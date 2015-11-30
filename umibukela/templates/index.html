@@ -1,8 +1,40 @@
 {% extends "layout.html" %}
 
-{% block title %}Page Title{% endblock %}
-{% block content %}
+{% block title %}Welcome{% endblock %}
+{% block page-content %}
 
-<h1>Hi!</h1>
+<div id="home">
+
+  <div class="jumbotron text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <h2><strong>Citizen Based Monitoring</strong> helps communities improve government service delivery.</h2>
+          <a href="about.html" class="btn btn-primary btn-lg uppercase">Learn about CBM</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-lg text-center">
+    <div class="container">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="input-group">
+             <input type="text" class="form-control" placeholder="Search the sites">
+             <span class="input-group-btn">
+                  <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
+             </span>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="programme-explore-menu text-center">
+    <div class="container">
+      Explore the programmes: <a href="" class="btn btn-default">sites</a> <a href="" class="btn btn-default">partners</a> <a href="" class="btn btn-default">sectors</a>
+    </div>
+  </div>
+
+</div>
 
 {% endblock %}

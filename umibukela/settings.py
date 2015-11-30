@@ -120,6 +120,8 @@ STATICFILES_FINDERS = (
 PYSCSS_LOAD_PATHS = [
     os.path.join(BASE_DIR, 'umibukela', 'static'),
     os.path.join(BASE_DIR, 'umibukela', 'static', 'bower_components'),
+    os.path.join(BASE_DIR, 'umibukela', 'static', 'bower_components', 'bootstrap-sass', 'assets', 'stylesheets'),
+    os.path.join(BASE_DIR, 'umibukela', 'static', 'bower_components', 'fontawesome', 'scss'),
 ]
 
 PIPELINE_CSS = {
