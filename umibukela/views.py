@@ -41,3 +41,15 @@ def sector(request, sector_name):
     return render(request, 'sector_detail.html', {
         'active_tab': 'sectors',
     })
+
+
+def partners(request):
+    return render(request, 'partners.html', {
+        'active_tab': 'partners',
+    })
+
+
+def partner(request, partner_name):
+    return render(request, 'partner_detail.html', {
+        'active_tab': 'partners',
+    })

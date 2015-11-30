@@ -1,50 +1,51 @@
 {% extends "layout.html" %}
 
-{% block title %}Sites{% endblock %}
+{% block title %}Partners{% endblock %}
 {% block page-content %}
 
-<div class="section" id="sites">
+<div class="section" id="partners">
   <div class="container">
 
     <!-- breadcrumbs -->
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
-      <li class="active">Sites</li>
+      <li class="active">Community Partners</li>
     </ol>    
     <!-- /breadcrumbs -->
 
     <div class="section-heading">
-      <h1>Sites</h1>
+      <h1>Community Partners</h1>
     </div>
+
 
     <div class="row">
       <div class="col-md-9">
-
         <table class="table table-striped sortable">
           <thead>
             <tr>
-              <th>Site name</th>
+              <th>Partner name</th>
               <th>Sector</th>
               <th>Province</th>
             </tr>
           </thead>
           <tr>
-            <td><a href="{% url 'site' site_name='folweni' %}">Folweni Clinic</a></td>
-            <td><a href="{% url 'sector' sector_name='health' %}">Health</a></td>
-            <td>KwaZulu-Natal</td>
-          </tr>
-          <tr>
-            <td>Paarl SASSA service office</td>
+            <td>Tshedza Development Project</td>
             <td>Social Development</td>
-            <td>Western Cape</td>
+            <td>Gauteng</td>
           </tr>
           <tr>
-            <td>Nxuba</td>
-            <td>Local Gov</td>
-            <td>Eastern Cape</td>
+            <td>Lebaleng</td>
+            <td>Social Development</td>
+            <td>Gauteng</td>
+          </tr>
+          <tr>
+            <td><a href="{% url 'partner' partner_name='folweni-crc' %}">Folweni CRC</a></td>
+            <td>Health</td>
+            <td>Kwazulu-Natal</td>
           </tr>
         </table>
-
+      </div>
+      <div class="col-md-3">
       </div>
     </div>
 

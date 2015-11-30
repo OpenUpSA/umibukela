@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}Folweni CRC{% endblock %}
+{% block page-content %}
+
+<div class="section site-details">
+  <div class="container">
+
+    <!-- breadcrumbs -->
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li><a href="{% url 'partners' %}">Community Partners</a></li>
+      <li class="active">Folweni CRC</li>
+    </ol>    
+    <!-- /breadcrumbs -->
+    
+    <div class="section-heading">
+      <h1>Folweni CRC</h1>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+
+        <div class="row">
+
+          <div class="site-overview col-md-8">
+            <table class="table table-bordered">
+              <tr>
+                <td><strong>Address:</strong></td>
+                <td>Folweni Township, Manquina Road, Folweni, South Africa</td>
+              </tr>
+              <tr>
+                <td><strong>GPS coordinates:</strong></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><strong>Sectors:</strong></td>
+                <td>
+                  <ul class="list-unstyled">
+                    <li><a href="{% url 'sector' sector_name='health' %}">Health</a></li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Contacts:</strong></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><strong>Sites:</strong></td>
+                <td>
+                  <ul class="list-unstyled">
+                    <li><a href="{% url 'site' site_name='folweni' %}">Folweni Clinic</a></li>
+                  </ul>
+                </td>
+              </tr>                        
+            </table>
+          </div>
+
+          <div class="site-map col-md-4">
+
+          </div>
+
+        </div>
+
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
