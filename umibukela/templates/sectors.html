@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}Sectors{% endblock %}
+{% block page-content %}
+
+<div class="section" id="sectors">
+  <div class="container">
+
+    <!-- breadcrumbs -->
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li class="active">Sectors</li>
+    </ol>    
+    <!-- /breadcrumbs -->
+    
+    <div class="section-heading">
+      <h1>Sectors</h1>
+    </div>
+
+    <div class="row">
+
+      <div class="col-md-9">
+
+        <table class="table table-striped sortable">
+          <thead>
+            <tr>
+              <th>Sector</th>
+              <th>No. of sites</th>
+              <th>No. of community partners</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Social Development</td>
+              <td>3</td>
+              <td>3</td>
+            </tr>
+            <tr>
+              <td><a href="{% url 'sector' sector_name='health' %}">Health</a></td>
+              <td>2</td>
+              <td>2</td>        
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="col-md-3">
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

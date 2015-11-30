@@ -9,5 +9,8 @@ urlpatterns = patterns('',
     url(r'^sites$', 'umibukela.views.sites', name='sites'),
     url(r'^sites/(?P<site_name>\w+)$', 'umibukela.views.site', name='site'),
 
+    url(r'^sectors$', 'umibukela.views.sectors', name='sectors'),
+    url(r'^sectors/(?P<sector_name>\w+)$', 'umibukela.views.sector', name='sector'),
+
     url(r'^admin/', include(admin.site.urls)),
 )
