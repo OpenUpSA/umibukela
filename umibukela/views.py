@@ -31,6 +31,12 @@ def site(request, site_name):
     })
 
 
+def site_result(request, site_name, result_id):
+    return render(request, 'site_result_detail.html', {
+        'active_tab': 'sites',
+    })
+
+
 def sectors(request):
     return render(request, 'sectors.html', {
         'active_tab': 'sectors',

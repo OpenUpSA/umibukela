@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+
+{% block title %}Results for Cycle 4{% endblock %}
+{% block page-content %}
+
+<div class="section cycle-results">
+  <div class="container">
+
+    <!-- breadcrumbs -->
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li><a href="{% url 'sites' %}">Sites</a></li>
+      <li><a href="{% url 'site' site_name='folweni' %}">Folweni Clinic</a></li>
+      <li class="active">Results</li>
+    </ol>    
+    <!-- /breadcrumbs -->
+    
+    <div class="section-heading">
+      <h1>Results: Cycle 4 <span class="badge">1 - 30 November 2015</span></h1>
+    </div>
+
+    <div class="row">
+      <div class="site-overview col-md-8">
+        
+        <div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">
+            <h3 class="panel-title">Folweni Clinic</h3>
+          </div>
+          <div class="panel-body">
+            <p>Description of Folweni Clinic</p>
+          </div>
+          <table class="table">
+            <tbody>
+              <tr>
+                <td class="text-right min-width"><strong>Sector</strong></td>
+                <td><a href="{% url 'sector' sector_name='health' %}">Health</a></td>
+              </tr>
+              <tr>
+                <td class="text-right min-width"><strong>Community Partners</strong></td>
+                <td><a href="{% url 'partner' partner_name='folweni' %}">Folweni CRC</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <div class="site-multimedia col-md-4">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-9">
+
+        <div class="site-summary-stats">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Summary Stats</h3>
+            </div>
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td class="text-right min-width"><strong>Total participants:</strong></td>
+                  <td>304</td>
+                </tr>
+                <tr>
+                  <td class="text-right min-width"><strong>Total Female:</strong></td>
+                  <td>197</td>
+                </tr>
+                <tr>
+                  <td class="text-right min-width"><strong>Total Male:</strong></td>
+                  <td>107</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-md-3">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Cycles</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
