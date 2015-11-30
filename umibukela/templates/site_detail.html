@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+
+{% block title %}Folweni Clinic{% endblock %}
+{% block page-content %}
+
+<div class="section site-details">
+  <div class="container">
+
+    <!-- breadcrumbs -->
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li><a href="{% url 'sites' %}">Sites</a></li>
+      <li class="active">Folweni Clinic</li>
+    </ol>    
+    <!-- /breadcrumbs -->
+    
+    <div class="section-heading">
+      <h1>Folweni Clinic</h1>
+    </div>
+
+    <div class="row">
+      <div class="col-md-9">
+
+        <div class="row">
+          <div class="site-overview col-md-8">
+            <table class="table table-bordered">
+              <tr>
+                <td><strong>Address:</strong></td>
+                <td>Folweni Township, Manquina Road, Folweni, South Africa</td>
+              </tr>
+              <tr>
+                <td><strong>GPS coordinates:</strong></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><strong>Sector:</strong></td>
+                <td><a href="sector-details.html">Health</a></td>
+              </tr>
+              <tr>
+                <td><strong>Contacts:</strong></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><strong>Community partners:</strong></td>
+                <td>
+                  <ul class="list-unstyled">
+                    <li><a href="partner-details.html">Folweni CRC</a></li>
+                  </ul>
+                </td>
+              </tr>                        
+            </table>
+          </div>
+          <div class="site-map col-md-4">
+          </div>
+        </div>
+
+        <div class="site-summary-stats">
+          <h2>Summary Stats</h2>
+          <table class="table table-bordered">
+            <tr>
+              <td><strong>Total participants to date:</strong></td>
+              <td>613</td>
+            </tr>
+            <tr>
+              <td><strong>Total Female:</strong></td>
+              <td>412</td>
+            </tr>
+            <tr>
+              <td><strong>Total Male:</strong></td>
+              <td>201</td>
+            </tr>
+            <tr>
+              <td><strong>Cycles monitored:</strong></td>
+              <td>2</td>
+            </tr>                 
+          </table>
+        </div>
+
+        <div class="site-current-programmes">
+          <h2>Current programmes</h2>
+          <div class="programme">
+            <h3 class="programme-name">Making all voices count (MAVC)</h3>
+            <div class="programme-description">
+              This  project, is part of a global initiative which aims to empower Community Based Organisations (CBOs) to take ownership of and participate actively in citizen-based monitoring of three government services in 20 service sites across South Africa. A working relationship with the Department of Performance Monitoring and Evaluation is in place to pilot the integration and institutionalisation of citizen feedback into government's performance monitoring and evaluation system.
+            </div>
+            <div class="programme-frequency"><strong>Frequency:</strong> monthly</div>
+            <div class="programme-last-cycle"><strong>Latest cycle:</strong> <a href="results.html">cycle 4 (1 - 30 November 2015)</a> <a href="results.html" class="btn btn-primary btn-sm">View results</a></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

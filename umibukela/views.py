@@ -23,3 +23,9 @@ def sites(request):
     return render(request, 'sites.html', {
         'active_tab': 'sites',
     })
+
+
+def site(request, site_name):
+    return render(request, 'site_detail.html', {
+        'active_tab': 'sites',
+    })

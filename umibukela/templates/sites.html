@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% block title %}Contact Us{% endblock %}
+{% block title %}Sites{% endblock %}
 {% block page-content %}
 
 <div class="section" id="sites">
@@ -27,7 +27,7 @@
             <th>Province</th>
           </tr>
           <tr>
-            <td><a href="site-details.html">Folweni Clinic</a></td>
+            <td><a href="{% url 'site' site_name='folweni' %}">Folweni Clinic</a></td>
             <td><a href="sector-details.html">Health</a></td>
             <td>KwaZulu-Natal</td>
           </tr>
