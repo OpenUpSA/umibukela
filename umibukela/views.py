@@ -17,3 +17,9 @@ def about(request):
     return render(request, 'about.html', {
         'active_tab': 'about',
     })
+
+
+def sites(request):
+    return render(request, 'sites.html', {
+        'active_tab': 'sites',
+    })

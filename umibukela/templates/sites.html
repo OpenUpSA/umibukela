@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}Contact Us{% endblock %}
+{% block page-content %}
+
+<div class="section" id="sites">
+  <div class="container">
+
+    <!-- breadcrumbs -->
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li class="active">Sites</li>
+    </ol>    
+    <!-- /breadcrumbs -->
+
+    <div class="section-heading">
+      <h1>Sites</h1>
+    </div>
+
+    <div class="row">
+      <div class="col-md-9">
+
+        <table class="table table-striped sortable">
+          <tr>
+            <th>Site name</th>
+            <th>Sector</th>
+            <th>Province</th>
+          </tr>
+          <tr>
+            <td><a href="site-details.html">Folweni Clinic</a></td>
+            <td><a href="sector-details.html">Health</a></td>
+            <td>KwaZulu-Natal</td>
+          </tr>
+          <tr>
+            <td>Paarl SASSA service office</td>
+            <td>Social Development</td>
+            <td>Western Cape</td>
+          </tr>
+          <tr>
+            <td>Nxuba</td>
+            <td>Local Gov</td>
+            <td>Eastern Cape</td>
+          </tr>
+        </table>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
