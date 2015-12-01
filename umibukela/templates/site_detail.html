@@ -1,6 +1,13 @@
 {% extends "layout.html" %}
+{% load pipeline %}
 
 {% block title %}Folweni Clinic{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  {% javascript "site" %}
+{% endblock %}
+
 {% block page-content %}
 
 <div class="section site-details">

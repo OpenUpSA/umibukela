@@ -138,10 +138,17 @@ PIPELINE_JS = {
     'js': {
         'source_filenames': (
             'bower_components/jquery/dist/jquery.min.js',
-            'bower_components/leaflet/dist/leaflet.js',
             'javascript/app.js',
         ),
         'output_filename': 'app.js',
+    },
+    'site': {
+        'source_filenames': (
+            'bower_components/leaflet/dist/leaflet.js',
+            'javascript/highcharts.js',
+            'javascript/site.js',
+        ),
+        'output_filename': 'site.js',
     },
 }
 PIPELINE_CSS_COMPRESSOR = None
