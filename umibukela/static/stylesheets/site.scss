@@ -1,0 +1,417 @@
+
+
+//============================================================================================
+
+// CUSTOM CSS
+
+//== Header
+
+.site-header{
+	background-color: $brand-primary;
+}
+
+.site-title{
+	padding: 1em 0;
+	font-family: $font-family-sans-serif-2;
+	font-size: 32px;
+	font-weight: bold;
+}
+
+//== Links
+
+a.btn-primary{
+
+	border: 0 !important;
+
+}
+
+//== Navbar
+
+.site-header .navbar{
+	border: 0;
+	text-transform: uppercase;
+	font-family: $font-family-sans-serif-2;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 12px;
+	li{
+		background-color: $black;
+		a{
+			padding: 15px;
+			line-height: inherit;
+		}
+	}
+}
+
+//== Jumbotron
+.jumbotron{
+	margin-top: 3px;
+	margin-bottom: 0;
+	h1, .h1{
+		font-size: 32px;
+	}
+}
+
+//== Section
+
+.section{
+
+	padding: 2em 0;
+
+	a{
+		border-bottom: solid 2px $link-color;
+		&:hover{
+			border-color: $link-hover-color;
+		}
+	}
+
+	.section-heading{
+		font-family: $font-family-sans-serif-2;
+		border-bottom: solid 1px $black;
+		margin-bottom: 2em;
+
+	}
+
+	table.sortable{
+		thead{
+			background-color: $brand-secondary-dark;
+			text-transform: uppercase;
+			color: $white;
+			th{
+				border: 0;
+			}
+		}
+}
+}
+
+//== site
+.site-multimedia{
+	background-color: $brand-secondary-light;
+	min-height: 200px;
+}
+
+//== #home
+
+#home{
+
+	.bg-image {
+	       background-image: url(/static/img/black-sash-protest2.jpg);
+	}
+
+	.search-lg, .programme-explore-menu{
+		padding: 2em 0;
+	}
+
+	.search-lg{
+		background-color: $brand-secondary-light;
+	}
+
+	.programme-explore-menu{
+		background-color: $brand-primary-light;		
+	}
+
+}
+
+//== Buttons
+.btn-lg{
+	font-family: $font-family-sans-serif-2;
+	font-size: 1em;
+	letter-spacing: 1px;
+}
+//== Sortable Table
+
+/* add a number column at the beginning of sortable tables, that can't itself be sorted and doesn't change on sorting */
+table.sortable tbody {
+    counter-reset: sortabletablescope;
+}
+table.sortable thead tr::before {
+    content: "#";
+    display: table-cell;
+
+	padding: $table-cell-padding;
+    line-height: $line-height-base;
+
+	vertical-align: bottom;
+
+    white-space: nowrap;
+    width: 1px;
+}
+table.sortable tbody tr::before {
+    content: counter(sortabletablescope);
+    counter-increment: sortabletablescope;
+    display: table-cell;
+
+    padding: $table-cell-padding;
+    line-height: $line-height-base;
+    vertical-align: top;
+    border-top: 1px solid $table-border-color;    
+
+	white-space: nowrap;
+	width: 1px;
+}
+
+//== Forms
+input{
+	font-family: $font-family-sans-serif-2;
+	font-weight: bold;
+}
+
+/* add up and down arrows to columns to show that they are sortable */
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+    content: " \25B4\25BE" 
+}
+
+//== Blockquotes
+
+blockquote {
+	position: relative;
+	quotes: "\201C""\201D""\2018""\2019";
+	font-weight: 300;
+	padding: 0 0 0 2em;
+	border: 0;
+}
+blockquote:before {
+	font-family: $font-family-sans-serif-2;
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 35px;
+	color: #ccc;
+	content: open-quote;
+	font-size: 4em;
+	line-height: 0.1em;
+	vertical-align: -0.4em;
+}
+
+blockquote cite{
+	font-size: 0.6em;
+	font-style: normal;
+	font-weight: 500;
+	&:before{
+		content: "-";
+		margin-right: 10px;
+		content: "\2014 \2009";
+	}
+}
+
+//== Footer
+footer.footer{
+	padding: 2em 0;
+	background: $gray-lighter;
+}
+
+//== Diagram: CBM Cycle (large screens)
+.diagram-container-large-screens .diagram#cbm-cycle{
+	display: inline-block;
+	width: 700px;
+	height: 700px;
+	position: relative;
+	.diagram-box{
+
+		width: 180px;
+
+		&#box-step1{ position: absolute; top: 145px; left: 255px; }
+		&#box-step2{ position: absolute; top: 235px; left: 430px; }
+		&#box-step3{ position: absolute; top: 435px; left: 470px; }
+		&#box-step4{ position: absolute; top: 625px; left: 360px; }
+		&#box-step5{ position: absolute; top: 625px; left: 165px; }
+		&#box-step6{ position: absolute; top: 445px; left: 50px; }
+		&#box-step7{ position: absolute; top: 240px; left: 85px; }
+
+	}
+	.diagram-caption{
+		display: inline-block;
+		background: rgba(0,0,0,0.8);
+		color: $white;
+		text-align: left;
+		line-height: 1;
+		font-family: $font-family-sans-serif-2;
+		padding: 5px;
+		border-radius: 3px;
+		h1, h2 { margin: 0; }
+		h1 { 
+			font-size: 30px; 
+			font-weight: bold; 
+			color: $brand-secondary; 
+			text-align: center;
+			float: left;
+			line-height: 36px;
+			padding: 0 10px 0 5px;
+			margin-right: 10px;
+			border-right: solid 1px $white;
+		}
+		h2 { 
+			font-size: 12px; 
+			font-weight: bold; 
+			line-height: 18px;
+		}
+		&:hover{
+			background: $brand-secondary-dark;
+			h1{ color: $white; }
+		}
+	}
+
+	#box-step1 .diagram-caption h2{ line-height: 12px; }
+
+	.diagram-comment{
+		color: $white;
+		font-family: $font-family-sans-serif-2;
+		font-size: 11px;
+		font-weight: bold;
+		text-align: left;
+		position: absolute;
+		&#feedback{
+			width: 120px;
+			top: 40px;
+			left: 130px;
+		}
+	}
+
+}
+
+//== Diagram: CBM Cycle (small screens)
+.diagram-container-small-screens .diagram#cbm-cycle{
+
+	.diagram-box{
+
+		text-align: center;
+
+	}
+
+	.diagram-image{
+		margin-top: 40px;
+	}
+
+	.diagram-caption{
+		display: inline-block;
+		margin-top: -20px; 
+		background: rgba(0,0,0,0.8);
+		color: $white;
+		text-align: left;
+		line-height: 1;
+		font-family: $font-family-sans-serif-2;
+		padding: 5px;
+		border-radius: 3px;
+		h1, h2 { margin: 0; }
+		h1 { 
+			font-size: 30px; 
+			font-weight: bold; 
+			color: $brand-secondary; 
+			text-align: center;
+			float: left;
+			line-height: 36px;
+			padding: 0 10px 0 5px;
+			margin-right: 10px;
+			border-right: solid 1px $white;
+		}
+		h2 { 
+			font-size: 12px; 
+			font-weight: bold; 
+			line-height: 18px;
+		}
+		&:hover{
+			background: $brand-secondary-dark;
+			h1{ color: $white; }
+		}
+	}
+
+	.diagram-comment{
+		color: $white;
+		font-family: $font-family-sans-serif-2;
+		font-size: 11px;
+		font-weight: bold;
+		text-align: left;
+		position: absolute;
+		&#feedback{
+			width: 120px;
+			top: 40px;
+			left: 130px;
+		}
+	}
+
+}
+
+//== Tricks
+
+/* remove top margin from headings if the heading is the first element in a DIV */
+
+div + h1 {
+    margin-top: 0;
+}
+
+//== Helper classes
+
+.bg-image{
+    background-size: 100% !important;
+    background-repeat: no-repeat;
+    background-position: center center;
+    text-shadow: 0 0 2px $white;
+    .text-white{
+    	text-shadow: 0 0 2px $black;
+    }
+    .btn{
+    	text-shadow: none;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    /* For mobile phones: */
+    .bg-image{
+    	background-size: cover !important;
+    }
+}
+
+.uppercase{
+	text-transform: uppercase;
+}
+
+.min-width{
+	white-space: nowrap;
+	width: 1px;
+}
+
+.one-line{
+	display: inline-block;
+}
+
+.add-padding-top { padding-top: 2em; }
+.add-padding-bottom { padding-bottom: 2em; }
+.add-padding-both { padding-top: 2em; padding-bottom: 2em; }
+
+.add-border-bottom { border-bottom: solid 1px $black; }
+
+.add-margin-img-right{ margin: 1em 0 1em 1em; }
+
+.remove-heading-margin-top{
+	h1,h2,h3,h4,h5,h6{ margin-top: 0; }
+}
+
+.text-black{ color: $black; }
+.text-white{ color: $white; }
+.text-primary{ color: $brand-primary; }
+.text-secondary { color: $brand-secondary; }
+
+.text-primary { color: $brand-primary; }
+.text-primary-light { color: $brand-primary-light; }
+.text-primary-dark { color: $brand-primary-dark; }
+
+.text-secondary { color: $brand-secondary; }
+.text-secondary-light{ color: $brand-secondary-light; }
+.text-secondary-dark { color: $brand-secondary-dark; }
+
+.bg-primary{ background-color: $brand-primary; }
+.bg-primary-light{ background-color: $brand-primary-light; }
+.bg-primary-dark{ background-color: $brand-primary-dark; }
+
+.bg-secondary{ background-color: $brand-secondary; }
+.bg-secondary-light{ background-color: $brand-secondary-light; }
+.bg-secondary-dark{ background-color: $brand-secondary-dark; }
+
+.bg-white { background-color: $white; }
+.bg-black { background-color: $black; }
+
+.bg-gray{ background-color: $gray; }
+.bg-gray-light{ background-color: $gray-light; }
+.bg-gray-lighter{ background-color: $gray-lighter; }
+.bg-gray-dark{ background-color: $gray-dark; }
+.bg-gray-darker{ background-color: $gray-darker; }

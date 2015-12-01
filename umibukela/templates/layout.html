@@ -4,8 +4,12 @@
 
   {% include '_header.html' %}
 
-  {% block page-content %}
-  {% endblock %}
+    <div class="page-content">
+      <div class="wrapper">
+        {% block page-content %}
+        {% endblock %}
+      </div>
+    </div>
 
   {% include '_footer.html' %}
 
