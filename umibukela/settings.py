@@ -145,6 +145,7 @@ PIPELINE_JS = {
     'site': {
         'source_filenames': (
             'bower_components/leaflet/dist/leaflet.js',
+            'bower_components/underscore/underscore-min.js',
             'javascript/highcharts.js',
             'javascript/site.js',
         ),
