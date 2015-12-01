@@ -2,15 +2,22 @@
 .stat {
   .value {
     font-size: 2.2em;
+    font-weight: 600;
     line-height: 1;
     margin-bottom: 0.2em;
-    font-weight: 600;
   }
 
   .name {
     font-size: 1.2em;
     font-weight: 400;
     line-height: 1.3;
+    margin-bottom: 0.2em;
+  }
+
+  .context {
+    font-size: 0.9em;
+    line-height: 1.3;
+    color: #777;
   }
 }
 
