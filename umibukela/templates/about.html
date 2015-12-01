@@ -1,20 +1,466 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block title %}Learn About CBM{% endblock %}
 {% block page-content %}
 
 <div class="section" id="about">
-
-  <div class="container">
-
-    <!-- breadcrumbs -->
-      <ol class="breadcrumb">
-        <li><a href="/">Home</a></li>
-        <li class="active">Learn about CBM</li>
-      </ol>    
+  
+  <div class="container add-padding-bottom">
+  	<!-- breadcrumbs -->
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li class="active">Learn about CBM</li>
+    </ol>    
     <!-- /breadcrumbs -->
-    
+    <div class="section-heading">
+      <h1>About Citizen-Based Monitoring</h1>
+    </div>
+
+    <div class="text-center">
+        <small>Scroll to section:</small> 
+        <a href="#what-is-cbm" class="btn btn-primary btn-sm uppercase">What is CBM?</a>
+        <a href="#why-do-cbm" class="btn btn-primary btn-sm uppercase">Why do CBM?</a>
+        <a href="#cbm-process" class="btn btn-primary btn-sm uppercase">The CBM Process</a>
+        <a href="#resources" class="btn btn-primary btn-sm uppercase">Resources</a>
+    </div>
+
   </div>
+  
+  <div class="bg-secondary bg-image add-padding-both remove-heading-margin-top" id="what-is-cbm" style="background: url({% static 'img/black-sash-protest.jpg' %}); background-position: center bottom;">
+    <div class="container">
+      <div class="row">
+      	<div class="col-md-8 col-md-offset-2">
+      	    <h2 class="text-white">What is <strong>Citizen-Based Monitoring (CBM)</strong>?</h2>
+      	    <p class="text-white">
+              <strong>Citizen-based monitoring (CBM) allows civil society to gather and analyse information from the service users’ points of view.</strong> It recognises that Citizens and public service users are active holders of fundamental rights and not merely passive users of public services. As a result, CBM provides strong evidence to take back to government and, where necessary, into the public domain, in order to better the delivery of services where needed and to acknowledge good service where it is provided.
+            </p>
+      	</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-gray-lighter add-padding-both remove-heading-margin-top" id="why-do-cbm">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h2 class="text-primary">Why do Citizen Based Monitoring?</h2>
+            <p>
+              <strong>The goal is to promote civic engagement to realise socio-economic rights by advocating for open, transparent and accountable governance.</strong>
+            </p>
+            <blockquote>
+              <p>
+                Citizen-based monitoring (CBM) is an approach to monitoring government performance that focuses on the experiences of ordinary citizens in order to strengthen public accountability and drive service delivery improvements.
+              </p>
+              <p>
+                <cite><a href="http://www.thepresidency-dpme.gov.za/keyfocusareas/cbmSite/CBM%20Documents/Framework%20for%20Strengthening%20Citizen-Government%20Partnerships%20for%20Monitoring%20Frontline%20Service%20Delivery.pdf">A Framework for strengthening citizen-government partnerships for monitoring frontline service delivery</a>, page 7</cite>
+              </p>           
+            </blockquote>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- diagram for large  screens -->
+  <div class="hidden-xs hidden-sm bg-primary-light add-padding-both remove-heading-margin-top diagram-container-large-screens" id="cbm-process">
+    <div class="container">
+
+      <div class="row text-center">
+        <h2 class="text-white">How do we do CBM?</h2>
+        <p>The CBM process is a <strong>cycle</strong> with 7 core steps.</p>
+      </div>
+
+      <div class="row text-center">
+        
+        <div class="diagram" id="cbm-cycle">
+
+          <img src="{% static 'img/cbm-cycle_wide.png' %}" width="700" height="700">
+          
+          <a href="#government">
+            <div class="diagram-box" id="box-step1">
+              <div class="diagram-caption">
+                <h1>1</h1>
+                <h2>Establish government relationship</h2>
+              </div>            
+            </div>
+          </a>
+
+          <a href="#cbo-partner">
+            <div class="diagram-box" id="box-step2">
+              <div class="diagram-caption">
+                <h1>2</h1>
+                <h2>Select community partner</h2>
+              </div>            
+            </div>
+          </a>
+
+          <a href="#local-facility">
+            <div class="diagram-box" id="box-step3">
+              <div class="diagram-caption">
+                <h1>3</h1>
+                <h2>Engage local facility</h2>
+              </div>            
+            </div>
+          </a>
+
+          <a href="#monitor">
+            <div class="diagram-box" id="box-step4">
+              <div class="diagram-caption">
+                <h1>4</h1>
+                <h2>Monitor facility</h2>
+              </div>            
+            </div>
+          </a>
+
+          <a href="#report">
+            <div class="diagram-box" id="box-step5">
+              <div class="diagram-caption">
+                <h1>5</h1>
+                <h2>Report findings</h2>
+              </div>            
+            </div>
+          </a>
+
+          <a href="#dialogues">
+            <div class="diagram-box" id="box-step6">
+              <div class="diagram-caption">
+                <h1>6</h1>
+                <h2>Conduct dialogues</h2>
+              </div>            
+            </div>
+          </a>
+
+          <a href="#advocacy">
+            <div class="diagram-box" id="box-step7">
+              <div class="diagram-caption">
+                <h1>7</h1>
+                <h2>Engage in advocacy</h2>
+              </div>            
+            </div>
+          </a>
+          
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- /diagram for large screens -->
+
+  <!-- diagram for small  screens -->
+  <div class="hidden-md hidden-lg bg-primary-light add-padding-both remove-heading-margin-top diagram-container-small-screens">
+    <div class="container">
+
+      <div class="row text-center">
+        <h2 class="text-white">How do we do CBM?</h2>
+        <p>The CBM process is a <strong>cycle</strong> with 7 core steps.</p>
+      </div>
+
+      <div class="row text-center">
+        
+        <div class="diagram text-center" id="cbm-cycle">
+
+          <div class="diagram-box" id="box-step1">
+            <div class="diagram-image"><img src="{% static 'img/cbm-menu_step1.png' %}"></div>
+            <a href="#government">
+              <div class="diagram-caption">
+                <h1>1</h1>
+                <h2>Establish government relationship</h2>
+              </div>
+            </a>            
+          </div>
+
+          <div class="diagram-box" id="box-step2">
+            <div class="diagram-image"><img src="{% static 'img/cbm-menu_step2.png' %}"></div>
+            <a href="#cbo-partner">
+              <div class="diagram-caption">
+                <h1>2</h1>
+                <h2>Select community partner</h2>
+              </div>
+            </a>            
+          </div>
+
+          <div class="diagram-box" id="box-step3">
+            <div class="diagram-image"><img src="{% static 'img/cbm-menu_step3.png' %}"></div>
+            <a href="#local-facility">
+              <div class="diagram-caption">
+                <h1>3</h1>
+                <h2>Engage local facility</h2>
+              </div>            
+            </a>
+          </div>
+
+          <div class="diagram-box" id="box-step4">
+            <div class="diagram-image"><img src="{% static 'img/cbm-menu_step4.png' %}"></div>
+            <a href="#monitor">
+              <div class="diagram-caption">
+                <h1>4</h1>
+                <h2>Monitor facility</h2>
+              </div>  
+            </a>
+          </div>
+
+          <div class="diagram-box" id="box-step5">
+            <div class="diagram-image"><img src="{% static 'img/cbm-menu_step5.png' %}"></div>
+            <a href="#report">
+              <div class="diagram-caption">
+                <h1>5</h1>
+                <h2>Report findings</h2>
+              </div>
+            </a>            
+          </div>
+
+          <div class="diagram-box" id="box-step6">
+            <div class="diagram-image"><img src="{% static 'img/cbm-menu_step6.png' %}"></div>
+            <a href="#dialogues">
+              <div class="diagram-caption">
+                <h1>6</h1>
+                <h2>Conduct dialogues</h2>
+              </div>            
+            </a>
+          </div>
+
+          <div class="diagram-box" id="box-step7">
+            <div class="diagram-image"><img src="{% static 'img/cbm-menu_step7.png' %}"></div>
+            <a href="#advocacy">
+              <div class="diagram-caption">
+                <h1>7</h1>
+                <h2>Engage in advocacy</h2>
+              </div>
+            </a>            
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- /diagram for small screens -->
+
+  <div class="bg-white add-padding-both remove-heading-margin-top" id="government">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="cbm-step-image text-center">
+            <img src="{% static 'img/cbm_step1.png' %}" width="170" height="170">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h4 class="uppercase"><strong>Step 1</strong></h4>
+          <h2 class="text-secondary-dark"><strong>Establish government relationship</strong></h2>
+        </div>
+        <div class="col-md-6">
+        <p>Securing physical access to government departments and their service delivery facilities is critical to the success of community monitoring programmes. Black Sash has signed a memorandum of understanding with the Department of Performance Monitoring and Evaluation (DPME) as well as SASSA, Department of Health and Local Government providing for access to select facilities for monitoring purposes.  </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-gray-lighter add-padding-both remove-heading-margin-top" id="cbo-partner">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="cbm-step-image text-center">
+            <img src="{% static 'img/cbm_step2.png' %}" width="170" height="170">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h4 class="uppercase"><strong>Step 2</strong></h4>
+          <h2 class="text-secondary-dark"><strong>Select community partner</strong></h2>
+          <h6 class="add-border-bottom"><strong>Sub-steps</strong></h6>
+          <ol>
+            <li>Secure MoU & financial arrangement</li>
+            <li>Draft a code of conduct</li>
+            <li>Consider ethical issues</li>
+            <li>Engage in training</li>
+          </ol>
+        </div>
+        <div class="col-md-6">
+          <p>To ensure that the local service improves, we need local users and organisations based in the community to be driving this process. 
+          <img src="{% static 'img/black-sash-people.jpg' %}" class="pull-right img-thumbnail add-margin-img-right" width="300px" height="auto">
+          The strength of this model lies in formulating a strong relationship with an existing community-based organisation as these are the people actively involved in their communities and understand the local context. Great care is taken to select the correct organisation to partner with. Once the selection has occurred the community partner is trained and skilled up on who best to perform this monitoring.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white add-padding-both remove-heading-margin-top" id="local-facility">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="cbm-step-image text-center">
+            <img src="{% static 'img/cbm_step3.png' %}" width="170" height="170">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h4 class="uppercase"><strong>Step 3</strong></h4>
+          <h2 class="text-secondary-dark"><strong>Engage local facility</strong></h2>
+        </div>
+        <div class="col-md-6">
+          <p>The step is about capacitating the local community partner and shepherding them through the local facility engagement. Partners are trained on the ethics of monitoring and positioned to be able to guide respondents through a questionnaire without invalidating the responses.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-gray-lighter add-padding-both remove-heading-margin-top" id="monitor">
+    <div class="container">
+      <div class="row">
+      <div class="col-md-2">
+          <div class="cbm-step-image text-center">
+            <img src="{% static 'img/cbm_step4.png' %}" width="170" height="170">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h4 class="uppercase"><strong>Step 4</strong></h4>
+          <h2 class="text-secondary-dark"><strong>Monitor facility</strong></h2>
+          <h6 class="add-border-bottom"><strong>Sub-steps</strong></h6>
+          <ol>
+            <li>select monitors</li>
+            <li>train monitors</li>
+            <li>prepare survey tools</li>
+            <li>collect the data</li>
+            <li>do site observations</li>
+            <li>finalise the data</li>
+          </ol>
+        </div>
+        <div class="col-md-6">
+          <p>Monitoring takes place over a 3 month period each year and consists of a light-touch survey conducted by trained monitors. Responses are captured directly onto the system via mobile or desktop tools, or else are transcribed from paper-based forms. Each community partner endeavours to survey at least 300 respondents per facility in order to ensure accurate representation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white add-padding-both remove-heading-margin-top" id="report">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="cbm-step-image text-center">
+            <img src="{% static 'img/cbm_step5.png' %}" width="170" height="170">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h4 class="uppercase"><strong>Step 5</strong></h4>
+          <h2 class="text-secondary-dark"><strong>Report findings</strong></h2>
+          <h6 class="add-border-bottom"><strong>Sub-steps</strong></h6>
+          <ol>
+            <li>clean the data & analyse</li>
+            <li>package the data</li>
+            <li>create a presentation</li>
+            <li>send your findings to stakeholders</li>
+          </ol>
+        </div>
+        <div class="col-md-6">
+          <p>In order to affect local change, it is vital that the results and output of the monitoring activities are presented back to the facility and its service users. This step is concerned with the analysis and packaging of these results. Each site is analysed and their results presented back to them by means of high-impact posters which are put up at the facility to give feedback to their users. In addition results are also packaged into a handout which is then used to plan the dialogues with.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-gray-lighter add-padding-both remove-heading-margin-top" id="dialogues">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="cbm-step-image text-center">
+            <img src="{% static 'img/cbm_step6.png' %}" width="170" height="170">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h4 class="uppercase"><strong>Step 6</strong></h4>
+          <h2 class="text-secondary-dark"><strong>Conduct dialogues</strong></h2>
+          <h6 class="add-border-bottom"><strong>Sub-steps</strong></h6>
+          <ol>
+            <li>plan some dialogue events</li>
+            <li>host the dialogues</li>
+            <li>create an improvement plan</li>
+            <li>establish a joint monitoring committee</li>
+          </ol>
+        </div>
+        <div class="col-md-6">
+          <p>Dialogues are a platform for civil society, service users and government facilities to discuss the findings of the annual monitoring and together, form an improvement plan to address the concerns raised. This is a collaborative platform, facilitated by the community partner, from which a joint monitoring committee should be established, to track and monitor the improvement plan. Learnings from the current cycle are fed back to be taken into account when planning the next cycle. This ensures that the process is continually learning and improving and optimisations are realised as time progresses.</p>
+       </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white add-padding-both remove-heading-margin-top" id="advocacy">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="cbm-step-image text-center">
+            <img src="{% static 'img/cbm_step7.png' %}" width="170" height="170">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <h4 class="uppercase"><strong>Step 7</strong></h4>
+          <h2 class="text-secondary-dark"><strong>Engage in advocacy</strong></h2>
+        </div>
+        <div class="col-md-6">
+
+          <p>
+            It is often the case that issues raised at a local level needed provincial or even national engagement in order to address the systemic concern. 
+            <img src="{% static 'img/black-sash-2.png' %}" class="pull-right img-thumbnail add-margin-img-right" width="300px" height="auto">
+            We see the results of the annual monitoring surveys as providing a good indicator of the overall wellbeing of the system, but recognise that more focused campaigns will be required to address the issues at the correct level. This is where our advocacy step fits into the larger CBM model. CBM also ensures there is data behind evidence-drive advocacy.
+          </p>
+       </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-secondary add-padding-both remove-heading-margin-top" id="resources">
+    <div class="container">
+      <div class="row text-center">
+        <h2 class="text-white">Resources</h2>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h5 class="text-white"><strong>Norms, standards and legislation</strong></h5>
+            </div>
+            <div class="panel-body">
+              <ul>
+                <li><a href="#">SASSA</a></li>
+                <li><a href="#">Primary health care facilities</a></li>
+                <li><a href="#">Local Government Municipal Systems Act (MSA)</a></li>
+                <li><a href="#">Local Government Municipal Finance Management Act (MFMA)</a>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h5 class="text-white"><strong>Batho Pele</strong></h5>
+            </div>
+            <div class="panel-body">
+              <ul>
+                <li><a href="#">Batho Pele principles</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h5 class="text-white"><strong>Examples & further reading</strong></h5>
+            </div>
+            <div class="panel-body">
+              <ul>
+                <li><a href="https://en.wikipedia.org/wiki/Community-based_monitoring" target="_blank">Wikipedia: Community-base Monitoring</a></li>
+                <li><a href="http://communitymonitoring.org/" target="_blank">Integrity Watch in Afghanistan</a></li>
+                <li><a href="http://www.nrhmcommunityaction.org/" target="blank">Community Action for Health – India</a></li>
+                <li><a href="http://erc.msh.org/quality/pstools/psmoncv.cfm" target="_blank">Unicef</li>
+                <li><a href="http://www.odi.org/publications/6200-community-scorecard-public-service-malawi" target="_blank">Malawi’s Public Score Card</a></li>
+                <li><a href="http://internationalbudget.org/2013/06/how-are-social-audits-empowering-citizens-of-south-africa/" target="_blank">How Social Audits are Empowering Citizens of South Africa (IBP)</a>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 </div>
 
