@@ -128,6 +128,7 @@ PIPELINE_CSS = {
     'css': {
         'source_filenames': (
             'bower_components/fontawesome/css/font-awesome.css',
+            'bower_components/leaflet/dist/leaflet.css',
             'stylesheets/app.scss',
         ),
         'output_filename': 'app.css',
@@ -137,6 +138,7 @@ PIPELINE_JS = {
     'js': {
         'source_filenames': (
             'bower_components/jquery/dist/jquery.min.js',
+            'bower_components/leaflet/dist/leaflet.js',
             'javascript/app.js',
         ),
         'output_filename': 'app.js',
