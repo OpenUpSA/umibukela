@@ -46,22 +46,58 @@ Umibukela.Site = function() {
       plotOptions: {
         series: {
           animation: false,
+          pointPadding: 0.05,
+          groupPadding: 0,
         },
         column: {
           dataLabels: {
             enabled: true,
+            format: '{y}%',
           },
         },
       },
     });
 
-    $('.chart').highcharts({
-      chart: {type: 'column'},
-      xAxis: {
-        categories: ['Yes', 'No'],
-        labels: {step: 1},
+    var data = {
+      chart1: {
+        labels: ['Yes', 'No'],
+        values: [88, 109],
       },
-      series: [{data: [152, 152]}],
+      chart2: {
+        labels: ['Yes', 'No'],
+        values: [64, 43],
+      },
+      chart3: {
+        labels: ['Positive', 'Neutral', 'Negative'],
+        values: [65, 36, 96],
+      },
+      chart4: {
+        labels: ['Positive', 'Neutral', 'Negative'],
+        values: [46, 28, 33],
+      },
+      chart5: {
+        labels: ['More than 4 hours', '1 - 2 hours', '3 - 4 hours', '2 - 3 hours', 'Less than 1 hour'],
+        values: [1, 84, 4, 22, 86],
+      },
+      chart6: {
+        labels: ['More than 4 hours', '1 - 2 hours', '3 - 4 hours', '2 - 3 hours', 'Less than 1 hour'],
+        values: [1, 84, 4, 22, 86],
+      },
+    };
+
+    $('.chart').each(function(i) {
+      var d = data[$(this).data('indicator')];
+      var total = _.reduce(d.values, function(s, v){ return s + v; }, 0);
+      var values = _.map(d.values, function(v) { return Math.round(v / total * 100); });
+
+      $(this).highcharts({
+        chart: {type: 'column'},
+        xAxis: {
+          categories: d.labels,
+          labels: {step: 1},
+        },
+        series: [{data: values}],
+      });
     });
   };
 };
