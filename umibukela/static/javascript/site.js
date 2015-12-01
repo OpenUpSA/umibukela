@@ -33,41 +33,26 @@ Umibukela.Site = function() {
   self.drawCharts = function() {
     Highcharts.setOptions({
       credits: {enabled: false},
-      chart: {
-        animation: false,
+      chart: {animation: false},
+      colors: ['#f6921d', '#000'],
+      title: {text: null},
+      xAxis: {
+        lineWidth: 0,
+        tickWidth: 0,
       },
+      yAxis: {visible: false},
+      legend: {enabled: false},
+      tooltip: {enabled: false},
       plotOptions: {
         series: {
           animation: false,
         },
         column: {
-          tooltip: {
-            pointFormat: '<b>{point.y}</b>',
-          }
-        },
-        line: {
-          tooltip: {
-            pointFormat: '<b>{point.y}</b>',
-          }
-        },
-        bar: {
-          tooltip: {
-            pointFormat: '<b>{point.y}</b>',
-          }
+          dataLabels: {
+            enabled: true,
+          },
         },
       },
-      title: {
-        text: null,
-      },
-      yAxis: {
-        title: {
-          text: null,
-        },
-        floor: 0,
-      },
-      legend: {
-        enabled: false
-      }
     });
 
     $('.chart').highcharts({
