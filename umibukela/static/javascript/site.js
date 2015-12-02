@@ -14,6 +14,8 @@ Umibukela.Site = function() {
 
   self.drawMap = function() {
     // load map of a place
+    L.Icon.Default.imagePath = '/static/bower_components/leaflet/dist/images';
+
     self.map = new L.Map(self.$map[0], {
       scrollWheelZoom: false,
       zoomControl: false,
