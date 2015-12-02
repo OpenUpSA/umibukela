@@ -28,13 +28,15 @@ Umibukela.Site = function() {
 
     self.map.setView(self.coords, 13);
     L.marker(self.coords).addTo(self.map);
+
+    self.colours = ['#f6921d', '#ccc'];
   };
 
   self.drawCharts = function() {
     Highcharts.setOptions({
       credits: {enabled: false},
       chart: {animation: false},
-      colors: ['#f6921d', '#ccc'],
+      colors: self.colours,
       title: {text: null},
       xAxis: {
         lineWidth: 0,
@@ -54,6 +56,12 @@ Umibukela.Site = function() {
           groupPadding: 0.07,
         },
         column: {
+          dataLabels: {
+            enabled: true,
+            format: '{y}%',
+          },
+        },
+        bar: {
           dataLabels: {
             enabled: true,
             format: '{y}%',
@@ -108,7 +116,9 @@ Umibukela.Site = function() {
     };
 
     $('.chart').each(function(i) {
-      var d = data[$(this).data('indicator')];
+      var $e = $(this);
+      var d = data[$e.data('indicator')];
+      var chartType = $e.hasClass('chart-bar') ? 'bar' : 'column';
 
       var currTotal = _.reduce(d.values.current, function(s, v){ return s + v; }, 0);
       var currValues = _.map(d.values.current, function(v) { return Math.round(v / currTotal * 100); });
@@ -116,25 +126,34 @@ Umibukela.Site = function() {
       var histTotal = _.reduce(d.values.historical, function(s, v){ return s + v; }, 0);
       var histValues = _.map(d.values.historical, function(v) { return Math.round(v / histTotal * 100); });
 
-      $(this).highcharts({
-        chart: {type: 'column'},
-        xAxis: {
-          categories: d.labels,
-          labels: {step: 1},
-        },
-        series: [{
+      var series = [{
           data: currValues,
           stack: 'current',
           name: 'Current cycle',
         }, {
           data: histValues,
           stack: 'historical',
-          pointWidth: 10,
+          pointWidth: chartType == 'bar' ? 5 : 10,
           name: 'Previous cycles',
           dataLabels: {
             enabled: false,
           },
-        }],
+        }];
+
+      if (chartType == 'bar') {
+        // show the current value on top. bar charts are drawn bottom up
+        series = series.reverse();
+        series[0].color = self.colours[1];
+        series[1].color = self.colours[0];
+      }
+
+      $(this).highcharts({
+        chart: {type: chartType},
+        series: series,
+        xAxis: {
+          categories: d.labels,
+          labels: {step: 1},
+        },
       });
     });
   };
