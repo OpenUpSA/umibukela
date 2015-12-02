@@ -128,6 +128,7 @@ PIPELINE_CSS = {
     'css': {
         'source_filenames': (
             'bower_components/fontawesome/css/font-awesome.css',
+            'bower_components/leaflet/dist/leaflet.css',
             'stylesheets/app.scss',
         ),
         'output_filename': 'app.css',
@@ -140,6 +141,15 @@ PIPELINE_JS = {
             'javascript/app.js',
         ),
         'output_filename': 'app.js',
+    },
+    'site': {
+        'source_filenames': (
+            'bower_components/leaflet/dist/leaflet.js',
+            'bower_components/underscore/underscore-min.js',
+            'javascript/highcharts.js',
+            'javascript/site.js',
+        ),
+        'output_filename': 'site.js',
     },
 }
 PIPELINE_CSS_COMPRESSOR = None

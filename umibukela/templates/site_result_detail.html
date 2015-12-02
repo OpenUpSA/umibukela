@@ -1,6 +1,13 @@
 {% extends "layout.html" %}
+{% load pipeline %}
 
 {% block title %}Results for Cycle 4{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  {% javascript "site" %}
+{% endblock %}
+
 {% block page-content %}
 
 <div class="section cycle-results">
@@ -14,22 +21,17 @@
       <li class="active">Results</li>
     </ol>    
     <!-- /breadcrumbs -->
-    
+
+    {% include '_site_header.html' %}
+
     <div class="section-heading">
-      <h1>Results: Cycle 4 <span class="badge">1 - 30 November 2015</span></h1>
+      <h2>MAVC, Cycle 2</h2>
+      <h3>1 June - 31 July 2015</h3>
     </div>
 
-    <div class="row">
-      <div class="site-overview col-md-8">
-        
-        <div class="panel panel-default">
-          <!-- Default panel contents -->
-          <div class="panel-heading">
-            <h3 class="panel-title">Folweni Clinic</h3>
-          </div>
-          <div class="panel-body">
-            <p>Description of Folweni Clinic</p>
-          </div>
+    <section class="cycle-details">
+      <div class="row">
+        <div class="col-md-6">
           <table class="table">
             <tbody>
               <tr>
@@ -44,46 +46,121 @@
           </table>
         </div>
 
-      </div>
-      <div class="site-multimedia col-md-4">
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-9">
-
-        <div class="site-summary-stats">
+        <div class="col-md-3">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">Summary Stats</h3>
+              <h3 class="panel-title">Cycles</h3>
             </div>
-            <table class="table">
-              <tbody>
-                <tr>
-                  <td class="text-right min-width"><strong>Total participants:</strong></td>
-                  <td>304</td>
-                </tr>
-                <tr>
-                  <td class="text-right min-width"><strong>Total Female:</strong></td>
-                  <td>197</td>
-                </tr>
-                <tr>
-                  <td class="text-right min-width"><strong>Total Male:</strong></td>
-                  <td>107</td>
-                </tr>
-              </tbody>
-            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr>
+
+    <div class="stat-table">
+      <section class="row stat-row">
+        <div class="col-sm-4">
+          <div class="stat stat-number">
+            <div class="value">304</div>
+            <div class="name">Participants</div>
           </div>
         </div>
 
-      </div>
-      <div class="col-md-3">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Cycles</h3>
+        <div class="col-sm-4">
+          <div class="stat stat-number">
+            <div class="value">197</div>
+            <div class="name">Female</div>
           </div>
         </div>
-      </div>
+
+        <div class="col-sm-4">
+          <div class="stat stat-number">
+            <div class="value">107</div>
+            <div class="name">Male</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="row stat-row">
+        <div class="col-sm-4">
+          <h3>Did you get all the medicine that you needed?</h3>
+        </div>
+
+        <div class="col-sm-2">
+          <h5>Female</h5>
+          <div class="stat stat-number">
+            <div class="value">44.7%</div>
+            <div class="name">Yes</div>
+            <div class="context"><strong>Down from 61%</strong> in previous cycles</div>
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <div class="chart chart-column" data-indicator="chart1"></div>
+        </div>
+
+        <div class="col-sm-2">
+          <h5>Male</h5>
+          <div class="stat stat-number">
+            <div class="value">59.8%</div>
+            <div class="name">Yes</div>
+            <div class="context"><strong>Up from 56%</strong> in previous cycles</div>
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <div class="chart chart-column" data-indicator="chart2"></div>
+        </div>
+      </section>
+
+      <section class="row stat-row">
+        <div class="col-sm-4">
+          <h3>How good are the ambulance services?</h3>
+        </div>
+
+        <div class="col-sm-2">
+          <h5>Female</h5>
+          <div class="stat stat-number">
+            <div class="value">33%</div>
+            <div class="name">Positive</div>
+            <div class="context"><strong>Up from 16%</strong> in previous cycles</div>
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <div class="chart chart-column" data-indicator="chart3"></div>
+        </div>
+
+        <div class="col-sm-2">
+          <h5>Male</h5>
+          <div class="stat stat-number">
+            <div class="value">43%</div>
+            <div class="name">Positive</div>
+            <div class="context"><strong>Up from 14%</strong> in previous cycles</div>
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <div class="chart chart-column" data-indicator="chart4"></div>
+        </div>
+      </section>
+
+      <section class="row stat-row">
+        <div class="col-sm-4">
+          <h3>How long did it take to see a nurse or doctor?</h3>
+        </div>
+
+        <div class="col-sm-4">
+          <h5>Female</h5>
+          <div class="chart chart-bar" data-indicator="chart5"></div>
+        </div>
+
+        <div class="col-sm-4">
+          <h5>Male</h5>
+          <div class="chart chart-bar" data-indicator="chart6"></div>
+        </div>
+      </section>
     </div>
 
   </div>
