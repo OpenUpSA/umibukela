@@ -2,7 +2,7 @@ Umibukela.Site = function() {
   var self = this;
 
   self.init = function() {
-    self.$map = $('.site-header .map');
+    self.$map = $('.place-header .map');
     if (self.$map.length) {
       self.coords = [self.$map.data('lat'), self.$map.data('lng')];
       self.drawMap();
