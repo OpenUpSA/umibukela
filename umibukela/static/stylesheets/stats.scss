@@ -1,5 +1,6 @@
 .place-header {
   position: relative;
+  margin-bottom: 2em;
 
   .map {
     display: none;
@@ -7,8 +8,8 @@
 
   h1, h2, h3, h4 {
     margin-top: 0px;
-    margin-bottom: 0.3em;
-    line-height: 1;
+    margin-bottom: 0.2em;
+    line-height: 1.2;
   }
 
   h1 {
@@ -73,7 +74,6 @@
 .stat-row {
   padding-bottom: 2em;
   margin-bottom: 2em;
-  border-bottom: 1px solid #eee;
 
   h3 {
     font-size: 1.2em;
@@ -94,4 +94,8 @@
   .chart-bar {
     height: 180px;
   }
+}
+
+.stat-table .stat-row {
+  border-bottom: 1px solid #eee;
 }
