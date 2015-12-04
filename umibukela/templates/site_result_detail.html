@@ -26,38 +26,23 @@
     {% include '_site_header.html' %}
 
     <div class="section-heading">
-      <h2>MAVC, Cycle 2</h2>
-      <h3>1 June - 31 July 2015</h3>
-    </div>
-
-    <section class="cycle-details">
       <div class="row">
-        <div class="col-md-6">
-          <table class="table">
-            <tbody>
-              <tr>
-                <td class="text-right min-width"><strong>Sector</strong></td>
-                <td><a href="{% url 'sector' sector_name='health' %}">Health</a></td>
-              </tr>
-              <tr>
-                <td class="text-right min-width"><strong>Community Partners</strong></td>
-                <td><a href="{% url 'partner' partner_name='folweni' %}">Folweni CRC</a></td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="col-sm-8">
+          <h2>MAVC, Cycle 2</h2>
+          <h3>1 June - 31 July 2015</h3>
         </div>
 
-        <div class="col-md-3">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">Cycles</h3>
-            </div>
-          </div>
+        <div class="col-sm-4">
+          <dl>
+            <dt>Sector</dt>
+            <dd><a href="{% url 'sector' sector_name='health' %}">Health</a></dd>
+
+            <dt>Community partners</dt>
+            <dd><a href="{% url 'partner' partner_name='folweni-crc' %}">Folweni CRC</a></dd>
+          </dl>
         </div>
       </div>
-    </section>
-
-    <hr>
+    </div>
 
     <div class="stat-table">
       <section class="row stat-row">
