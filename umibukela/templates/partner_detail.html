@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block title %}Folweni CRC{% endblock %}
 {% block page-content %}
@@ -13,19 +14,51 @@
 </div>
 <!-- /breadcrumbs -->
 
-<div class="section site-details">
-  <div class="container">
-    
-    <div class="section-heading">
-      <h1>Folweni CRC</h1>
+<div class="section" id="partner-details">
+  
+  <!-- section-header -->
+  <div class="section-heading">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <h3><i class="fa fa-group"></i> Community Partner</h3>
+          <h1>Folweni CRC</h1>
+          <h2>Folweni Community Resource Centre</h2>
+          <a href="{% url 'site-result' site_name='folweni' result_id='4' %}" class="btn btn-primary btn-sm btn-recent-results"><i class="fa fa-bar-chart"></i> View most recent results</a>
+        </div>
+        <div class="col-md-4 text-right">
+          <a href="" class="social-media"><i class="fa fa-twitter"></i><br>Tweet</a>
+          <a href="" class="social-media"><i class="fa fa-facebook"></i><br>Share</a>
+        </div>
+      </div>
     </div>
+  </div>
+  <!-- /section-header -->
 
-    <div class="row">
-      <div class="col-md-8">
+  <!-- partner-feature-image -->
+  <div class="partner-description">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <p><strong>The Folweni Community Resource Centre works to improve the quality of live of the Folweni community and the surrounding areas.</strong></p>
+          <p>To promote its initiatives, Folweni CRC works closely with government departments, community groups, non-governmental organizations, churches, small entrepreneurs and the corporate sector.</p>
+        </div>
+        <div class="col-md-4 text-center">
+          <img src="{% static 'img/community-women.jpg' %}" class="img-responsive">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /partner-feature-image -->  
 
-        <div class="row">
+  <!-- partner-overview -->
+  <div class="partner-overview">
+    <div class="container">
+      <div class="row">
 
-          <div class="site-overview col-md-8">
+        <div class="col-md-8">
+          <div class="panel panel-default">
+            <div class="panel-heading">Overview</div>
             <table class="table table-bordered">
               <tr>
                 <td><strong>Address:</strong></td>
@@ -57,18 +90,17 @@
               </tr>                        
             </table>
           </div>
-
-          <div class="site-map col-md-4">
-
-          </div>
-
         </div>
 
+        <div class="site-map col-md-4">
+          [site-map]
+        </div>
 
       </div>
     </div>
-
   </div>
+  <!-- /partner-overview -->
+
 </div>
 
 {% endblock %}
