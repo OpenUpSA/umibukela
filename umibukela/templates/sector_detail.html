@@ -3,16 +3,18 @@
 {% block title %}Health{% endblock %}
 {% block page-content %}
 
+<!-- breadcrumbs -->
+<div class="container breadcrumb-container">
+  <ol class="breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li><a href="{% url 'sectors' %}">Sectors</a></li>
+    <li class="active">Health</li>
+  </ol>
+</div>
+<!-- /breadcrumbs -->
+
 <div class="section sector-details">
   <div class="container">
-
-    <!-- breadcrumbs -->
-    <ol class="breadcrumb">
-      <li><a href="/">Home</a></li>
-      <li><a href="{% url 'sectors' %}">Sectors</a></li>
-      <li class="active">Health</li>
-    </ol>    
-    <!-- /breadcrumbs -->
     
     <div class="section-heading">
       <h1>Health</h1>

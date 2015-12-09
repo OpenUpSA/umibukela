@@ -11,17 +11,19 @@
 
 {% block page-content %}
 
-<div class="section cycle-results">
-  <div class="container">
-
-    <!-- breadcrumbs -->
+<!-- breadcrumbs -->
+<div class="container breadcrumb-container">
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
       <li><a href="{% url 'sites' %}">Sites</a></li>
       <li><a href="{% url 'site' site_name='folweni' %}">Folweni Clinic</a></li>
       <li class="active">Results</li>
     </ol>    
-    <!-- /breadcrumbs -->
+</div>
+<!-- /breadcrumbs -->
+
+<div class="section cycle-results">
+  <div class="container">
 
     {% include '_site_header.html' %}
 

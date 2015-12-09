@@ -11,16 +11,18 @@
 
 {% block page-content %}
 
+<!-- breadcrumbs -->
+<div class="container breadcrumb-container">
+  <ol class="breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li><a href="{% url 'sites' %}">Sites</a></li>
+    <li class="active">Folweni Clinic</li>
+  </ol>
+</div>
+<!-- /breadcrumbs -->
+
 <div class="section site-details">
   <div class="container">
-
-    <!-- breadcrumbs -->
-    <ol class="breadcrumb">
-      <li><a href="/">Home</a></li>
-      <li><a href="{% url 'sites' %}">Sites</a></li>
-      <li class="active">Folweni Clinic</li>
-    </ol>    
-    <!-- /breadcrumbs -->
 
     {% include '_site_header.html' %}
     
