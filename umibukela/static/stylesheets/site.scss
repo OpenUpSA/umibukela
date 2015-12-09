@@ -45,6 +45,8 @@ a.btn-primary{
 			padding: 15px;
 			line-height: inherit;
 		}
+		a#nav-sites:hover{ color: $color-sites; }
+		a#nav-partners:hover{ color: $color-partners; }
 	}
 }
 
@@ -55,6 +57,19 @@ a.btn-primary{
 	h1, .h1{
 		font-size: 32px;
 	}
+}
+
+//== Panels
+.panel {
+
+	border-radius: 5px;
+  border: solid 3px rgba(0,0,0,0.2);
+
+  .panel-heading{
+  	font-family: $font-family-sans-serif-2;
+  	font-size: 1.2em;
+  }
+
 }
 
 //== Section
@@ -71,18 +86,58 @@ a.btn-primary{
 	}
 
 	.section-heading{
-		font-family: $font-family-sans-serif-2;
-		border-bottom: solid 1px $black;
-		margin-bottom: 2em;
-		padding-bottom: 1em;
-		h1,h2,h3,h4,h5,h6{
+
+		background-color: $gray-lighter;
+
+		padding: 2em 0;
+		border: 0;
+		margin: 0;
+    
+		h1,h2,h3{ 
 			margin: 0;
 		}
+
+		h1{
+			font-family: $font-family-sans-serif;
+			font-size: 2em;
+			font-weight: 500;
+			line-height: 120%;
+			font-weight: bold;
+		}
+		h2{
+			font-family: $font-family-sans-serif;
+			font-size: 1em;
+			font-weight: 300;
+			line-height: 120%;
+		}
+		h3{
+			display: inline-block;
+			background: $white;
+			padding: 5px;
+			font-family: $font-family-sans-serif-2;
+			font-size: 0.9em;
+			font-weight: bold;
+			text-transform: uppercase;
+			line-height: 100%;
+			letter-spacing: 2px;
+		}
+
+		.btn-latest-results{
+			margin-top: 1em;
+			font-size: 0.8em;
+		}
+
+	}
+
+	.section-subnav{
+		padding: 2em 0;
+		text-align: center;
 	}
 
 	table.sortable{
 		thead{
-			background-color: $brand-secondary-dark;
+			background-color: $black;
+			background-color: rgba(0,0,0,0.5);
 			text-transform: uppercase;
 			color: $white;
 			th{
@@ -129,52 +184,69 @@ a.btn-primary{
 
 }
 
-//== partner-details
-.section#partner-details{
+//== #sites
+.section#sites{
+
+	.section-heading h1 i{
+		color: $color-sites;
+	}
+
+	.sites-table{
+		background: $color-sites-dark;
+		@include background-texture;
+		padding: 2em 0;
+	}
+
+}
+
+//== #site-detail
+.section#site-detail{
 	
 	.section-heading{
-
-		background-color: $gray-lighter;
-
-		padding: 2em 0;
-		border: 0;
-		margin: 0;
-    
-		h1,h2,h3{ 
-			margin: 0;
-		}
-
-		h1{
-			font-family: $font-family-sans-serif;
-			font-weight: 500;
-			line-height: 120%;
-			font-weight: bold;
-			font-size: 3em;
-		}
-		h2{
-			font-family: $font-family-sans-serif;
-			font-size: 1.1em;
-			font-weight: 300;
-			line-height: 100%;
-		}
 		h3{
-			display: inline-block;
-			background: $white;
+			color: $color-sites-dark;
+		}
+	}
+
+	.site-map{
+		background: $color-sites-dark;
+		@include background-texture;
+	}
+
+	.site-stats{
+		padding: 2em 0;
+	}
+
+	.site-current-programmes{
+		padding: 2em 0;
+		background: $color-sites;
+		@include background-texture;
+	}
+
+}
+
+//== #partners
+.section#partners{
+
+	.section-heading h1 i{
+		color: $color-partners;
+	}
+
+	.partners-table{
+		background: $color-partners-dark;
+		@include background-texture;
+		padding: 2em 0;
+	}
+
+}
+
+//== #partner-detail
+.section#partner-detail{
+
+	.section-heading{
+		h3{
 			color: $color-partners-dark;
-			padding: 5px;
-			font-family: $font-family-sans-serif-2;
-			font-size: 0.8em;
-			font-weight: bold;
-			text-transform: uppercase;
-			line-height: 100%;
-			letter-spacing: 2px;
 		}
-
-		.btn-recent-results{
-			margin-top: 1em;
-			font-size: 0.8em;
-		}
-
 	}
 
 	.partner-description{
@@ -206,29 +278,30 @@ a.btn-primary{
 
 /* add a number column at the beginning of sortable tables, that can't itself be sorted and doesn't change on sorting */
 table.sortable tbody {
-    counter-reset: sortabletablescope;
+  counter-reset: sortabletablescope;
+	background-color: $white; 
 }
 table.sortable thead tr::before {
-    content: "#";
-    display: table-cell;
+	content: "#";
+	display: table-cell;
 
 	padding: $table-cell-padding;
-    line-height: $line-height-base;
+	line-height: $line-height-base;
 
 	vertical-align: bottom;
 
-    white-space: nowrap;
-    width: 1px;
+	white-space: nowrap;
+	width: 1px;
 }
 table.sortable tbody tr::before {
-    content: counter(sortabletablescope);
-    counter-increment: sortabletablescope;
-    display: table-cell;
+	content: counter(sortabletablescope);
+	counter-increment: sortabletablescope;
+	display: table-cell;
 
-    padding: $table-cell-padding;
-    line-height: $line-height-base;
-    vertical-align: top;
-    border-top: 1px solid $table-border-color;    
+	padding: $table-cell-padding;
+	line-height: $line-height-base;
+	vertical-align: top;
+	border-top: 1px solid $table-border-color;    
 
 	white-space: nowrap;
 	width: 1px;
@@ -242,7 +315,7 @@ input{
 
 /* add up and down arrows to columns to show that they are sortable */
 table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
-    content: " \25B4\25BE" 
+  content: " \25B4\25BE";
 }
 
 //== Blockquotes

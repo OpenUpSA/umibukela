@@ -12,6 +12,7 @@ $black: #000;
 $orange: #f6921d;
 $green: #8cc63f;
 
+$blue: rgb(24,148,184);
 $teal: rgb(100,200,150);
 
 $beige: rgb(231,217,189);
@@ -39,6 +40,10 @@ $brand-secondary-light: lighten($brand-secondary,10%);
 $brand-secondary-dark: darken($brand-secondary,10%);
 
 //- Section Colors
+
+$color-sites: $blue;
+$color-sites-dark: darken($color-sites, 20%);
+$color-sites-light: lighten($color-sites, 20%);
 
 $color-partners: $teal;
 $color-partners-dark: darken($color-partners,20%);

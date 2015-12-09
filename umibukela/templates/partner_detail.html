@@ -14,7 +14,7 @@
 </div>
 <!-- /breadcrumbs -->
 
-<div class="section" id="partner-details">
+<div class="section" id="partner-detail">
   
   <!-- section-header -->
   <div class="section-heading">
@@ -24,7 +24,7 @@
           <h3><i class="fa fa-group"></i> Community Partner</h3>
           <h1>Folweni CRC</h1>
           <h2>Folweni Community Resource Centre</h2>
-          <a href="{% url 'site-result' site_name='folweni' result_id='4' %}" class="btn btn-primary btn-sm btn-recent-results"><i class="fa fa-bar-chart"></i> View most recent results</a>
+          <a href="{% url 'site-result' site_name='folweni' result_id='4' %}" class="btn btn-primary btn-sm btn-latest-results"><i class="fa fa-bar-chart"></i> View latest results</a>
         </div>
         <div class="col-md-4 text-right">
           <a href="" class="social-media"><i class="fa fa-twitter"></i><br>Tweet</a>
@@ -61,15 +61,15 @@
             <div class="panel-heading">Overview</div>
             <table class="table table-bordered">
               <tr>
-                <td><strong>Address:</strong></td>
+                <td class="text-right"><strong>Address</strong></td>
                 <td>Folweni Township, Manquina Road, Folweni, South Africa</td>
               </tr>
               <tr>
-                <td><strong>GPS coordinates:</strong></td>
+                <td class="text-right"><strong>GPS coordinates</strong></td>
                 <td></td>
               </tr>
               <tr>
-                <td><strong>Sectors:</strong></td>
+                <td class="text-right"><strong>Sectors</strong></td>
                 <td>
                   <ul class="list-unstyled">
                     <li>Health</li>
@@ -77,11 +77,11 @@
                 </td>
               </tr>
               <tr>
-                <td><strong>Contacts:</strong></td>
+                <td class="text-right"><strong>Contacts</strong></td>
                 <td></td>
               </tr>
               <tr>
-                <td><strong>Sites:</strong></td>
+                <td class="text-right"><strong>Sites</strong></td>
                 <td>
                   <ul class="list-unstyled">
                     <li><a href="{% url 'site' site_name='folweni' %}">Folweni Clinic</a></li>

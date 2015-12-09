@@ -13,48 +13,62 @@
 <!-- /breadcrumbs -->
 
 <div class="section" id="sites">
-  <div class="container">
 
-    <div class="section-heading">
-      <h1>Sites</h1>
-    </div>
-
-    <div class="row">
-      <div class="col-md-9">
-
-        <table class="table table-striped sortable">
-          <thead>
-            <tr>
-              <th>Site name</th>
-              <th>Latest Cycle Results</th>
-              <th>Sector</th>
-              <th>Province</th>
-            </tr>
-          </thead>
-          <tr>
-            <td><a href="{% url 'site' site_name='folweni' %}">Folweni Clinic</a></td>
-            <td><a href="{% url 'site-result' site_name='folweni' result_id='4' %}">1 Jun - 31 Jul Cycle Results</a></td>
-            <td>Health</td>
-            <td>KwaZulu-Natal</td>
-          </tr>
-          <tr>
-            <td>Paarl SASSA service office</td>
-            <td></td>
-            <td>Social Development</td>
-            <td>Western Cape</td>
-          </tr>
-          <tr>
-            <td>Nxuba</td>
-            <td></td>
-            <td>Local Gov</td>
-            <td>Eastern Cape</td>
-          </tr>
-        </table>
-
+  <!-- section-header -->
+  <div class="section-heading">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <h1><i class="fa fa-map-marker"></i> Sites</h1>
+        </div>
+        <div class="col-md-4 text-right">
+          <a href="" class="social-media"><i class="fa fa-twitter"></i><br>Tweet</a>
+          <a href="" class="social-media"><i class="fa fa-facebook"></i><br>Share</a>
+        </div>
       </div>
     </div>
-
   </div>
+  <!-- /section-header -->
+
+  <!-- sites-table -->
+  <div class="sites-table">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-9">
+          <table class="table table-striped sortable">
+            <thead>
+              <tr>
+                <th>Site name</th>
+                <th>Latest Cycle Results</th>
+                <th>Sector</th>
+                <th>Province</th>
+              </tr>
+            </thead>
+            <tr>
+              <td><a href="{% url 'site' site_name='folweni' %}">Folweni Clinic</a></td>
+              <td><a href="{% url 'site-result' site_name='folweni' result_id='4' %}">1 Jun - 31 Jul Cycle Results</a></td>
+              <td>Health</td>
+              <td>KwaZulu-Natal</td>
+            </tr>
+            <tr>
+              <td>Paarl SASSA service office</td>
+              <td></td>
+              <td>Social Development</td>
+              <td>Western Cape</td>
+            </tr>
+            <tr>
+              <td>Nxuba</td>
+              <td></td>
+              <td>Local Gov</td>
+              <td>Eastern Cape</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /sites-table -->
+
 </div>
 
 {% endblock %}
