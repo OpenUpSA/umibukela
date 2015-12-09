@@ -9,11 +9,11 @@
   <nav class="navbar navbar-default">
     <div class="container">
       <ul class="nav navbar-nav">
-	<li class="{% if active_tab == 'home' %}active{% endif %}"><a href="/">Home</a></li>
-	<li class="{% if active_tab == 'about' %}active{% endif %}"><a href="{% url 'about' %}">Learn about CBM</a></li>
-	<li class="{% if active_tab == 'sites' %}active{% endif %}"><a href="{% url 'sites' %}">Sites</a></li>
-	<li class="{% if active_tab == 'partners' %}active{% endif %}"><a href="{% url 'partners' %}">Community Partners</a></li>
-	<li class="{% if active_tab == 'contact' %}active{% endif %}"><a href="{% url 'contact' %}">Contact Us</a></li>
+	<li class="{% if active_tab == 'home' %}active{% endif %}"><a href="/" id="nav-home">Home</a></li>
+	<li class="{% if active_tab == 'about' %}active{% endif %}"><a href="{% url 'about' %}" id="nav-about">Learn about CBM</a></li>
+	<li class="{% if active_tab == 'sites' %}active{% endif %}"><a href="{% url 'sites' %}" id="nav-sites">Sites</a></li>
+	<li class="{% if active_tab == 'partners' %}active{% endif %}"><a href="{% url 'partners' %}" id="nav-partners">Community Partners</a></li>
+	<li class="{% if active_tab == 'contact' %}active{% endif %}"><a href="{% url 'contact' %}" id="nav-contact">Contact Us</a></li>
       </ul>
     </div>
   </nav>
