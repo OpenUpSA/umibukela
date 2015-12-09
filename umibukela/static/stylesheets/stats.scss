@@ -1,12 +1,24 @@
+.map {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .map {
+    display: block;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 200px;
+
+    border: 1px solid $orange;
+  }
+}
+
 .place-header {
   position: relative;
   
   margin-top: 2em;
   margin-bottom: 2em;
-
-  .map {
-    display: none;
-  }
 
   h1, h2, h3, h4 {
     margin-top: 0px;
@@ -27,14 +39,6 @@
   }
 
   @media (min-width: 768px) {
-    .map {
-      display: block;
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      height: 300px;
-    }
-
     .place-card {
       position: absolute;
       z-index: 20;
