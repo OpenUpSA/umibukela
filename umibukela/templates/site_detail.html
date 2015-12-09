@@ -27,14 +27,17 @@
   <div class="section-heading">
     <div class="container">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-sm-4 col-xs-9">
           <h3><i class="fa fa-map-marker"></i> Site</h3>
           <h1>Folweni Clinic</h1>
           <h2>Manquina Road, Folweni, KwaZulu-Natal</h2>
           <i class="fa-fw fa fa-phone"></i> <a href="tel:0319000501">031 900 0501</a><br>
           <a href="{% url 'site-result' site_name='folweni' result_id='4' %}" class="btn btn-primary btn-sm btn-latest-results"><i class="fa fa-bar-chart"></i> View latest results</a>
         </div>
-        <div class="col-md-4 text-right">
+        <div class="col-sm-7">
+          <div class="map" data-lat="-29.9957054" data-lng="30.8232985"></div>
+        </div>
+        <div class="col-sm-1 col-xs-3 text-right">
           <a href="" class="social-media"><i class="fa fa-twitter"></i><br>Tweet</a>
           <a href="" class="social-media"><i class="fa fa-facebook"></i><br>Share</a>
         </div>
@@ -43,16 +46,8 @@
   </div>
   <!-- /section-header -->
 
-  <!-- site-map -->
-  <div class="site-map">
-    <div class="container">
-      {% include '_site_header.html' %}
-    </div>
-  </div>
-  <!-- /site-map -->
-
   <!-- site-stats -->
-  <div class="site-stats">
+  <div class="page-section">
     <div class="container"> 
       <div class="row">
         <div class="col-sm-8">

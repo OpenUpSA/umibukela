@@ -63,7 +63,10 @@ a.btn-primary{
 .panel {
 
 	border-radius: 5px;
-  border: solid 3px rgba(0,0,0,0.2);
+	border: solid 3px rgba(0,0,0,0.2);
+
+	-webkit-background-clip: padding-box; /* for Safari */
+  background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */	
 
   .panel-heading{
   	font-family: $font-family-sans-serif-2;
