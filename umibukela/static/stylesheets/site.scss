@@ -56,7 +56,7 @@ a.btn-primary{
 
 .section{
 
-	padding: 2em 0;
+	padding: 0 0;
 
 	a{
 		border-bottom: solid 2px $link-color;
@@ -69,7 +69,9 @@ a.btn-primary{
 		font-family: $font-family-sans-serif-2;
 		border-bottom: solid 1px $black;
 		margin-bottom: 2em;
-
+		h1{
+			margin-top: 0;
+		}
 	}
 
 	table.sortable{
@@ -81,7 +83,16 @@ a.btn-primary{
 				border: 0;
 			}
 		}
+	}
 }
+
+//== Breadcrumbs
+.breadcrumb-container{
+	padding-top: 1em; 
+	padding-bottom: 1em;
+	.breadcrumb{
+		margin-bottom: 0;
+	}
 }
 
 //== site
