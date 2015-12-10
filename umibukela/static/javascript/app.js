@@ -39,13 +39,28 @@ $(function() {
 });
 
 // function for scrolling around website (links to "#section" will scroll to that section)
-    $('a[href^="#"]').on('click',function (e) {
-        e.preventDefault();
+$('a[href^="#"]').on('click',function (e) {
+  e.preventDefault();
 
-        var target = this.hash;
-        var $target = $(target);
+  var target = this.hash;
+  var $target = $(target);
 
-        $('html, body').stop().animate({
-            'scrollTop': $target.offset().top-15
-        }, 900, 'swing');
-    });
+  $('html, body').stop().animate({
+      'scrollTop': $target.offset().top-15
+  }, 900, 'swing');
+});
+
+// scrollspy
+$('body').scrollspy({
+  target: '.steps-sidebar',
+  offset: 100
+});
+
+/*
+// affix
+$('.nav#sidebar').affix({
+      offset: {
+        top: $('.nav#sidebar').height()
+      }
+}); 
+*/
