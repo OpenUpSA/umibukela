@@ -140,22 +140,21 @@ img.img-rounded-border {
 }
 
 .panel-resource{
-	img{
-		height: 100px;
-		width: auto;
-		display: inline-block;
-	}
-	.table td{
+	border-width: 1px;
+	.panel-body{
 		padding: 5px;
-		font-size: 0.8em;
 	}
-	a.list-group-item{
-		background-color: $brand-primary;
-		color: $white;
-		border: 0;
-		&:hover{
-			background-color: $brand-secondary; 
-		}
+	img{
+		height: 80px;
+		width: auto;
+	}
+	.media-list{
+		margin-bottom: 0;
+	}
+	.btn{
+		line-height: 100%;
+		padding: 10px;
+		font-size: 0.8em;
 	}
 }
 
@@ -320,8 +319,15 @@ img.img-rounded-border {
 //== #cycle-results
 .cycle-results{
 	.result-resources{
+		
+	}
+	.stat-overview{
 		background-color: $color-sites-dark;
 		@include background-texture;
+		color: $white;
+	}
+	.panel-resource{
+		margin-bottom: 5px;
 	}
 }
 
