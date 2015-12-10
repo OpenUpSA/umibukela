@@ -35,8 +35,8 @@
   </div>
   <!-- /section-header -->
 
-  <!-- partner-feature-image -->
-  <div class="partner-description">
+  <!-- partner-description -->
+  <div class="partner-description page-section">
     <div class="container">
       <div class="row">
         <div class="col-md-8">
@@ -44,62 +44,105 @@
           <p>To promote its initiatives, Folweni CRC works closely with government departments, community groups, non-governmental organizations, churches, small entrepreneurs and the corporate sector.</p>
         </div>
         <div class="col-md-4 text-center">
-          <img src="{% static 'img/community-women.jpg' %}" class="img-responsive">
+          <img src="{% static 'img/community-women.jpg' %}" class="img-responsive img-rounded-border">
         </div>
       </div>
     </div>
   </div>
-  <!-- /partner-feature-image -->  
+  <!-- /partner-description --> 
 
-  <!-- partner-overview -->
-  <div class="partner-overview">
+<!-- partner-quickinfo -->
+  <div class="partner-quickinfo page-section">
     <div class="container">
       <div class="row">
 
-        <div class="col-md-8">
-          <div class="panel panel-default">
-            <div class="panel-heading">Overview</div>
-            <table class="table table-bordered">
-              <tr>
-                <td class="text-right"><strong>Address</strong></td>
-                <td>Folweni Township, Manquina Road, Folweni, South Africa</td>
-              </tr>
-              <tr>
-                <td class="text-right"><strong>GPS coordinates</strong></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td class="text-right"><strong>Sectors</strong></td>
-                <td>
-                  <ul class="list-unstyled">
-                    <li>Health</li>
-                  </ul>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-right"><strong>Contacts</strong></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td class="text-right"><strong>Sites</strong></td>
-                <td>
-                  <ul class="list-unstyled">
-                    <li><a href="{% url 'site' site_name='folweni' %}">Folweni Clinic</a></li>
-                  </ul>
-                </td>
-              </tr>                        
-            </table>
+        <div class="col-sm-2">
+          <div class="panel panel-quickinfo">
+            <div class="panel-heading">
+              Sectors
+            </div>
+            <div class="panel-body">
+              <div class="list-group">
+                <a href="" class="list-group-item"><i class="fa fa-medkit"></i> Health</a>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="site-map col-md-4">
-          [site-map]
+        <div class="col-sm-3">
+          <div class="panel panel-quickinfo">
+            <div class="panel-heading">
+              Sites
+            </div>
+            <div class="panel-body">
+              <div class="list-group">
+                <a href="{% url 'site' site_name='folweni' %}" class="list-group-item"><i class="fa fa-map-marker"></i> Folweni Clinic</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <div class="panel panel-quickinfo">
+            <div class="panel-heading">
+              Contact Person
+            </div>
+            <div class="panel-body">
+              <strong>Rose Dlamini</strong><br>
+              <small>Director</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-3">
+          <div class="panel panel-quickinfo">
+            <div class="panel-heading">
+              Contact Details
+            </div>
+            <div class="panel-body">
+              <div class="list-group">
+                <a href="tel:0319004354" class="list-group-item"><i class="fa fa-phone"></i> 031 900 4354</a>
+                <a href="mailto:folwenicrc@telkomsa.net" class="list-group-item"><i class="fa fa-envelope"></i> folwenicrc@telkomsa.net</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <div class="panel panel-quickinfo">
+            <div class="panel-heading">
+              GPS Coordinates
+            </div>
+            <div class="panel-body text-center">
+              -30.031643, 30.810375
+            </div>
+          </div>
         </div>
 
       </div>
     </div>
   </div>
-  <!-- /partner-overview -->
+  <!-- /partner-quickinfo -->
+
+  <!-- partner-context -->
+  <div class="partner-context page-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <img src="{% static 'img/community-children.jpg' %}" class="img-responsive img-rounded-border">
+        </div>
+        <div class="col-md-4">
+          <blockquote>
+            FolweniCRC's activities focus especially on the community's children, youth and women. 
+          </blockquote>
+        </div>
+        <div class="col-md-4">
+          The vision of FolweniCRC is to promote active participation by the Folweni community in matters affecting their lives, doing so through the use of participatory mechanisms and processes.
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /partner-context -->
 
 </div>
 

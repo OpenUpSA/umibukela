@@ -30,6 +30,16 @@ a.btn-primary{
 
 }
 
+//== Lists
+
+ul, ol {
+	padding-left: 20px;
+}
+
+//== Headings
+
+h1,h2,h3,h4,h5,h6{ margin-top: 0; }
+
 //== Navbar
 
 .site-header .navbar{
@@ -59,6 +69,12 @@ a.btn-primary{
 	}
 }
 
+//== Images
+img.img-rounded-border {
+	border-radius: 5px;
+	border: solid 3px rgba(0,0,0,0.2);
+}
+
 //== Panels
 .panel {
 
@@ -73,6 +89,59 @@ a.btn-primary{
   	font-size: 1.2em;
   }
 
+}
+
+.panel-quickinfo {
+
+	border: 0;
+	box-shadow: none;
+
+	background: transparent;
+
+	.panel-heading {
+
+		background: rgba(255,255,255,0.2);
+		padding: 10px;
+		text-transform: uppercase;
+		text-align: center;			
+		font-size: 0.8em;
+		font-weight: bold;;
+		line-height: 120%;
+
+	}
+
+	.panel-body { 
+
+		background: $white;
+		padding: 10px;
+		line-height: 120%;
+
+	}
+
+	.list-group {
+		margin-bottom: 0;
+		a.list-group-item{
+			padding: 5px 10px;
+			font-size: 0.9em;
+			color: $white;
+			border-bottom-width: 1px;
+			background: $brand-primary;
+			border-color: $brand-primary-dark;
+			&:hover{
+				background: $brand-secondary;
+				border-color: $brand-secondary-dark;
+			}
+			i{
+				margin-right: 5px;
+			}
+		}
+	}
+
+}
+
+//== Buttons
+.btn-primary:hover{
+	background-color: $brand-secondary;
 }
 
 //== Section
@@ -221,12 +290,7 @@ a.btn-primary{
 		@include background-texture;
 	}
 
-	.site-stats{
-		padding: 2em 0;
-	}
-
 	.site-current-programmes{
-		padding: 2em 0;
 		background: $color-sites;
 		@include background-texture;
 	}
@@ -258,20 +322,20 @@ a.btn-primary{
 	}
 
 	.partner-description{
-		padding: 2em 0;
 		background-color: $color-partners-dark;
 		@include background-texture;
 		color: $white;
 		font-size: 1.2em;
-		img{
-			border-radius: 5px;
-			border: solid 3px rgba(0,0,0,0.2);
-		}
 	}
 
-	.partner-overview{
-		padding: 2em 0;
+	.partner-quickinfo{
+		background-color: $color-partners-dark;
+		@include background-texture;
 	}
+
+	.partner-quickinfo{
+		
+	}	
 
 }
 
@@ -342,6 +406,7 @@ blockquote:before {
 	left: 0;
 	top: 35px;
 	color: #ccc;
+	color: rgba(0,0,0,0.2);
 	content: open-quote;
 	font-size: 4em;
 	line-height: 0.1em;
@@ -411,7 +476,7 @@ footer.footer{
 		font-family: $font-family-sans-serif-2;
 		padding: 5px;
 		border-radius: 3px;
-		h1, h2 { margin: 0; }
+		h1, h2 { margin: 0; color: $white; }
 		h1 { 
 			font-size: 30px; 
 			font-weight: bold; 
@@ -475,7 +540,7 @@ footer.footer{
 		font-family: $font-family-sans-serif-2;
 		padding: 5px;
 		border-radius: 3px;
-		h1, h2 { margin: 0; }
+		h1, h2 { margin: 0; color: $white; }
 		h1 { 
 			font-size: 30px; 
 			font-weight: bold; 
