@@ -183,6 +183,7 @@ img.img-rounded-border {
 		padding: 2em 0;
 		border: 0;
 		margin: 0;
+		line-height: 150%;
     
 		h1,h2,h3{ 
 			margin: 0;
@@ -199,7 +200,6 @@ img.img-rounded-border {
 			font-family: $font-family-sans-serif;
 			font-size: 1em;
 			font-weight: 300;
-			line-height: 120%;
 		}
 		h3{
 			display: inline-block;
