@@ -139,22 +139,13 @@ img.img-rounded-border {
 
 }
 
-.panel-resource{
-	border-width: 1px;
-	.panel-body{
-		padding: 5px;
-	}
+.media-list.resource-list {
 	img{
-		height: 80px;
-		width: auto;
-	}
-	.media-list{
-		margin-bottom: 0;
-	}
-	.btn{
-		line-height: 100%;
-		padding: 10px;
-		font-size: 0.8em;
+		width: 64px;
+		height: auto;
+		background: white;
+		border: 2px solid $gray-light;
+		border-radius: 5px;
 	}
 }
 
@@ -325,9 +316,6 @@ img.img-rounded-border {
 		background-color: $color-sites-dark;
 		@include background-texture;
 		color: $white;
-	}
-	.panel-resource{
-		margin-bottom: 5px;
 	}
 }
 
