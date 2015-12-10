@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load pipeline %}
+{% load static %}
 
 {% block title %}Results for Cycle 4{% endblock %}
 {% block description %}Results for MAVC Cycle 4 for Folweni Clinic{% endblock %}
@@ -27,32 +28,73 @@
   <div class="section-heading">
     <div class="container">
       <div class="row">
-        <div class="col-sm-4 col-xs-9">
-          <h3><i class="fa fa-map-marker"></i> Site</h3>
-          <h1>Folweni Clinic</h1>
-          <h2>Manquina Road, Folweni, KwaZulu-Natal</h2>
-          <i class="fa-fw fa fa-phone"></i> <a href="tel:0319000501">031 900 0501</a><br>
+        <div class="col-sm-11 col-xs-9">
+          <h3><i class="fa fa-bar-chart-o"></i> Results</h3>
+          <h1>Folweni Clinic <br>MAVC Cycle 2</h1>
+          <h2>1 June - 31 July 2015</h2>
           <i class="fa-fw fa fa-group"></i> <a href="{% url 'partner' partner_name='folweni-crc' %}">Folweni CRC</a><br>
         </div>
 
-        <div class="col-sm-1 col-sm-push-7 col-xs-3 text-right">
+        <div class="col-sm-1 col-xs-3 text-right">
           <a href="" class="social-media"><i class="fa fa-twitter"></i><br>Tweet</a>
           <a href="" class="social-media"><i class="fa fa-facebook"></i><br>Share</a>
         </div>
 
-        <div class="col-sm-7 col-sm-pull-1 col-xs-12">
-          <h3><i class="fa fa-bar-chart"></i> Results</h3>
-          <h1>MAVC, Cycle 2</h1>
-          <h2>1 June - 31 July 2015</h2>
-        </div>
       </div>
     </div>
   </div>
   <!-- /section-header -->
 
-  <div class="container"> 
-    <div class="stat-table page-section">
-      <section class="row stat-row">
+  <!-- result-resources -->
+  <div class="result-resources page-section">
+    <div class="container">
+      <h4>Resources for this cycle</h4>
+      <div class="row">
+
+        <div class="col-md-4 col-sx-6">
+          <div class="panel panel-default panel-resource">
+            <div class="panel-body">
+              <ul class="media-list">
+                <li class="media">
+                  <div class="media-left">
+                    <img class="media-object" src="{% static 'img/cbm-cycle_wide.png' %}" alt="">
+                  </div>
+                  <div class="media-body">
+                    <h4 class="media-heading">Cycle Poster</h4>
+                    <a href="" class="btn btn-primary"><i class="fa fa-download"></i> Download <small>(46.6kb)</small></a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 col-sx-6">
+          <div class="panel panel-default panel-resource">
+            <div class="panel-body">
+              <ul class="media-list">
+                <li class="media">
+                  <div class="media-left">
+                    <img class="media-object" src="{% static 'img/community-women.jpg' %}" alt="">
+                  </div>
+                  <div class="media-body">
+                    <h4 class="media-heading">Poster</h4>
+                    <a href="" class="btn btn-primary"><i class="fa fa-download"></i> Download <small>(1.2mb)</small></a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- /results-serouces -->   
+
+  <div class="stat-table stat-overview page-section">
+    <div class="container"> 
+      <section class="row">
         <div class="col-sm-4">
           <div class="stat stat-number">
             <div class="value">304</div>
@@ -74,7 +116,11 @@
           </div>
         </div>
       </section>
+    </div>
+  </div>
 
+  <div class="container"> 
+    <div class="stat-table page-section">
       <section class="row stat-row">
         <div class="col-sm-4">
           <h3>Did you get all the medicine that you needed?</h3>
@@ -157,6 +203,7 @@
     </div>
 
   </div>
+
 </div>
 
 {% endblock %}

@@ -139,6 +139,25 @@ img.img-rounded-border {
 
 }
 
+.panel-resource{
+	border-width: 1px;
+	.panel-body{
+		padding: 5px;
+	}
+	img{
+		height: 80px;
+		width: auto;
+	}
+	.media-list{
+		margin-bottom: 0;
+	}
+	.btn{
+		line-height: 100%;
+		padding: 10px;
+		font-size: 0.8em;
+	}
+}
+
 //== Buttons
 .btn-primary:hover{
 	background-color: $brand-secondary;
@@ -295,6 +314,21 @@ img.img-rounded-border {
 		@include background-texture;
 	}
 
+}
+
+//== #cycle-results
+.cycle-results{
+	.result-resources{
+		
+	}
+	.stat-overview{
+		background-color: $color-sites-dark;
+		@include background-texture;
+		color: $white;
+	}
+	.panel-resource{
+		margin-bottom: 5px;
+	}
 }
 
 //== #partners
@@ -540,7 +574,7 @@ footer.footer{
 		font-family: $font-family-sans-serif-2;
 		padding: 5px;
 		border-radius: 3px;
-		h1, h2 { margin: 0; color: $white; }
+		h1, h2 { margin: 0; color: $white ;fa}
 		h1 { 
 			font-size: 30px; 
 			font-weight: bold; 
