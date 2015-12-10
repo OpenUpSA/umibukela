@@ -67,37 +67,38 @@
   <!-- /partner-description --> 
 
 <!-- partner-quickinfo -->
-  <div class="partner-quickinfo page-section">
+  <div class="page-section">
     <div class="container">
-      <div class="row">
 
-        <div class="col-sm-2">
-          <div class="panel panel-quickinfo">
-            <div class="panel-heading">
-              Sectors
-            </div>
-            <div class="panel-body">
-              <div class="list-group">
-                <a href="" class="list-group-item"><i class="fa fa-medkit"></i> Health</a>
-              </div>
-            </div>
-          </div>
-        </div>
+      <table class="table table-striped sortable">
+        <thead>
+          <tr>
+            <th>Site name</th>
+            <th>Latest Cycle Results</th>
+            <th>Sector</th>
+            <th>Province</th>
+          </tr>
+        </thead>
+        <tr>
+          <td><a href="{% url 'site' site_name='folweni' %}">Folweni Clinic</a></td>
+          <td><a href="{% url 'site-result' site_name='folweni' result_id='4' %}">1 Jun - 31 Jul Cycle Results</a></td>
+          <td>Health</td>
+          <td>KwaZulu-Natal</td>
+        </tr>
+        <tr>
+          <td>Paarl SASSA service office</td>
+          <td></td>
+          <td>Social Development</td>
+          <td>Western Cape</td>
+        </tr>
+        <tr>
+          <td>Nxuba</td>
+          <td></td>
+          <td>Local Gov</td>
+          <td>Eastern Cape</td>
+        </tr>
+      </table>
 
-        <div class="col-sm-3">
-          <div class="panel panel-quickinfo">
-            <div class="panel-heading">
-              Sites
-            </div>
-            <div class="panel-body">
-              <div class="list-group">
-                <a href="{% url 'site' site_name='folweni' %}" class="list-group-item"><i class="fa fa-map-marker"></i> Folweni Clinic</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
     </div>
   </div>
   <!-- /partner-quickinfo -->
