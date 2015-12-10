@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load pipeline %}
+{% load static %}
 
 {% block title %}Results for Cycle 4{% endblock %}
 {% block description %}Results for MAVC Cycle 4 for Folweni Clinic{% endblock %}
@@ -157,6 +158,60 @@
     </div>
 
   </div>
+
+  <!-- result-resources -->
+  <div class="result-resources page-section">
+    <div class="container">
+      <div class="row">
+        <h4 class="text-white">Additional resources for this cycle</h4>
+      </div>
+      <div class="row">
+
+        <div class="col-md-3 col-sx-6">
+          <div class="panel panel-default panel-resource">
+            <div class="panel-body text-center">
+              <img src="{% static 'img/cbm-cycle_wide.png' %}" class="img-responsive img-rounded-border"><br>
+              <strong>Cycle Poster</strong>
+            </div>
+            <table class="table">
+              <tr>
+                <td class="text-right"><strong>Filetype</strong></td><td>PNG</td>
+              </tr>
+              <tr>
+                <td class="text-right"><strong>Filesize</strong></td><td>46.6kb</td>
+              </tr>
+            </table>
+            <div class="list-group text-center">
+                <a href="" class="list-group-item"><i class="fa fa-download"></i> Download</a>
+              </div>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-sx-6">
+          <div class="panel panel-default panel-resource">
+            <div class="panel-body text-center">
+              <img src="{% static 'img/community-women.jpg' %}" class="img-responsive img-rounded-border"><br>
+              <strong>Poster</strong>
+            </div>
+            <table class="table">
+              <tr>
+                <td class="text-right"><strong>Filetype</strong></td><td>PDF</td>
+              </tr>
+              <tr>
+                <td class="text-right"><strong>Filesize</strong></td><td>1.2mb</td>
+              </tr>
+            </table>
+            <div class="list-group text-center">
+                <a href="" class="list-group-item"><i class="fa fa-download"></i> Download</a>
+              </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- /results-serouces -->
+
 </div>
 
 {% endblock %}
