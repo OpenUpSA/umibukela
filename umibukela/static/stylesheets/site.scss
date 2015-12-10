@@ -280,6 +280,24 @@ img.img-rounded-border {
 
 }
 
+//== #about
+.section#about{
+	.step-nav{
+		font-size: 0.8em;
+		margin-bottom: 2em;
+		line-height: 100%;
+		a{
+			border-bottom: 0;
+			&:hover{
+				background-color: transparent;
+			}
+		}
+		li.active a:hover {
+			background-color: $brand-primary;
+		}
+	}
+}
+
 //== #sites
 .section#sites{
 
