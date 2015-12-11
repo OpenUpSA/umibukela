@@ -30,9 +30,46 @@
       <div class="row">
         <div class="col-sm-11 col-xs-9">
           <h3><i class="fa fa-bar-chart-o"></i> Results</h3>
-          <h1>Folweni Clinic <br>MAVC Cycle 2</h1>
-          <h2>1 June - 31 July 2015</h2>
-          <i class="fa-fw fa fa-group"></i> <a href="{% url 'partner' partner_name='folweni-crc' %}">Folweni CRC</a><br>
+
+          <div class="row">
+            <div class="col-sm-5">
+              <h1>Folweni Clinic <br>MAVC Cycle 2</h1>
+              <h2>1 June - 31 July 2015</h2>
+              <i class="fa-fw fa fa-group"></i> <a href="{% url 'partner' partner_name='folweni-crc' %}">Folweni CRC</a><br>
+            </div>
+
+            <div class="col-sm-4">
+              <ul class="media-list resource-list">
+
+                <li class="media">
+                  <div class="media-left">
+                    <img class="media-object" src="{% static 'img/cbm-cycle_wide.png' %}" alt="">
+                  </div>
+                  <div class="media-body">
+                    <a href=""><i class="fa fa-download"></i> Cycle Poster <small>(46.6kb)</small></a>
+                  </div>
+                </li>
+
+                <li class="media">
+                  <div class="media-left">
+                    <img class="media-object" src="{% static 'img/community-women.jpg' %}" alt="">
+                  </div>
+                  <div class="media-body">
+                    <a href=""><i class="fa fa-download"></i> Cycle Poster <small>(1.2mb)</small></a>
+                  </div>
+                </li>
+
+              </ul>
+            </div>
+
+            <div class="col-sm-3">
+              <ul class="list-unstyled">
+                <li><a href=""><i class="fa fa-download"></i> Community handout <small>(1mb)</small></a></li>
+                <li><a href=""><i class="fa fa-download"></i> Narrative <small>(2mb)</small></a></li>
+                <li><a href=""><i class="fa fa-download"></i> Partner report <small>(2mb)</small></a></li>
+              </ul>
+            </div>
+          </div>
         </div>
 
         <div class="col-sm-1 col-xs-3 text-right">
@@ -44,53 +81,6 @@
     </div>
   </div>
   <!-- /section-header -->
-
-  <!-- result-resources -->
-  <div class="result-resources page-section">
-    <div class="container">
-      <h4>Resources for this cycle</h4>
-      <div class="row">
-
-        <div class="col-md-4 col-sx-6">
-          <div class="panel panel-default panel-resource">
-            <div class="panel-body">
-              <ul class="media-list">
-                <li class="media">
-                  <div class="media-left">
-                    <img class="media-object" src="{% static 'img/cbm-cycle_wide.png' %}" alt="">
-                  </div>
-                  <div class="media-body">
-                    <h4 class="media-heading">Cycle Poster</h4>
-                    <a href="" class="btn btn-primary"><i class="fa fa-download"></i> Download <small>(46.6kb)</small></a>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4 col-sx-6">
-          <div class="panel panel-default panel-resource">
-            <div class="panel-body">
-              <ul class="media-list">
-                <li class="media">
-                  <div class="media-left">
-                    <img class="media-object" src="{% static 'img/community-women.jpg' %}" alt="">
-                  </div>
-                  <div class="media-body">
-                    <h4 class="media-heading">Poster</h4>
-                    <a href="" class="btn btn-primary"><i class="fa fa-download"></i> Download <small>(1.2mb)</small></a>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-  <!-- /results-serouces -->   
 
   <div class="stat-table stat-overview page-section">
     <div class="container"> 
