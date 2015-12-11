@@ -270,6 +270,64 @@ img.img-rounded-border {
 
 }
 
+//== #about
+.section#about{
+
+	.step-row{
+		padding-top: 2em;
+		padding-bottom: 1em;
+		border-top: solid $gray-lighter 1px;
+	}
+	.step-row:first-child {
+	  padding-top: 0px;
+	  border-top: 0px;
+	}
+
+}
+
+/* all links */
+
+.steps-sidebar .nav>li>a {
+    font-size: 13px;
+    font-weight: 400;
+    border-bottom: 0;
+}
+
+/* nested links */
+.steps-sidebar .nav .nav>li>a {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 30px;
+    font-size: 12px;
+}
+
+/* active & hover links */
+.steps-sidebar .nav>.active>a, 
+.steps-sidebar .nav>li>a:hover, 
+.steps-sidebar .nav>li>a:focus {   
+		color: $black;            
+    text-decoration: none;          
+    background-color: transparent;  
+}
+/* all active links */
+.steps-sidebar .nav>.active>a, 
+.steps-sidebar .nav>.active:hover>a,
+.steps-sidebar .nav>.active:focus>a {
+    font-weight: 700;
+}
+/* nested active links */
+.steps-sidebar .nav .nav>.active>a, 
+.steps-sidebar .nav .nav>.active:hover>a,
+.steps-sidebar .nav .nav>.active:focus>a {
+    font-weight: 500;
+}
+
+.steps-sidebar.affix {
+  position: fixed !important;
+  top: 27px;
+  width: 300px;
+}
+
 //== #sites
 .section#sites{
 
