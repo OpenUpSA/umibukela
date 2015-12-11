@@ -15,7 +15,7 @@ Umibukela.General = function() {
 
       $('html, body').stop().animate({
           'scrollTop': $target.offset().top-15
-      }, 900, 'swing');
+      }, 300, 'swing');
     });
 
     if ($("#about").length) {
