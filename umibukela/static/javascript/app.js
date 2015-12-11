@@ -33,9 +33,9 @@ Umibukela.General = function() {
     var $lastRow = $('.step-row:last-child');
 
     // affix
-    $('.nav#sidebar').affix({
+    $('.steps-sidebar').affix({
       offset: {
-        top: $('.nav#sidebar').offset().top,
+        top: $('.steps-sidebar').offset().top,
         // stop affix 2/3 of the way down the last step row
         bottom: $('body').height() - $lastRow.offset().top - $lastRow.height() * 2 / 3,
       }

@@ -284,18 +284,18 @@ img.img-rounded-border {
 .section#about{
 
 	.step-row{
-		padding-top: 1em;
+		padding-top: 2em;
 		padding-bottom: 1em;
-		border-bottom: solid $gray-lighter 1px;
+		border-top: solid $gray-lighter 1px;
+	}
+	.step-row:first-child {
+	  padding-top: 0px;
+	  border-top: 0px;
 	}
 
 }
 
 /* all links */
-
-.nav#sidebar{
-	
-}
 
 .steps-sidebar .nav>li>a {
     font-size: 13px;
@@ -332,7 +332,7 @@ img.img-rounded-border {
     font-weight: 500;
 }
 
-.steps-sidebar .affix {
+.steps-sidebar.affix {
   position: fixed !important;
   top: 27px;
   width: 300px;
