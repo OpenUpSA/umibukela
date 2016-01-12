@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% load static %}
 
-{% block title %}Folweni CRC{% endblock %}
+{% block title %}{{ partner.short_name }}{% endblock %}
 {% block page-content %}
 
 <!-- breadcrumbs -->
@@ -9,13 +9,13 @@
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="{% url 'partners' %}">Community Partners</a></li>
-    <li class="active">Folweni CRC</li>
+    <li class="active">{{ partner.short_name }}</li>
   </ol>
 </div>
 <!-- /breadcrumbs -->
 
 <div class="section" id="partner-detail">
-  
+
   <!-- section-header -->
   <div class="section-heading">
     <div class="container">
@@ -25,17 +25,17 @@
 
           <div class="row">
             <div class="col-md-6">
-              <h1>Folweni CRC</h1>
-              <h2>Folweni Community Resource Centre</h2>
+              <h1>{{ partner.short_name }}</h1>
+              <h2>{{ partner.full_name }}</h2>
               <a href="{% url 'site-result' site_name='folweni' result_id='4' %}" class="btn btn-primary btn-latest-results"><i class="fa fa-bar-chart"></i> View latest results</a>
             </div>
 
             <div class="col-md-6">
               <ul class="list-unstyled">
-                <li><i class="fa fa-fw fa-map-marker"></i> A1100 Folweni Township, Isipingo, 4110</li>
-                <li><i class="fa fa-fw fa-user"></i> <strong>Contact:</strong> Rose Dlamini</li>
-                <li><i class="fa fa-fw fa-phone"></i> <a href="tel:0319003454">031 900 3454</a></li>
-                <li><i class="fa fa-fw fa-envelope"></i> <a href="mailto:folwenicrc@telkomsa.net">folwenicrc@telkomsa.net</a></li>
+                <li><i class="fa fa-fw fa-map-marker"></i>{{ partner.physical_address }}</li>
+                <li><i class="fa fa-fw fa-user"></i> <strong>Contact:</strong> {{ partner.contact_person }}</li>
+                <li><i class="fa fa-fw fa-phone"></i> <a href="tel:{{ partner.telephone | slugify }}">{{ partner.telephone }}</a></li>
+                <li><i class="fa fa-fw fa-envelope"></i> <a href="mailto:{{ partner.email_address }}">{{ partner.email_address }}</a></li>
               </ul>
             </div>
           </div>
@@ -55,16 +55,16 @@
     <div class="container">
       <div class="row">
         <div class="col-md-8">
-          <p><strong>The Folweni Community Resource Centre works to improve the quality of live of the Folweni community and the surrounding areas.</strong></p>
-          <p>To promote its initiatives, Folweni CRC works closely with government departments, community groups, non-governmental organizations, churches, small entrepreneurs and the corporate sector.</p>
+          <p><strong>{{ partner.intro_title }}</strong></p>
+          <p>{{ partner.intro_statement }}</p>
         </div>
         <div class="col-md-4 text-center">
-          <img src="{% static 'img/community-women.jpg' %}" class="img-responsive img-rounded-border">
+          <img src="{{ partner.intro_image.url }}" class="img-responsive img-rounded-border">
         </div>
       </div>
     </div>
   </div>
-  <!-- /partner-description --> 
+  <!-- /partner-description -->
 
 <!-- partner-quickinfo -->
   <div class="page-section">
@@ -108,15 +108,15 @@
     <div class="container">
       <div class="row">
         <div class="col-md-4">
-          <img src="{% static 'img/community-children.jpg' %}" class="img-responsive img-rounded-border">
+          <img src="{{ partner.context_image.url }}" class="img-responsive img-rounded-border">
         </div>
         <div class="col-md-4">
           <blockquote>
-            FolweniCRC's activities focus especially on the community's children, youth and women. 
+            {{ partner.context_quote }}
           </blockquote>
         </div>
         <div class="col-md-4">
-          The vision of FolweniCRC is to promote active participation by the Folweni community in matters affecting their lives, doing so through the use of participatory mechanisms and processes.
+          {{ partner.context.statement }}
         </div>
       </div>
     </div>

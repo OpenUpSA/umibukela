@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import Partner
 
 
 def home(request):
@@ -58,4 +59,12 @@ def partners(request):
 def partner(request, partner_name):
     return render(request, 'partner_detail.html', {
         'active_tab': 'partners',
+    })
+
+
+def partner_by_id(request, partner_id):
+    partner = Partner.objects.get(pk=partner_id)
+    return render(request, 'partner_detail.html', {
+        'active_tab': 'partners',
+        'partner': partner
     })
