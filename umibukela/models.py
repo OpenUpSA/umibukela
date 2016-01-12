@@ -31,3 +31,6 @@ class Partner(models.Model):
     context_quote = models.CharField(max_length=200)
     context_statement = models.TextField(max_length=200)
     context_image = models.ImageField(upload_to=image_filename, blank=True, null=True)
+
+    def __str__(self):
+        return "[ID: %s] %s" % (self.id, self.short_name)
