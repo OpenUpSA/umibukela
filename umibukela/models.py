@@ -27,10 +27,10 @@ class Partner(models.Model):
     email_address = models.EmailField(max_length=200)
     intro_title = models.CharField(max_length=200)
     intro_statement = models.TextField(max_length=200)
-    intro_image = models.ImageField(upload_to=image_filename, blank=True, null=True)
+    intro_image = models.ImageField(upload_to=image_filename)
     context_quote = models.CharField(max_length=200)
     context_statement = models.TextField(max_length=200)
-    context_image = models.ImageField(upload_to=image_filename, blank=True, null=True)
+    context_image = models.ImageField(upload_to=image_filename)
 
     def __str__(self):
         return "[ID: %s] %s" % (self.id, self.short_name)
