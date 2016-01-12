@@ -98,7 +98,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 # file uploads
-if not DEBUG:
+if DEBUG:
+    MEDIA_URL = "/images/"
+    MEDIA_ROOT = "/tmp/umibukela/images"
+else:
     DEFAULT_FILE_STORAGE = 'umibukela.botopatch.S3Storage'
     AWS_S3_FILE_OVERWRITE = False
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
