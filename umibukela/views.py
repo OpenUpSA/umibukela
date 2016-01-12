@@ -51,8 +51,10 @@ def sector(request, sector_name):
 
 
 def partners(request):
+    partners = Partner.objects.all()
     return render(request, 'partners.html', {
         'active_tab': 'partners',
+        'partners': partners
     })
 
 

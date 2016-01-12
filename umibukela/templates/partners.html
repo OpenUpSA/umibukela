@@ -43,24 +43,14 @@
             <th>Province</th>
           </tr>
         </thead>
+{% for partner in partners %}
         <tr>
-          <td>Tshedza Development Project</td>
+          <td><a href="{% url 'partner' partner.id %}">{{ partner.short_name }}</a></td>
+          <td><a href="{% url 'site-result' site_name='folweni' result_id='4' %}"></a></td>
           <td></td>
-          <td>Social Development</td>
-          <td>Gauteng</td>
-        </tr>
-        <tr>
-          <td>Lebaleng</td>
           <td></td>
-          <td>Social Development</td>
-          <td>Gauteng</td>
         </tr>
-        <tr>
-          <td><a href="{% url 'partner' partner_name='folweni-crc' %}">Folweni CRC</a></td>
-          <td><a href="{% url 'site-result' site_name='folweni' result_id='4' %}">Folweni Clinic - 1 Jun to 31 Jul Cycle Results</a></td>
-          <td>Health</td>
-          <td>Kwazulu-Natal</td>
-        </tr>
+{% endfor %}
       </table>
     </div>
   </div>
