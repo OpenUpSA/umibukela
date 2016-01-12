@@ -1,4 +1,5 @@
 import os
+import uuid
 
 from django.db import models
 
@@ -8,9 +9,9 @@ from django.db import models
 
 
 def image_filename(instance, filename):
-    """ Make S3 image filenames
+    """ Make image filenames
     """
-    return 'images/%s/%s' % (instance.id, os.path.basename(filename))
+    return 'images/%s_%s' % (uuid.uuid4(), os.path.basename(filename))
 
 # ------------------------------------------------------------------------------
 # Models
