@@ -59,7 +59,9 @@
           <p>{{ partner.intro_statement }}</p>
         </div>
         <div class="col-md-4 text-center">
+          {% if partner.intro_image %}
           <img src="{{ partner.intro_image.url }}" class="img-responsive img-rounded-border">
+          {% endif %}
         </div>
       </div>
     </div>
@@ -108,7 +110,9 @@
     <div class="container">
       <div class="row">
         <div class="col-md-4">
+          {% if partner.context_image %}
           <img src="{{ partner.context_image.url }}" class="img-responsive img-rounded-border">
+          {% endif %}
         </div>
         <div class="col-md-4">
           <blockquote>
