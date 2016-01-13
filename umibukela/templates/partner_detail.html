@@ -34,7 +34,7 @@
               <ul class="list-unstyled">
                 <li><i class="fa fa-fw fa-map-marker"></i>{{ partner.physical_address }}</li>
                 <li><i class="fa fa-fw fa-user"></i> <strong>Contact:</strong> {{ partner.contact_person }}</li>
-                <li><i class="fa fa-fw fa-phone"></i> <a href="tel:{{ partner.telephone | slugify }}">{{ partner.telephone }}</a></li>
+                <li><i class="fa fa-fw fa-phone"></i> <a href="tel:{{ partner.telephone.split | join:"-" }}">{{ partner.telephone }}</a></li>
                 <li><i class="fa fa-fw fa-envelope"></i> <a href="mailto:{{ partner.email_address }}">{{ partner.email_address }}</a></li>
               </ul>
             </div>
