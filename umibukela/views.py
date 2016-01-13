@@ -58,14 +58,8 @@ def partners(request):
     })
 
 
-def partner(request, partner_name):
-    return render(request, 'partner_detail.html', {
-        'active_tab': 'partners',
-    })
-
-
-def partner_by_id(request, partner_id):
-    partner = Partner.objects.get(pk=partner_id)
+def partner(request, partner_slug):
+    partner = Partner.objects.get(slug=partner_slug)
     return render(request, 'partner_detail.html', {
         'active_tab': 'partners',
         'partner': partner

@@ -16,8 +16,7 @@ urlpatterns = patterns('',
     # url(r'^sectors/(?P<sector_name>\w+)$', 'umibukela.views.sector', name='sector'),
 
     url(r'^partners$', 'umibukela.views.partners', name='partners'),
-    url(r'^partners/(?P<partner_id>\d+)$', 'umibukela.views.partner_by_id', name='partner'),
-    url(r'^partners/(?P<partner_name>[\w-]+)$', 'umibukela.views.partner', name='partner'),
+    url(r'^partners/(?P<partner_slug>[\w-]+)$', 'umibukela.views.partner', name='partner'),
 
     url(r'^admin/', include(admin.site.urls)),
 

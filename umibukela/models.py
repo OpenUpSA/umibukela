@@ -19,6 +19,7 @@ def image_filename(instance, filename):
 
 
 class Partner(models.Model):
+    slug = models.CharField(max_length=200, primary_key=True)
     short_name = models.CharField(max_length=200)
     full_name = models.CharField(max_length=200)
     physical_address = models.CharField(max_length=200)
@@ -33,4 +34,4 @@ class Partner(models.Model):
     context_image = models.ImageField(upload_to=image_filename)
 
     def __str__(self):
-        return "[ID: %s] %s" % (self.id, self.short_name)
+        return "[ID: %s] %s" % (self.slug, self.short_name)

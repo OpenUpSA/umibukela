@@ -45,7 +45,7 @@
         </thead>
 {% for partner in partners %}
         <tr>
-          <td><a href="{% url 'partner' partner.id %}">{{ partner.short_name }}</a></td>
+          <td><a href="{% url 'partner' partner.slug %}">{{ partner.short_name }}</a></td>
           <td><a href="{% url 'site-result' site_name='folweni' result_id='4' %}"></a></td>
           <td></td>
           <td></td>
