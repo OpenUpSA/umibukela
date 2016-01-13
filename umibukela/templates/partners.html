@@ -46,15 +46,20 @@
 {% for partner in partners %}
         <tr>
           <td><a href="{% url 'partner' partner.slug %}">{{ partner.short_name }}</a></td>
-          <td><a href="{% url 'site-result' site_name='folweni' result_id='4' %}"></a></td>
-          <td>{{ partner.sector.name }}</td>
-          <td>{{ partner.province.name }}</td>
+          <td>
+            {% if partner.latest_complete_result %}
+            <a href="{% url 'site-result' site_slug=partner.latest_complete_result.site.slug result_id=partner.latest_complete_result.id %}">
+              {{ partner.latest_complete_result.cycle.start_date|date:'Y-m-d' }}
+              - {{ partner.latest_complete_result.cycle.end_date|date:'Y-m-d' }}
+            </a>
+            {% endif %}
+          </td>
+          <td>{{ partner.latest_complete_result.site.sector.name }}</td>
+          <td>{{ partner.latest_complete_result.site.province.name }}</td>
         </tr>
 {% endfor %}
       </table>
     </div>
   </div>
-
 </div>
-
 {% endblock %}

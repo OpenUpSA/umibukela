@@ -2,8 +2,8 @@
 {% load pipeline %}
 {% load static %}
 
-{% block title %}Results for Cycle 4{% endblock %}
-{% block description %}Results for MAVC Cycle 4 for Folweni Clinic{% endblock %}
+{% block title %}Results for {{ result_set.cycle.name }}{% endblock %}
+{% block description %}Results for {{ result_set.cycle.programme.name }} {{ result_set.cycle.name }} for {{result_set.site.name }}{% endblock %}
 
 {% block js %}
   {{ block.super }}
@@ -17,7 +17,7 @@
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
       <li><a href="{% url 'sites' %}">Sites</a></li>
-      <li><a href="{% url 'site' site_name='folweni' %}">Folweni Clinic</a></li>
+      <li><a href="{% url 'site' site_slug=result_set.site.slug %}">{{ result_set.site.name }}</a></li>
       <li class="active">Results</li>
     </ol>
 </div>
@@ -33,9 +33,10 @@
 
           <div class="row">
             <div class="col-sm-5">
-              <h1>Folweni Clinic <br>MAVC Cycle 2</h1>
-              <h2>1 June - 31 July 2015</h2>
-              <i class="fa-fw fa fa-group"></i> <a href="{% url 'partner' partner_slug='folweni-crc' %}">Folweni CRC</a><br>
+              <h1>{{ result_set.site.name }} <br>{{ result_set.cycle.programme.name}} {{ result_set.cycle.name}}</h1>
+              <h2>{{ result_set.cycle.start_date|date:'Y-m-d' }}
+                  - {{ result_set.cycle.end_date|date:'Y-m-d' }}</h2>
+              <i class="fa-fw fa fa-group"></i> <a href="{% url 'partner' partner_slug=result_set.partner.slug %}">{{ result_set.partner.short_name }}</a><br>
             </div>
 
             <div class="col-sm-4">

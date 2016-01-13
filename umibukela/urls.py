@@ -9,11 +9,8 @@ urlpatterns = patterns('',
     url(r'^about$', 'umibukela.views.about', name='about'),
 
     url(r'^sites$', 'umibukela.views.sites', name='sites'),
-    url(r'^sites/(?P<site_name>\w+)$', 'umibukela.views.site', name='site'),
-    url(r'^sites/(?P<site_name>\w+)/results/(?P<result_id>\w+)$', 'umibukela.views.site_result', name='site-result'),
-
-    # url(r'^sectors$', 'umibukela.views.sectors', name='sectors'),
-    # url(r'^sectors/(?P<sector_name>\w+)$', 'umibukela.views.sector', name='sector'),
+    url(r'^sites/(?P<site_slug>[\w-]+)$', 'umibukela.views.site', name='site'),
+    url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)$', 'umibukela.views.site_result', name='site-result'),
 
     url(r'^partners$', 'umibukela.views.partners', name='partners'),
     url(r'^partners/(?P<partner_slug>[\w-]+)$', 'umibukela.views.partner', name='partner'),

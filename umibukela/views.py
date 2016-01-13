@@ -1,5 +1,14 @@
 from django.shortcuts import render
-from .models import Partner
+
+from .models import (
+    Partner,
+    Province,
+    Sector,
+    Site,
+    CycleResultSet,
+    Cycle,
+    Programme,
+)
 
 
 def home(request):
@@ -21,40 +30,35 @@ def about(request):
 
 
 def sites(request):
+    sites = Site.objects.all().prefetch_related('province', 'sector')
+
     return render(request, 'sites.html', {
         'active_tab': 'sites',
+        'sites': sites,
     })
 
 
-def site(request, site_name):
+def site(request, site_slug):
+    site = Site.objects.get(slug=site_slug)
     return render(request, 'site_detail.html', {
         'active_tab': 'sites',
+        'site': site,
     })
 
 
-def site_result(request, site_name, result_id):
+def site_result(request, site_slug, result_id):
+    result_set = CycleResultSet.objects.get(id=result_id, site__slug__exact=site_slug)
     return render(request, 'site_result_detail.html', {
         'active_tab': 'sites',
-    })
-
-
-def sectors(request):
-    return render(request, 'sectors.html', {
-        'active_tab': 'sectors',
-    })
-
-
-def sector(request, sector_name):
-    return render(request, 'sector_detail.html', {
-        'active_tab': 'sectors',
+        'result_set': result_set,
     })
 
 
 def partners(request):
-    partners = Partner.objects.all().prefetch_related('province', 'sector')
+    partners = Partner.objects.all().prefetch_related()
     return render(request, 'partners.html', {
         'active_tab': 'partners',
-        'partners': partners
+        'partners': partners,
     })
 
 
@@ -62,5 +66,5 @@ def partner(request, partner_slug):
     partner = Partner.objects.get(slug=partner_slug)
     return render(request, 'partner_detail.html', {
         'active_tab': 'partners',
-        'partner': partner
+        'partner': partner,
     })

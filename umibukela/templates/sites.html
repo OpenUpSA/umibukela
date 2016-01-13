@@ -8,7 +8,7 @@
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li class="active">Sites</li>
-  </ol>    
+  </ol>
 </div>
 <!-- /breadcrumbs -->
 
@@ -44,24 +44,21 @@
                 <th>Province</th>
               </tr>
             </thead>
+{% for site in sites %}
             <tr>
-              <td><a href="{% url 'site' site_name='folweni' %}">Folweni Clinic</a></td>
-              <td><a href="{% url 'site-result' site_name='folweni' result_id='4' %}">1 Jun - 31 Jul Cycle Results</a></td>
-              <td>Health</td>
-              <td>KwaZulu-Natal</td>
+              <td><a href="{% url 'site' site_slug=site.slug %}">{{ site.name }}</a></td>
+              <td>
+                {% if site.latest_complete_result %}
+                <a href="{% url 'site-result' site_slug=site.slug result_id=site.latest_complete_result.id %}">
+                  {{ site.latest_complete_result.cycle.start_date|date:'Y-m-d' }}
+                  - {{ site.latest_complete_result.cycle.end_date|date:'Y-m-d' }}
+                </a>
+                {% endif %}
+              </td>
+              <td>{{ site.sector.name }}</td>
+              <td>{{ site.province.name }}</td>
             </tr>
-            <tr>
-              <td>Paarl SASSA service office</td>
-              <td></td>
-              <td>Social Development</td>
-              <td>Western Cape</td>
-            </tr>
-            <tr>
-              <td>Nxuba</td>
-              <td></td>
-              <td>Local Gov</td>
-              <td>Eastern Cape</td>
-            </tr>
+{% endfor %}
           </table>
         </div>
       </div>
