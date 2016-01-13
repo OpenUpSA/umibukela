@@ -65,7 +65,7 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 import dj_database_url
-db_config = dj_database_url.config(default='sqlite:///db.sqlite3')
+db_config = dj_database_url.config(default='postgres://umibukela:umibukela@localhost:5432/umibukela')
 db_config['ATOMIC_REQUESTS'] = True
 DATABASES = {
     'default': db_config,
@@ -97,6 +97,20 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "umibukela.context_processors.general",
 )
 
+# file uploads
+if DEBUG:
+    MEDIA_URL = "/images/"
+    MEDIA_ROOT = "/tmp/umibukela/images"
+else:
+    DEFAULT_FILE_STORAGE = 'umibukela.botopatch.S3Storage'
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = "umibukela-media"
+    AWS_S3_HOST = "s3-eu-west-1.amazonaws.com"
+    AWS_HEADERS = {
+        'Cache-Control': 'max-age=86400',
+    }
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
