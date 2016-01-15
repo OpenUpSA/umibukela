@@ -34,8 +34,8 @@
           <div class="row">
             <div class="col-sm-5">
               <h1>{{ result_set.site.name }} <br>{{ result_set.cycle.programme.name}} {{ result_set.cycle.name}}</h1>
-              <h2>{{ result_set.cycle.start_date|date:'Y-m-d' }}
-                  - {{ result_set.cycle.end_date|date:'Y-m-d' }}</h2>
+              <h2>{{ result_set.cycle.start_date|date:'j F Y' }}
+                  - {{ result_set.cycle.end_date|date:'j F Y' }}</h2>
               <i class="fa-fw fa fa-group"></i> <a href="{% url 'partner' partner_slug=result_set.partner.slug %}">{{ result_set.partner.short_name }}</a><br>
             </div>
 

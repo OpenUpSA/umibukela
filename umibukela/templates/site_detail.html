@@ -112,8 +112,8 @@
             <div class="programme-frequency"><strong>Frequency:</strong> {{ site.latest_complete_result.cycle.programme.frequency.name }}</div>
             <div class="programme-last-cycle"><strong>Latest cycle:</strong>
               <a href="{% url 'site-result' site_slug=site.slug result_id=site.latest_complete_result.id %}">
-                {{ site.latest_complete_result.cycle.start_date|date:'Y-m-d' }}
-                  - {{ site.latest_complete_result.cycle.end_date|date:'Y-m-d' }}
+                {{ site.latest_complete_result.cycle.start_date|date:'j F Y' }}
+                  - {{ site.latest_complete_result.cycle.end_date|date:'j F Y' }}
               </a>
               <a href="{% url 'site-result' site_slug=site.slug result_id=site.latest_complete_result.id %}" class="btn btn-primary btn-sm">View results</a></div>
           </div>
