@@ -27,7 +27,9 @@
             <div class="col-md-6">
               <h1>{{ partner.short_name }}</h1>
               <h2>{{ partner.full_name }}</h2>
-              <a href="{% url 'site-result' site_name='folweni' result_id='4' %}" class="btn btn-primary btn-latest-results"><i class="fa fa-bar-chart"></i> View latest results</a>
+              {% if partner.latest_complete_result %}
+              <a href="{% url 'site-result' site_slug=partner.latest_complete_result.site.slug result_id=partner.latest_complete_result.id %}" class="btn btn-primary btn-latest-results"><i class="fa fa-bar-chart"></i> View latest results</a>
+              {% endif %}
             </div>
 
             <div class="col-md-6">
@@ -67,43 +69,6 @@
     </div>
   </div>
   <!-- /partner-description -->
-
-<!-- partner-quickinfo -->
-  <div class="page-section">
-    <div class="container">
-
-      <table class="table table-striped sortable">
-        <thead>
-          <tr>
-            <th>Site name</th>
-            <th>Latest Cycle Results</th>
-            <th>Sector</th>
-            <th>Province</th>
-          </tr>
-        </thead>
-        <tr>
-          <td><a href="{% url 'site' site_name='folweni' %}">Folweni Clinic</a></td>
-          <td><a href="{% url 'site-result' site_name='folweni' result_id='4' %}">1 Jun - 31 Jul Cycle Results</a></td>
-          <td>Health</td>
-          <td>KwaZulu-Natal</td>
-        </tr>
-        <tr>
-          <td>Paarl SASSA service office</td>
-          <td></td>
-          <td>Social Development</td>
-          <td>Western Cape</td>
-        </tr>
-        <tr>
-          <td>Nxuba</td>
-          <td></td>
-          <td>Local Gov</td>
-          <td>Eastern Cape</td>
-        </tr>
-      </table>
-
-    </div>
-  </div>
-  <!-- /partner-quickinfo -->
 
   <!-- partner-context -->
   <div class="partner-context page-section">
