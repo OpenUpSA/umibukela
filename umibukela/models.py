@@ -3,6 +3,7 @@ import uuid
 
 from django.db import models
 from django.contrib.gis.db import models as gis_models
+import jsonfield
 from django.utils import timezone
 
 # ------------------------------------------------------------------------------
@@ -166,3 +167,14 @@ class CycleResultSet(models.Model):
 
     def end_date_cmp(a, b):
         return Cycle.end_date_cmp(a.cycle, b.cycle)
+
+
+class Survey(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    form = models.TextField()
+
+
+class Submission(models.Model):
+    answers = jsonfield.JSONField()
+    survey = models.ForeignKey(Survey)
+    cycle_result_set = models.ForeignKey(CycleResultSet)
