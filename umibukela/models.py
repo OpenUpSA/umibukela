@@ -43,10 +43,10 @@ class Partner(models.Model):
     telephone = models.CharField(max_length=200)
     email_address = models.EmailField(max_length=200)
     intro_title = models.CharField(max_length=200)
-    intro_statement = models.TextField(max_length=200)
+    intro_statement = models.TextField()
     intro_image = models.ImageField(upload_to=image_filename, null=True, blank=True)
     context_quote = models.CharField(max_length=200)
-    context_statement = models.TextField(max_length=200)
+    context_statement = models.TextField()
     context_image = models.ImageField(upload_to=image_filename, null=True, blank=True)
 
     def __str__(self):
@@ -126,19 +126,32 @@ class Cycle(models.Model):
             return -1
 
 
-class CycleResultSet(models.Model):
-    """An entity representing the data collection cycle for a given site
-    by the partner that collected the data for that site in the given cycle.
+class SurveyType(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.TextField()
 
-    This entity would be implicit if all resource and data point relating to
-    a given combination of cycle, site and partner referred to each of those
-    individually, but that would be quite redundant, and since this is a first-
-    class thing from the user's perspective (/site/x/results/y) it's nice to
-    have this object to refer to. If there was instead a unique Cycle per site,
-    the cycle start and end dates and name would be repeated for each site."""
+
+class CycleResultSet(models.Model):
+    """
+    An entity representing the data collection cycle for a given site
+    and survey type, by the partner that collected the data for that site in
+    the given cycle.
+
+    This entity would be implicit if all resource and submissions relating to
+    a given combination of cycle, site, partner and survey type referred to
+    each of those individually, but that would be quite redundant, and since
+    this is a first-class thing from the user's perspective (/site/x/results/y)
+    it's nice to have this object to refer to. If there was instead a unique
+    Cycle per site, the cycle start and end dates and name would be repeated
+    for each site.
+    """
     cycle = models.ForeignKey(Cycle)
     site = models.ForeignKey(Site)
     partner = models.ForeignKey(Partner)
+    survey_type = models.ForeignKey(SurveyType, null=True, blank=True)
+
+    class Meta:
+        unique_together = ('cycle', 'site', 'survey_type')
 
     def __str__(self):
         return "%s -> %s (%s)" % (
