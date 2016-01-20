@@ -21,23 +21,23 @@ def image_filename(instance, filename):
 
 
 class Sector(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class Province(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class Partner(models.Model):
-    short_name = models.CharField(max_length=200)
+    short_name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
-    full_name = models.CharField(max_length=200)
+    full_name = models.CharField(max_length=200, unique=True)
     physical_address = models.CharField(max_length=200, null=True, blank=True)
     contact_person = models.CharField(max_length=200, null=True, blank=True)
     telephone = models.CharField(max_length=200)
@@ -63,7 +63,7 @@ class Partner(models.Model):
 
 
 class Site(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     slug = models.CharField(max_length=200, unique=True)
     address_1 = models.CharField(max_length=200, null=True, blank=True)
     address_2 = models.CharField(max_length=200, null=True, blank=True)
@@ -90,15 +90,15 @@ class Site(models.Model):
 
 
 class CycleFrequency(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class Programme(models.Model):
-    short_name = models.CharField(max_length=100)
-    long_name = models.CharField(max_length=200)
+    short_name = models.CharField(max_length=100, unique=True)
+    long_name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
     frequency = models.ForeignKey(CycleFrequency, null=True, blank=True)
 
@@ -111,6 +111,9 @@ class Cycle(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     programme = models.ForeignKey(Programme)
+
+    class Meta:
+        unique_together = ('name', 'programme')
 
     def __str__(self):
         return "%s [%s to %s]" % (
@@ -127,8 +130,11 @@ class Cycle(models.Model):
 
 
 class SurveyType(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
+
+    def __str__(self):
+        return self.name
 
 
 class CycleResultSet(models.Model):
