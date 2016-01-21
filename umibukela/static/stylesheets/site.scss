@@ -500,7 +500,13 @@ footer.footer{
 	background: $gray-lighter;
 
 	.logos {
-	  padding-top: 5em;
+	  padding-top: 2em;
+
+	  img {
+	    width: 300px;
+	    height: auto;
+	    margin-bottom: 2em;
+	  }
 	}
 }
 
