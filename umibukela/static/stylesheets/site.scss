@@ -262,16 +262,16 @@ img.img-rounded-border {
 	       background-image: url(/static/img/black-sash-protest2.jpg);
 	}
 
-	.search-lg, .programme-explore-menu{
+	.section {
 		padding: 2em 0;
-	}
-
-	.search-lg{
-		background-color: $brand-secondary-light;
 	}
 
 	.programme-explore-menu{
 		background-color: $brand-primary-light;
+	}
+
+	.signup-cta-lg {
+		background-color: $brand-secondary-light;
 	}
 
 }
