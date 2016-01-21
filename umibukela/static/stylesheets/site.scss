@@ -490,6 +490,10 @@ a.social-media{
 footer.footer{
 	padding: 2em 0;
 	background: $gray-lighter;
+
+	.logos {
+	  padding-top: 5em;
+	}
 }
 
 //== Diagram: CBM Cycle (large screens)
