@@ -11,6 +11,10 @@ from .models import (
     Site,
 )
 
+from .forms import (
+    SiteForm,
+)
+
 
 class PartnerAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("short_name",)}
@@ -18,6 +22,8 @@ class PartnerAdmin(admin.ModelAdmin):
 
 class SiteAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
+    form = SiteForm
+
 
 admin.site.register(Cycle)
 admin.site.register(CycleFrequency)
