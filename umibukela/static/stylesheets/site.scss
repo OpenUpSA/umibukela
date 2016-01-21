@@ -20,6 +20,12 @@
 	font-family: $font-family-sans-serif-2;
 	font-size: 32px;
 	font-weight: bold;
+	a {
+	  color: $black;
+	}
+	a:hover, a:active {
+	  color: $white;
+	}
 }
 
 //== Links
