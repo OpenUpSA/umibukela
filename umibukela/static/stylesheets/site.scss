@@ -20,6 +20,12 @@
 	font-family: $font-family-sans-serif-2;
 	font-size: 32px;
 	font-weight: bold;
+	a {
+	  color: $black;
+	}
+	a:hover, a:active {
+	  color: $white;
+	}
 }
 
 //== Links
@@ -256,18 +262,20 @@ img.img-rounded-border {
 	       background-image: url(/static/img/black-sash-protest2.jpg);
 	}
 
-	.search-lg, .programme-explore-menu{
+	.section {
 		padding: 2em 0;
-	}
-
-	.search-lg{
-		background-color: $brand-secondary-light;
 	}
 
 	.programme-explore-menu{
 		background-color: $brand-primary-light;
+		a:first-child {
+		  margin-right: 10px;
+		}
 	}
 
+	.signup-cta-lg {
+		background-color: $brand-secondary-light;
+	}
 }
 
 //== #about
@@ -490,6 +498,16 @@ a.social-media{
 footer.footer{
 	padding: 2em 0;
 	background: $gray-lighter;
+
+	.logos {
+	  padding-top: 2em;
+
+	  img {
+	    width: 300px;
+	    height: auto;
+	    margin-bottom: 2em;
+	  }
+	}
 }
 
 //== Diagram: CBM Cycle (large screens)
@@ -634,6 +652,7 @@ div + h1 {
 //== Helper classes
 
 .bg-image{
+    background-color: $brand-secondary-dark;
     background-size: 100% !important;
     background-repeat: no-repeat;
     background-position: center center;

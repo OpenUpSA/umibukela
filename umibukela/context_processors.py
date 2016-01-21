@@ -5,7 +5,7 @@ def general(request):
     """ Add some useful settings into the template helpers.
     """
     info = {
-        'SITE_NAME': 'CBM',
+        'SITE_NAME': 'Community-Based Monitoring',
     }
 
     ga_tracking_id = getattr(settings, 'GOOGLE_ANALYTICS_ID', False)

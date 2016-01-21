@@ -22,7 +22,7 @@
         </ul>
 
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
 
         <ul class="list-unstyled">
           <li><a href="{% url 'contact' %}"><strong>Contact</strong></a></li>
@@ -31,10 +31,20 @@
         </ul>
 
       </div>
-      <div class="col-md-3">
-				
-        <a href="http://www.blacksash.org.za" target="_blank"><img src="{% static 'img/black-sash-logo.png' %}" class="img-responsive" alt="Black Sash"></a>
+      <div class="col-md-4">
+        <h5>Sign up to our mailing list</h5>
 
+        {% include '_mailing_list_form.html' %}
+      </div>
+    </div>
+
+    <div class="row logos">
+      <div class="col-sm-4">
+        <a href="http://www.blacksash.org.za" target="_blank"><img src="{% static 'img/black-sash-logo.png' %}" alt="Black Sash"></a>
+      </div>
+
+      <div class="col-sm-8">
+        <a href="http://code4sa.org" target="_blank"><img src="{% static 'img/logo-code4sa.png' %}" alt="Code for South Africa"></a>
       </div>
     </div>
   </div>
