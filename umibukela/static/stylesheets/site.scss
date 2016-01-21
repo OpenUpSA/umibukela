@@ -268,12 +268,14 @@ img.img-rounded-border {
 
 	.programme-explore-menu{
 		background-color: $brand-primary-light;
+		a:first-child {
+		  margin-right: 10px;
+		}
 	}
 
 	.signup-cta-lg {
 		background-color: $brand-secondary-light;
 	}
-
 }
 
 //== #about
