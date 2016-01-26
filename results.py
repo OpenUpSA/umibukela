@@ -9,7 +9,9 @@ site_submissions = df[df['facility'] == 'folweni']
 form_file = open('DOH-Citizen-Survey.json')
 form = json.loads(form_file.read())
 
-
+# returns nested dicts where the keys are the names of the XForm element
+# branches to each question and each option of a question. Only multiple
+# choice questions are supported.
 
 def calc_q_results(indent, children, path, question_results, leaf_results):
     for child in children:
@@ -24,13 +26,16 @@ def calc_q_results(indent, children, path, question_results, leaf_results):
         elif ('type' in child) and child['type'] == 'select one':
             leaf_results['/'.join(deeper_path)] = calc_leaf(site_submissions, deeper_path)
             print("%sSELECTONE [%s] %s" % (indent, '/'.join(deeper_path), child['label']))
+            question_results = deep_dict_set(question_results, child['label'], [pathstr(deeper_path), 'label'])
             question_results = calc_q_results(indent + '\t', child['children'], deeper_path, question_results, leaf_results)
         elif ('type' in child) and child['type'] == 'select all that apply':
             leaf_results['/'.join(deeper_path)] = calc_leaf(site_submissions, deeper_path)
             print("%sSELECTALL [%s] %s" % (indent, '/'.join(deeper_path), child['label']))
+            question_results = deep_dict_set(question_results, child['label'], [pathstr(deeper_path), 'label'])
             question_results = calc_q_results(indent + '\t', child['children'], deeper_path, question_results, leaf_results)
         elif ('type' not in child):
             print("%sOPTION [%s] %s" % (indent, '/'.join(deeper_path), child['label']))
+            question_results = deep_dict_set(question_results, child['label'], [pathstr(path), 'options', child['name'], 'label'])
             question_results = set_leaf_results(path, child['name'], question_results, leaf_results)
         else:
             # print("%s UNKNOWN %s" % (indent, child))
@@ -41,8 +46,7 @@ def calc_q_results(indent, children, path, question_results, leaf_results):
 def calc_leaf(site_submissions, path):
     cols = ['facility', 'demographics_group/gender', '/'.join(path)]
     question_table = site_submissions.loc[:, cols]
-    question_counts = question_table.groupby(['demographics_group/gender', '/'.join(path)]).count()
-    #q1groupcount.loc['female','no']
+    question_counts = question_table.groupby(['demographics_group/gender', pathstr(path)]).count()
     return question_counts
 
 
@@ -50,8 +54,8 @@ def set_leaf_results(path, leaf_key, results, leaf_results):
     # print leaf_results
     if '/'.join(path) in leaf_results:
         for gender in ['male', 'female']:
-            leaf_table = leaf_results['/'.join(path)]
-            # keys that can be int will be known as int indexes to pandas.DataFrame
+            leaf_table = leaf_results[pathstr(path)]
+            # keys that can be int are known as int indexes to the DataFrame
             try:
                 leaf_key_as_idx = int(leaf_key)
             except:
@@ -64,13 +68,16 @@ def set_leaf_results(path, leaf_key, results, leaf_results):
                 # results for this question won't be indexes in the counts
                 val = 0
 
-            results = deep_dict_set(results, val, path + ['count', gender, leaf_key])
+            results = deep_dict_set(results, val, [pathstr(path), 'options', leaf_key, 'count', gender])
     return results
+
+
+def pathstr(path):
+    return '/'.join(path)
 
 
 def deep_dict_set(deep_dict, value, layers):
     layer = layers[0]
-    # print("deep_dict_set dict=%s layers=%s value=%s" % (deep_dict, layers, value))
     if layers[1:]:
         if layer in deep_dict:
             deep_dict[layer] = deep_dict_set(deep_dict[layer], value, layers[1:])
