@@ -140,7 +140,7 @@ class SurveyType(models.Model):
 
 class Survey(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    form = models.TextField()
+    form = jsonfield.JSONField()
 
 
 class CycleResultSet(models.Model):
