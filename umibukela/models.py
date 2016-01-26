@@ -179,4 +179,4 @@ class CycleResultSet(models.Model):
 
 class Submission(models.Model):
     answers = jsonfield.JSONField()
-    cycle_result_set = models.ForeignKey(CycleResultSet)
+    cycle_result_set = models.ForeignKey(CycleResultSet, null=True, blank=True)
