@@ -1,16 +1,6 @@
-import pandas as pd
-import json
-import pprint
-
-df = pd.read_csv('DOH-Citizen-Survey_2016_01_25_04_22_15.csv', sep=',', encoding='latin-1')
-site_submissions = df[df['facility'] == 'folweni']
 
 
-form_file = open('DOH-Citizen-Survey.json')
-form = json.loads(form_file.read())
-
-
-def calc_q_results(children, path, question_results, leaf_results):
+def calc_q_results(submissions, children, path, question_results, leaf_results):
     """
     returns nested dicts where the keys are the names of the XForm element
     branches to each question and each option of a question. Only multiple
@@ -24,6 +14,7 @@ def calc_q_results(children, path, question_results, leaf_results):
             pass
         elif child_is_type(child, 'group'):
             question_results = calc_q_results(
+                submissions,
                 child['children'],
                 deeper_path,
                 question_results,
@@ -31,7 +22,8 @@ def calc_q_results(children, path, question_results, leaf_results):
         elif (child_is_type(child, 'select one')
               or child_is_type(child, 'select all that apply')):
             leaf_results['/'.join(deeper_path)] = calc_leaf(
-                site_submissions, deeper_path
+                submissions,
+                deeper_path
             )
             question_results = deep_dict_set(
                 question_results,
@@ -39,6 +31,7 @@ def calc_q_results(children, path, question_results, leaf_results):
                 [pathstr(deeper_path), 'label']
             )
             question_results = calc_q_results(
+                submissions,
                 child['children'],
                 deeper_path,
                 question_results,
@@ -118,7 +111,3 @@ def deep_dict_set(deep_dict, value, layers):
         deep_dict[layer] = value
 
     return deep_dict
-
-question_results = calc_q_results(form['children'], [], {}, {})
-
-pprint.pprint(question_results)

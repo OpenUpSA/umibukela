@@ -142,6 +142,9 @@ class Survey(models.Model):
     name = models.CharField(max_length=200, unique=True)
     form = jsonfield.JSONField()
 
+    def __str__(self):
+        return self.name
+
 
 class CycleResultSet(models.Model):
     """

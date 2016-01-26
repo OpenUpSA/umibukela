@@ -1,13 +1,12 @@
 from django.shortcuts import render
+import pandas
+import results
 
 from .models import (
     Partner,
-    Province,
-    Sector,
     Site,
     CycleResultSet,
-    Cycle,
-    Programme,
+    Submission,
 )
 
 
@@ -46,11 +45,23 @@ def site(request, site_slug):
     })
 
 
+def site_result_hardcoded(request, site_slug, result_id):
+    result_set = CycleResultSet.objects.get(id=result_id, site__slug__exact=site_slug)
+    return render(request, 'site_result_hardcoded.html', {
+        'active_tab': 'sites',
+        'result_set': result_set,
+    })
+
 def site_result(request, site_slug, result_id):
     result_set = CycleResultSet.objects.get(id=result_id, site__slug__exact=site_slug)
+    site_submissions = Submission.objects.filter(cycle_result_set=result_set)
+    site_responses = [submission.answers for submission in site_submissions]
+    form = result_set.survey.form
+    site_results = results.calc_q_results(pandas.DataFrame(site_responses), form['children'], [], {}, {})
     return render(request, 'site_result_detail.html', {
         'active_tab': 'sites',
         'result_set': result_set,
+        'results': site_results,
     })
 
 
