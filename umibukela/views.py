@@ -58,10 +58,15 @@ def site_result(request, site_slug, result_id):
     site_responses = [submission.answers for submission in site_submissions]
     form = result_set.survey.form
     site_results = results.calc_q_results(pandas.DataFrame(site_responses), form['children'], [], {}, {})
+    questions = []
+    for key in site_results.keys():
+        site_results[key]['key'] = key
+        questions.append(site_results[key])
+
     return render(request, 'site_result_detail.html', {
         'active_tab': 'sites',
         'result_set': result_set,
-        'results': site_results,
+        'results': {'questions': questions}
     })
 
 
