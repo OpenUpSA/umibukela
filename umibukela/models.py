@@ -138,6 +138,11 @@ class SurveyType(models.Model):
         return self.name
 
 
+class Survey(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    form = models.TextField()
+
+
 class CycleResultSet(models.Model):
     """
     An entity representing the data collection cycle for a given site
@@ -155,7 +160,10 @@ class CycleResultSet(models.Model):
     cycle = models.ForeignKey(Cycle)
     site = models.ForeignKey(Site)
     partner = models.ForeignKey(Partner)
+    # This is meant to allow identifying comparable CycleResultSets
+    # which don't necessarily have exactly the same survey
     survey_type = models.ForeignKey(SurveyType, null=True, blank=True)
+    survey = models.ForeignKey(Survey, null=True, blank=True)
 
     class Meta:
         unique_together = ('cycle', 'site', 'survey_type')
@@ -169,12 +177,6 @@ class CycleResultSet(models.Model):
         return Cycle.end_date_cmp(a.cycle, b.cycle)
 
 
-class Survey(models.Model):
-    name = models.CharField(max_length=200, unique=True)
-    form = models.TextField()
-
-
 class Submission(models.Model):
     answers = jsonfield.JSONField()
-    survey = models.ForeignKey(Survey)
     cycle_result_set = models.ForeignKey(CycleResultSet)
