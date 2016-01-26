@@ -28,25 +28,10 @@ def calc_q_results(children, path, question_results, leaf_results):
                 deeper_path,
                 question_results,
                 leaf_results)
-        elif child_is_type(child, 'select one'):
+        elif (child_is_type(child, 'select one')
+              or child_is_type(child, 'select all that apply')):
             leaf_results['/'.join(deeper_path)] = calc_leaf(
                 site_submissions, deeper_path
-            )
-            question_results = deep_dict_set(
-                question_results,
-                child['label'],
-                [pathstr(deeper_path), 'label']
-            )
-            question_results = calc_q_results(
-                child['children'],
-                deeper_path,
-                question_results,
-                leaf_results
-            )
-        elif child_is_type(child, 'select all that apply'):
-            leaf_results['/'.join(deeper_path)] = calc_leaf(
-                site_submissions,
-                deeper_path
             )
             question_results = deep_dict_set(
                 question_results,
