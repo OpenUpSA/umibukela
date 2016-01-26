@@ -59,9 +59,17 @@ def site_result(request, site_slug, result_id):
     form = result_set.survey.form
     site_results = results.calc_q_results(pandas.DataFrame(site_responses), form['children'], [], {}, {})
     questions = []
-    for key in site_results.keys():
-        site_results[key]['key'] = key
-        questions.append(site_results[key])
+    for q_key in site_results.keys():
+        question = site_results[q_key]
+        options_dict = question['options']
+        options = []
+        for o_key in options_dict.keys():
+            option = options_dict[o_key]
+            option['key'] = o_key
+            options.append(option)
+        question['options'] = options  # overwrite
+        question['key'] = q_key
+        questions.append(question)
 
     return render(request, 'site_result_detail.html', {
         'active_tab': 'sites',
