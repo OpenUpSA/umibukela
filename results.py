@@ -51,13 +51,20 @@ def set_leaf_results(path, leaf_key, results, leaf_results):
     if '/'.join(path) in leaf_results:
         for gender in ['male', 'female']:
             leaf_table = leaf_results['/'.join(path)]
+            # keys that can be int will be known as int indexes to pandas.DataFrame
             try:
-                val = int(leaf_table.loc[gender, leaf_key])
+                leaf_key_as_idx = int(leaf_key)
+            except:
+                leaf_key_as_idx = leaf_key
+
+            try:
+                val = int(leaf_table.loc[gender, leaf_key_as_idx])
             except KeyError:
+                # values that aren't counted because they don't occur in the
+                # results for this question won't be indexes in the counts
                 val = 0
-            # print("set_leaf_results path=%s gender=%s leaf=%s val=%s" % ('/'.join(path), gender, leaf_key, val))
+
             results = deep_dict_set(results, val, path + ['count', gender, leaf_key])
-            #results = deep_dict_set(results, 0, path + ['count', gender])
     return results
 
 
