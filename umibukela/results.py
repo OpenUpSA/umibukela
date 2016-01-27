@@ -2,8 +2,6 @@
 survey response summary calculation
 """
 
-import pdb
-
 
 def count_submissions(submissions):
     results = {}
@@ -32,14 +30,17 @@ def count_submissions(submissions):
 def count_options(
         submissions,
         children,
-        path=[],
-        question_results={},
-        current_option_counts={}):
+        path=None,
+        question_results=None,
+        current_option_counts=None):
     """
     returns nested dicts where the keys are the names of the XForm element
     branches to each question and each option of a question. Only multiple
     choice questions are supported.
     """
+    path = path or []
+    question_results = question_results or {}
+    idx = 0  # The index of the child in the form in its array of siblings
     for child in children:
         deeper_path = path + [child['name']]
         if deeper_path in [['facility'], ['demographics_group', 'gender']]:
@@ -52,7 +53,7 @@ def count_options(
                 child['children'],
                 deeper_path,
                 question_results,
-                {})
+                None)
         elif (child_is_type(child, 'select one')
               or child_is_type(child, 'select all that apply')):
             # multiple choice questions
@@ -79,6 +80,11 @@ def count_options(
                 child['label'],
                 [pathstr(path), 'options', child['name'], 'label']
             )
+            question_results = deep_dict_set(
+                question_results,
+                idx,
+                [pathstr(path), 'options', child['name'], 'idx']
+            )
             question_results = set_option_counts(
                 path,
                 child['name'],
@@ -87,6 +93,7 @@ def count_options(
             )
         else:
             pass
+        idx += 1
     return question_results
 
 
@@ -157,11 +164,11 @@ def questions_dict_to_array(question_dict):
     for q_key in question_dict.keys():
         question = question_dict[q_key]
         options_dict = question['options']
-        options = []
+        options = [None] * len(options_dict)
         for o_key in options_dict.keys():
             option = options_dict[o_key]
             option['key'] = o_key
-            options.append(option)
+            options[option['idx']] = option
         question['options'] = options  # overwrite
         question['key'] = q_key
         questions.append(question)
@@ -169,7 +176,6 @@ def questions_dict_to_array(question_dict):
 
 
 def calc_q_percents(questions, site_totals):
-    #pdb.set_trace()
     """
     updates and returns a questions dict with percentages for option counts
     """

@@ -202,12 +202,13 @@
         <div class="col-sm-4">
           <h3>{{ question.label }}</h3>
         </div>
-
+        {% for option in question.options %}
+        {% if forloop.counter0 == 0 %}
         <div class="col-sm-2">
           <h5>Female</h5>
           <div class="stat stat-number">
-            <div class="value">44.7%</div>
-            <div class="name">Yes</div>
+            <div class="value">{{ option.pct.female|floatformat }}%</div>
+            <div class="name">{{ option.label }}</div>
           </div>
         </div>
 
@@ -218,14 +219,16 @@
         <div class="col-sm-2">
           <h5>Male</h5>
           <div class="stat stat-number">
-            <div class="value">59.8%</div>
-            <div class="name">Yes</div>
+            <div class="value">{{ option.pct.male|floatformat }}%</div>
+            <div class="name">{{ option.label }}</div>
           </div>
         </div>
 
         <div class="col-sm-2">
           <div class="chart chart-column" data-indicator="chart2"></div>
         </div>
+        {% endif %}
+        {% endfor %}
       </section>
       {% else %}
       <section class="row stat-row">
