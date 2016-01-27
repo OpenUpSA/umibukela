@@ -1,13 +1,17 @@
 {% extends "layout.html" %}
 {% load pipeline %}
 {% load static %}
+{% load jsonify %}
 
 {% block title %}Results for {{ result_set.cycle.name }}{% endblock %}
 {% block description %}Results for {{ result_set.cycle.programme.name }} {{ result_set.cycle.name }} for {{result_set.site.name }}{% endblock %}
 
 {% block js %}
-  {{ block.super }}
-  {% javascript "site" %}
+{{ block.super }}
+<script type="application/javascript">
+  data = {{ results.totals|jsonify }};
+</script>
+{% javascript "site" %}
 {% endblock %}
 
 {% block page-content %}
@@ -213,7 +217,7 @@
         </div>
 
         <div class="col-sm-2">
-          <div class="chart chart-column" data-indicator="chart1"></div>
+          <div class="chart chart-column" data-indicator="{{ question.key }}/female"></div>
         </div>
 
         <div class="col-sm-2">
@@ -225,7 +229,7 @@
         </div>
 
         <div class="col-sm-2">
-          <div class="chart chart-column" data-indicator="chart2"></div>
+          <div class="chart chart-column" data-indicator="{{ question.key }}/male"></div>
         </div>
         {% endif %}
         {% endfor %}
@@ -238,12 +242,12 @@
 
         <div class="col-sm-4">
           <h5>Female</h5>
-          <div class="chart chart-bar" data-indicator="chart5"></div>
+          <div class="chart chart-bar" data-indicator="{{ question.key }}/female"></div>
         </div>
 
         <div class="col-sm-4">
           <h5>Male</h5>
-          <div class="chart chart-bar" data-indicator="chart6"></div>
+          <div class="chart chart-bar" data-indicator="{{ question.key }}/male"></div>
         </div>
       </section>
       {% endif %}
