@@ -113,17 +113,15 @@ def count_question_options(site_submissions, path):
 def set_option_counts(path, option_name, results, current_option_counts):
     for gender in ['male', 'female']:
         option_table = current_option_counts
-        # keys that can be int are known as int indexes to the DataFrame
-        try:
-            option_name_as_idx = int(option_name)
-        except:
-            option_name_as_idx = option_name
 
         try:
-            val = int(option_table.loc[gender, option_name_as_idx])
+            val = int(option_table.loc[gender, option_name])
         except KeyError:
             # values that aren't counted because they don't occur in the
             # results for this question won't be indexes in the counts
+            print("########################################")
+            print(path, gender, option_name_as_idx)
+            print(option_table)
             val = 0
 
         results = deep_dict_set(

@@ -56,7 +56,7 @@ Umibukela.Site = function() {
       })[0];
       var chartType = $e.hasClass('chart-bar') ? 'bar' : 'column';
       var labels = _.map(d.options, function(o) { return o.label; });
-      var currValues = _.map(d.options, function(o) { return o.pct[gender]; });
+      var currValues = _.map(d.options, function(o) { return Math.round(o.pct[gender]); });
 
       var series = [{
           data: currValues,
