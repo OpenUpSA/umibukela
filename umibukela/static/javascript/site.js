@@ -46,71 +46,23 @@ Umibukela.Site = function() {
       },
     });
 
-    var data = {
-      chart1: {
-        labels: ['Yes', 'No'],
-        values: {
-          current: [88, 109],
-          historical: [132, 83],
-        },
-      },
-      chart2: {
-        labels: ['Yes', 'No'],
-        values: {
-          current: [64, 43],
-          historical: [53, 41],
-        },
-      },
-      chart3: {
-        labels: ['Positive', 'Neutral', 'Negative'],
-        values: {
-          current: [65, 36, 96],
-          historical: [34, 27, 152],
-        }
-      },
-      chart4: {
-        labels: ['Positive', 'Neutral', 'Negative'],
-        values: {
-          current: [46, 28, 33],
-          historical: [14, 9, 72],
-        },
-      },
-      chart5: {
-        labels: ['More than 4 hours', '1 - 2 hours', '3 - 4 hours', '2 - 3 hours', 'Less than 1 hour'],
-        values: {
-          current: [1, 84, 4, 22, 86],
-          historical: [18, 57, 17, 52, 70],
-        },
-      },
-      chart6: {
-        labels: ['More than 4 hours', '1 - 2 hours', '3 - 4 hours', '2 - 3 hours', 'Less than 1 hour'],
-        values: {
-          current: [1, 84, 4, 22, 86],
-          historical: [1, 29, 10, 19, 35],
-        },
-      },
-    };
-
     $('.chart').each(function(i) {
       var $e = $(this);
-      var d = data[$e.data('indicator')];
+      var chartIdFields = $e.data('indicator').split(":");
+      var key = chartIdFields[0];
+      var gender = chartIdFields[1];
+      var d = questions.filter(function(q) {
+          return q.key == key
+      })[0];
       var chartType = $e.hasClass('chart-bar') ? 'bar' : 'column';
-
-      var currTotal = _.reduce(d.values.current, function(s, v){ return s + v; }, 0);
-      var currValues = _.map(d.values.current, function(v) { return Math.round(v / currTotal * 100); });
-
-      var histTotal = _.reduce(d.values.historical, function(s, v){ return s + v; }, 0);
-      var histValues = _.map(d.values.historical, function(v) { return Math.round(v / histTotal * 100); });
+      var labels = _.map(d.options, function(o) { return o.label; });
+      var currValues = _.map(d.options, function(o) { return o.pct[gender]; });
 
       var series = [{
           data: currValues,
           stack: 'current',
           name: 'Current cycle',
-        }, {
-          data: histValues,
-          stack: 'historical',
           pointWidth: chartType == 'bar' ? 5 : 10,
-          name: 'Previous cycles',
           dataLabels: {
             enabled: false,
           },
@@ -120,14 +72,13 @@ Umibukela.Site = function() {
         // show the current value on top. bar charts are drawn bottom up
         series = series.reverse();
         series[0].color = self.colours[1];
-        series[1].color = self.colours[0];
       }
 
       $(this).highcharts({
         chart: {type: chartType},
         series: series,
         xAxis: {
-          categories: d.labels,
+          categories: labels,
           labels: {step: 1},
         },
       });
