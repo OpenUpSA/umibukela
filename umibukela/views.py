@@ -63,28 +63,14 @@ def site_result(request, site_slug, result_id):
     )
     site_submissions = Submission.objects.filter(cycle_result_set=result_set)
     site_responses = [submission.answers for submission in site_submissions]
-    form = result_set.survey.form
-    site_results = results.calc_q_results(
-        pandas.DataFrame(site_responses),
-        form['children'],
-        [], {}, {}
-    )
-
-    # Turn the question-name-keyed dict into an array of questions and options
-    questions = []
-    for q_key in site_results.keys():
-        question = site_results[q_key]
-        options_dict = question['options']
-        options = []
-        for o_key in options_dict.keys():
-            option = options_dict[o_key]
-            option['key'] = o_key
-            options.append(option)
-        question['options'] = options  # overwrite
-        question['key'] = q_key
-        questions.append(question)
-
     site_totals = results.count_submissions(pandas.DataFrame(site_responses))
+    form = result_set.survey.form
+    site_results = results.count_options(
+        pandas.DataFrame(site_responses),
+        form['children']
+    )
+    site_results = results.calc_q_percents(site_results, site_totals)
+    questions = results.questions_dict_to_array(site_results)
 
     return render(request, 'site_result_detail.html', {
         'active_tab': 'sites',
