@@ -1,6 +1,33 @@
+"""
+survey response summary calculation
+"""
 
 
-def calc_q_results(submissions, children, path, question_results, leaf_results):
+def count_submissions(submissions):
+    results = {}
+    # per-gender counts
+    cols = ['facility', 'demographics_group/gender']
+    question_table = submissions.loc[:, cols]
+    gender_counts = question_table.groupby(
+        ['demographics_group/gender']
+    ).count()
+    for gender in ['female', 'male']:
+        results = deep_dict_set(
+            results,
+            int(gender_counts.loc[gender]),
+            [gender]
+        )
+
+    # total count
+    results = deep_dict_set(
+        results,
+        int(submissions.loc[:, ['facility']].count()),
+        ['total']
+    )
+    return results
+
+
+def calc_q_results(submissions, children, path, question_results, option_counts):
     """
     returns nested dicts where the keys are the names of the XForm element
     branches to each question and each option of a question. Only multiple
@@ -18,10 +45,11 @@ def calc_q_results(submissions, children, path, question_results, leaf_results):
                 child['children'],
                 deeper_path,
                 question_results,
-                leaf_results)
+                option_counts)
         elif (child_is_type(child, 'select one')
               or child_is_type(child, 'select all that apply')):
-            leaf_results['/'.join(deeper_path)] = calc_leaf(
+            # multiple choice questions
+            option_counts['/'.join(deeper_path)] = count_options(
                 submissions,
                 deeper_path
             )
@@ -35,19 +63,20 @@ def calc_q_results(submissions, children, path, question_results, leaf_results):
                 child['children'],
                 deeper_path,
                 question_results,
-                leaf_results
+                option_counts
             )
         elif ('type' not in child):
+            # option in multiple choice question
             question_results = deep_dict_set(
                 question_results,
                 child['label'],
                 [pathstr(path), 'options', child['name'], 'label']
             )
-            question_results = set_leaf_results(
+            question_results = set_option_counts(
                 path,
                 child['name'],
                 question_results,
-                leaf_results
+                option_counts
             )
         else:
             pass
@@ -58,7 +87,7 @@ def child_is_type(child, type):
     return ('type' in child) and child['type'] == type
 
 
-def calc_leaf(site_submissions, path):
+def count_options(site_submissions, path):
     cols = ['facility', 'demographics_group/gender', '/'.join(path)]
     question_table = site_submissions.loc[:, cols]
     question_counts = question_table.groupby(
@@ -67,18 +96,18 @@ def calc_leaf(site_submissions, path):
     return question_counts
 
 
-def set_leaf_results(path, leaf_key, results, leaf_results):
-    if '/'.join(path) in leaf_results:
+def set_option_counts(path, option_name, results, option_counts):
+    if '/'.join(path) in option_counts:
         for gender in ['male', 'female']:
-            leaf_table = leaf_results[pathstr(path)]
+            option_table = option_counts[pathstr(path)]
             # keys that can be int are known as int indexes to the DataFrame
             try:
-                leaf_key_as_idx = int(leaf_key)
+                option_name_as_idx = int(option_name)
             except:
-                leaf_key_as_idx = leaf_key
+                option_name_as_idx = option_name
 
             try:
-                val = int(leaf_table.loc[gender, leaf_key_as_idx])
+                val = int(option_table.loc[gender, option_name_as_idx])
             except KeyError:
                 # values that aren't counted because they don't occur in the
                 # results for this question won't be indexes in the counts
@@ -87,7 +116,7 @@ def set_leaf_results(path, leaf_key, results, leaf_results):
             results = deep_dict_set(
                 results,
                 val,
-                [pathstr(path), 'options', leaf_key, 'count', gender]
+                [pathstr(path), 'options', option_name, 'count', gender]
             )
     return results
 

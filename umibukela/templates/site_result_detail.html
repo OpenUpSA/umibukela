@@ -197,6 +197,7 @@
   <div class="container">
     <div class="stat-table page-section">
       {% for question in results.questions %}
+      {% if question.options|length <= 3 %}
       <section class="row stat-row">
         <div class="col-sm-4">
           <h3>{{ question.label }}</h3>
@@ -207,7 +208,6 @@
           <div class="stat stat-number">
             <div class="value">44.7%</div>
             <div class="name">Yes</div>
-            <div class="context"><strong>Down from 61%</strong> in previous cycles</div>
           </div>
         </div>
 
@@ -220,7 +220,6 @@
           <div class="stat stat-number">
             <div class="value">59.8%</div>
             <div class="name">Yes</div>
-            <div class="context"><strong>Up from 56%</strong> in previous cycles</div>
           </div>
         </div>
 
@@ -228,6 +227,23 @@
           <div class="chart chart-column" data-indicator="chart2"></div>
         </div>
       </section>
+      {% else %}
+      <section class="row stat-row">
+        <div class="col-sm-4">
+          <h3>{{ question.label }}</h3>
+        </div>
+
+        <div class="col-sm-4">
+          <h5>Female</h5>
+          <div class="chart chart-bar" data-indicator="chart5"></div>
+        </div>
+
+        <div class="col-sm-4">
+          <h5>Male</h5>
+          <div class="chart chart-bar" data-indicator="chart6"></div>
+        </div>
+      </section>
+      {% endif %}
       {% endfor %}
     </div>
   </div>
