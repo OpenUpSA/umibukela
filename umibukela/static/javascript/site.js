@@ -66,13 +66,8 @@ Umibukela.Site = function() {
           dataLabels: {
             enabled: false,
           },
-        }];
-
-      if (chartType == 'bar') {
-        // show the current value on top. bar charts are drawn bottom up
-        series = series.reverse();
-        series[0].color = self.colours[1];
-      }
+          color: self.colours[0],
+      }];
 
       $(this).highcharts({
         chart: {type: chartType},
