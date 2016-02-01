@@ -55,9 +55,8 @@ class Partner(models.Model):
 
     def latest_complete_result(self):
         """Return the latest ended CycleResultSet, otherwise None"""
-        result_sets = list(CycleResultSet.objects.filter(
-            partner=self, cycle__end_date__lte=timezone.now()
-        ).filter().all().prefetch_related('cycle', 'site'))
+        result_sets = list(
+            self.cycle_result_sets.filter(cycle__end_date__lte=timezone.now()).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp)
         result_sets.reverse()
         return result_sets[0] if result_sets else None
@@ -79,9 +78,8 @@ class Site(models.Model):
 
     def latest_complete_result(self):
         """Return the latest ended CycleResultSet, otherwise None"""
-        result_sets = list(CycleResultSet.objects.filter(
-            site=self, cycle__end_date__lte=timezone.now()
-        ).filter().all().prefetch_related('cycle'))
+        result_sets = list(
+            self.cycle_result_sets.filter(cycle__end_date__lte=timezone.now()).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp)
         result_sets.reverse()
         return result_sets[0] if result_sets else None
@@ -161,8 +159,8 @@ class CycleResultSet(models.Model):
     for each site.
     """
     cycle = models.ForeignKey(Cycle)
-    site = models.ForeignKey(Site)
-    partner = models.ForeignKey(Partner)
+    site = models.ForeignKey(Site, related_name='cycle_result_sets')
+    partner = models.ForeignKey(Partner, related_name='cycle_result_sets')
     # This is meant to allow identifying comparable CycleResultSets
     # which don't necessarily have exactly the same survey
     survey_type = models.ForeignKey(SurveyType, null=True, blank=True)
@@ -182,4 +180,4 @@ class CycleResultSet(models.Model):
 
 class Submission(models.Model):
     answers = jsonfield.JSONField()
-    cycle_result_set = models.ForeignKey(CycleResultSet, null=True, blank=True)
+    cycle_result_set = models.ForeignKey(CycleResultSet, null=True, blank=True, related_name="submissions")

@@ -7,7 +7,6 @@ from .models import (
     Partner,
     Site,
     CycleResultSet,
-    Submission,
 )
 
 
@@ -64,14 +63,11 @@ def site_result(request, site_slug, result_id):
         id=result_id,
         site__slug__exact=site_slug
     )
-    site_submissions = Submission.objects.filter(cycle_result_set=result_set)
-    site_responses = [submission.answers for submission in site_submissions]
-    site_totals = results.count_submissions(pandas.DataFrame(site_responses))
+    site_responses = [s.answers for s in result_set.submissions.all()]
+    df = pandas.DataFrame(site_responses)
+    site_totals = results.count_submissions(df)
     form = result_set.survey.form
-    site_results = results.count_options(
-        pandas.DataFrame(site_responses),
-        form['children']
-    )
+    site_results = results.count_options(df, form['children'])
     site_results = results.calc_q_percents(site_results, site_totals)
     questions = results.questions_dict_to_array(site_results)
 
@@ -86,7 +82,7 @@ def site_result(request, site_slug, result_id):
 
 
 def partners(request):
-    partners = Partner.objects.all().prefetch_related()
+    partners = Partner.objects.all()
     return render(request, 'partners.html', {
         'active_tab': 'partners',
         'partners': partners,
