@@ -159,11 +159,10 @@ def questions_dict_to_array(question_dict):
     Turn the question-name-keyed dict into an array of questions and options
     """
     questions = []
-    for q_key in question_dict.keys():
-        question = question_dict[q_key]
+    for q_key, question in question_dict.iteritems():
         options_dict = question['options']
         options = [None] * len(options_dict)
-        for o_key in options_dict.keys():
+        for o_key, option in options_dict.iteritems():
             option = options_dict[o_key]
             option['key'] = o_key
             options[option['idx']] = option
@@ -177,15 +176,15 @@ def calc_q_percents(questions, site_totals):
     """
     updates and returns a questions dict with percentages for option counts
     """
-    for q_key in questions.keys():
-        for o_key in questions[q_key]['options'].keys():
+    for q_key, question in questions.iteritems():
+        for o_key, option in question['options'].iteritems():
             for gender in ['female', 'male']:
-                o_count = questions[q_key]['options'][o_key]['count'][gender]
+                o_count = option['count'][gender]
                 g_count = site_totals[gender]
                 pct = (float(o_count)/float(g_count))*100
                 deep_dict_set(
-                    questions,
+                    option,
                     pct,
-                    [q_key, 'options', o_key, 'pct', gender]
+                    ['pct', gender]
                 )
     return questions
