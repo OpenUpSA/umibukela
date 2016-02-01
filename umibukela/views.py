@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 import pandas
-import results
+import analysis
 
 from .models import (
     Partner,
@@ -65,11 +65,11 @@ def site_result(request, site_slug, result_id):
     )
     site_responses = [s.answers for s in result_set.submissions.all()]
     df = pandas.DataFrame(site_responses)
-    site_totals = results.count_submissions(df)
+    site_totals = analysis.count_submissions(df)
     form = result_set.survey.form
-    site_results = results.count_options(df, form['children'])
-    site_results = results.calc_q_percents(site_results, site_totals)
-    questions = results.questions_dict_to_array(site_results)
+    site_results = analysis.count_options(df, form['children'])
+    site_results = analysis.calc_q_percents(site_results, site_totals)
+    questions = analysis.questions_dict_to_array(site_results)
 
     return render(request, 'site_result_detail.html', {
         'active_tab': 'sites',
