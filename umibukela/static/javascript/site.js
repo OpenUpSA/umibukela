@@ -62,9 +62,9 @@ Umibukela.Site = function() {
           data: currValues,
           stack: 'current',
           name: 'Current cycle',
-          pointWidth: chartType == 'bar' ? 5 : 10,
+          pointWidth: chartType == 'bar' ? 10 : 15,
           dataLabels: {
-            enabled: false,
+            enabled: true,
           },
           color: self.colours[0],
       }];

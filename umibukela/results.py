@@ -120,7 +120,7 @@ def set_option_counts(path, option_name, results, current_option_counts):
             # values that aren't counted because they don't occur in the
             # results for this question won't be indexes in the counts
             print("########################################")
-            print(path, gender, option_name_as_idx)
+            print(path, gender, option_name)
             print(option_table)
             val = 0
 
