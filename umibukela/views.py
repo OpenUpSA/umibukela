@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 import pandas
 import results
 
@@ -38,7 +39,7 @@ def sites(request):
 
 
 def site(request, site_slug):
-    site = Site.objects.get(slug=site_slug)
+    site = get_object_or_404(Site, slug=site_slug)
     return render(request, 'site_detail.html', {
         'active_tab': 'sites',
         'site': site,
@@ -46,7 +47,8 @@ def site(request, site_slug):
 
 
 def site_result_hardcoded(request, site_slug, result_id):
-    result_set = CycleResultSet.objects.get(
+    result_set = get_object_or_404(
+        CycleResultSet,
         id=result_id,
         site__slug__exact=site_slug
     )
@@ -57,7 +59,8 @@ def site_result_hardcoded(request, site_slug, result_id):
 
 
 def site_result(request, site_slug, result_id):
-    result_set = CycleResultSet.objects.get(
+    result_set = get_object_or_404(
+        CycleResultSet,
         id=result_id,
         site__slug__exact=site_slug
     )
@@ -91,7 +94,7 @@ def partners(request):
 
 
 def partner(request, partner_slug):
-    partner = Partner.objects.get(slug=partner_slug)
+    partner = get_object_or_404(Partner, slug=partner_slug)
     return render(request, 'partner_detail.html', {
         'active_tab': 'partners',
         'partner': partner,
