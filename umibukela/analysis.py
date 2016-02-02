@@ -137,19 +137,19 @@ def pathstr(path):
     return '/'.join(path)
 
 
-def deep_dict_set(deep_dict, layers, value):
-    layer = layers[0]
-    if layers[1:]:
-        if layer in deep_dict:
-            deep_dict[layer] = deep_dict_set(
-                deep_dict[layer],
-                layers[1:],
+def deep_dict_set(deep_dict, path, value):
+    key = path[0]
+    if path[1:]:
+        if key in deep_dict:
+            deep_dict[key] = deep_dict_set(
+                deep_dict[key],
+                path[1:],
                 value
             )
         else:
-            deep_dict[layer] = deep_dict_set({}, layers[1:], value)
+            deep_dict[key] = deep_dict_set({}, path[1:], value)
     else:
-        deep_dict[layer] = value
+        deep_dict[key] = value
 
     return deep_dict
 
