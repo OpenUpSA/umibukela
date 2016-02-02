@@ -50,14 +50,17 @@ class Element(object):
     def __init__(self, element, path):
         self.label = element['label']
         self.name = element['name']
-        self.path = path
-        self.pathstr = pathstr(path)
+        self.path = path + [element['name']]
+        self.pathstr = pathstr(self.path)
+
+    def __str__(self):
+        return "%s %s" % (self.__class__, self.pathstr)
 
 
 class MultipleChoice(Element):
     def __init__(self, question, path):
         super(MultipleChoice, self).__init__(question, path)
-        self.options = question['children']
+        self.options = [Option(o, self.path) for o in question['children']]
 
 
 class Option(Element):
@@ -113,10 +116,10 @@ def count_options(submissions, children, path=None, results=None):
         elif child.get('type') == 'group':
             results = count_options(submissions, child['children'], deeper_path, results)
         elif child.get('type') == 'select one':
-            question = SelectOne(child, deeper_path)
+            question = SelectOne(child, path)
             results = count_select_one(submissions, question, results)
         elif child.get('type') == 'select all that apply':
-            question = SelectAllThatApply(child, deeper_path)
+            question = SelectAllThatApply(child, path)
             results = count_select_all_that_apply(submissions, question, results)
         else:
             pass
@@ -127,41 +130,61 @@ def count_select_one(submissions, q, results):
     option_counts = count_select_one_options(submissions, q.path)
     results = deep_set(results, [q.pathstr, 'label'], q.label)
     for idx in range(len(q.options)):
-        opt = Option(q.options[idx], q.path)
+        opt = q.options[idx]
         results = deep_set(results, [q.pathstr, 'options', opt.name, 'label'], opt.label)
         results = deep_set(results, [q.pathstr, 'options', opt.name, 'idx'], idx)
-        results = set_option_counts(q.path, opt.name, results, option_counts)
+        results = set_select_one_option_counts(q.path, opt.name, results, option_counts)
     return results
 
 
 def count_select_all_that_apply(submissions, q, results):
-    option_counts = count_select_one_options(submissions, q.path)
     results = deep_set(results, [q.pathstr, 'label'], q.label)
     for idx in range(len(q.options)):
-        opt = Option(q.options[idx], q.path)
+        opt = q.options[idx]
+        option_counts = count_select_all_that_apply_options(submissions, opt.path)
         results = deep_set(results, [q.pathstr, 'options', opt.name, 'label'], opt.label)
         results = deep_set(results, [q.pathstr, 'options', opt.name, 'idx'], idx)
-        results = set_option_counts(q.path, opt.name, results, option_counts)
+        results = set_select_all_that_apply_option_counts(q.path, opt.name, results, option_counts)
     return results
 
 
-def count_select_one_options(site_submissions, path):
-    cols = ['facility', 'demographics_group/gender', pathstr(path)]
-    question_table = site_submissions.loc[:, cols]
+def count_select_one_options(submissions, questionpath):
+    cols = ['_uuid', 'demographics_group/gender', pathstr(questionpath)]
+    question_table = submissions.loc[:, cols]
     question_counts = question_table.groupby(
-        ['demographics_group/gender', pathstr(path)]
+        ['demographics_group/gender', pathstr(questionpath)]
     ).count()
     return question_counts
 
 
-def count_select_all_that_apply_options():
-    # df.loc[:,['facility', 'demographics_group/gender', 'visit_reason/emergency']].where((df['facility']=='folweni') & (df['visit_reason/pregnant'] == True)).groupby(['facility', 'demographics_group/gender']).count()
-    pass
+def count_select_all_that_apply_options(submissions, optionpath):
+    option_col = pathstr(optionpath)
+    cols = ['demographics_group/gender', option_col]
+    option_table = submissions.loc[:, cols]
+    option_chosen_table = option_table.where(submissions[option_col] == 'True')
+    option_counts = option_chosen_table.groupby(['demographics_group/gender']).count()
+    return option_counts
 
 
-def set_option_counts(path, option_name, results, current_option_counts):
+def set_select_all_that_apply_option_counts(path, option_name, results, option_table):
     for gender in ['male', 'female']:
-        option_table = current_option_counts
+
+        try:
+            val = int(option_table.loc[gender])
+        except KeyError:
+            # values that aren't counted because they don't occur in the
+            # results for this question won't be indexes in the counts
+            print("########################################")
+            print(path, gender, option_name)
+            print(option_table)
+            val = 0
+
+        results = deep_set(results, [pathstr(path), 'options', option_name, 'count', gender], val)
+    return results
+
+
+def set_select_one_option_counts(path, option_name, results, option_table):
+    for gender in ['male', 'female']:
 
         try:
             val = int(option_table.loc[gender, option_name])
