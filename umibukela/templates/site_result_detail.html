@@ -120,7 +120,12 @@
       {% if question.options|length <= 3 %}
       <section class="row stat-row">
         <div class="col-sm-4">
-          <h3>{{ question.label }}</h3>
+          <h3>
+            {% if question.group_labels.count > 0 %}
+            {{ question.group_labels | join:" - " }} -
+            {% endif %}
+            {{ question.label }}
+          </h3>
         </div>
         {% for option in question.options %}
         {% if forloop.counter0 == 0 %}
@@ -153,7 +158,12 @@
       {% else %}
       <section class="row stat-row">
         <div class="col-sm-4">
-          <h3>{{ question.label }}</h3>
+          <h3>
+            {% if question.group_labels.count > 0 %}
+            {{ question.group_labels | join:" - " }} -
+            {% endif %}
+            {{ question.label }}
+          </h3>
         </div>
 
         <div class="col-sm-4">

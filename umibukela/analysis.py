@@ -58,9 +58,10 @@ class Element(object):
 
 
 class MultipleChoice(Element):
-    def __init__(self, question, path):
+    def __init__(self, question, path, group_labels):
         super(MultipleChoice, self).__init__(question, path)
         self.options = [Option(o, self.path) for o in question['children']]
+        self.group_labels = group_labels
 
 
 class Option(Element):
@@ -99,14 +100,15 @@ def count_submissions(submissions):
     return results
 
 
-def count_options(submissions, children, path=None, results=None):
+def count_options(submissions, children, path=None, group_labels=None, results=None):
     """
     returns nested dicts where the keys are the names of the XForm element
     branches to each question and each option of a question. Only multiple
     choice questions are supported.
     """
-    path = path or []
-    results = results or {}
+    path = path or []  # list of names in structure leading to current element
+    group_labels = group_labels or []  # list of labels in groups in path
+    results = results or {}  # results nested dict under construction
     for child in children:
         deeper_path = path + [child['name']]
         if deeper_path in SKIP_QUESTIONS:
@@ -114,12 +116,14 @@ def count_options(submissions, children, path=None, results=None):
         elif child.get('type') == 'group' and child['name'] == 'meta':
             pass
         elif child.get('type') == 'group':
-            results = count_options(submissions, child['children'], deeper_path, results)
+            deeper_group_labels = group_labels + [child['label']]
+            results = count_options(submissions, child['children'],
+                                    deeper_path, deeper_group_labels, results)
         elif child.get('type') == 'select one':
-            question = SelectOne(child, path)
+            question = SelectOne(child, path, group_labels)
             results = count_select_one(submissions, question, results)
         elif child.get('type') == 'select all that apply':
-            question = SelectAllThatApply(child, path)
+            question = SelectAllThatApply(child, path, group_labels)
             results = count_select_all_that_apply(submissions, question, results)
         else:
             pass
@@ -129,6 +133,7 @@ def count_options(submissions, children, path=None, results=None):
 def count_select_one(submissions, q, results):
     option_counts = count_select_one_options(submissions, q.path)
     results = deep_set(results, [q.pathstr, 'label'], q.label)
+    results = deep_set(results, [q.pathstr, 'group_labels'], q.group_labels)
     for idx in range(len(q.options)):
         opt = q.options[idx]
         results = deep_set(results, [q.pathstr, 'options', opt.name, 'label'], opt.label)
@@ -139,6 +144,7 @@ def count_select_one(submissions, q, results):
 
 def count_select_all_that_apply(submissions, q, results):
     results = deep_set(results, [q.pathstr, 'label'], q.label)
+    results = deep_set(results, [q.pathstr, 'group_labels'], q.group_labels)
     for idx in range(len(q.options)):
         opt = q.options[idx]
         option_counts = count_select_all_that_apply_options(submissions, opt.path)
