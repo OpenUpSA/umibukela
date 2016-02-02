@@ -14,15 +14,15 @@ def count_submissions(submissions):
     for gender in ['female', 'male']:
         results = deep_dict_set(
             results,
-            int(gender_counts.loc[gender]),
-            [gender]
+            [gender],
+            int(gender_counts.loc[gender])
         )
 
     # total count
     results = deep_dict_set(
         results,
-        int(submissions.loc[:, ['facility']].count()),
-        ['total']
+        ['total'],
+        int(submissions.loc[:, ['facility']].count())
     )
     return results
 
@@ -63,8 +63,8 @@ def count_options(
             )
             question_results = deep_dict_set(
                 question_results,
-                child['label'],
-                [pathstr(deeper_path), 'label']
+                [pathstr(deeper_path), 'label'],
+                child['label']
             )
             question_results = count_options(
                 submissions,
@@ -77,13 +77,13 @@ def count_options(
             # option in multiple choice question
             question_results = deep_dict_set(
                 question_results,
-                child['label'],
-                [pathstr(path), 'options', child['name'], 'label']
+                [pathstr(path), 'options', child['name'], 'label'],
+                child['label']
             )
             question_results = deep_dict_set(
                 question_results,
-                idx,
-                [pathstr(path), 'options', child['name'], 'idx']
+                [pathstr(path), 'options', child['name'], 'idx'],
+                idx
             )
             question_results = set_option_counts(
                 path,
@@ -126,8 +126,8 @@ def set_option_counts(path, option_name, results, current_option_counts):
 
         results = deep_dict_set(
             results,
-            val,
-            [pathstr(path), 'options', option_name, 'count', gender]
+            [pathstr(path), 'options', option_name, 'count', gender],
+            val
         )
     return results
 
@@ -137,17 +137,17 @@ def pathstr(path):
     return '/'.join(path)
 
 
-def deep_dict_set(deep_dict, value, layers):
+def deep_dict_set(deep_dict, layers, value):
     layer = layers[0]
     if layers[1:]:
         if layer in deep_dict:
             deep_dict[layer] = deep_dict_set(
                 deep_dict[layer],
-                value,
-                layers[1:]
+                layers[1:],
+                value
             )
         else:
-            deep_dict[layer] = deep_dict_set({}, value, layers[1:])
+            deep_dict[layer] = deep_dict_set({}, layers[1:], value)
     else:
         deep_dict[layer] = value
 
@@ -184,7 +184,7 @@ def calc_q_percents(questions, site_totals):
                 pct = (float(o_count)/float(g_count))*100
                 deep_dict_set(
                     option,
-                    pct,
-                    ['pct', gender]
+                    ['pct', gender],
+                    pct
                 )
     return questions
