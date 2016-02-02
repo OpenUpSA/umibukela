@@ -62,6 +62,8 @@ class MultipleChoice(Element):
         super(MultipleChoice, self).__init__(question, path)
         self.options = [Option(o, self.path) for o in question['children']]
         self.group_labels = group_labels
+        if question['bind']['required'] != 'yes':
+            raise Exception("optional questions not supported")
 
 
 class Option(Element):
@@ -84,19 +86,10 @@ def count_submissions(submissions):
     gender_counts = question_table.groupby(
         ['demographics_group/gender']
     ).count()
-    for gender in ['female', 'male']:
-        results = deep_set(
-            results,
-            [gender],
-            int(gender_counts.loc[gender])
-        )
+    results['female'] = int(gender_counts.loc['female'])
+    results['male'] = int(gender_counts.loc['male'])
+    results['total'] = int(submissions.loc[:, ['facility']].count())
 
-    # total count
-    results = deep_set(
-        results,
-        ['total'],
-        int(submissions.loc[:, ['facility']].count())
-    )
     return results
 
 
