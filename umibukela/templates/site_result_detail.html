@@ -121,9 +121,11 @@
       <section class="row stat-row">
         <div class="col-sm-4">
           <h3>
-            {% if question.group_labels.count > 0 %}
+            {% with group_count=question.group_labels|length %}
+            {% if group_count > 0 %}
             {{ question.group_labels | join:" - " }} -
             {% endif %}
+            {% endwith %}
             {{ question.label }}
           </h3>
         </div>
@@ -159,9 +161,11 @@
       <section class="row stat-row">
         <div class="col-sm-4">
           <h3>
-            {% if question.group_labels.count > 0 %}
+            {% with group_count=question.group_labels|length %}
+            {% if group_count > 0 %}
             {{ question.group_labels | join:" - " }} -
             {% endif %}
+            {% endwith %}
             {{ question.label }}
           </h3>
         </div>
@@ -181,5 +185,7 @@
     </div>
   </div>
 </div>
+
+<pre> {% filter force_escape %} {% debug %} {% endfilter %} </pre>
 
 {% endblock %}
