@@ -281,15 +281,15 @@ def questions_dict_to_array(question_dict):
     return questions
 
 
-def calc_q_percents(questions, site_totals):
+def calc_q_percents(questions):
     """
     updates and returns a questions dict with percentages for option counts
     """
     for q_key, question in questions.iteritems():
         for o_key, option in question['options'].iteritems():
             for gender in ['female', 'male']:
-                o_count = option['count'][gender]
-                g_count = site_totals[gender]
-                pct = (float(o_count)/float(g_count))*100
+                select_count = float(option['count'][gender])
+                response_count = float(question['response_count'][gender])
+                pct = (select_count/response_count)*100
                 deep_set(option, ['pct', gender], pct)
     return questions

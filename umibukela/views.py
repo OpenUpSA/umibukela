@@ -79,7 +79,7 @@ def site_result(request, site_slug, result_id):
         form = result_set.survey.form
         site_totals = analysis.count_submissions(df)
         site_results = analysis.count_options(df, form['children'])
-        site_results = analysis.calc_q_percents(site_results, site_totals)
+        site_results = analysis.calc_q_percents(site_results)
         questions = analysis.questions_dict_to_array(site_results)
     else:
         questions = []
