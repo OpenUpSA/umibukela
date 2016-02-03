@@ -45,7 +45,7 @@ from logging import getLogger
 
 # These are used for grouping. Trying to count them and group by them
 # at the same time doesn't work.
-SKIP_QUESTIONS = [['facility'], ['demographics_group', 'gender']]
+SKIP_QUESTIONS = [['_uuid'], ['demographics_group', 'gender']]
 
 log = getLogger(__name__)
 
@@ -85,14 +85,14 @@ class SelectAllThatApply(MultipleChoice):
 def count_submissions(submissions):
     results = {}
     # per-gender counts
-    cols = ['facility', 'demographics_group/gender']
+    cols = ['_uuid', 'demographics_group/gender']
     question_table = submissions.loc[:, cols]
     gender_counts = question_table.groupby(
         ['demographics_group/gender']
     ).count()
     results['female'] = int(gender_counts.loc['female'])
     results['male'] = int(gender_counts.loc['male'])
-    results['total'] = int(submissions.loc[:, ['facility']].count())
+    results['total'] = int(submissions.loc[:, ['_uuid']].count())
 
     return results
 
