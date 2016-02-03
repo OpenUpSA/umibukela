@@ -46,6 +46,7 @@ from logging import getLogger
 # These are used for grouping. Trying to count them and group by them
 # at the same time doesn't work.
 SKIP_QUESTIONS = [['_uuid'], ['demographics_group', 'gender']]
+GENDER_COLUMN = 'demographics_group/gender'
 
 log = getLogger(__name__)
 
@@ -66,8 +67,6 @@ class MultipleChoice(Element):
         super(MultipleChoice, self).__init__(question, path)
         self.options = [Option(o, self.path) for o in question['children']]
         self.group_labels = group_labels
-        if question['bind']['required'] != 'yes':
-            raise Exception("optional questions not supported")
 
 
 class Option(Element):
@@ -85,10 +84,10 @@ class SelectAllThatApply(MultipleChoice):
 def count_submissions(submissions):
     results = {}
     # per-gender counts
-    cols = ['_uuid', 'demographics_group/gender']
+    cols = ['_uuid', GENDER_COLUMN]
     question_table = submissions.loc[:, cols]
     gender_counts = question_table.groupby(
-        ['demographics_group/gender']
+        [GENDER_COLUMN]
     ).count()
     results['female'] = int(gender_counts.loc['female'])
     results['male'] = int(gender_counts.loc['male'])
@@ -152,20 +151,20 @@ def count_select_all_that_apply(submissions, q, results):
 
 
 def count_select_one_options(submissions, questionpath):
-    cols = ['_uuid', 'demographics_group/gender', pathstr(questionpath)]
+    cols = ['_uuid', GENDER_COLUMN, pathstr(questionpath)]
     question_table = submissions.loc[:, cols]
     question_counts = question_table.groupby(
-        ['demographics_group/gender', pathstr(questionpath)]
+        [GENDER_COLUMN, pathstr(questionpath)]
     ).count()
     return question_counts
 
 
 def count_select_all_that_apply_options(submissions, optionpath):
     option_col = pathstr(optionpath)
-    cols = ['demographics_group/gender', option_col]
+    cols = [GENDER_COLUMN, option_col]
     option_table = submissions.loc[:, cols]
     option_chosen_table = option_table.where(submissions[option_col] == 'True')
-    option_counts = option_chosen_table.groupby(['demographics_group/gender']).count()
+    option_counts = option_chosen_table.groupby([GENDER_COLUMN]).count()
     return option_counts
 
 
