@@ -40,10 +40,14 @@ where questions are in an array and each question's options are
 in an array under the question's options field.
 """
 
+from logging import getLogger
+
 
 # These are used for grouping. Trying to count them and group by them
 # at the same time doesn't work.
 SKIP_QUESTIONS = [['facility'], ['demographics_group', 'gender']]
+
+log = getLogger(__name__)
 
 
 class Element(object):
@@ -167,17 +171,7 @@ def count_select_all_that_apply_options(submissions, optionpath):
 
 def set_select_all_that_apply_option_counts(path, option_name, results, option_table):
     for gender in ['male', 'female']:
-
-        try:
-            val = int(option_table.loc[gender])
-        except KeyError:
-            # values that aren't counted because they don't occur in the
-            # results for this question won't be indexes in the counts
-            print("########################################")
-            print(path, gender, option_name)
-            print(option_table)
-            val = 0
-
+        val = int(option_table.loc[gender])
         results = deep_set(results, [pathstr(path), 'options', option_name, 'count', gender], val)
     return results
 
@@ -190,9 +184,8 @@ def set_select_one_option_counts(path, option_name, results, option_table):
         except KeyError:
             # values that aren't counted because they don't occur in the
             # results for this question won't be indexes in the counts
-            print("########################################")
-            print(path, gender, option_name)
-            print(option_table)
+            log.debug("Question %s option %s %s not found in counts DataFrame %s",
+                      pathstr(path), gender, option_name, option_table)
             val = 0
 
         results = deep_set(results, [pathstr(path), 'options', option_name, 'count', gender], val)

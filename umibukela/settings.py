@@ -207,9 +207,9 @@ LOGGING = {
     },
     'loggers': {
         # put any custom loggers here
-        # 'your_package_name': {
-        #    'level': 'DEBUG' if DEBUG else 'INFO',
-        # },
+        'umibukela': {
+            'level': 'DEBUG' if DEBUG else 'INFO',
+        },
         'django': {
             'level': 'DEBUG' if DEBUG else 'INFO',
         }
