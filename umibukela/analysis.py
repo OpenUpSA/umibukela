@@ -178,7 +178,6 @@ def set_select_all_that_apply_option_counts(path, option_name, results, option_t
 
 def set_select_one_option_counts(path, option_name, results, option_table):
     for gender in ['male', 'female']:
-
         try:
             val = int(option_table.loc[gender, option_name])
         except KeyError:
