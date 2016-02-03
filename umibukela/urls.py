@@ -10,6 +10,7 @@ urlpatterns = patterns('',
 
     url(r'^sites$', 'umibukela.views.sites', name='sites'),
     url(r'^sites/(?P<site_slug>[\w-]+)$', 'umibukela.views.site', name='site'),
+    url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)-hardcoded$', 'umibukela.views.site_result_hardcoded', name='site-result-hardcoded'),
     url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)$', 'umibukela.views.site_result', name='site-result'),
 
     url(r'^partners$', 'umibukela.views.partners', name='partners'),
