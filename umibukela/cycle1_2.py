@@ -1,0 +1,261 @@
+import csv
+import pandas as pd
+
+
+f = open('cycle1/Health_citizen_survey_all.csv')
+r = csv.DictReader(f, delimiter=',', quotechar='"')
+df = pd.DataFrame(list(r))
+
+# change column names
+df.columns = ['waiting_group/medicine_time', 'device_id', 'yes_no_group/examined_private', 'performance_group/respect_admin', 'performance_group/queues', 'performance_group/respect_professionals', 'yes_no_group/consent', 'yes_no_group/safety', 'yes_no_group/all_medication', 'yes_no_group/complaint', 'yes_no_group/complaint_response', 'performance_group/equipment', 'waiting_group/register_time', 'performance_group/ambulance', 'tracking_no', 'personal_comment1', 'personal_comment2', 'clinic_committee', 'clinic_committee_function', 'clinic_feedback', 'improvements_comment', 'demographics_group/gender', 'facility', 'demographics_group/age', 'demographics_group/disability', 'distance', 'demographics_group/income', 'town_village', 'district', 'province', 'surveyor', 'today', 'visit_reason', 'travel_distance', '_uuid', 'waiting_group/professional_time', 'submitted_date', 'performance_group/clean']
+
+
+# change values
+
+# method
+# for val in pd.unique(df.where(df['device_id']=='MAVCEC1')['facility'].ravel()):
+#    print val
+#
+# deviceid doesn't seem to be fixed to a site
+#
+# df.where(df['town_village']=='Folweni').replace(inplace=True, to_replace={'facility':{'Clinic':'notclinic'}})
+# doesn't seem to work
+
+replacements_all = {
+    'town_village': {},
+    'district': {},
+    'province': {},
+    'surveyor': {},
+    'today': {},
+    'visit_reason': {},
+    'travel_distance': {},
+    'waiting_group/register_time': {},
+    'waiting_group/professional_time': {},
+    'waiting_group/medicine_time': {},
+    'yes_no_group/safety': {},
+    'yes_no_group/examined_private': {},
+    'yes_no_group/consent': {},
+    'yes_no_group/all_medication': {},
+    'yes_no_group/complaint': {},
+    'yes_no_group/complaint_response': {},
+    'personal_comment1': {},
+    'performance_group/clean': {},
+    'performance_group/queues': {},
+    'performance_group/respect_admin': {},
+    'performance_group/respect_professionals': {},
+    'performance_group/ambulance': {},
+    'performance_group/equipment': {},
+    'personal_comment2': {},
+    'clinic_committee': {},
+    'clinic_committee_function': {},
+    'clinic_feedback': {},
+    'improvements_comment': {},
+    'demographics_group/gender': {},
+    'demographics_group/age': {},
+    'demographics_group/disability': {},
+    'distance': {},
+    'demographics_group/income': {}
+}
+
+replacements_MAVCEC1 = {
+    'facility': {
+        'Thabong Clinic': 'thabong',
+        'Thabong': 'thabong',
+    },
+    'town_village': {},
+    'district': {},
+    'province': {},
+    'surveyor': {},
+    'today': {},
+    'visit_reason': {},
+    'travel_distance': {},
+    'waiting_group/register_time': {},
+    'waiting_group/professional_time': {},
+    'waiting_group/medicine_time': {},
+    'yes_no_group/safety': {},
+    'yes_no_group/examined_private': {},
+    'yes_no_group/consent': {},
+    'yes_no_group/all_medication': {},
+    'yes_no_group/complaint': {},
+    'yes_no_group/complaint_response': {},
+    'personal_comment1': {},
+    'performance_group/clean': {},
+    'performance_group/queues': {},
+    'performance_group/respect_admin': {},
+    'performance_group/respect_professionals': {},
+    'performance_group/ambulance': {},
+    'performance_group/equipment': {},
+    'personal_comment2': {},
+    'clinic_committee': {},
+    'clinic_committee_function': {},
+    'clinic_feedback': {},
+    'improvements_comment': {},
+    'demographics_group/gender': {},
+    'demographics_group/age': {},
+    'demographics_group/disability': {},
+    'distance': {},
+    'demographics_group/income': {}
+}
+
+replacements_MAVCEC4 = {
+    'facility': {
+        'Port St Johns': 'port_st_johns',
+    },
+    'town_village': {},
+    'district': {},
+    'province': {},
+    'surveyor': {},
+    'today': {},
+    'visit_reason': {},
+    'travel_distance': {},
+    'waiting_group/register_time': {},
+    'waiting_group/professional_time': {},
+    'waiting_group/medicine_time': {},
+    'yes_no_group/safety': {},
+    'yes_no_group/examined_private': {},
+    'yes_no_group/consent': {},
+    'yes_no_group/all_medication': {},
+    'yes_no_group/complaint': {},
+    'yes_no_group/complaint_response': {},
+    'personal_comment1': {},
+    'performance_group/clean': {},
+    'performance_group/queues': {},
+    'performance_group/respect_admin': {},
+    'performance_group/respect_professionals': {},
+    'performance_group/ambulance': {},
+    'performance_group/equipment': {},
+    'personal_comment2': {},
+    'clinic_committee': {},
+    'clinic_committee_function': {},
+    'clinic_feedback': {},
+    'improvements_comment': {},
+    'demographics_group/gender': {},
+    'demographics_group/age': {},
+    'demographics_group/disability': {},
+    'distance': {},
+    'demographics_group/income': {}
+}
+
+replacements_MAVCJHB5 = {
+    'facility': {
+        'Soshoanguve Block X Clinic': 'tshwane',
+        'Clinic': 'tswane',
+        'ufvh': 'tswane',
+        'ju5huh': 'tswane',
+        'tshwane': 'tswane',
+        'Soshoanguve': 'tswane',
+    },
+    'town_village': {},
+    'district': {},
+    'province': {},
+    'surveyor': {},
+    'today': {},
+    'visit_reason': {},
+    'travel_distance': {},
+    'waiting_group/register_time': {},
+    'waiting_group/professional_time': {},
+    'waiting_group/medicine_time': {},
+    'yes_no_group/safety': {},
+    'yes_no_group/examined_private': {},
+    'yes_no_group/consent': {},
+    'yes_no_group/all_medication': {},
+    'yes_no_group/complaint': {},
+    'yes_no_group/complaint_response': {},
+    'personal_comment1': {},
+    'performance_group/clean': {},
+    'performance_group/queues': {},
+    'performance_group/respect_admin': {},
+    'performance_group/respect_professionals': {},
+    'performance_group/ambulance': {},
+    'performance_group/equipment': {},
+    'personal_comment2': {},
+    'clinic_committee': {},
+    'clinic_committee_function': {},
+    'clinic_feedback': {},
+    'improvements_comment': {},
+    'demographics_group/gender': {},
+    'demographics_group/age': {},
+    'demographics_group/disability': {},
+    'distance': {},
+    'demographics_group/income': {}
+}
+
+replacements_MAVCKZN2 = {
+    'facility': {
+        'siphosethu nzoyi': 'umlazi',
+        'Q clinic': 'umlazi',
+        'D': 'umlazi',
+    },
+    'town_village': {},
+    'district': {},
+    'province': {},
+    'surveyor': {},
+    'today': {},
+    'visit_reason': {},
+    'travel_distance': {},
+    'waiting_group/register_time': {},
+    'waiting_group/professional_time': {},
+    'waiting_group/medicine_time': {},
+    'yes_no_group/safety': {},
+    'yes_no_group/examined_private': {},
+    'yes_no_group/consent': {},
+    'yes_no_group/all_medication': {},
+    'yes_no_group/complaint': {},
+    'yes_no_group/complaint_response': {},
+    'personal_comment1': {},
+    'performance_group/clean': {},
+    'performance_group/queues': {},
+    'performance_group/respect_admin': {},
+    'performance_group/respect_professionals': {},
+    'performance_group/ambulance': {},
+    'performance_group/equipment': {},
+    'personal_comment2': {},
+    'clinic_committee': {},
+    'clinic_committee_function': {},
+    'clinic_feedback': {},
+    'improvements_comment': {},
+    'demographics_group/gender': {},
+    'demographics_group/age': {},
+    'demographics_group/disability': {},
+    'distance': {},
+    'demographics_group/income': {}
+}
+
+replacements_MAVCKZN5 = {
+    'facility': {
+        'Clinic': 'folweni',
+    },
+    'town_village': {},
+    'district': {},
+    'province': {},
+    'surveyor': {},
+    'today': {},
+    'visit_reason': {},
+    'travel_distance': {},
+    'waiting_group/register_time': {},
+    'waiting_group/professional_time': {},
+    'waiting_group/medicine_time': {},
+    'yes_no_group/safety': {},
+    'yes_no_group/examined_private': {},
+    'yes_no_group/consent': {},
+    'yes_no_group/all_medication': {},
+    'yes_no_group/complaint': {},
+    'yes_no_group/complaint_response': {},
+    'personal_comment1': {},
+    'performance_group/clean': {},
+    'performance_group/queues': {},
+    'performance_group/respect_admin': {},
+    'performance_group/respect_professionals': {},
+    'performance_group/ambulance': {},
+    'performance_group/equipment': {},
+    'personal_comment2': {},
+    'clinic_committee': {},
+    'clinic_committee_function': {},
+    'clinic_feedback': {},
+    'improvements_comment': {},
+    'demographics_group/gender': {},
+    'demographics_group/age': {},
+    'demographics_group/disability': {},
+    'distance': {},
+    'demographics_group/income': {}
+}

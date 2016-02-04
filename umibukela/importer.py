@@ -3,10 +3,11 @@ import csv
 
 # f = open('DOH-Citizen-Survey_2016_01_25_04_22_15.csv')
 # r = csv.DictReader(f, delimiter=',', quotechar='"')
-# pd.unique(facility_coldf.facility.ravel())
-# for answer_sheet in answer_sheets:
-#     submission = models.Submission(answers=answer_sheet)
-#     submission.save()
+# df = pd.DataFrame(list(r))
+# pd.unique(df.facility.ravel())
+for answers in list(r):
+    submission = models.Submission(answers=answers)
+    submission.save()
 
 
 def claim_submissions(field_name, submission_site_name, site_name, cycle_name):
