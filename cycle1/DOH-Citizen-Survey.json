@@ -1,0 +1,814 @@
+{
+  "default_language": "default",
+  "id_string": "DOH-Citizen-Survey",
+  "children": [
+    {
+      "name": "today",
+      "label": "Date of Survey",
+      "type": "today"
+    },
+    {
+      "name": "start",
+      "label": "Start Time",
+      "type": "start"
+    },
+    {
+      "name": "end",
+      "label": "End Time",
+      "type": "end"
+    },
+    {
+      "name": "device_id",
+      "label": "Phone Serial Number",
+      "type": "deviceid"
+    },
+    {
+      "name": "sim_imei",
+      "label": "SIM Serial",
+      "type": "deviceid"
+    },
+    {
+      "name": "phone_number",
+      "label": "Phone Number",
+      "type": "phonenumber"
+    },
+    {
+      "children": [
+        {
+          "name": "folweni",
+          "label": "Folweni Clinic"
+        },
+        {
+          "name": "thabong",
+          "label": "Thabong Clinic"
+        },
+        {
+          "name": "umlazi",
+          "label": "Umlazi Q Clinic"
+        },
+        {
+          "name": "port_st_johns",
+          "label": "Port St John's Community Health Centre"
+        },
+        {
+          "name": "tshwane",
+          "label": "Soshanguve Block X Clinic"
+        }
+      ],
+      "name": "facility",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Health Facility Name",
+      "type": "select one"
+    },
+    {
+      "name": "surveyor",
+      "hint": "Person who took the initial survey from the respondent",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Monitor",
+      "type": "text"
+    },
+    {
+      "name": "capturer",
+      "hint": "Person capturing the survey",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Capturer",
+      "type": "text"
+    },
+    {
+      "children": [
+        {
+          "name": "not_well",
+          "label": "Generally not feeling well"
+        },
+        {
+          "name": "pregnant",
+          "label": "Pregnant mother and children"
+        },
+        {
+          "name": "emergency",
+          "label": "Emergency"
+        },
+        {
+          "name": "accompanying",
+          "label": "Accompanying someone else"
+        },
+        {
+          "name": "regular_collection",
+          "label": "I visit regularly to collect monthly medication and/or check up"
+        },
+        {
+          "name": "other",
+          "label": "Other (please specify)"
+        }
+      ],
+      "name": "visit_reason",
+      "hint": "Select all that apply to you",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "What was your reason for visiting the facility?",
+      "type": "select all that apply"
+    },
+    {
+      "name": "vist_other",
+      "bind": {
+        "relevant": "${visit_reason} = 'other'",
+        "required": "yes"
+      },
+      "label": "What was the other reason for your visit?",
+      "type": "text"
+    },
+    {
+      "children": [
+        {
+          "name": "under_two",
+          "label": "2km or less"
+        },
+        {
+          "name": "two_five",
+          "label": "3 - 5km"
+        },
+        {
+          "name": "six_eight",
+          "label": "6 - 8km"
+        },
+        {
+          "name": "more_eight",
+          "label": "More than 8km"
+        }
+      ],
+      "name": "travel_distance",
+      "hint": "Assist the respondent to calculate the distance from their house",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "How far did you travel to get to the clinic?",
+      "type": "select one"
+    },
+    {
+      "children": [
+        {
+          "name": "nothing",
+          "label": "Nothing"
+        },
+        {
+          "name": "under_ten",
+          "label": "Less than R10"
+        },
+        {
+          "name": "eleven_twentyfive",
+          "label": "R11 - R25"
+        },
+        {
+          "name": "twentysix_fifty",
+          "label": "R26 - R50"
+        },
+        {
+          "name": "fiftyone_seventyfive",
+          "label": "R51 - R75"
+        },
+        {
+          "name": "more_seventyfive",
+          "label": "More than R75"
+        }
+      ],
+      "name": "transport_amount",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "What was the total amount you had to pay for transport to this clinic?",
+      "type": "select one"
+    },
+    {
+      "children": [
+        {
+          "name": "yes",
+          "label": "Yes"
+        },
+        {
+          "name": "no",
+          "label": "No"
+        }
+      ],
+      "name": "distance",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Is this clinic the nearest health facility to your home?",
+      "type": "select one"
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "name": "more_four",
+              "label": "More than 4 hours"
+            },
+            {
+              "name": "three_four",
+              "label": "3 - 4 hours"
+            },
+            {
+              "name": "two_three",
+              "label": "2 - 3 hours"
+            },
+            {
+              "name": "one_two",
+              "label": "1 - 2 hours"
+            },
+            {
+              "name": "under_one",
+              "label": "Less than 1 hour"
+            }
+          ],
+          "name": "register_time",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Get registered at reception",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "more_four",
+              "label": "More than 4 hours"
+            },
+            {
+              "name": "three_four",
+              "label": "3 - 4 hours"
+            },
+            {
+              "name": "two_three",
+              "label": "2 - 3 hours"
+            },
+            {
+              "name": "one_two",
+              "label": "1 - 2 hours"
+            },
+            {
+              "name": "under_one",
+              "label": "Less than 1 hour"
+            }
+          ],
+          "name": "professional_time",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "See a professional (nurse or doctor)",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "more_four",
+              "label": "More than 4 hours"
+            },
+            {
+              "name": "three_four",
+              "label": "3 - 4 hours"
+            },
+            {
+              "name": "two_three",
+              "label": "2 - 3 hours"
+            },
+            {
+              "name": "one_two",
+              "label": "1 - 2 hours"
+            },
+            {
+              "name": "under_one",
+              "label": "Less than 1 hour"
+            }
+          ],
+          "name": "medicine_time",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Collect your medication",
+          "type": "select one"
+        }
+      ],
+      "name": "waiting_group",
+      "label": "Please tell us how long you waited to:",
+      "type": "group"
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "safety",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did you feel safe in and around the clinic?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "examined_private",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did the staff respect your right to be examined in private?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "consent",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did the nurse or doctor explain your rights and ask for your consent before treating you?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "all_medication",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did you get all the medication that you needed?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "complaint",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Do you know how to make a complaint at this clinic if you wanted to?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "complaint_response",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Do you think that the clinic will respond to a complaint if you make one?",
+          "type": "select one"
+        }
+      ],
+      "name": "yes_no_group",
+      "label": "Please answer yes or no to the following questions",
+      "type": "group"
+    },
+    {
+      "name": "personal_comment",
+      "hint": "Specifically regarding the set of questions above",
+      "label": "Would you like to say more about your personal experience?",
+      "type": "text"
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very Poor"
+            },
+            {
+              "name": "2",
+              "label": "Poor"
+            },
+            {
+              "name": "3",
+              "label": "Not good, not bad"
+            },
+            {
+              "name": "4",
+              "label": "Good"
+            },
+            {
+              "name": "5",
+              "label": "Excellent"
+            }
+          ],
+          "name": "clean",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Was the clinic clean?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very Poor"
+            },
+            {
+              "name": "2",
+              "label": "Poor"
+            },
+            {
+              "name": "3",
+              "label": "Not good, not bad"
+            },
+            {
+              "name": "4",
+              "label": "Good"
+            },
+            {
+              "name": "5",
+              "label": "Excellent"
+            }
+          ],
+          "name": "queues",
+          "hint": "Were you guided to the right queue?\nDid you experience any bad behaviour whilst waiting?",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did the clinic manage queues well?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very Poor"
+            },
+            {
+              "name": "2",
+              "label": "Poor"
+            },
+            {
+              "name": "3",
+              "label": "Not good, not bad"
+            },
+            {
+              "name": "4",
+              "label": "Good"
+            },
+            {
+              "name": "5",
+              "label": "Excellent"
+            }
+          ],
+          "name": "respect_admin",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did the administrative staff treat you respectfully?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very Poor"
+            },
+            {
+              "name": "2",
+              "label": "Poor"
+            },
+            {
+              "name": "3",
+              "label": "Not good, not bad"
+            },
+            {
+              "name": "4",
+              "label": "Good"
+            },
+            {
+              "name": "5",
+              "label": "Excellent"
+            }
+          ],
+          "name": "respect_professionals",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did the health professionals (doctors and nurses) treat you respectfully?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very Poor"
+            },
+            {
+              "name": "2",
+              "label": "Poor"
+            },
+            {
+              "name": "3",
+              "label": "Not good, not bad"
+            },
+            {
+              "name": "4",
+              "label": "Good"
+            },
+            {
+              "name": "5",
+              "label": "Excellent"
+            }
+          ],
+          "name": "ambulance",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "How good are the ambulance services?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very Poor"
+            },
+            {
+              "name": "2",
+              "label": "Poor"
+            },
+            {
+              "name": "3",
+              "label": "Not good, not bad"
+            },
+            {
+              "name": "4",
+              "label": "Good"
+            },
+            {
+              "name": "5",
+              "label": "Excellent"
+            }
+          ],
+          "name": "equipment",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Does the clinic have the necessary equipment in good working condition to provide the services you need?",
+          "type": "select one"
+        }
+      ],
+      "name": "performance_group",
+      "label": "How would you rate the performance of the clinic staff in the following areas?",
+      "type": "group"
+    },
+    {
+      "name": "performance_comment",
+      "hint": "Specifically regarding the set of questions above",
+      "label": "Would you like to say more about your personal experience?",
+      "type": "text"
+    },
+    {
+      "children": [
+        {
+          "name": "yes",
+          "label": "Yes"
+        },
+        {
+          "name": "no",
+          "label": "No"
+        },
+        {
+          "name": "unsure",
+          "label": "Unsure"
+        }
+      ],
+      "name": "clinic_committee",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Does this clinic have a Clinic Committee?",
+      "type": "select one"
+    },
+    {
+      "children": [
+        {
+          "name": "yes",
+          "label": "Yes"
+        },
+        {
+          "name": "no",
+          "label": "No"
+        }
+      ],
+      "name": "clinic_committee_function",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Do you know what the clinic committee should do?",
+      "type": "select one"
+    },
+    {
+      "children": [
+        {
+          "name": "yes",
+          "label": "Yes"
+        },
+        {
+          "name": "no",
+          "label": "No"
+        },
+        {
+          "name": "maybe",
+          "label": "Maybe"
+        }
+      ],
+      "name": "clinic_feedback",
+      "hint": "Note: We are measuring whether the respondent has hope of improvement being possible",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Do you think that this clinic will learn from this survey and improve their services?",
+      "type": "select one"
+    },
+    {
+      "name": "improvements_comment",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "What improvements would you most like to see at this clinic?",
+      "type": "text"
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "name": "male",
+              "label": "Male"
+            },
+            {
+              "name": "female",
+              "label": "Female"
+            }
+          ],
+          "name": "gender",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Select your gender",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "under_25",
+              "label": "Under 25 years old"
+            },
+            {
+              "name": "26_40",
+              "label": "26 - 40 years old"
+            },
+            {
+              "name": "41_60",
+              "label": "41 - 60 years old"
+            },
+            {
+              "name": "older_60",
+              "label": "Older than 60 years"
+            }
+          ],
+          "name": "age",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "How old are you?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "disability",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Do you have any disabilities?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "none",
+              "label": "I do not earn an income"
+            },
+            {
+              "name": "gov_grant",
+              "label": "Government grant"
+            },
+            {
+              "name": "temp_employ",
+              "label": "Temporary employment"
+            },
+            {
+              "name": "perm_employ",
+              "label": "Permanent employment"
+            },
+            {
+              "name": "small_vendor",
+              "label": "Small scale vendor (no employees)"
+            },
+            {
+              "name": "own_business",
+              "label": "Own business (with employees)"
+            }
+          ],
+          "name": "income",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Where do you earn most of your income from?",
+          "type": "select one"
+        }
+      ],
+      "name": "demographics_group",
+      "label": "Some questions about you",
+      "type": "group"
+    },
+    {
+      "control": {
+        "bodyless": true
+      },
+      "children": [
+        {
+          "name": "instanceID",
+          "bind": {
+            "readonly": "true()",
+            "calculate": "concat('uuid:', uuid())"
+          },
+          "type": "calculate"
+        }
+      ],
+      "name": "meta",
+      "type": "group"
+    }
+  ],
+  "type": "survey",
+  "name": "DOH-Citizen-Survey",
+  "sms_keyword": "DOH-Citizen-Survey",
+  "title": "DOH-Citizen-Survey"
+}
