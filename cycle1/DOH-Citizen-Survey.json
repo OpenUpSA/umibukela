@@ -154,40 +154,6 @@
     {
       "children": [
         {
-          "name": "nothing",
-          "label": "Nothing"
-        },
-        {
-          "name": "under_ten",
-          "label": "Less than R10"
-        },
-        {
-          "name": "eleven_twentyfive",
-          "label": "R11 - R25"
-        },
-        {
-          "name": "twentysix_fifty",
-          "label": "R26 - R50"
-        },
-        {
-          "name": "fiftyone_seventyfive",
-          "label": "R51 - R75"
-        },
-        {
-          "name": "more_seventyfive",
-          "label": "More than R75"
-        }
-      ],
-      "name": "transport_amount",
-      "bind": {
-        "required": "yes"
-      },
-      "label": "What was the total amount you had to pay for transport to this clinic?",
-      "type": "select one"
-    },
-    {
-      "children": [
-        {
           "name": "yes",
           "label": "Yes"
         },
