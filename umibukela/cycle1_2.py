@@ -19,12 +19,7 @@ import csv
 import pandas as pd
 
 
-f = open('cycle1/Health_citizen_survey_all.csv')
-r = csv.DictReader(f, delimiter=',', quotechar='"')
-df = pd.DataFrame(list(r))
-
-# change column names
-df.columns = ['waiting_group/medicine_time', 'device_id', 'yes_no_group/examined_private', 'performance_group/respect_admin', 'performance_group/queues', 'performance_group/respect_professionals', 'yes_no_group/consent', 'yes_no_group/safety', 'yes_no_group/all_medication', 'yes_no_group/complaint', 'yes_no_group/complaint_response', 'performance_group/equipment', 'waiting_group/register_time', 'performance_group/ambulance', 'tracking_no', 'personal_comment1', 'personal_comment2', 'clinic_committee', 'clinic_committee_function', 'clinic_feedback', 'improvements_comment', 'demographics_group/gender', 'facility', 'demographics_group/age', 'demographics_group/disability', 'distance', 'demographics_group/income', 'town_village', 'district', 'province', 'surveyor', 'today', 'visit_reason', 'travel_distance', '_uuid', 'waiting_group/professional_time', 'submitted_date', 'performance_group/clean']
+cycle2_columns = ['waiting_group/medicine_time', 'device_id', 'yes_no_group/examined_private', 'performance_group/respect_admin', 'performance_group/queues', 'performance_group/respect_professionals', 'yes_no_group/consent', 'yes_no_group/safety', 'yes_no_group/all_medication', 'yes_no_group/complaint', 'yes_no_group/complaint_response', 'performance_group/equipment', 'waiting_group/register_time', 'performance_group/ambulance', 'tracking_no', 'personal_comment1', 'personal_comment2', 'clinic_committee', 'clinic_committee_function', 'clinic_feedback', 'improvements_comment', 'demographics_group/gender', 'facility', 'demographics_group/age', 'demographics_group/disability', 'distance', 'demographics_group/income', 'town_village', 'district', 'province', 'surveyor', 'today', 'visit_reason', 'travel_distance', '_uuid', 'waiting_group/professional_time', 'submitted_date', 'performance_group/clean']
 
 
 # change values
@@ -46,7 +41,7 @@ df.columns = ['waiting_group/medicine_time', 'device_id', 'yes_no_group/examined
 
 replacements_all = {
     'visit_reason': {
-        '3 days for infant': 'other',
+        '3 days for infant': 'accompanying',
         '6 weeks': 'other',
         'Accompanying someone else': 'accompanying',
         'Accompanying someone elseI visit regularly to collect monthly medication and/or check-up.': 'accompanying,regular_collection',
@@ -69,14 +64,14 @@ replacements_all = {
         'body height and weight': 'other',
         'checking TB': 'other',
         'checkup': 'other',
-        'child check up': 'other',
-        'child immunization': 'other',
-        'child sick': 'other',
-        'child vaccination': 'other',
-        'child was not feeling well': 'other',
-        'child was sick': 'other',
-        'child': 'other',
-        'children immunisation': 'other',
+        'child check up': 'accompanying',
+        'child immunization': 'accompanying',
+        'child sick': 'accompanying',
+        'child vaccination': 'accompanying',
+        'child was not feeling well': 'accompanying',
+        'child was sick': 'accompanying',
+        'child': 'accompanying',
+        'children immunisation': 'accompanying',
         'chronic / high blood': 'other',
         'contraception': 'other',
         'diahria': 'other',
@@ -91,20 +86,20 @@ replacements_all = {
         'inLabour': 'pregnant',
         'injection': 'other',
         'maternity': 'pregnant',
-        'my children were sick': 'other',
+        'my children were sick': 'accompanying',
         'new born': 'other',
-        'pregnancy test': 'pregnant',
+        'pregnancy test': 'other',
         'pregnancy': 'pregnant',
         'pregnant an to check blood': 'pregnant,other',
         'preventing': 'other',
         'prevention': 'other',
         'private matter': 'other',
         'private': 'other',
-        'taking child to the clinic': 'other',
+        'taking child to the clinic': 'accompanying',
         'test Tb': 'other',
         'testing HIV and high blood': 'other',
         'testing': 'other',
-        'the child is sick': 'other',
+        'the child is sick': 'accompanying',
         'to check BP and diabetes.': 'other',
         'to check BP': 'other',
         'to check bp': 'other',
@@ -278,49 +273,85 @@ replacements_all = {
     },
 }
 
-replacements_MAVCEC1 = {
-    'facility': {
-        'Thabong Clinic': 'thabong',
-        'Thabong': 'thabong',
+device_replacements = {
+    'MAVCEC1': {
+        'facility': {
+            'Thabong Clinic': 'thabong',
+            'Thabong': 'thabong',
+        },
+    },
+    'MAVCEC4': {
+        'facility': {
+            'Port St Johns': 'port_st_johns',
+        },
+    },
+    'MAVCJHB5': {
+        'facility': {
+            'Soshoanguve Block X Clinic': 'tshwane',
+            'Clinic': 'tswane',
+            'ufvh': 'tswane',
+            'ju5huh': 'tswane',
+            'tshwane': 'tswane',
+            'Soshoanguve': 'tswane',
+        },
+    },
+    'MAVCKZN2': {
+        'facility': {
+            'siphosethu nzoyi': 'umlazi',
+            'Q clinic': 'umlazi',
+            'D': 'umlazi',
+        },
+    },
+    'MAVCKZN5': {
+        'facility': {
+            'Clinic': 'folweni',
+        },
     },
 }
 
-replacements_MAVCEC4 = {
-    'facility': {
-        'Port St Johns': 'port_st_johns',
-    },
+device_files = {
+    'MAVCEC1': 'Health\ Citizen\ Survey\ MAVCEC1\ -\ Data.csv',
+    'MAVCEC4': 'Health\ Citizen\ Survey\ MAVCEC4\ -\ Data.csv',
+    'MAVCJHB5': 'Health\ Citizen\ Survey\ MAVCJHB5\ -\ Data.csv',
+    'MAVCKZN2': 'Health\ Citizen\ Survey\ MAVCKZN2\ -\ Data.csv',
+    'MAVCKZN5': 'Health\ Citizen\ Survey\ MAVCKZN5\ -\ Data.csv'
 }
 
-replacements_MAVCJHB5 = {
-    'facility': {
-        'Soshoanguve Block X Clinic': 'tshwane',
-        'Clinic': 'tswane',
-        'ufvh': 'tswane',
-        'ju5huh': 'tswane',
-        'tshwane': 'tswane',
-        'Soshoanguve': 'tswane',
-    },
-}
-
-replacements_MAVCKZN2 = {
-    'facility': {
-        'siphosethu nzoyi': 'umlazi',
-        'Q clinic': 'umlazi',
-        'D': 'umlazi',
-    },
-}
-
-replacements_MAVCKZN5 = {
-    'facility': {
-        'Clinic': 'folweni',
-    },
-}
 
 # [c for c in df2.columns if c.startswith("visit_reason")]
-# Out[251]:
-# ['visit_reason/accompanying',
-#  'visit_reason/emergency',
-#  'visit_reason/not_well',
-#  'visit_reason/other',
-#  'visit_reason/pregnant',
-#  'visit_reason/regular_collection']
+visit_reason_vals = ['accompanying',
+                     'emergency',
+                     'not_well',
+                     'other',
+                     'pregnant',
+                     'regular_collection']
+
+
+def set_select_all_that_apply_columns(dict, q_key, possible_vals):
+    for val in possible_vals:
+        dict['/'.join([q_key, val])] = 'False'
+    for val in dict[q_key].split(','):
+        dict['/'.join([q_key, val])] = 'True'
+    return dict
+
+
+def run():
+    dicts = []
+
+    # Read in each device file and do the per-device replacements
+    for id, filename in device_files.iteritems():
+        f = open('cycle1/' + filename)
+        r = csv.DictReader(f, delimiter=',', quotechar='"')
+        df = pd.DataFrame(list(r))
+        df.columns = cycle2_columns
+        df.replace(to_replace=device_replacements[id], in_place=True)
+        dicts += df.T.to_dict().values()
+
+    df = pd.DataFrame(dicts)
+    df.replace(to_replace=replacements_all, in_place=True)
+    dicts = df.T.to_dict().values()
+    dicts = map(
+        lambda x: set_select_all_that_apply_columns(x, 'visit_reason', visit_reason_vals),
+        dicts
+    )
+    return dicts
