@@ -19,7 +19,8 @@ import csv
 import pandas as pd
 
 
-cycle2_columns = ['waiting_group/medicine_time', 'device_id', 'yes_no_group/examined_private', 'performance_group/respect_admin', 'performance_group/queues', 'performance_group/respect_professionals', 'yes_no_group/consent', 'yes_no_group/safety', 'yes_no_group/all_medication', 'yes_no_group/complaint', 'yes_no_group/complaint_response', 'performance_group/equipment', 'waiting_group/register_time', 'performance_group/ambulance', 'tracking_no', 'personal_comment1', 'personal_comment2', 'clinic_committee', 'clinic_committee_function', 'clinic_feedback', 'improvements_comment', 'demographics_group/gender', 'facility', 'demographics_group/age', 'demographics_group/disability', 'distance', 'demographics_group/income', 'town_village', 'district', 'province', 'surveyor', 'today', 'visit_reason', 'travel_distance', '_uuid', 'waiting_group/professional_time', 'submitted_date', 'performance_group/clean']
+# In alphabetical order of the original column names according to pandas
+cycle2_columns = ['waiting_group/medicine_time', 'device_id', 'yes_no_group/examined_private', 'performance_group/respect_admin', 'performance_group/queues', 'performance_group/respect_professionals', 'yes_no_group/consent', 'yes_no_group/safety', 'yes_no_group/all_medication', 'yes_no_group/complaint', 'yes_no_group/complaint_response', 'performance_group/equipment', 'waiting_group/register_time', 'performance_group/ambulance', 'tracking_no', 'personal_comment1', 'personal_comment2', 'clinic_committee', 'clinic_committee_function', 'clinic_feedback', 'improvements_comment', 'demographics_group/gender', 'facility', 'demographics_group/age', 'demographics_group/disability', 'distance', 'demographics_group/income', 'town_village', 'district', 'province', 'surveyor', 'date', 'visit_reason', 'travel_distance', '_uuid', 'waiting_group/professional_time', 'submitted_date', 'performance_group/clean']
 
 
 # change values
@@ -288,11 +289,10 @@ device_replacements = {
     'MAVCJHB5': {
         'facility': {
             'Soshoanguve Block X Clinic': 'tshwane',
-            'Clinic': 'tswane',
-            'ufvh': 'tswane',
-            'ju5huh': 'tswane',
-            'tshwane': 'tswane',
-            'Soshoanguve': 'tswane',
+            'Clinic': 'tshwane',
+            'ufvh': 'tshwane',
+            'ju5huh': 'tshwane',
+            'Soshoanguve': 'tshwane',
         },
     },
     'MAVCKZN2': {
@@ -310,11 +310,11 @@ device_replacements = {
 }
 
 device_files = {
-    'MAVCEC1': 'Health\ Citizen\ Survey\ MAVCEC1\ -\ Data.csv',
-    'MAVCEC4': 'Health\ Citizen\ Survey\ MAVCEC4\ -\ Data.csv',
-    'MAVCJHB5': 'Health\ Citizen\ Survey\ MAVCJHB5\ -\ Data.csv',
-    'MAVCKZN2': 'Health\ Citizen\ Survey\ MAVCKZN2\ -\ Data.csv',
-    'MAVCKZN5': 'Health\ Citizen\ Survey\ MAVCKZN5\ -\ Data.csv'
+    'MAVCEC1': 'Health Citizen Survey MAVCEC1 - Data.csv',
+    'MAVCEC4': 'Health Citizen Survey MAVCEC4 - Data.csv',
+    'MAVCJHB5': 'Health Citizen Survey MAVCJHB5 - Data.csv',
+    'MAVCKZN2': 'Health Citizen Survey MAVCKZN2 - Data.csv',
+    'MAVCKZN5': 'Health Citizen Survey MAVCKZN5 - Data.csv'
 }
 
 
@@ -344,11 +344,11 @@ def run():
         r = csv.DictReader(f, delimiter=',', quotechar='"')
         df = pd.DataFrame(list(r))
         df.columns = cycle2_columns
-        df.replace(to_replace=device_replacements[id], in_place=True)
+        df.replace(to_replace=device_replacements[id], inplace=True)
         dicts += df.T.to_dict().values()
 
     df = pd.DataFrame(dicts)
-    df.replace(to_replace=replacements_all, in_place=True)
+    df.replace(to_replace=replacements_all, inplace=True)
     dicts = df.T.to_dict().values()
     dicts = map(
         lambda x: set_select_all_that_apply_columns(x, 'visit_reason', visit_reason_vals),
