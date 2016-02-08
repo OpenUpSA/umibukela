@@ -137,6 +137,15 @@
           <div class="stat stat-number">
             <div class="value">{{ option.current.pct.female|floatformat }}%</div>
             <div class="name">{{ option.current.label }}</div>
+            {% if option.prev %}
+            <div class="context">
+              <strong>
+                {% if option.prev.pct.female > option.current.pct.female %} Down
+                {% else %} Up
+                {% endif %}
+                from {{ option.prev.pct.female|floatformat }}
+              </strong> in the previous cycle</div>
+            {% endif %}
           </div>
         </div>
 
@@ -149,6 +158,15 @@
           <div class="stat stat-number">
             <div class="value">{{ option.current.pct.male|floatformat }}%</div>
             <div class="name">{{ option.current.label }}</div>
+            {% if option.prev %}
+            <div class="context">
+              <strong>
+                {% if option.prev.pct.male > option.current.pct.male %} Down
+                {% else %} Up
+                {% endif %}
+                from {{ option.prev.pct.male|floatformat }}
+              </strong> in the previous cycle</div>
+            {% endif %}
           </div>
         </div>
 
