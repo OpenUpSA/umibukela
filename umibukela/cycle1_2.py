@@ -289,6 +289,7 @@ device_replacements = {
     'MAVCJHB5': {
         'facility': {
             'Soshoanguve Block X Clinic': 'tshwane',
+            'Soshanguve Block X Clinic': 'tshwane',
             'Clinic': 'tshwane',
             'ufvh': 'tshwane',
             'ju5huh': 'tshwane',
@@ -305,6 +306,7 @@ device_replacements = {
     'MAVCKZN5': {
         'facility': {
             'Clinic': 'folweni',
+            'Folweni Clinic': 'folweni',
         },
     },
 }
