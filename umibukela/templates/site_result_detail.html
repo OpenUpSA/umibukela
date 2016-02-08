@@ -9,8 +9,8 @@
 {% block js %}
 {{ block.super }}
 <script type="application/javascript">
-  curr_questions = {{ results.curr_q_dict|jsonify }};
-  prev_questions = {{ results.prev_q_dict|jsonify }};
+  currQuestions = {{ results.curr_q_dict|jsonify }};
+  prevQuestions = {{ results.prev_q_dict|jsonify }};
 </script>
 {% javascript "site" %}
 {% endblock %}
