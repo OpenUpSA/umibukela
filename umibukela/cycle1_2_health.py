@@ -1,4 +1,4 @@
-from cycle_1_2 import run
+import umibukela.cycle1_2
 
 
 """
@@ -329,5 +329,5 @@ select_all_that_applies_columns = {
                      'regular_collection']
 }
 
-
-run(columns, device_files, device_replacements, select_all_that_applies_columns)
+def run():
+    return umibukela.cycle1_2.run(columns, device_files, device_replacements, select_all_that_applies_columns)
