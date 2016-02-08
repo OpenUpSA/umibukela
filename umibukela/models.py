@@ -177,7 +177,25 @@ class CycleResultSet(models.Model):
     def end_date_cmp(a, b):
         return Cycle.end_date_cmp(a.cycle, b.cycle)
 
+    def get_previous(self):
+        result_sets = list(CycleResultSet.objects.filter(
+            cycle__end_date__lte=self.cycle.start_date,
+            site__exact=self.site,
+            survey_type=self.survey_type,
+        ).all())
+        result_sets.sort(cmp=CycleResultSet.end_date_cmp)
+        result_sets.reverse()
+        if result_sets:
+            return result_sets[0]
+        else:
+            return None
+
 
 class Submission(models.Model):
     answers = jsonfield.JSONField()
-    cycle_result_set = models.ForeignKey(CycleResultSet, null=True, blank=True, related_name="submissions")
+    cycle_result_set = models.ForeignKey(
+        CycleResultSet,
+        null=True,
+        blank=True,
+        related_name="submissions"
+    )

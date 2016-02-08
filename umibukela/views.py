@@ -85,12 +85,30 @@ def site_result(request, site_slug, result_id):
         questions = []
         site_totals = {'male': 0, 'female': 0, 'total': 0}
 
+    prev_result_set = result_set.get_previous()
+    if prev_result_set:
+        prev_responses = [s.answers for s in prev_result_set.submissions.all()]
+        if prev_responses:
+            prev_df = pandas.DataFrame(prev_responses)
+            prev_form = prev_result_set.survey.form
+            prev_totals = analysis.count_submissions(prev_df)
+            prev_results = analysis.count_options(prev_df, prev_form['children'])
+            prev_results = analysis.calc_q_percents(prev_results)
+            prev_questions = analysis.questions_dict_to_array(prev_results)
+        else:
+            prev_questions = []
+            prev_totals = {'male': 0, 'female': 0, 'total': 0}
+
     return render(request, 'site_result_detail.html', {
         'active_tab': 'sites',
         'result_set': result_set,
         'results': {
             'questions': questions,
             'totals': site_totals,
+            'previous': {
+                'prev_questions': prev_questions,
+                'prev_totals': prev_totals
+            }
         }
     })
 
