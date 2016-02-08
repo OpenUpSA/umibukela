@@ -11,6 +11,14 @@ def set_select_all_that_apply_columns(dict, q_key, possible_vals):
     return dict
 
 
+def all(device_files):
+    all = []
+    for device, filename in device_files.iteritems():
+        f = open('cycle1/' + filename)
+        all += list(csv.DictReader(f, delimiter=',', quotechar='"'))
+    return all
+
+
 def run(columns, device_files, device_replacements, select_all_that_applies_columns):
     dicts = []
 
@@ -19,16 +27,27 @@ def run(columns, device_files, device_replacements, select_all_that_applies_colu
         f = open('cycle1/' + filename)
         r = csv.DictReader(f, delimiter=',', quotechar='"')
         df = pd.DataFrame(list(r))
+        # 1) update column names
         df.columns = columns
-        df.replace(to_replace=device_replacements[id], inplace=True)
+
+        # 2) do per-device fixes
+        df.replace(to_replace=device_replacements[id], inplace=True, regex=True)
+
+        # 3) concatenate all device files
         dicts += df.T.to_dict().values()
 
     df = pd.DataFrame(dicts)
+
+    # 4) do all-device replacements
     df.replace(to_replace=replacements_all, inplace=True)
     dicts = df.T.to_dict().values()
+
+    # 5) translate single-column select-all-that-apply to multiple columns
     for column, vals in select_all_that_applies_columns.iteritems():
         dicts = map(
             lambda x: set_select_all_that_apply_columns(x, column, vals),
             dicts
         )
+
+    # 6) DONE
     return dicts

@@ -21,7 +21,7 @@ import umibukela.cycle1_2
 # In alphabetical order of the original column names according to pandas
 #
 # 'waiting_group/medicine_time',
-columns = ['yes_no_group/alt_id', 'yes_no_group/bribe', 'performance_group/information', 'yes_no_group/nametag', 'performance_group/queues', 'performance_group/respect', 'yes_no_group/documents', 'tracking_no', 'transport_amount', 'waiting_time', 'visit_frequecy', 'frequency_reason', 'personal_comment', 'clinic_feedback', 'improvements_comment', 'demographics_group/gender', 'facility', 'demographics_group/age', 'picture_permission', 'town_village', 'district', 'province', 'surveyor', 'today', 'visit_reason', 'service', 'performance_group/clean', 'performance_group/service_satisfaction', 'submitted_date', 'device_id', '_uuid']
+columns = ['yes_no_group/alt_id', 'yes_no_group/bribe', 'performance_group/information', 'yes_no_group/nametag', 'performance_group/queues', 'performance_group/respect', 'yes_no_group/documents', 'tracking_no', 'transport_amount', 'waiting_time', 'visit_frequency', 'frequency_reason', 'personal_comment', 'clinic_feedback', 'improvements_comment', 'demographics_group/gender', 'facility', 'demographics_group/age', 'picture_permission', 'town_village', 'district', 'province', 'surveyor', 'today', 'visit_reason', 'service', 'performance_group/clean', 'performance_group/service_satisfaction', 'submitted_date', 'device_id', '_uuid']
 
 
 # change values
@@ -43,65 +43,203 @@ columns = ['yes_no_group/alt_id', 'yes_no_group/bribe', 'performance_group/infor
 
 #    'visit_reason': {
 #        '3 days for infant': 'accompanying',
+
 replacements_all = {
-    'yes_no_group/alt_id': {},
-    'yes_no_group/bribe': {},
-    'performance_group/information': {},
-    'yes_no_group/nametag': {},
-    'performance_group/queues': {},
-    'performance_group/respect': {},
-    'yes_no_group/documents': {},
-    'transport_amount': {},
+    'clinic_feedback': {
+        'Yes': 'yes',
+        'No': 'no',
+        'Maybe': 'maybe',
+    },
+    'demographics_group/age': {
+        '26 - 40 years old': '26_40',
+        '41 - 60 years old': '40_60',
+        'Older than 60 years': 'older_60',
+        'Under 25 years old': 'under_25',
+    },
+    'demographics_group/gender': {
+        'Male': 'male',
+        'Female': 'female',
+    },
+    'performance_group/clean': {
+        'OK': '3',
+        'Not applicable': 'n/a',
+    },
+    'performance_group/information': {
+        'Very poor': '1',
+        'Poor': '2',
+        'OK': '3',
+        'Good': '4',
+        'Excellent': '5',
+        'Not applicable': 'n/a',
+        '': 'n/a',
+    },
+    'performance_group/queues': {
+        'OK': '3',
+        'Not applicable': 'n/a',
+    },
+    'performance_group/respect': {
+        'Very poor': '1',
+        'Poor': '2',
+        'OK': '3',
+        'Good': '4',
+        'Excellent': '5',
+        'Not applicable': 'n/a',
+        '': 'n/a',
+    },
+    'performance_group/service_satisfaction': {
+        'Very poor': '1',
+        'Poor': '2',
+        'OK': '3',
+        'Good': '4',
+        'Excellent': '5',
+        'Not applicable': 'n/a',
+    },
+    'service': {
+        '': 'other',
+        'Appeal against a previous decision not to pay you a grant': 'appeal',
+        'Apply for a new grant': 'apply',
+        'Changing of payment': 'other',
+        'Come for a new card': '',
+        'Come to fetch my Sassa grant card.': '',
+        'Complain about bad service that you received': 'service_complaint',
+        'Enquire about deductions from your grant or short payments': 'deductions_enquiry',
+        'Fetch Sassa child\'s card for grant': 'other',
+        'General inquiry or get information about grants': 'general_enquiry',
+        'Get a "life certificate"': 'live_certificate',
+        'Grant in Aid': 'other',
+        'Hand in grant forms.': 'other',
+        'Lost Sassa grant card.': 'other',
+        'Lost card now came to make a new one.': 'other',
+        'Lost the child\'s card now coming to make a new one': 'other',
+        'Make a  new Sassa grant card': 'other',
+        'Make a new card': 'other',
+        'Make a new card.': 'other',
+        'Report lost card': 'other',
+        'Sort out a problem with an existing grant': 'existing_grant_issue',
+        'Transfer money to grandmother.': 'other',
+        'Transfer of child\'s grant': 'other',
+        'Transfer of grant to me': 'other',
+        'Transfer': 'other',
+        'Waiting for a Sassa pay card.': 'other',
+        'adding child': 'other',
+        'adding': 'other',
+        'aplication for cancelling child support grant': 'other',
+        'application for lost card': 'other',
+        'application of cancelling for child support grant': 'other',
+        'card block': 'other',
+        'card lost': 'other',
+        'change grant from mother to grandma': 'other',
+        'come to change the money to be transferred to me': 'other',
+        'for fingerprints': 'other',
+        'get the last grant': 'other',
+        'i lost my sassa card so im ere for the new one': 'other',
+        'im her to renew my grant': 'other',
+        'im here for doctors appointment': 'other',
+        'im here for the result of my application': 'other',
+        'im here to add another child': 'other',
+        'im here to renew my grant': 'other',
+        'lost card': 'other',
+        'make a new card': 'other',
+        'no answer': 'n/a',
+        'other': 'other',
+        'pick many': 'n/a',
+        'proof of pension': 'other',
+        'renew my grant': 'other',
+        'renw my grant': 'other',
+        't0 add another child': 'other',
+        'to add another child': 'other',
+        'to book doctor appointment': 'other',
+        'to bring doctors letter': 'other',
+        'to cancell child support grant': 'other',
+        'to change the grant': 'other',
+        'to make a sassa card': 'other',
+        'to make sassa card': 'other',
+    },
+    'transport_amount': {
+        'R11 - R25': 'eleven_twentyfive',
+        'Nothing': 'nothing',
+        'R26 - R50': 'twentysix_fifty',
+        'Less than R10': 'under_ten',
+        'R51 - R75': 'fiftyone_seventyfive',
+        'More than R75': 'more_seventyfive',
+    },
+    'visit_frequency': {
+        'This is my second visit for this same issue': 'first',
+        'This is my first visit for this issue': 'second',
+        'This is my 3rd or more visit for the same issue': 'third_mode',
+    },
     'waiting_time': {},
-    'visit_frequecy': {},
-    'frequency_reason': {},
-    'personal_comment': {},
-    'clinic_feedback': {},
-    'improvements_comment': {},
-    'demographics_group/gender': {},
-    'demographics_group/age': {},
-    'picture_permission': {},
-    'town_village': {},
-    'district': {},
-    'province': {},
-    'service': {},
-    'performance_group/clean': {},
-    'performance_group/service_satisfaction': {},
+    'yes_no_group/alt_id': {
+        'Yes': 'yes',
+        'No': 'no',
+    },
+    'yes_no_group/bribe': {
+        'Yes': 'yes',
+        'No': 'no',
+    },
+    'yes_no_group/documents': {
+        'Yes': 'yes',
+        'No': 'no',
+    },
+    'yes_no_group/nametag': {
+        'Yes': 'yes',
+        'No': 'no',
+    },
 }
 
 #     'MAVCEC1': {
 #         'facility': {
 #             'Thabong Clinic': 'thabong',
 device_replacements = {
-    'MAVCCT4': {
-        'facility': {},
+    'MAVCCT4': {  # gugulethu
+        'facility': {
+            r'.*': 'gugulethu',
+        },
     },
-    'MAVCKZN3': {
-        'facility': {},
+    'MAVCKZN3': {  # utrecht
+        'facility': {
+            r'.*': 'utrecht',
+        },
     },
-    'MAVCKZN4': {
-        'facility': {},
+    'MAVCKZN4': {  # umzinto
+        'facility': {
+            r'.*': 'umzinto',
+        },
     },
-    'MAVCT3': {
-        'facility': {},
+    'MAVCT3': {  # paarl
+        'facility': {
+            r'.*': 'paarl',
+        },
     },
-    'MAVEC3': {
-        'facility': {},
+    'MAVEC3': {  # mthatha
+        'facility': {
+            r'.*': 'mthatha',
+        },
     },
-    'MAVEC5': {
-        'facility': {},
+    'MAVEC5': {  # uitenhgage
+        'facility': {
+            r'.*': 'uitenhage',
+        },
     },
-    'MAVJHB1': {
-        'facility': {},
+    'MAVJHB1': {  # jouberton
+        'facility': {
+            r'.*': 'jouberton',
+        },
     },
-    'MAVJHB2': {
-        'facility': {},
+    'MAVJHB2': {  # mahube
+        'facility': {
+            r'.*': 'mahube',
+        },
     },
-    'MAVJHB4': {
-        'facility': {},
+    'MAVJHB4': {  # lephepane
+        'facility': {
+            r'.*': 'lephepane',
+        },
     },
-    'MAVKZN1': {
-        'facility': {},
+    'MAVKZN1': {  # kwa-mhlanga
+        'facility': {
+            r'.*': 'kwa-mhlanga',
+        },
     },
 }
 
