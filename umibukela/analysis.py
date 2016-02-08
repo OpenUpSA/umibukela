@@ -263,7 +263,7 @@ def deep_set(deep_dict, path, value):
     return deep_dict
 
 
-def questions_dict_to_array(question_dict):
+def questions_dict_to_array(question_dict, prev_q_dict):
     """
     Turn the question-name-keyed dict into an array of questions and options
     """
@@ -271,10 +271,16 @@ def questions_dict_to_array(question_dict):
     for q_key, question in question_dict.iteritems():
         options_dict = question['options']
         options = [None] * len(options_dict)
+        prev_q = prev_q_dict.get(q_key)
         for o_key, option in options_dict.iteritems():
             option = options_dict[o_key]
             option['key'] = o_key
-            options[option['idx']] = option
+            options[option['idx']] = {'current': option}
+            #import pdb; pdb.set_trace()
+            if prev_q:
+                prev_o = prev_q['options'].get(o_key)
+                if prev_o:
+                    options[option['idx']]['prev'] = prev_o
         question['options'] = options  # overwrite
         question['key'] = q_key
         questions.append(question)

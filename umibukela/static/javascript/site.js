@@ -51,12 +51,10 @@ Umibukela.Site = function() {
       var chartIdFields = $e.data('indicator').split(":");
       var key = chartIdFields[0];
       var gender = chartIdFields[1];
-      var d = questions.filter(function(q) {
-          return q.key == key
-      })[0];
+      var d = curr_questions[key];
       var chartType = $e.hasClass('chart-bar') ? 'bar' : 'column';
-      var labels = _.map(d.options, function(o) { return o.label; });
-      var currValues = _.map(d.options, function(o) { return Math.round(o.pct[gender]); });
+      var labels = _.map(d.options, function(o) { return o.current.label; });
+      var currValues = _.map(d.options, function(o) { return Math.round(o.current.pct[gender]); });
 
       var series = [{
           data: currValues,

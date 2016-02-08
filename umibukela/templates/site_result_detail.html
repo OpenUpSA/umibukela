@@ -9,7 +9,8 @@
 {% block js %}
 {{ block.super }}
 <script type="application/javascript">
-  questions = {{ results.questions|jsonify }};
+  curr_questions = {{ results.curr_q_dict|jsonify }};
+  prev_questions = {{ results.prev_q_dict|jsonify }};
 </script>
 {% javascript "site" %}
 {% endblock %}
@@ -134,8 +135,8 @@
         <div class="col-sm-2">
           <h5>Female</h5>
           <div class="stat stat-number">
-            <div class="value">{{ option.pct.female|floatformat }}%</div>
-            <div class="name">{{ option.label }}</div>
+            <div class="value">{{ option.current.pct.female|floatformat }}%</div>
+            <div class="name">{{ option.current.label }}</div>
           </div>
         </div>
 
@@ -146,8 +147,8 @@
         <div class="col-sm-2">
           <h5>Male</h5>
           <div class="stat stat-number">
-            <div class="value">{{ option.pct.male|floatformat }}%</div>
-            <div class="name">{{ option.label }}</div>
+            <div class="value">{{ option.current.pct.male|floatformat }}%</div>
+            <div class="name">{{ option.current.label }}</div>
           </div>
         </div>
 
