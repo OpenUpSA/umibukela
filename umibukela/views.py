@@ -92,7 +92,7 @@ def site_result(request, site_slug, result_id):
                 prev_results = None
         else:
             prev_results = None
-            questions = analysis.questions_dict_to_array(site_results, prev_results)
+        questions = analysis.questions_dict_to_array(site_results, prev_results)
     else:
         questions = []
         site_totals = {'male': 0, 'female': 0, 'total': 0}
