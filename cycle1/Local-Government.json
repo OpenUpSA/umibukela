@@ -1,0 +1,666 @@
+{
+  "default_language": "default",
+  "id_string": "Local-Government",
+  "children": [
+    {
+      "name": "today",
+      "label": "Date of Survey",
+      "type": "today"
+    },
+    {
+      "name": "start",
+      "label": "Start Time",
+      "type": "start"
+    },
+    {
+      "name": "end",
+      "label": "End Time",
+      "type": "end"
+    },
+    {
+      "name": "device_id",
+      "label": "Phone Serial Number",
+      "type": "deviceid"
+    },
+    {
+      "name": "sim_imei",
+      "label": "SIM Serial",
+      "type": "deviceid"
+    },
+    {
+      "name": "phone_number",
+      "label": "Phone Number",
+      "type": "phonenumber"
+    },
+    {
+      "children": [
+        {
+          "name": "office1",
+          "label": "Lavendar Hill"
+        },
+        {
+          "name": "office2",
+          "label": "Adelaide"
+        }
+      ],
+      "name": "office_name",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Name of office",
+      "type": "select one"
+    },
+    {
+      "name": "surveyor",
+      "hint": "Person who took the initial survey from the respondent",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Surveyor",
+      "type": "text"
+    },
+    {
+      "name": "capturer",
+      "hint": "Person capturing the survey",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Monitor",
+      "type": "text"
+    },
+    {
+      "children": [
+        {
+          "name": "ward_member",
+          "label": "Ward committee member"
+        },
+        {
+          "name": "civic_member",
+          "label": "Civic association member"
+        },
+        {
+          "name": "ratepayer",
+          "label": "Member of ratepayer association"
+        },
+        {
+          "name": "bus_association",
+          "label": "Member of local business association"
+        },
+        {
+          "name": "political",
+          "label": "Political party"
+        },
+        {
+          "name": "faith_based",
+          "label": "Faith-based organisation"
+        },
+        {
+          "name": "sports",
+          "label": "Sports association"
+        },
+        {
+          "name": "taxi",
+          "label": "Taxi association"
+        },
+        {
+          "name": "ngo",
+          "label": "CBO / NGO"
+        },
+        {
+          "name": "none",
+          "label": "none"
+        },
+        {
+          "name": "other",
+          "label": "Other (please specify)"
+        }
+      ],
+      "name": "affiliation",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Are you a member of one of the following?",
+      "type": "select one"
+    },
+    {
+      "name": "affiliation_other",
+      "bind": {
+        "relevant": "${affiliation} = 'other'",
+        "required": "yes"
+      },
+      "label": "Please specify your affiliation",
+      "type": "text"
+    },
+    {
+      "children": [
+        {
+          "name": "yes",
+          "label": "Yes"
+        },
+        {
+          "name": "no",
+          "label": "No"
+        }
+      ],
+      "name": "previous_meeting",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Have you attended a meeting with municipal officials or councillors in the last 6 months?",
+      "type": "select one"
+    },
+    {
+      "children": [
+        {
+          "name": "council_meeting",
+          "label": "Monthly Council meeting"
+        },
+        {
+          "name": "ward_meeting",
+          "label": "A ward committee meeting"
+        },
+        {
+          "name": "petition",
+          "label": "To petition or complain about services"
+        },
+        {
+          "name": "input",
+          "label": "To give input into IDP and budget"
+        },
+        {
+          "name": "general_meeting",
+          "label": "Mayoral public meeting / Imbizo"
+        },
+        {
+          "name": "other_meeting",
+          "label": "Other (please specify)"
+        },
+        {
+          "name": "portfolio",
+          "label": "Portfolio committee meeting"
+        },
+        {
+          "name": "report_back",
+          "label": "Councillor report back meeting"
+        }
+      ],
+      "name": "meeting_type",
+      "bind": {
+        "relevant": "${previous_meeting} = 'yes'",
+        "required": "yes"
+      },
+      "label": "What type of meeting was it?",
+      "type": "select one"
+    },
+    {
+      "name": "meeting_other",
+      "bind": {
+        "relevant": "${meeting_type} = 'other'",
+        "required": "yes"
+      },
+      "label": "Please specify the type of meeting",
+      "type": "text"
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "ease",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Was it easy for you to attend the meeting (time and place)?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "notification",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Were you notified about the meeting in good time?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "documentation",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did you get ALL the relevent documents and information in good time before the meeting?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "doc_understood",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did you understand the documents and information?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "info_withheld",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Was any information kept away from you?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "discussion_understood",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did the municipality make sure that all participants could understand what was being discussed at the meeting?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "questions",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did the meeting provide people with the opportunity to ask questions and express their views freely?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            },
+            {
+              "name": "na",
+              "label": "Not applicable"
+            }
+          ],
+          "name": "vulnerable_groups",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "In your opinion, were women and other vulnerable groups sufficiently represented at the meeting?",
+          "type": "select one"
+        }
+      ],
+      "name": "meeting_group",
+      "bind": {
+        "relevant": "${previous_meeting} = 'yes'"
+      },
+      "label": "Please answer yes or no to these questions about the meeting",
+      "type": "group"
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very poorly"
+            },
+            {
+              "name": "2",
+              "label": "Well"
+            },
+            {
+              "name": "3",
+              "label": "Not sure"
+            },
+            {
+              "name": "4",
+              "label": "Mostly well"
+            },
+            {
+              "name": "5",
+              "label": "Very well"
+            }
+          ],
+          "name": "clear_communication",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "How well does the municipality communicate its annual plans in a clear and simple way?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very poorly"
+            },
+            {
+              "name": "2",
+              "label": "Well"
+            },
+            {
+              "name": "3",
+              "label": "Not sure"
+            },
+            {
+              "name": "4",
+              "label": "Mostly well"
+            },
+            {
+              "name": "5",
+              "label": "Very well"
+            }
+          ],
+          "name": "own_lang",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "How well does the municipality communication with citizens in their own language?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very poorly"
+            },
+            {
+              "name": "2",
+              "label": "Well"
+            },
+            {
+              "name": "3",
+              "label": "Not sure"
+            },
+            {
+              "name": "4",
+              "label": "Mostly well"
+            },
+            {
+              "name": "5",
+              "label": "Very well"
+            }
+          ],
+          "name": "citizen_input",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "How well does the municipality give citizens the opportunity to give input on plans and decisions that affect them?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very poorly"
+            },
+            {
+              "name": "2",
+              "label": "Well"
+            },
+            {
+              "name": "3",
+              "label": "Not sure"
+            },
+            {
+              "name": "4",
+              "label": "Mostly well"
+            },
+            {
+              "name": "5",
+              "label": "Very well"
+            }
+          ],
+          "name": "citizen_decisions",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "How well does the municipality consider people's views before they take important decisions?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very poorly"
+            },
+            {
+              "name": "2",
+              "label": "Well"
+            },
+            {
+              "name": "3",
+              "label": "Not sure"
+            },
+            {
+              "name": "4",
+              "label": "Mostly well"
+            },
+            {
+              "name": "5",
+              "label": "Very well"
+            }
+          ],
+          "name": "citizen_feedback",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "How well does the municipality respond the feedback from citizens?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "not_at_all",
+              "label": "Not at all"
+            },
+            {
+              "name": "mostly_not",
+              "label": "Mostly not"
+            },
+            {
+              "name": "not_sure",
+              "label": "Not sure"
+            },
+            {
+              "name": "yes_sometimes",
+              "label": "Yes, sometimes"
+            },
+            {
+              "name": "yes_definitely",
+              "label": "Yes, definitely"
+            }
+          ],
+          "name": "engagement",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Do you think that it is worth spending time and effort to engage with the municipality?",
+          "type": "select one"
+        }
+      ],
+      "name": "performance_group",
+      "label": "In your experience, please rate how well you think the municipality performs the following:",
+      "type": "group"
+    },
+    {
+      "name": "engagement_comment",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "What changes would you most like to see in the way municipality engages with citizens in this municipality?",
+      "type": "text"
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "name": "male",
+              "label": "Male"
+            },
+            {
+              "name": "female",
+              "label": "Female"
+            }
+          ],
+          "name": "gender",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Select your gender",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "under_25",
+              "label": "Under 25 years old"
+            },
+            {
+              "name": "26_40",
+              "label": "26 - 40 years old"
+            },
+            {
+              "name": "41_60",
+              "label": "41 - 60 years old"
+            },
+            {
+              "name": "older_60",
+              "label": "Older than 60 years"
+            }
+          ],
+          "name": "age",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "How old are you?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "informal",
+              "label": "Informal housing"
+            },
+            {
+              "name": "owner",
+              "label": "Own your own house"
+            },
+            {
+              "name": "tenant_gov",
+              "label": "Tenant in council or government property"
+            },
+            {
+              "name": "tenant_pvt",
+              "label": "Tenant on private property"
+            },
+            {
+              "name": "backyard_structure",
+              "label": "Structure in backyard of house"
+            }
+          ],
+          "name": "house",
+          "hint": "Choose your closest option.",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "How would you describe the type of house that you live in?",
+          "type": "select one"
+        }
+      ],
+      "name": "demographics_group",
+      "label": "Some questions about you",
+      "type": "group"
+    },
+    {
+      "name": "name",
+      "label": "What is the name of the area where you live?",
+      "type": "text"
+    },
+    {
+      "control": {
+        "bodyless": true
+      },
+      "children": [
+        {
+          "name": "instanceID",
+          "bind": {
+            "readonly": "true()",
+            "calculate": "concat('uuid:', uuid())"
+          },
+          "type": "calculate"
+        }
+      ],
+      "name": "meta",
+      "type": "group"
+    }
+  ],
+  "type": "survey",
+  "name": "Local-Government",
+  "sms_keyword": "Local-Government",
+  "title": "Local-Government"
+}
