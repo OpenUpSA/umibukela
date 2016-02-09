@@ -287,7 +287,13 @@ def questions_dict_to_array(question_dict, prev_q_dict):
     for q_key, question in question_dict.iteritems():
         options_dict = question['options']
         options = [None] * len(options_dict)
-        prev_q = prev_q_dict.get(q_key) if prev_q_dict else None
+        if (prev_q_dict and prev_q_dict.get(q_key)):
+            prev_q = prev_q_dict.get(q_key)
+            if not is_comparable(question, prev_q):
+                prev_q = None
+        else:
+            prev_q = None
+
         for o_key, option in options_dict.iteritems():
             option = options_dict[o_key]
             option['key'] = o_key
@@ -296,10 +302,18 @@ def questions_dict_to_array(question_dict, prev_q_dict):
                 prev_o = prev_q['options'].get(o_key)
                 if prev_o:
                     options[option['idx']]['prev'] = prev_o
+
         question['options'] = options  # overwrite
         question['key'] = q_key
         questions.append(question)
     return questions
+
+
+def is_comparable(q1, q2):
+    """
+    True if q1 and q2 have identical keys
+    """
+    return set(q1['options'].keys()) == set(q2['options'].keys())
 
 
 def calc_q_percents(questions):

@@ -675,15 +675,15 @@
         {
           "children": [
             {
-              "name": "under_25",
-              "label": "Under 25 years old"
+              "name": "under_18",
+              "label": "Under 18 years old"
             },
             {
-              "name": "26_40",
-              "label": "26 - 40 years old"
+              "name": "19_40",
+              "label": "19 - 40 years old"
             },
             {
-              "name": "41_60",
+              "name": "40_60",
               "label": "41 - 60 years old"
             },
             {
