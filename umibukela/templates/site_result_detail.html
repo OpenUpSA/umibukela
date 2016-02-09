@@ -9,7 +9,7 @@
 {% block js %}
 {{ block.super }}
 <script type="application/javascript">
-  questions = {{ results.curr_q_dict|jsonify }};
+  questions = {{ results.questions_dict|jsonify }};
 </script>
 {% javascript "site" %}
 {% endblock %}
@@ -203,8 +203,5 @@
     </div>
   </div>
 </div>
-
-<pre> {% filter force_escape %} {% debug %} {% endfilter %} </pre>
-
 
 {% endblock %}
