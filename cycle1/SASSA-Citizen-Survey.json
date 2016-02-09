@@ -365,10 +365,6 @@
         {
           "name": "social_relief",
           "label": "Social Relief of Distress"
-        },
-        {
-          "name": "in_aid",
-          "label": "Grant in aid"
         }
       ],
       "name": "visit_reason",
