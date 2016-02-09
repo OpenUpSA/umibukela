@@ -65,7 +65,7 @@ Umibukela.Site = function() {
           color: self.colours[0],
       }];
 
-      if (key in prevQuestions) {
+        if ((prevQuestions !== null) && (key in prevQuestions)) {
           var prevQ = currQuestions[key];
           var prevValues = _.map(prevQ.options, function(o) {
               return Math.round(o.prev.pct[gender]);

@@ -271,12 +271,11 @@ def questions_dict_to_array(question_dict, prev_q_dict):
     for q_key, question in question_dict.iteritems():
         options_dict = question['options']
         options = [None] * len(options_dict)
-        prev_q = prev_q_dict.get(q_key)
+        prev_q = prev_q_dict.get(q_key) if prev_q_dict else None
         for o_key, option in options_dict.iteritems():
             option = options_dict[o_key]
             option['key'] = o_key
             options[option['idx']] = {'current': option}
-            #import pdb; pdb.set_trace()
             if prev_q:
                 prev_o = prev_q['options'].get(o_key)
                 if prev_o:
