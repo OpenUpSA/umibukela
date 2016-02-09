@@ -1,0 +1,639 @@
+{
+  "default_language": "default",
+  "id_string": "SASSA-Citizen",
+  "children": [
+    {
+      "name": "surveyor",
+      "hint": "Person who took the initial survey from the respondent",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Surveyor",
+      "type": "text"
+    },
+    {
+      "name": "capturer",
+      "hint": "Person capturing the survey",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Monitor",
+      "type": "text"
+    },
+    {
+      "name": "service_other",
+      "bind": {
+        "relevant": "${service} = 'other'",
+        "required": "yes"
+      },
+      "label": "What other service did you come here for?",
+      "type": "text"
+    },
+    {
+      "name": "frequency_reason",
+      "bind": {
+        "relevant": "${visit_frequency} = 'second' or ${visit_frequency} = 'third_more'",
+        "required": "yes"
+      },
+      "label": "Please provide the reasons you had to come back to this office",
+      "type": "text"
+    },
+    {
+      "name": "personal_comment",
+      "label": "Would you like to say more about your personal experience at this service office?",
+      "type": "text"
+    },
+    {
+      "name": "improvements_comment",
+      "label": "What improvements would you most like to see at this service office?",
+      "type": "text"
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "documents",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did you know before you came what documents you had to bring with you?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "nametag",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did the person serving you tell you their name or wear a name tag?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "bribe",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did any official (including security) ask you for money or a favour in order to help you?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "yes",
+              "label": "Yes"
+            },
+            {
+              "name": "no",
+              "label": "No"
+            }
+          ],
+          "name": "alt_id",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Are you aware that you can apply for a grant even if you do not have an ID book, using alternative identification methods? (Regulation 11)",
+          "type": "select one"
+        }
+      ],
+      "name": "yes_no_group",
+      "label": "Please answer yes or no to the following questions",
+      "type": "group"
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very Poor"
+            },
+            {
+              "name": "2",
+              "label": "Poor"
+            },
+            {
+              "name": "3",
+              "label": "Not good, not bad"
+            },
+            {
+              "name": "4",
+              "label": "Good"
+            },
+            {
+              "name": "5",
+              "label": "Excellent"
+            }
+          ],
+          "name": "clean",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "What was the state of the waiting area?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very Poor"
+            },
+            {
+              "name": "2",
+              "label": "Poor"
+            },
+            {
+              "name": "3",
+              "label": "Not good, not bad"
+            },
+            {
+              "name": "4",
+              "label": "Good"
+            },
+            {
+              "name": "5",
+              "label": "Excellent"
+            }
+          ],
+          "name": "queues",
+          "hint": "Were you guided to the right queue?\nDid you experience any bad behaviour whilst waiting?",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "How well did the staff manage queues?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very Poor"
+            },
+            {
+              "name": "2",
+              "label": "Poor"
+            },
+            {
+              "name": "3",
+              "label": "Not good, not bad"
+            },
+            {
+              "name": "4",
+              "label": "Good"
+            },
+            {
+              "name": "5",
+              "label": "Excellent"
+            }
+          ],
+          "name": "respect",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "How respectful were the staff to you?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very Poor"
+            },
+            {
+              "name": "2",
+              "label": "Poor"
+            },
+            {
+              "name": "3",
+              "label": "Not good, not bad"
+            },
+            {
+              "name": "4",
+              "label": "Good"
+            },
+            {
+              "name": "5",
+              "label": "Excellent"
+            }
+          ],
+          "name": "information",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Did the staff answer your questions clearly and give you the correct information that you needed?",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "1",
+              "label": "Very Poor"
+            },
+            {
+              "name": "2",
+              "label": "Poor"
+            },
+            {
+              "name": "3",
+              "label": "Not good, not bad"
+            },
+            {
+              "name": "4",
+              "label": "Good"
+            },
+            {
+              "name": "5",
+              "label": "Excellent"
+            }
+          ],
+          "name": "service_satisfaction",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Were you satisfied with the service that you received?",
+          "type": "select one"
+        }
+      ],
+      "name": "performance_group",
+      "label": "How would you rate the performance of the staff in the following areas?",
+      "type": "group"
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "name": "male",
+              "label": "Male"
+            },
+            {
+              "name": "female",
+              "label": "Female"
+            }
+          ],
+          "name": "gender",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "Select your gender",
+          "type": "select one"
+        },
+        {
+          "children": [
+            {
+              "name": "under_25",
+              "label": "Under 25 years old"
+            },
+            {
+              "name": "26_40",
+              "label": "26 - 40 years old"
+            },
+            {
+              "name": "41_60",
+              "label": "41 - 60 years old"
+            },
+            {
+              "name": "older_60",
+              "label": "Older than 60 years"
+            }
+          ],
+          "name": "age",
+          "bind": {
+            "required": "yes"
+          },
+          "label": "How old are you?",
+          "type": "select one"
+        }
+      ],
+      "name": "demographics_group",
+      "label": "Some questions about you",
+      "type": "group"
+    },
+    {
+      "children": [
+        {
+          "name": "old_age",
+          "label": "State Old Age Grant"
+        },
+        {
+          "name": "disability",
+          "label": "Disability Grant"
+        },
+        {
+          "name": "child_support",
+          "label": "Child-Support Grant"
+        },
+        {
+          "name": "foster_child",
+          "label": "Foster Child Grant"
+        },
+        {
+          "name": "care_dependency",
+          "label": "Care Dependency Grant"
+        },
+        {
+          "name": "war_veterans",
+          "label": "War-Veteran's Grant"
+        },
+        {
+          "name": "social_relief",
+          "label": "Social Relief of Distress"
+        },
+        {
+          "name": "in_aid",
+          "label": "Grant in aid"
+        }
+      ],
+      "name": "visit_reason",
+      "hint": "Please select all that apply",
+      "label": "What kind of grant/s do you receive - or are you applying for?",
+      "type": "select all that apply"
+    },
+    {
+      "children": [
+        {
+          "name": "kwa-mhlanga",
+          "label": "Kwa Mhlanga Local SASSA Office"
+        },
+        {
+          "name": "utrecht",
+          "label": "Utrecht Local SASSA Office"
+        },
+        {
+          "name": "umzinto",
+          "label": "Umzinto Local SASSA Office"
+        },
+        {
+          "name": "lephepane",
+          "label": "Lephepane Local SASSA Office"
+        },
+        {
+          "name": "mahube",
+          "label": "Mahube Local SASSA Office"
+        },
+        {
+          "name": "mthatha",
+          "label": "Mthatha Local SASSA Office"
+        },
+        {
+          "name": "uitenhage",
+          "label": "Uitenhage Local SASSA Office"
+        },
+        {
+          "name": "gugulethu",
+          "label": "Gugulethu Local SASSA Office"
+        },
+        {
+          "name": "paarl",
+          "label": "Paarl Local SASSA Office"
+        }
+      ],
+      "name": "facility",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Service Office",
+      "type": "select one"
+    },
+    {
+      "children": [
+        {
+          "name": "apply",
+          "label": "Apply for a new grant"
+        },
+        {
+          "name": "existing_grant_issue",
+          "label": "Sort out a problem with an existing grant"
+        },
+        {
+          "name": "life_certificate",
+          "label": "Get a 'proof of life' certificate"
+        },
+        {
+          "name": "appeal",
+          "label": "Appeal against a previous decision not to pay you a grant"
+        },
+        {
+          "name": "deductions_enquiry",
+          "label": "Enquire about deductions from your grant or short payments"
+        },
+        {
+          "name": "general_enquiry",
+          "label": "General enquiry or get information about grants"
+        },
+        {
+          "name": "service_complaint",
+          "label": "Complain about bad service that you received"
+        },
+        {
+          "name": "other",
+          "label": "Other (please specify)"
+        }
+      ],
+      "name": "service",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "What kind of service did you come here for?",
+      "type": "select one"
+    },
+    {
+      "children": [
+        {
+          "name": "nothing",
+          "label": "Nothing"
+        },
+        {
+          "name": "under_ten",
+          "label": "Less than R10"
+        },
+        {
+          "name": "eleven_twentyfive",
+          "label": "R11 - R25"
+        },
+        {
+          "name": "twentysix_fifty",
+          "label": "R26 - R50"
+        },
+        {
+          "name": "fiftyone_seventyfive",
+          "label": "R51 - R75"
+        },
+        {
+          "name": "more_seventyfive",
+          "label": "More than R75"
+        }
+      ],
+      "name": "transport_amount",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "What was the total amount you had to pay for transport to the service office?",
+      "type": "select one"
+    },
+    {
+      "children": [
+        {
+          "name": "under_thirty",
+          "label": "Less than 30 minutes"
+        },
+        {
+          "name": "thirty_one",
+          "label": "30 minutes - 1 hour"
+        },
+        {
+          "name": "one_two",
+          "label": "1 - 2 hours"
+        },
+        {
+          "name": "two_four",
+          "label": "2 - 4 hours"
+        },
+        {
+          "name": "four_six",
+          "label": "4 - 6 hours"
+        },
+        {
+          "name": "more-six",
+          "label": "More than 6 hours"
+        }
+      ],
+      "name": "waiting_time",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "How long did you wait in the queue before you were attended to?",
+      "type": "select one"
+    },
+    {
+      "children": [
+        {
+          "name": "first",
+          "label": "This is my 1st visit for this issue"
+        },
+        {
+          "name": "second",
+          "label": "This is my 2nd visit for this same issue"
+        },
+        {
+          "name": "third_more",
+          "label": "This is my 3rd or more visit for this same issue"
+        }
+      ],
+      "name": "visit_frequency",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "How many times have you come to this office for the same issue - because it was not resolved the first time?",
+      "type": "select one"
+    },
+    {
+      "children": [
+        {
+          "name": "yes",
+          "label": "Yes"
+        },
+        {
+          "name": "no",
+          "label": "No"
+        },
+        {
+          "name": "maybe",
+          "label": "Maybe"
+        }
+      ],
+      "name": "clinic_feedback",
+      "hint": "Note: We are measuring whether the respondent has hope of improvement being possible",
+      "bind": {
+        "required": "yes"
+      },
+      "label": "Do you think that this service office will learn from this survey and improve their services?",
+      "type": "select one"
+    },
+    {
+      "name": "today",
+      "type": "today"
+    },
+    {
+      "name": "end",
+      "type": "end"
+    },
+    {
+      "name": "sim_imei",
+      "type": "deviceid"
+    },
+    {
+      "control": {
+        "bodyless": true
+      },
+      "children": [
+        {
+          "name": "instanceID",
+          "bind": {
+            "readonly": "true()",
+            "calculate": "concat('uuid:', uuid())"
+          },
+          "type": "calculate"
+        }
+      ],
+      "name": "meta",
+      "type": "group"
+    },
+    {
+      "name": "start",
+      "type": "start"
+    },
+    {
+      "name": "phone_number",
+      "type": "phonenumber"
+    },
+    {
+      "name": "device_id",
+      "type": "deviceid"
+    },
+    {
+      "children": [
+        {
+          "name": "uuid",
+          "bind": {
+            "calculate": "'fe484c472e3e43dab36d3d76390d9e87'"
+          },
+          "type": "calculate"
+        }
+      ],
+      "name": "formhub",
+      "type": "group"
+    }
+  ],
+  "type": "survey",
+  "name": "SASSA-Citizen",
+  "sms_keyword": "SASSA-Citizen",
+  "title": "SASSA-Citizen"
+}
