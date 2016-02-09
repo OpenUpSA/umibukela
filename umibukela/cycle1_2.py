@@ -19,7 +19,7 @@ def all(device_files):
     return all
 
 
-def run(columns, device_files, device_replacements, select_all_that_applies_columns):
+def run(columns, replacements_all, device_files, device_replacements, select_all_that_applies_columns):
     dicts = []
 
     # Read in each device file and do the per-device replacements

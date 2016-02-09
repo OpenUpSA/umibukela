@@ -61,8 +61,13 @@ replacements_all = {
         'Female': 'female',
     },
     'performance_group/clean': {
+        'Very poor': '1',
+        'Poor': '2',
         'OK': '3',
+        'Good': '4',
+        'Excellent': '5',
         'Not applicable': 'n/a',
+        '': 'n/a',
     },
     'performance_group/information': {
         'Very poor': '1',
@@ -74,8 +79,13 @@ replacements_all = {
         '': 'n/a',
     },
     'performance_group/queues': {
+        'Very poor': '1',
+        'Poor': '2',
         'OK': '3',
+        'Good': '4',
+        'Excellent': '5',
         'Not applicable': 'n/a',
+        '': 'n/a',
     },
     'performance_group/respect': {
         'Very poor': '1',
@@ -99,8 +109,8 @@ replacements_all = {
         'Appeal against a previous decision not to pay you a grant': 'appeal',
         'Apply for a new grant': 'apply',
         'Changing of payment': 'other',
-        'Come for a new card': '',
-        'Come to fetch my Sassa grant card.': '',
+        'Come for a new card': 'other',
+        'Come to fetch my Sassa grant card.': 'other',
         'Complain about bad service that you received': 'service_complaint',
         'Enquire about deductions from your grant or short payments': 'deductions_enquiry',
         'Fetch Sassa child\'s card for grant': 'other',
@@ -141,7 +151,6 @@ replacements_all = {
         'lost card': 'other',
         'make a new card': 'other',
         'no answer': 'n/a',
-        'other': 'other',
         'pick many': 'n/a',
         'proof of pension': 'other',
         'renew my grant': 'other',
@@ -168,22 +177,33 @@ replacements_all = {
         'This is my first visit for this issue': 'second',
         'This is my 3rd or more visit for the same issue': 'third_mode',
     },
-    'waiting_time': {},
+    'waiting_time': {
+        '30 minutes - 1 hour': 'thirty_one',
+        '1 - 2 hours': 'one_two',
+        '2 - 4 hours': 'two_four',
+        '4 - 6 hours': 'four_six',
+        'Less than 30 minutes': 'under_thirty',
+        'More than 6 hours': 'more_four',
+    },
     'yes_no_group/alt_id': {
         'Yes': 'yes',
         'No': 'no',
+        '': 'n/a',
     },
     'yes_no_group/bribe': {
         'Yes': 'yes',
         'No': 'no',
+        '': 'n/a',
     },
     'yes_no_group/documents': {
         'Yes': 'yes',
         'No': 'no',
+        '': 'n/a',
     },
     'yes_no_group/nametag': {
         'Yes': 'yes',
         'No': 'no',
+        '': 'n/a',
     },
 }
 
@@ -262,8 +282,17 @@ device_files = {
 #
 #    'visit_reason': ['accompanying',
 select_all_that_applies_columns = {
-    'visit_reason': {},
+    'visit_reason': {
+        'State Old Age Grant': 'old_age',
+        'Disability Grant': 'disability',
+        'Child-Support Grant': 'child_support',
+        'Social relief of distress': 'social_relief',
+        'Foster Child Grant': 'foster_child',
+        'Care Dependency Grant': 'care_dependency',
+        'War-Veteran\'s Grant': 'war_veterans',
+    },
 }
 
+
 def run():
-    return umibukela.cycle1_2.run(columns, device_files, device_replacements, select_all_that_applies_columns)
+    return umibukela.cycle1_2.run(columns, replacements_all, device_files, device_replacements, select_all_that_applies_columns)

@@ -329,5 +329,6 @@ select_all_that_applies_columns = {
                      'regular_collection']
 }
 
+
 def run():
-    return umibukela.cycle1_2.run(columns, device_files, device_replacements, select_all_that_applies_columns)
+    return umibukela.cycle1_2.run(columns, replacements_all, device_files, device_replacements, select_all_that_applies_columns)
