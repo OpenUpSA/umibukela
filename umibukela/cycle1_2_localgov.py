@@ -1,4 +1,5 @@
 import umibukela.cycle1_2
+import uuid
 
 
 """
@@ -63,7 +64,7 @@ columns = ['meeting_group/questions',
            'demographics_group/gender',
            'demographics_group/age',
            'demographics_group/house',
-           'ward',
+           'office_name',
            'municipality',
            'province',
            'surveyor',
@@ -71,7 +72,7 @@ columns = ['meeting_group/questions',
            'affiliation',
            'previous_meeting',
            'meeting_type',
-           'meeting_group/info_witheld',
+           'meeting_group/info_withheld',
            'meeting_group/ease',
            'meeting_group/notification']
 
@@ -128,7 +129,7 @@ replacements_all = {
         '18 years and under': 'under_19',
         '19 -35  years old': '19_35',
         '36 - 60 years old': '36_60',
-        'Older than 60 years': 'over_60',
+        'Older than 60 years': 'older_60',
     },
     'demographics_group/gender': {
         'Female': 'female',
@@ -285,4 +286,7 @@ select_all_that_applies_columns = {}
 
 
 def run():
-    return umibukela.cycle1_2.run(columns, replacements_all, device_files, device_replacements, select_all_that_applies_columns)
+    dicts = umibukela.cycle1_2.run(columns, replacements_all, device_files, device_replacements, select_all_that_applies_columns)
+    for d in dicts:
+        d['_uuid'] = str(uuid.uuid4())
+    return dicts

@@ -99,15 +99,12 @@ def site_result(request, site_slug, result_id):
         site_results = None
         prev_results = None
 
-
-
     return render(request, 'site_result_detail.html', {
         'active_tab': 'sites',
         'result_set': result_set,
         'results': {
             'questions': questions,
             'curr_q_dict': site_results,
-            'prev_q_dict': prev_results,
             'totals': site_totals,
         }
     })
