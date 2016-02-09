@@ -45,6 +45,15 @@ columns = ['yes_no_group/alt_id', 'yes_no_group/bribe', 'performance_group/infor
 #        '3 days for infant': 'accompanying',
 
 replacements_all = {
+    'visit_reason': {
+        'State Old Age Grant': 'old_age',
+        'Disability Grant': 'disability',
+        'Child-Support Grant': 'child_support',
+        'Social relief of distress': 'social_relief',
+        'Foster Child Grant': 'foster_child',
+        'Care Dependency Grant': 'care_dependency',
+        'War-Veteran\'s Grant': 'war_veterans',
+    },
     'clinic_feedback': {
         'Yes': 'yes',
         'No': 'no',
@@ -282,15 +291,15 @@ device_files = {
 #
 #    'visit_reason': ['accompanying',
 select_all_that_applies_columns = {
-    'visit_reason': {
-        'State Old Age Grant': 'old_age',
-        'Disability Grant': 'disability',
-        'Child-Support Grant': 'child_support',
-        'Social relief of distress': 'social_relief',
-        'Foster Child Grant': 'foster_child',
-        'Care Dependency Grant': 'care_dependency',
-        'War-Veteran\'s Grant': 'war_veterans',
-    },
+    'visit_reason': [
+        'old_age',
+        'disability',
+        'child_support',
+        'social_relief',
+        'foster_child',
+        'care_dependency',
+        'war_veterans',
+    ],
 }
 
 

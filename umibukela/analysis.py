@@ -266,6 +266,22 @@ def deep_set(deep_dict, path, value):
 def questions_dict_to_array(question_dict, prev_q_dict):
     """
     Turn the question-name-keyed dict into an array of questions and options
+
+    This has the IMPORTANT SIDE-EFFECT of changing question_dict
+    into a dict of questions with an array of options containing both
+    current and previous results looking something like this in JSON:
+
+    {"yes_no_group/bribe": {
+        "response_count": {
+            "total": 159, "male": 45, "female": 114
+        },
+        "options": [{"current": {
+                        "count": {"male": 0, "female": 1},
+                        "key": "yes",
+                        "pct": {"male": 0.0, "female": 0.8771929824561403},
+                        "idx": 0, "label": "Yes"
+                    },
+                     "prev": {"count": {"male": 0, "female": 0},
     """
     questions = []
     for q_key, question in question_dict.iteritems():

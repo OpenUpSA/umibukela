@@ -51,10 +51,10 @@ Umibukela.Site = function() {
       var chartIdFields = $e.data('indicator').split(":");
       var key = chartIdFields[0];
       var gender = chartIdFields[1];
-      var currQ = currQuestions[key];
+      var q = questions[key];
       var chartType = $e.hasClass('chart-bar') ? 'bar' : 'column';
-      var labels = _.map(currQ.options, function(o) { return o.current.label; });
-      var currValues = _.map(currQ.options, function(o) {
+      var labels = _.map(q.options, function(o) { return o.current.label; });
+      var currValues = _.map(q.options, function(o) {
           return Math.round(o.current.pct[gender]);
       });
 
@@ -65,27 +65,27 @@ Umibukela.Site = function() {
           color: self.colours[0],
       }];
 
-        if ((prevQuestions !== null) && (key in prevQuestions)) {
-          var prevQ = currQuestions[key];
-          var prevValues = _.map(prevQ.options, function(o) {
-              return Math.round(o.prev.pct[gender]);
-          });
-          if (prevValues.length === currValues.length) {
-              var prevSeries = {
-                  data: prevValues,
-                  stack: 'historical',
-                  name: 'Previous cycle',
-                  dataLabels: {
-                      enabled: false,
-                  },
-                  pointWidth: chartType == 'bar' ? 5 : 10,
-                  color: self.colours[1],
-              };
-              series.push(prevSeries);
-              if (chartType == 'bar') {
-                  // show the current value on top. bar charts are drawn bottom up
-                  series = series.reverse();
-              }
+      var prevValues = [];
+      _.map(q.options, function(o) {
+          if (o.prev !== undefined) {
+              prevValues.push(Math.round(o.prev.pct[gender]));
+          }
+      });
+      if (prevValues.length === currValues.length) {
+          var prevSeries = {
+              data: prevValues,
+              stack: 'historical',
+              name: 'Previous cycle',
+              dataLabels: {
+                  enabled: false,
+              },
+              pointWidth: chartType == 'bar' ? 5 : 10,
+              color: self.colours[1],
+          };
+          series.push(prevSeries);
+          if (chartType == 'bar') {
+              // show the current value on top. bar charts are drawn bottom up
+              series = series.reverse();
           }
       }
       $(this).highcharts({
