@@ -1,6 +1,9 @@
 import json
 import csv
 import sys
+import httplib
+import urllib
+import base64
 
 """
 {
@@ -136,7 +139,8 @@ form_path = sys.argv[1]
 submissions_path = sys.argv[2]
 """
 
-def submit(form_path, submissions_path):
+
+def submit(form_path, submissions_path, form_id, username, password):
     with open(form_path) as form_file:
         form = json.loads(form_file.read())
 
@@ -148,11 +152,49 @@ def submit(form_path, submissions_path):
         SelectAllThatApply: select_all_that_apply,
     }
 
-    state = {
-        'row': submissions[0],
-        'submission': {},
+    headers = {
+        "Content-type": "application/json",
+        "Authorization": "Basic %s" % auth(username, password),
     }
 
-    state = traverse(form, state, handlers)
+    successful = 0
+    already = 0
+    failed = 0
+    for submission in submissions:
+        state = {
+            'row': submission,
+            'submission': {},
+        }
 
-    print(state['submission'])
+        state = traverse(form, state, handlers)
+
+        body = json.dumps({
+            'submission': state['submission'],
+            'id': form_id,
+        })
+
+        conn = httplib.HTTPSConnection("kc.kobotoolbox.org")
+        conn.request("POST", "/api/v1/submissions", body, headers)
+        response = conn.getresponse()
+        if response.status == 201:
+            successful += 1
+            sys.stdout.write('.')
+        elif response.status == 202:
+            already += 1
+            sys.stdout.write('-')
+        else:
+            failed += 1
+            sys.stdout.write(response.status, response.reason)
+
+        conn.close()
+
+    print({
+        'successful': successful,
+        'already': already,
+        'failed': failed,
+        'total': len(submissions)
+    })
+
+
+def auth(u, p):
+    return base64.b64encode("%s:%s" % (u, p))
