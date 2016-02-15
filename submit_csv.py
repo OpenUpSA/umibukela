@@ -185,7 +185,7 @@ def submit(form_path, submissions_path, form_id, username, password):
         else:
             failed += 1
             sys.stdout.write(response.status, response.reason)
-
+        sys.stdout.flush()
         conn.close()
 
     print({
