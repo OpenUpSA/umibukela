@@ -82,9 +82,8 @@ def site_result(request, site_slug, result_id):
                 prev_results = None
         else:
             prev_results = None
-        questions = analysis.questions_dict_to_array(site_results, prev_results)
+        questions = analysis.combine_curr_hist(site_results, prev_results)
     else:
-        questions = []
         site_totals = {'male': 0, 'female': 0, 'total': 0}
         site_results = None
 
@@ -92,7 +91,6 @@ def site_result(request, site_slug, result_id):
         'active_tab': 'sites',
         'result_set': result_set,
         'results': {
-            'questions': questions,
             'questions_dict': site_results,
             'totals': site_totals,
         }

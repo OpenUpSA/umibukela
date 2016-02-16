@@ -2,6 +2,7 @@
 {% load pipeline %}
 {% load static %}
 {% load jsonify %}
+{% load lookup %}
 
 {% block title %}Results for {{ result_set.cycle.name }}{% endblock %}
 {% block description %}Results for {{ result_set.cycle.programme.name }} {{ result_set.cycle.name }} for {{result_set.site.name }}{% endblock %}
@@ -116,7 +117,8 @@
 
   <div class="container">
     <div class="stat-table page-section">
-      {% for question in results.questions %}
+      {% for question_key in results.questions_dict.keys %}
+      {% with question=results.questions_dict|get:question_key %}
       {% if question.options|length <= 3 %}
       <section class="row stat-row">
         <div class="col-sm-4">
@@ -199,6 +201,7 @@
         </div>
       </section>
       {% endif %}
+      {% endwith %}
       {% endfor %}
     </div>
   </div>

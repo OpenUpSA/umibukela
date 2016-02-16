@@ -263,14 +263,13 @@ def deep_set(deep_dict, path, value):
     return deep_dict
 
 
-def questions_dict_to_array(question_dict, prev_q_dict):
+def combine_curr_hist(question_dict, prev_q_dict):
     """
-    Turn the question-name-keyed dict into an array of questions and options
-
-    This has the IMPORTANT SIDE-EFFECT of changing question_dict
-    into a dict of questions with an array of options containing both
-    current and previous results looking something like this in JSON:
-
+    Combines two question result dicts, updating 'question_dict'
+    to have 'current' and 'previous' results. The Question 'options'
+    dict is replaced with an option array in the order the options occurred
+    in the form.
+    e.g.
     {"yes_no_group/bribe": {
         "response_count": {
             "total": 159, "male": 45, "female": 114
@@ -280,13 +279,12 @@ def questions_dict_to_array(question_dict, prev_q_dict):
                         "key": "yes",
                         "pct": {"male": 0.0, "female": 0.8771929824561403},
                         "idx": 0, "label": "Yes"
-                    },
+                        },
                      "prev": {"count": {"male": 0, "female": 0},
     """
-    questions = []
     for q_key, question in question_dict.iteritems():
         options_dict = question['options']
-        options = [None] * len(options_dict)
+        options_arr = [None] * len(options_dict)
         if (prev_q_dict and prev_q_dict.get(q_key)):
             prev_q = prev_q_dict.get(q_key)
             if not is_comparable(question, prev_q):
@@ -297,16 +295,15 @@ def questions_dict_to_array(question_dict, prev_q_dict):
         for o_key, option in options_dict.iteritems():
             option = options_dict[o_key]
             option['key'] = o_key
-            options[option['idx']] = {'current': option}
+            options_arr[option['idx']] = {'current': option}
             if prev_q:
                 prev_o = prev_q['options'].get(o_key)
                 if prev_o:
-                    options[option['idx']]['prev'] = prev_o
+                    options_arr[option['idx']]['prev'] = prev_o
 
-        question['options'] = options  # overwrite
+        question['options'] = options_arr  # overwrite
+        question['response_count'] = {'current': question['response_count']}
         question['key'] = q_key
-        questions.append(question)
-    return questions
 
 
 def is_comparable(q1, q2):
