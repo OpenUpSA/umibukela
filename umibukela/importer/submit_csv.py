@@ -2,35 +2,20 @@ import json
 import csv
 import sys
 import httplib
-import urllib
 import base64
 
 """
-{
-      "transport": {
-          "available_transportation_types_to_referral_facility": ["ambulance", "bicycle"],
-          "loop_over_transport_types_frequency": {
-              "ambulance": {
-                  "frequency_to_referral_facility": "daily"
-              },
-              "bicycle": {
-                  "frequency_to_referral_facility": "weekly"
-              },
-              "boat_canoe": null,
-              "bus": null,
-              "donkey_mule_cart": null,
-              "keke_pepe": null,
-              "lorry": null,
-              "motorbike": null,
-              "taxi": null,
-              "other": null
-          }
-      }
-      "meta": {
-          "instanceID": "uuid:f3d8dc65-91a6-4d0f-9e97-802128083390"
-      }
-  }
-"""
+submits a formhub survey to KoboToolbox given an XForm in JSON and a formhub
+csv export.
+
+e.g.
+
+submit_csv.submit('form.json', 'formhub_export.csv', 'form_id', 'username', 'password')
+-----..........................................................................
+...............................................................................
+...............................................................................
+............................................................................
+{'successful': 308, 'failed': 0, 'already': 5, 'total': 313}"""
 
 class Element(object):
     def __init__(self, element, path):
@@ -132,12 +117,6 @@ def select_all_that_apply(q, state):
         elif val == 'True':
             selected += [o.name]
     return deep_set(state, path, selected)
-
-
-"""
-form_path = sys.argv[1]
-submissions_path = sys.argv[2]
-"""
 
 
 def submit(form_path, submissions_path, form_id, username, password):
