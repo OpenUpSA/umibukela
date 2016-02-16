@@ -51,24 +51,43 @@ Umibukela.Site = function() {
       var chartIdFields = $e.data('indicator').split(":");
       var key = chartIdFields[0];
       var gender = chartIdFields[1];
-      var d = questions.filter(function(q) {
-          return q.key == key
-      })[0];
+      var q = questions[key];
       var chartType = $e.hasClass('chart-bar') ? 'bar' : 'column';
-      var labels = _.map(d.options, function(o) { return o.label; });
-      var currValues = _.map(d.options, function(o) { return Math.round(o.pct[gender]); });
+      var labels = _.map(q.options, function(o) { return o.current.label; });
+      var currValues = _.map(q.options, function(o) {
+          return Math.round(o.current.pct[gender]);
+      });
 
       var series = [{
           data: currValues,
           stack: 'current',
           name: 'Current cycle',
-          pointWidth: chartType == 'bar' ? 10 : 15,
-          dataLabels: {
-            enabled: true,
-          },
           color: self.colours[0],
       }];
 
+      var prevValues = [];
+      _.map(q.options, function(o) {
+          if (o.prev !== undefined) {
+              prevValues.push(Math.round(o.prev.pct[gender]));
+          }
+      });
+      if (prevValues.length === currValues.length) {
+          var prevSeries = {
+              data: prevValues,
+              stack: 'historical',
+              name: 'Previous cycle',
+              dataLabels: {
+                  enabled: false,
+              },
+              pointWidth: chartType == 'bar' ? 5 : 10,
+              color: self.colours[1],
+          };
+          series.push(prevSeries);
+          if (chartType == 'bar') {
+              // show the current value on top. bar charts are drawn bottom up
+              series = series.reverse();
+          }
+      }
       $(this).highcharts({
         chart: {type: chartType},
         series: series,
