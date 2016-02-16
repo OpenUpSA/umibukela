@@ -55,18 +55,6 @@ def site(request, site_slug):
     })
 
 
-def site_result_hardcoded(request, site_slug, result_id):
-    result_set = get_object_or_404(
-        CycleResultSet,
-        id=result_id,
-        site__slug__exact=site_slug
-    )
-    return render(request, 'site_result_hardcoded.html', {
-        'active_tab': 'sites',
-        'result_set': result_set,
-    })
-
-
 def site_result(request, site_slug, result_id):
     result_set = get_object_or_404(
         CycleResultSet,
