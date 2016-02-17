@@ -1,4 +1,4 @@
-import umibukela.cycle1_2
+from umibukela.importer.mavc import cycle1_2
 import uuid
 
 
@@ -261,14 +261,10 @@ replacements_all = {
 #             'Thabong Clinic': 'thabong',
 device_replacements = {
     'EC': {
-        'office_name': {
-            r'.*': 'office2',
-        },
+        'office_name': 'office2',
     },
     'WC': {
-        'office_name': {
-            r'.*': 'office1',
-        },
+        'office_name': 'office1',
     },
 }
 
@@ -286,7 +282,7 @@ select_all_that_applies_columns = {}
 
 
 def run():
-    dicts = umibukela.cycle1_2.run(columns, replacements_all, device_files, device_replacements, select_all_that_applies_columns)
+    dicts = cycle1_2.run(columns, replacements_all, device_files, device_replacements, select_all_that_applies_columns)
     for d in dicts:
         d['_uuid'] = str(uuid.uuid4())
     return dicts
