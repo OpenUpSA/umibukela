@@ -1,25 +1,24 @@
 import umibukela.models as models
+import sys
 
 """
-import urllib
-
-testfile = urllib.URLopener()
-testfile.retrieve("https://doc-0g-5s-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/vvafdsti2u0snorfm7m36p1h97018hec/1455739200000/17237697729152170611/*/0B8yXDspOrgF9TDMzX3dCTkNPOWM?e=download", "SASSA-citizen-2014.csv")
-
-https://drive.google.com/uc?export=download&id=0B8yXDspOrgF9NVJRZVdUSTBZdms
-
+import urllib2
 import csv
 import pandas as pd
 from umibukela import models
+import sys
+from umibukela.importer import importer
 
-f = open('DOH-Citizen-Survey_2016_01_25_04_22_15.csv')
+url = ''
+f = urllib2.urlopen(url)
 r = csv.DictReader(f, delimiter=',', quotechar='"')
 dicts = list(r)
-df = pd.DataFrame(dicts)
-pd.unique(df.facility.ravel())
 for answers in dicts:
     submission = models.Submission(answers=answers)
     submission.save()
+
+df = pd.DataFrame(dicts)
+pd.unique(df.facility.ravel())
 """
 
 def claim_submissions(field_name, submission_site_name, site_name, cycle_name):
@@ -30,3 +29,5 @@ def claim_submissions(field_name, submission_site_name, site_name, cycle_name):
     for submission in site_submissions:
         submission.cycle_result_set = crs
         submission.save()
+        sys.stdout.write('.')
+        sys.stdout.flush()

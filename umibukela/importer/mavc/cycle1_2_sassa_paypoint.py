@@ -1,4 +1,5 @@
-import umibukela.importer.cycle1_2
+import umibukela.importer.mavc.cycle1_2 as cycle1_2
+import uuid
 
 
 """
@@ -265,4 +266,7 @@ select_all_that_applies_columns = {
 
 
 def run():
-    return umibukela.importer.cycle1_2.run(columns, replacements_all, device_files, device_replacements, select_all_that_applies_columns)
+    dicts = cycle1_2.run(columns, replacements_all, device_files, device_replacements, select_all_that_applies_columns)
+    for d in dicts:
+        d['_uuid'] = str(uuid.uuid4())
+    return dicts
