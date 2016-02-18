@@ -243,14 +243,10 @@ replacements_all = {
 #             'Thabong Clinic': 'thabong',
 device_replacements = {
     'MAVCCT5': {
-        'facility': {
-            r'.*': 'montagu',
-        },
+        'facility': 'montagu',
     },
     'MAVCCT1': {
-        'facility': {
-            r'.*': 'kaigarib',
-        },
+        'facility': 'kaigarib',
     },
 }
 

@@ -1,6 +1,13 @@
 import csv
 import pandas as pd
 
+"""
+with open('sassa_paypoint_cycle1.csv', 'w') as f:
+    writer = csv.DictWriter(f, fieldnames=dicts[0].keys())
+    writer.writeheader()
+    for d in dicts:
+        writer.writerow(d)
+"""
 
 def set_select_all_that_apply_columns(dict, q_key, possible_vals):
     for val in possible_vals:
@@ -31,10 +38,12 @@ def run(columns, replacements_all, device_files, device_replacements, select_all
         df.columns = columns
 
         # 2) do per-device fixes
-        df.replace(to_replace=device_replacements[id], inplace=True, regex=True)
+        file_dicts = df.T.to_dict().values()
+        for d in file_dicts:
+            d.update(device_replacements[id])
 
         # 3) concatenate all device files
-        dicts += df.T.to_dict().values()
+        dicts += file_dicts
 
     df = pd.DataFrame(dicts)
 

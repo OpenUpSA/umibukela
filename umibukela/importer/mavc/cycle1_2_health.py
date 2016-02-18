@@ -1,4 +1,4 @@
-import umibukela.cycle1_2
+from umibukela.importer.mavc import cycle1_2
 
 
 """
@@ -275,38 +275,19 @@ replacements_all = {
 
 device_replacements = {
     'MAVCEC1': {
-        'facility': {
-            'Thabong Clinic': 'thabong',
-            'Thabong': 'thabong',
-        },
+        'facility': 'thabong',
     },
     'MAVCEC4': {
-        'facility': {
-            'Port St Johns': 'port_st_johns',
-        },
+        'facility': 'port_st_johns',
     },
     'MAVCJHB5': {
-        'facility': {
-            'Soshoanguve Block X Clinic': 'tshwane',
-            'Soshanguve Block X Clinic': 'tshwane',
-            'Clinic': 'tshwane',
-            'ufvh': 'tshwane',
-            'ju5huh': 'tshwane',
-            'Soshoanguve': 'tshwane',
-        },
+        'facility': 'tshwane',
     },
     'MAVCKZN2': {
-        'facility': {
-            'siphosethu nzoyi': 'umlazi',
-            'Q clinic': 'umlazi',
-            'D': 'umlazi',
-        },
+        'facility': 'umlazi',
     },
     'MAVCKZN5': {
-        'facility': {
-            'Clinic': 'folweni',
-            'Folweni Clinic': 'folweni',
-        },
+        'facility': 'folweni',
     },
 }
 
@@ -331,4 +312,4 @@ select_all_that_applies_columns = {
 
 
 def run():
-    return umibukela.cycle1_2.run(columns, replacements_all, device_files, device_replacements, select_all_that_applies_columns)
+    return cycle1_2.run(columns, replacements_all, device_files, device_replacements, select_all_that_applies_columns)

@@ -1,4 +1,4 @@
-import umibukela.cycle1_2
+from umibukela.importer.mavc import cycle1_2
 
 
 """
@@ -221,54 +221,34 @@ replacements_all = {
 #             'Thabong Clinic': 'thabong',
 device_replacements = {
     'MAVCCT4': {  # gugulethu
-        'facility': {
-            r'.*': 'gugulethu',
-        },
+        'facility': 'gugulethu',
     },
     'MAVCKZN3': {  # utrecht
-        'facility': {
-            r'.*': 'utrecht',
-        },
+        'facility': 'utrecht',
     },
     'MAVCKZN4': {  # umzinto
-        'facility': {
-            r'.*': 'umzinto',
-        },
+        'facility': 'umzinto',
     },
     'MAVCT3': {  # paarl
-        'facility': {
-            r'.*': 'paarl',
-        },
+        'facility': 'paarl',
     },
     'MAVEC3': {  # mthatha
-        'facility': {
-            r'.*': 'mthatha',
-        },
+        'facility': 'mthatha',
     },
     'MAVEC5': {  # uitenhgage
-        'facility': {
-            r'.*': 'uitenhage',
-        },
+        'facility': 'uitenhage',
     },
     'MAVJHB1': {  # jouberton
-        'facility': {
-            r'.*': 'jouberton',
-        },
+        'facility': 'jouberton',
     },
     'MAVJHB2': {  # mahube
-        'facility': {
-            r'.*': 'mahube',
-        },
+        'facility': 'mahube',
     },
     'MAVJHB4': {  # lephepane
-        'facility': {
-            r'.*': 'lephepane',
-        },
+        'facility': 'lephepane',
     },
     'MAVKZN1': {  # kwa-mhlanga
-        'facility': {
-            r'.*': 'kwa-mhlanga',
-        },
+        'facility': 'kwa-mhlanga',
     },
 }
 
@@ -304,4 +284,4 @@ select_all_that_applies_columns = {
 
 
 def run():
-    return umibukela.cycle1_2.run(columns, replacements_all, device_files, device_replacements, select_all_that_applies_columns)
+    return cycle1_2.run(columns, replacements_all, device_files, device_replacements, select_all_that_applies_columns)
