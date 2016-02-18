@@ -328,19 +328,18 @@ img.img-rounded-border {
 						width: 60px;
 					}
 				}
+			}
+		}
 
-			}
-			
-			h2 {
-				color: $brand-secondary-dark;
-				font-weight: bold;
-			}
+		h2 {
+			color: $brand-secondary-dark;
+			font-weight: bold;
+		}
 
-			h4 {
-				font-weight: bold;
-				text-transform: uppercase;
-				margin-bottom: 0px;
-			}
+		h4 {
+			font-weight: bold;
+			text-transform: uppercase;
+			margin-bottom: 0px;
 		}
 	}
 }
