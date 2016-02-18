@@ -21,6 +21,10 @@ Umibukela.General = function() {
     if ($("#about").length) {
       self.initAboutPage();
     }
+
+    $('.btn-print').on('click', function() {
+      window.print();
+    });
   };
 
   self.initAboutPage = function() {
