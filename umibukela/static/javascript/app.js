@@ -35,9 +35,15 @@ Umibukela.General = function() {
     // affix
     $('.steps-sidebar').affix({
       offset: {
-        top: $('.steps-sidebar').offset().top,
+        top: $('.steps-sidebar').offset().top - 30,
         // stop affix 2/3 of the way down the last step row
         bottom: $('body').height() - $lastRow.offset().top - $lastRow.height() * 2 / 3,
+      }
+    });
+
+    $('#subnav').affix({
+      offset: {
+        top: $('#subnav').offset().top - 10,
       }
     });
   };

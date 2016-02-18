@@ -280,6 +280,23 @@ img.img-rounded-border {
 
 //== #about
 .section#about{
+	.section-subnav {
+		min-height: 60px;
+	}
+
+	#subnav {
+		&.affix {
+			position: fixed;
+			left: 0px;
+			right: 0px;
+			top: 0px;
+			background-color: $gray-lighter;
+			z-index: 99;
+			text-align: center;
+			padding: 10px;
+		}
+	}
+
 	.steps-content {
 		position: relative;
 		margin-left: 70px;
@@ -358,7 +375,7 @@ img.img-rounded-border {
 
 .steps-sidebar.affix {
     position: fixed !important;
-    top: 27px;
+    top: 80px;
     width: 300px;
 }
 
