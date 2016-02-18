@@ -330,18 +330,9 @@ img.img-rounded-border {
 
 /* all links */
 
-.steps-sidebar .nav>li>a {
-    font-size: 13px;
-    font-weight: 400;
+.steps-sidebar .nav > li > a {
     border-bottom: 0;
-}
-
-/* nested links */
-.steps-sidebar .nav .nav>li>a {
-    padding-top: 1px;
-    padding-bottom: 1px;
-    padding-left: 30px;
-    font-size: 12px;
+	padding: 0px;
 }
 
 /* active & hover links */
