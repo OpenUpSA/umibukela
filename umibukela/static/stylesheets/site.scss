@@ -280,17 +280,52 @@ img.img-rounded-border {
 
 //== #about
 .section#about{
+	.steps-content {
+		position: relative;
+		margin-left: 70px;
 
-    .step-row{
-        padding-top: 2em;
-        padding-bottom: 1em;
-        border-top: solid $gray-lighter 1px;
-    }
-    .step-row:first-child {
-        padding-top: 0px;
-        border-top: 0px;
-    }
+		& > section {
+			padding-top: 2em;
+			padding-bottom: 1em;
+			border-top: solid $gray-lighter 1px;
 
+			&:first-child {
+				padding-top: 0px;
+				border-top: 0px;
+			}
+		}
+
+		header {
+			.step-icon {
+				position: absolute;
+				left: -90px;
+
+				img {
+					width: 80px;
+					height: auto;
+				}
+
+				@media (max-width: 767px) {
+					left: -70px;
+					img {
+						width: 60px;
+					}
+				}
+
+			}
+			
+			h2 {
+				color: $brand-secondary-dark;
+				font-weight: bold;
+			}
+
+			h4 {
+				font-weight: bold;
+				text-transform: uppercase;
+				margin-bottom: 0px;
+			}
+		}
+	}
 }
 
 /* all links */

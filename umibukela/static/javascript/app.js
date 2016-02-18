@@ -30,7 +30,7 @@ Umibukela.General = function() {
       offset: 100
     });
 
-    var $lastRow = $('.step-row:last-child');
+    var $lastRow = $('.steps-content section').last();
 
     // affix
     $('.steps-sidebar').affix({
