@@ -82,7 +82,7 @@ def site_result(request, site_slug, result_id):
                 prev_results = None
         else:
             prev_results = None
-        questions = analysis.combine_curr_hist(site_results, prev_results)
+        analysis.combine_curr_hist(site_results, prev_results)
     else:
         site_totals = {'male': 0, 'female': 0, 'total': 0}
         site_results = None
