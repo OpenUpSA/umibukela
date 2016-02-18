@@ -12,6 +12,12 @@
     {% stylesheet "css" %}
     {% endblock %}
 
+    {% block social-meta %}
+    <meta property="og:site_name" content="{{ SITE_NAME }}" />
+    <meta property="og:description" content="Community-based monitoring (CBM) promotes civic engagement to realise socio-economic rights by advocating for open, transparent and accountable governance." />
+    <meta property="og:type" content="website" />
+    {% endblock %}
+
     {% block head-meta %}{% endblock %}
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
