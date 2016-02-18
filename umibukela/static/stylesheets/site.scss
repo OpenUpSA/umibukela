@@ -297,6 +297,10 @@ img.img-rounded-border {
 		}
 	}
 
+	nav.steps-sidebar button {
+		margin-top: 30px;
+	}
+
 	.steps-content {
 		position: relative;
 		margin-left: 70px;
@@ -768,3 +772,9 @@ div + h1 {
 .bg-gray-lighter{ background-color: $gray-lighter; }
 .bg-gray-dark{ background-color: $gray-dark; }
 .bg-gray-darker{ background-color: $gray-darker; }
+
+@media print {
+	nav, .breadcrumb, .social-media {
+		display: none;
+	}
+}
