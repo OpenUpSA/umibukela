@@ -23,8 +23,7 @@
           <h1><i class="fa fa-lightbulb-o"></i> About Community-Based Monitoring</h1>
         </div>
         <div class="col-md-4 text-right">
-          <a href="" class="social-media"><i class="fa fa-twitter"></i><br>Tweet</a>
-          <a href="" class="social-media"><i class="fa fa-facebook"></i><br>Share</a>
+          {% include '_social_buttons.html' %}
         </div>
       </div>
     </div>
@@ -32,14 +31,15 @@
   <!-- /section-header -->
 
   <!-- section-subnav -->
-  <div class="section-subnav">
+  <nav class="section-subnav">
     <div class="container">
-      <a href="#what-is-cbm" class="btn btn-primary btn-sm uppercase">What is CBM?</a>
-      <a href="#why-do-cbm" class="btn btn-primary btn-sm uppercase">Why do CBM?</a>
-      <a href="#cbm-process" class="btn btn-primary btn-sm uppercase">The CBM Process</a>
-      <a href="#resources" class="btn btn-primary btn-sm uppercase">Resources</a>
+      <div id="subnav">
+        <a href="#what-is-cbm" class="btn btn-primary btn-sm uppercase">What is CBM?</a>
+        <a href="#why-do-cbm" class="btn btn-primary btn-sm uppercase">Why do CBM?</a>
+        <a href="#cbm-process" class="btn btn-primary btn-sm uppercase">The CBM Process</a>
+      </div>
     </div>
-  </div>
+  </nav>
   <!-- /section-subnav -->
 
   <div class="bg-secondary bg-image add-padding-both remove-heading-margin-top" id="what-is-cbm" style="background: url({% static 'img/black-sash-protest.jpg' %}); background-position: center bottom;">
@@ -75,9 +75,12 @@
       </div>
     </div>
   </div>
+
+  <!-- anchor for cbm-process links, since we have two containers, one for mobile and one for desktop -->
+  <span id="cbm-process"></span>
  
   <!-- diagram for large  screens -->
-  <div class="hidden-xs hidden-sm bg-primary-light add-padding-both remove-heading-margin-top diagram-container-large-screens" id="cbm-process">
+  <div class="hidden-xs hidden-sm bg-primary-light add-padding-both remove-heading-margin-top diagram-container-large-screens">
     <div class="container">
 
       <div class="text-center">
@@ -95,7 +98,7 @@
             <div class="diagram-box" id="box-step1">
               <div class="diagram-caption">
                 <h1>1</h1>
-                <h2>Build government relationships</h2>
+                <h2>Establish government relationships</h2>
               </div>            
             </div>
           </a>
@@ -180,7 +183,7 @@
             <a href="#government">
               <div class="diagram-caption">
                 <h1>1</h1>
-                <h2>Build government relationships</h2>
+                <h2>Establish government relationships</h2>
               </div>
             </a>            
           </div>
@@ -252,7 +255,7 @@
   </div>
   <!-- /diagram for small screens -->
 
-  <div class="bg-white add-padding-both remove-heading-margin-top" id="government">
+  <div class="bg-white add-padding-both remove-heading-margin-top">
     <div class="container">
       <div class="row">
 
@@ -260,7 +263,7 @@
           <nav class="steps-sidebar">
             <h4>The CBM Process</h4>
             <ul class="nav nav-stacked">
-              <li><a href="#government">1. Build gov. relationship</a></li>
+              <li><a href="#government">1. Establish gov. relationship</a></li>
               <li><a href="#cbo-partner">2. Select community partner</a></li>
               <li><a href="#local-facility">3. Engage community partner</a></li>
               <li><a href="#monitor">4. Monitor facility</a></li>
@@ -268,230 +271,165 @@
               <li><a href="#dialogues">6. Conduct dialogues</a></li>
               <li><a href="#advocacy">7. Engage in advocacy</a></li>
             </ul>
+
+            <button class="btn btn-primary btn-print"><i class="fa fa-print"></i> Print the steps</button>
           </nav>
         </div>
 
         <div class="col-md-9">
-
-          <div class="row step-row">
+          <div class="steps-content">
             <section id="government">
-              <div class="col-md-3">
-                <div class="cbm-step-image text-center">
-                  <img src="{% static 'img/cbm_step1.png' %}" width="170" height="170">
+              <header>
+                <div class="step-icon"><img src="{% static 'img/cbm_step1.png' %}" width="170" height="170"></div>
+                <h4>Step 1</h4>
+                <h2>Establish government relationship</strong></h2>
+              </header>
+
+              <div class="row step-detail">
+                <div class="col-md-8">
+                  <p>Securing physical access to government departments and their service delivery facilities is critical to the success of community monitoring programmes. Black Sash signed a memorandum of understanding with the Department of Performance Monitoring and Evaluation (DPME) supporting the CBM project undertaken by Black Sash in selected SASSA, Department of Health and Local Government sites. SASSA also provided a letter for access to select facilities for monitoring purposes. Black Sash and Community Partners build on relationships developed during previous monitoring engagements with the Department of Health and the selected local government sites.</p>
                 </div>
               </div>
-              <div class="col-md-4">
-                <h4 class="uppercase"><strong>Step 1</strong></h4>
-                <h2 class="text-secondary-dark"><strong>Establish government relationship</strong></h2>
-              </div>
-              <div class="col-md-5">
-                <p>Securing physical access to government departments and their service delivery facilities is critical to the success of community monitoring programmes. Black Sash signed a memorandum of understanding with the Department of Performance Monitoring and Evaluation (DPME) supporting the CBM project undertaken by Black Sash in selected SASSA, Department of Health and Local Government sites. SASSA also provided a letter for access to select facilities for monitoring purposes. Black Sash and Community Partners build on relationships developed during previous monitoring engagements with the Department of Health and the selected local government sites.</p>
-              </div>
             </section>
-          </div>
 
-          <div class="row step-row">
             <section id="cbo-partner">
-              <div class="col-md-3">
-                <div class="cbm-step-image text-center">
-                  <img src="{% static 'img/cbm_step2.png' %}" width="170" height="170">
+              <header>
+                <div class="step-icon"><img src="{% static 'img/cbm_step2.png' %}" width="170" height="170"></div>
+                <h4>Step 2</h4>
+                <h2>Select community partner</h2>
+              </header>
+
+              <div class="row step-detail">
+                <div class="col-md-8">
+                  <ol>
+                    <li>Secure MoU</li>
+                    <li>Draft a code of conduct</li>
+                    <li>Consider ethical issues</li>
+                    <li>Engage in training</li>
+                  </ol>
+                  <p>To ensure that the local service improves, we need local users and organisations based in the community to be driving this process. 
+                  The strength of this model lies in formulating a strong relationship with an existing community-based organisation as these are the people actively involved in their communities and understand the local context. Great care is taken to select the correct organisation to partner with. Once the selection has occurred the community partner is trained and skilled up on who best to perform this monitoring.</p>
+                </div>
+                <div class="col-md-4">
+                  <img src="{% static 'img/black-sash-people.jpg' %}" class="img-thumbnail" width="300px" height="auto">
                 </div>
               </div>
-              <div class="col-md-4">
-                <h4 class="uppercase"><strong>Step 2</strong></h4>
-                <h2 class="text-secondary-dark"><strong>Select community partner</strong></h2>
-                <h6 class="add-border-bottom"><strong>Sub-steps</strong></h6>
-                <ol>
-                  <li>Secure MoU</li>
-                  <li>Draft a code of conduct</li>
-                  <li>Consider ethical issues</li>
-                  <li>Engage in training</li>
-                </ol>
-              </div>
-              <div class="col-md-5">
-                <p>To ensure that the local service improves, we need local users and organisations based in the community to be driving this process. 
-                <img src="{% static 'img/black-sash-people.jpg' %}" class="pull-right img-thumbnail add-margin-img-right" width="300px" height="auto">
-                The strength of this model lies in formulating a strong relationship with an existing community-based organisation as these are the people actively involved in their communities and understand the local context. Great care is taken to select the correct organisation to partner with. Once the selection has occurred the community partner is trained and skilled up on who best to perform this monitoring.</p>
-              </div>
             </section>
-          </div>
 
-          <div class="row step-row">
             <section id="local-facility">
-              <div class="col-md-3">
-                <div class="cbm-step-image text-center">
-                  <img src="{% static 'img/cbm_step3.png' %}" width="170" height="170">
+              <header>
+                <div class="step-icon"><img src="{% static 'img/cbm_step3.png' %}" width="170" height="170"></div>
+                <h4>Step 3</h4>
+                <h2>Engage community partner</h2>
+              </header>
+
+              <div class="row step-detail">
+                <div class="col-md-8">
+                  <p>This step is about building leadership and skills and knowledge of the local community partner - guiding and supporting  them through the local facility engagement.</p>
+
+                  <p>Partners are trained on building a relationship with the local government facility; the ethics of monitoring; guiding respondents through a questionnaire without invalidating the responses; norms and standards as well as policy guidelines for the government sector or agency being monitored; interpreting survey results; sharing the results with local government facility and community stakeholders at a community Dialogue; offering community members to express views for improvement of the service.</p>
+
+                  <p>Partners are also trained on how to facilitate in a participatory and inclusive manner and how to develop the Improvement Plan. The implementation of the plan will be lead by a Joint Monitoring Committee which will regularly report back to the community on the work done, progress made and want obstacles encountered.</p>
                 </div>
               </div>
-              <div class="col-md-4">
-                <h4 class="uppercase"><strong>Step 3</strong></h4>
-                <h2 class="text-secondary-dark"><strong>Engage community partner</strong></h2>
-              </div>
-              <div class="col-md-5">
-                <p>This step is about building leadership and skills and knowledge of the local community partner - guiding and supporting  them through the local facility engagement.</p>
-
-                <p>Partners are trained on building a relationship with the local government facility; the ethics of monitoring; guiding respondents through a questionnaire without invalidating the responses; norms and standards as well as policy guidelines for the government sector or agency being monitored; interpreting survey results; sharing the results with local government facility and community stakeholders at a community Dialogue; offering community members to express views for improvement of the service.</p>
-
-                <p>Partners are also trained on how to facilitate in a participatory and inclusive manner and how to develop the Improvement Plan. The implementation of the plan will be lead by a Joint Monitoring Committee which will regularly report back to the community on the work done, progress made and want obstacles encountered.</p>
-              </div>
             </section>
-          </div>
 
-          <div class="row step-row">
             <section id="monitor">
-              <div class="col-md-3">
-                <div class="cbm-step-image text-center">
-                  <img src="{% static 'img/cbm_step4.png' %}" width="170" height="170">
+              <header>
+                <div class="step-icon"><img src="{% static 'img/cbm_step4.png' %}" width="170" height="170"></div>
+                <h4>Step 4</h4>
+                <h2>Monitor facility</h2>
+              </header>
+
+              <div class="row step-detail">
+                <div class="col-md-8">
+                  <ol>
+                    <li>select &amp; train monitors</li>
+                    <li>prepare survey tools</li>
+                    <li>collect the data</li>
+                    <li>do site observations</li>
+                    <li>finalise the data</li>
+                  </ol>
+
+                  <p>Monitoring takes place over a 3 month period each year and consists of a light-touch survey conducted by trained monitors. Responses are captured directly onto the system via mobile or desktop tools, or else are transcribed from paper-based forms. Each community partner endeavours to survey at least 300 respondents per facility in order to ensure accurate representation.</p>
                 </div>
               </div>
-              <div class="col-md-4">
-                <h4 class="uppercase"><strong>Step 4</strong></h4>
-                <h2 class="text-secondary-dark"><strong>Monitor facility</strong></h2>
-                <h6 class="add-border-bottom"><strong>Sub-steps</strong></h6>
-                <ol>
-                  <li>select &amp; train monitors</li>
-                  <li>prepare survey tools</li>
-                  <li>collect the data</li>
-                  <li>do site observations</li>
-                  <li>finalise the data</li>
-                </ol>
-              </div>
-              <div class="col-md-5">
-                <p>Monitoring takes place over a 3 month period each year and consists of a light-touch survey conducted by trained monitors. Responses are captured directly onto the system via mobile or desktop tools, or else are transcribed from paper-based forms. Each community partner endeavours to survey at least 300 respondents per facility in order to ensure accurate representation.</p>
-              </div>
             </section>
-          </div>
 
-          <div class="row step-row">
             <section id="report">
-              <div class="col-md-3">
-                <div class="cbm-step-image text-center">
-                  <img src="{% static 'img/cbm_step5.png' %}" width="170" height="170">
+              <header>
+                <div class="step-icon"><img src="{% static 'img/cbm_step5.png' %}" width="170" height="170"></div>
+                <h4>Step 5</h4>
+                <h2>Report findings</h2>
+              </header>
+
+              <div class="row step-detail">
+                <div class="col-md-8">
+                  <ol>
+                    <li>clean the data & analyse</li>
+                    <li>package the data</li>
+                    <li>create a presentation</li>
+                    <li>send your findings to stakeholders</li>
+                  </ol>
+
+                  <p>In order to effect local change leading to improved service delivery, it is vital that the results and output of the monitoring activities are presented back to the facility and its service users. This step is concerned with the analysis and packaging of these results. Each site is analysed and their results presented back to them by means of high-impact posters which are put up at the facility to give feedback to their users. In addition results are also packaged into a handout which is then used to plan the dialogues with.</p>
                 </div>
               </div>
-              <div class="col-md-4">
-                <h4 class="uppercase"><strong>Step 5</strong></h4>
-                <h2 class="text-secondary-dark"><strong>Report findings</strong></h2>
-                <h6 class="add-border-bottom"><strong>Sub-steps</strong></h6>
-                <ol>
-                  <li>clean the data & analyse</li>
-                  <li>package the data</li>
-                  <li>create a presentation</li>
-                  <li>send your findings to stakeholders</li>
-                </ol>
-              </div>
-              <div class="col-md-5">
-                <p>In order to effect local change leading to improved service delivery, it is vital that the results and output of the monitoring activities are presented back to the facility and its service users. This step is concerned with the analysis and packaging of these results. Each site is analysed and their results presented back to them by means of high-impact posters which are put up at the facility to give feedback to their users. In addition results are also packaged into a handout which is then used to plan the dialogues with.</p>
-              </div>
             </section>
-          </div>
 
-          <div class="row step-row">
             <section id="dialogues">
-              <div class="col-md-3">
-                <div class="cbm-step-image text-center">
-                  <img src="{% static 'img/cbm_step6.png' %}" width="170" height="170">
+              <header>
+                <div class="step-icon"><img src="{% static 'img/cbm_step6.png' %}" width="170" height="170"></div>
+                <h4>Step 6</h4>
+                <h2>Conduct dialogues</h2>
+              </header>
+
+              <div class="row step-detail">
+                <div class="col-md-8">
+                  <ol>
+                    <li>plan some dialogue events</li>
+                    <li>host the dialogues</li>
+                    <li>create an improvement plan</li>
+                    <li>establish a joint monitoring committee</li>
+                  </ol>
+
+                  <p>Dialogues are a platform for civil society, service users and government facilities to discuss the findings of the annual monitoring and together, form an improvement plan to address the concerns raised. This is a collaborative platform, facilitated by the community partner, from which a joint monitoring committee should be established, to track and monitor the improvement plan. Learnings from the current cycle are fed back to be taken into account when planning the next cycle. This ensures that the process is continually learning and improving and optimisations are realised as time progresses.</p>
+                </div>  
+                <div class="col-md-4">
+                  <h4>Materials</h4>
+
+                  <ul>
+                    <li><a href="{% static 'resources/Dialogue_Inivitation_to_Stakeholders.docx' %}">Dialogue Inivitation to Stakeholders</a></li>
+                  </ul>
                 </div>
               </div>
-              <div class="col-md-4">
-                <h4 class="uppercase"><strong>Step 6</strong></h4>
-                <h2 class="text-secondary-dark"><strong>Conduct dialogues</strong></h2>
-                <h6 class="add-border-bottom"><strong>Sub-steps</strong></h6>
-                <ol>
-                  <li>plan some dialogue events</li>
-                  <li>host the dialogues</li>
-                  <li>create an improvement plan</li>
-                  <li>establish a joint monitoring committee</li>
-                </ol>
-              </div>
-              <div class="col-md-5">
-                <p>Dialogues are a platform for civil society, service users and government facilities to discuss the findings of the annual monitoring and together, form an improvement plan to address the concerns raised. This is a collaborative platform, facilitated by the community partner, from which a joint monitoring committee should be established, to track and monitor the improvement plan. Learnings from the current cycle are fed back to be taken into account when planning the next cycle. This ensures that the process is continually learning and improving and optimisations are realised as time progresses.</p>
-             </div>  
             </section>
-          </div>
 
-          <div class="row step-row">
             <section id="advocacy">
-              <div class="col-md-3">
-                <div class="cbm-step-image text-center">
-                  <img src="{% static 'img/cbm_step7.png' %}" width="170" height="170">
+              <header>
+                <div class="step-icon"><img src="{% static 'img/cbm_step7.png' %}" width="170" height="170"></div>
+                <h4>Step 7</h4>
+                <h2>Engage in advocacy</h2>
+              </header>
+
+              <div class="row step-detail">
+                <div class="col-md-8">
+                  <p>
+                    It is often the case that issues raised at a local level need provincial or even national interventions in order to address the systemic concern. 
+                    We see the results of the annual monitoring surveys as providing a good indicator of the overall well being of the system, but recognise that more focused campaigns will be required to address the issues at the correct level. This is where our advocacy step fits into the larger CBM model. CBM also ensures that advocacy is evidence-based.
+                  </p>
+                </div>
+                <div class="col-md-4">
+                  <img src="{% static 'img/black-sash-2.png' %}" class="img-thumbnail" width="300px" height="auto">
                 </div>
               </div>
-              <div class="col-md-4">
-                <h4 class="uppercase"><strong>Step 7</strong></h4>
-                <h2 class="text-secondary-dark"><strong>Engage in advocacy</strong></h2>
-              </div>
-              <div class="col-md-5">
-                <p>
-                  It is often the case that issues raised at a local level need provincial or even national interventions in order to address the systemic concern. 
-                  <img src="{% static 'img/black-sash-2.png' %}" class="pull-right img-thumbnail add-margin-img-right" width="300px" height="auto">
-                  We see the results of the annual monitoring surveys as providing a good indicator of the overall well being of the system, but recognise that more focused campaigns will be required to address the issues at the correct level. This is where our advocacy step fits into the larger CBM model. CBM also ensures that advocacy is evidence-based.
-                </p>
-             </div>    
             </section>
-          </div>
 
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="bg-secondary add-padding-both remove-heading-margin-top" id="resources">
-    <div class="container">
-      <div class="row text-center">
-        <h2 class="text-white">Resources</h2>
-      </div>
-      <div class="row">
-        <div class="col-md-4">
-          <div class="panel panel-primary">
-            <div class="panel-heading">
-              <h5 class="text-white"><strong>Norms, standards and legislation</strong></h5>
-            </div>
-            <div class="panel-body">
-              <ul>
-                <li><a href="http://www.gov.za/sites/www.gov.za/files/a13-04_0.pdf" target="_blank">Social Assistance Act, 2004</a></li>
-                <li><a href="http://www.gov.za/documents/national-health-act-regulation-norms-and-standards-applicable-certain-categories-health-19" target="_blank">National Health Act Regulations: Norms and standards</a></li>
-                <li><a href="http://www.gov.za/sites/www.gov.za/files/36702_gon529_0.pdf" target="_blank">National Health Amendment Act, 2013</a></li>
-                <li><a href="http://mfma.treasury.gov.za/MFMA/Legislation/Local%20Government%20-%20Municipal%20Systems%20Act/Local%20Government%20-%20Municipal%20Systems%20Act,%20No.%2032%20of%202000.pdf" target="_blank">Local Government Municipal Systems Act, 2000 (MSA)</a></li>
-                <li><a href="{% static 'SASSA_Norms_and_Standards_2013.pdf' %}" target="_blank">SASSA: Norms and Standards</a></li>
-                <li><a href="http://mfma.treasury.gov.za/Pages/Default.aspx">Local Government Municipal Finance Management Act (MFMA)</a>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="panel panel-primary">
-            <div class="panel-heading">
-              <h5 class="text-white"><strong>Batho Pele</strong></h5>
-            </div>
-            <div class="panel-body">
-              <ul>
-                <li><a href="http://www.dpsa.gov.za/documents/Abridged%20BP%20programme%20July2014.pdf" target="_blank">Batho Pele principles</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="panel panel-primary">
-            <div class="panel-heading">
-              <h5 class="text-white"><strong>Examples & further reading</strong></h5>
-            </div>
-            <div class="panel-body">
-              <ul>
-                <li><a href="https://en.wikipedia.org/wiki/Community-based_monitoring" target="_blank">Wikipedia: Community-base Monitoring</a></li>
-                <li><a href="http://communitymonitoring.org/" target="_blank">Integrity Watch in Afghanistan</a></li>
-                <li><a href="http://www.nrhmcommunityaction.org/" target="blank">Community Action for Health – India</a></li>
-                <li><a href="http://erc.msh.org/quality/pstools/psmoncv.cfm" target="_blank">Unicef</li>
-                <li><a href="http://www.odi.org/publications/6200-community-scorecard-public-service-malawi" target="_blank">Malawi’s Public Score Card</a></li>
-                <li><a href="http://internationalbudget.org/2013/06/how-are-social-audits-empowering-citizens-of-south-africa/" target="_blank">How Social Audits are Empowering Citizens of South Africa (IBP)</a>
-              </ul>
-            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
 
 </div>
 

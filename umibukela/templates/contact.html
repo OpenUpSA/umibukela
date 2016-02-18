@@ -13,21 +13,36 @@
 <!-- /breadcrumbs -->
 
 <div class="section" id="contact">
-
   <div class="container">
-    <p class="lead">We're hard at work building this CBM platform.</p>
-
-
     <div class="row">
-      <div class="col-md-6">
 
+      <div class="col-md-8">
+        <h2>About {{ SITE_NAME }}</h2>
+
+        <p class="lead">
+          {{ SITE_NAME }} is a project by <a href="http://www.blacksash.org.za/">Black Sash</a> to promote the use of community-based monitoring.
+        </p>
+
+        <p>
+        We are creating a space to collect, store and share the CBM work done by Black Sash, our Community Partners and many others. We're working
+        together to collaboratively build a pracite of community oversight and state accountability.
+        </p>
+
+        <h3>With Support From</h3>
+
+        <p>
+        The platform is supported by <a href="https://www.hivos.org/">Hivos</a> and <a href="http://www.makingallvoicescount.org/">MAVC</a> and is
+        developed by <a href="http://code4sa.org">Code for South Africa</a>.
+        </p>
+
+      </div>
+      <div class="col-md-4">
+        <h3>Contact us</h3>
         <p>If you're interested in using the platform please sign up to our mailing list or email us at <a href="mailto:cbm@code4sa.org">cbm@code4sa.org</a>.</p>
 
         {% include '_mailing_list_form.html' %}
-
-        <br>
-        <br>
       </div>
+
     </div>
   </div>
 

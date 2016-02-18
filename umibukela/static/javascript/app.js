@@ -12,15 +12,23 @@ Umibukela.General = function() {
 
       var target = this.hash;
       var $target = $(target);
-
-      $('html, body').stop().animate({
-          'scrollTop': $target.offset().top-15
-      }, 300, 'swing');
+      
+      if ($target.length) {
+        $('html, body').stop().animate({
+            'scrollTop': $target.offset().top-15
+        }, 300, 'swing');
+      }
     });
 
     if ($("#about").length) {
       self.initAboutPage();
     }
+
+    $('.btn-print').on('click', function() {
+      window.print();
+    });
+
+    self.initSocial();
   };
 
   self.initAboutPage = function() {
@@ -30,14 +38,20 @@ Umibukela.General = function() {
       offset: 100
     });
 
-    var $lastRow = $('.step-row:last-child');
+    var $lastRow = $('.steps-content section').last();
 
     // affix
     $('.steps-sidebar').affix({
       offset: {
-        top: $('.steps-sidebar').offset().top,
+        top: $('.steps-sidebar').offset().top - 30,
         // stop affix 2/3 of the way down the last step row
         bottom: $('body').height() - $lastRow.offset().top - $lastRow.height() * 2 / 3,
+      }
+    });
+
+    $('#subnav').affix({
+      offset: {
+        top: $('#subnav').offset().top - 10,
       }
     });
   };
@@ -69,6 +83,30 @@ Umibukela.General = function() {
       });
     }
   };
+
+  self.initSocial = function() {
+    var url = window.location.toString();
+
+    // social buttons
+    $('.fb-share').on('click', function(e) {
+      e.preventDefault();
+
+      window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(url),
+                  "share", "width=600, height=400, scrollbars=no");
+      ga('send', 'social', 'facebook', 'share', url);
+    });
+
+    $('.twitter-share').on('click', function(e) {
+      e.preventDefault();
+          var tweet = $(this).data('tweet') || '';
+
+      window.open("https://twitter.com/intent/tweet?" +
+                  "text=" + encodeURIComponent(tweet) +
+                  "&url=" + encodeURIComponent(url),
+                  "share", "width=364, height=250, scrollbars=no");
+      ga('send', 'social', 'twitter', 'share', url);
+    });
+  }
 };
 
 $(function() {
