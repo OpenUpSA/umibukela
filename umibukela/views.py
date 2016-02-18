@@ -29,6 +29,12 @@ def about(request):
     })
 
 
+def resources(request):
+    return render(request, 'resources.html', {
+        'active_tab': 'resources',
+    })
+
+
 def sites(request):
     sites = Site.objects.all().prefetch_related('province', 'sector')
 
