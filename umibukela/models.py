@@ -72,7 +72,7 @@ class Site(models.Model):
     address_2 = models.CharField(max_length=200, null=True, blank=True)
     address_3 = models.CharField(max_length=200, null=True, blank=True)
     province = models.ForeignKey(Province, null=True, blank=True)
-    telephone = models.CharField(max_length=200)
+    telephone = models.CharField(max_length=200, null=True, blank=True)
     sector = models.ForeignKey(Sector, null=True, blank=True)
     coordinates = gis_models.PointField(null=True, blank=True)
 
