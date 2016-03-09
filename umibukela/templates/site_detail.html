@@ -31,13 +31,17 @@
           <h3><i class="fa fa-map-marker"></i> Site</h3>
           <h1>{{ site.name }}</h1>
           <h2>{{ site.address_1 }}, {{ site.address_2 }}, {{ site.address_3 }}, {{ site.province.name }}</h2>
+          {% if site.telephone %}
           <i class="fa-fw fa fa-phone"></i> <a href="tel:{{ site.telephone.split|join:'-' }}">{{ site.telephone }}</a><br>
+          {% endif %}
           {% if latest_result %}
           <a href="{% url 'site-result' site_slug=site.slug result_id=latest_result.id %}" class="btn btn-primary btn-latest-results"><i class="fa fa-bar-chart"></i> View latest results</a>
           {% endif %}
         </div>
         <div class="col-sm-7">
+          {% if site.coordinates.x and site.coordinates.y %}
           <div class="map" data-lat="{{ site.coordinates.y }}" data-lng="{{ site.coordinates.x }}"></div>
+          {% endif %}
         </div>
         <div class="col-sm-1 col-xs-3 text-right">
           {% include '_social_buttons.html' %}
