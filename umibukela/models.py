@@ -50,6 +50,9 @@ class Partner(models.Model):
     context_statement = models.TextField(null=True, blank=True)
     context_image = models.ImageField(upload_to=image_filename, null=True, blank=True)
 
+    class Meta:
+        ordering = ('short_name',)
+
     def __str__(self):
         return "[ID: %s] %s" % (self.id, self.short_name)
 
@@ -69,9 +72,12 @@ class Site(models.Model):
     address_2 = models.CharField(max_length=200, null=True, blank=True)
     address_3 = models.CharField(max_length=200, null=True, blank=True)
     province = models.ForeignKey(Province, null=True, blank=True)
-    telephone = models.CharField(max_length=200)
+    telephone = models.CharField(max_length=200, null=True, blank=True)
     sector = models.ForeignKey(Sector, null=True, blank=True)
     coordinates = gis_models.PointField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('name',)
 
     def __str__(self):
         return "[ID: %s] %s" % (self.id, self.name)
@@ -86,6 +92,12 @@ class Site(models.Model):
 
     def result_sets(self):
         return CycleResultSet.objects.filter(site=self).all()
+
+    def address_str(self):
+        parts = [self.address_1, self.address_2, self.address_3]
+        if self.province:
+            parts.append(self.province.name)
+        return ', '.join([p for p in parts if p])
 
 
 class CycleFrequency(models.Model):

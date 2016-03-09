@@ -7,16 +7,15 @@ from .models import (
 
 
 class SiteForm(forms.ModelForm):
-
     latitude = forms.DecimalField(
         min_value=-90,
         max_value=90,
-        required=True,
+        required=False,
     )
     longitude = forms.DecimalField(
         min_value=-180,
         max_value=180,
-        required=True,
+        required=False,
     )
 
     class Meta(object):
