@@ -50,6 +50,9 @@ class Partner(models.Model):
     context_statement = models.TextField(null=True, blank=True)
     context_image = models.ImageField(upload_to=image_filename, null=True, blank=True)
 
+    class Meta:
+        ordering = ('short_name',)
+
     def __str__(self):
         return "[ID: %s] %s" % (self.id, self.short_name)
 
@@ -72,6 +75,9 @@ class Site(models.Model):
     telephone = models.CharField(max_length=200)
     sector = models.ForeignKey(Sector, null=True, blank=True)
     coordinates = gis_models.PointField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('name',)
 
     def __str__(self):
         return "[ID: %s] %s" % (self.id, self.name)
