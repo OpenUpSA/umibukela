@@ -561,6 +561,13 @@ a.social-media{
     }
 }
 
+.contact-logos {
+    img {
+        width: 200px;
+        max-width: 100%;
+    }
+}
+
 //== Footer
 footer.footer{
     padding: 2em 0;
@@ -570,7 +577,8 @@ footer.footer{
         padding-top: 2em;
 
         img {
-            width: 300px;
+            width: 200px;
+            max-width: 100%;
             height: auto;
             margin-bottom: 2em;
         }

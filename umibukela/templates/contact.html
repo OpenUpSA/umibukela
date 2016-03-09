@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block title %}About Us{% endblock %}
 {% block page-content %}
@@ -29,19 +30,47 @@
         </p>
 
         <h3>With Support From</h3>
-
         <p>
         The platform is supported by <a href="https://www.hivos.org/">Hivos</a> and <a href="http://www.makingallvoicescount.org/">MAVC</a> and is
         developed by <a href="http://code4sa.org">Code for South Africa</a>.
         </p>
-
       </div>
+
       <div class="col-md-4 contact-us-box">
         <h3>Contact us</h3>
         <p>If you'd like to get involved or learn more, sign up to our mailing list or email us at <a href="mailto:cbm@code4sa.org">cbm@code4sa.org</a>.</p>
 
         {% include '_mailing_list_form.html' %}
       </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <h4>About Black Sash</h4>
+        <p>
+        <a href="http://www.blacksash.org.za/">The Black Sash</a> is a veteran human rights organisation whose current programmes draw on a rich institutional heritage of advocating for social justice in South Africa.
+        </p>
+
+        <h4>About Hivos</h4>
+        <p><a href="https://www.hivos.org/">Hivos</a> is an international organisation that seeks new solutions to persistent global issues.</p>
+
+        <h4>About MAVC</h4>
+        <p><a href="http://www.makingallvoicescount.org/">Making All Voices Count (MAVC)</a> is about promoting transparency, fighting corruption, empowering citizens, and harnessing the power of new technologies to make government more effective and accountable.
+        </p>
+
+        <h4>About Code for South Africa</h4>
+        <p>
+        <a href="http://code4sa.org" target="_blank">Code for South Africa</a> is a civic technology laboratory that uses data and technology
+        to promote informed decision-making that drives social change.
+        </p>
+      </div>
+      <div class="col-md-4 contact-logos">
+        <p><a href="http://www.blacksash.org.za" target="_blank"><img src="{% static 'img/black-sash-logo.png' %}" alt="Black Sash"></a></p>
+        <p><a href="https://www.hivos.org" target="_blank"><img src="{% static 'img/hivos-logo.png' %}" alt="Hivos"></a></p>
+        <p><a href="http://www.makingallvoicescount.org" target="_blank"><img src="{% static 'img/mavc-logo.svg' %}" alt="MAVC"></a></p>
+        <p><a href="http://code4sa.org" target="_blank"><img src="{% static 'img/logo-code4sa.png' %}" alt="Code for South Africa"></a></p>
+      </div>
+
 
     </div>
   </div>
