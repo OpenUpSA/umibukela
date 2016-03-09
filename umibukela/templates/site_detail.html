@@ -2,7 +2,7 @@
 {% load pipeline %}
 
 {% block title %}{{ site.name }}{% endblock %}
-{% block description %}Site details for {{ site.name }}, {{ site.address_2 }}, {{ site.province.name }}{% endblock %}
+{% block description %}Site details for {{ site.name }}, {{ site.province.name }}{% endblock %}
 
 {% block js %}
   {{ block.super }}
@@ -30,7 +30,7 @@
         <div class="col-sm-4 col-xs-9">
           <h3><i class="fa fa-map-marker"></i> Site</h3>
           <h1>{{ site.name }}</h1>
-          <h2>{{ site.address_1 }}, {{ site.address_2 }}, {{ site.address_3 }}, {{ site.province.name }}</h2>
+          <h2>{{ site.address_str }}</h2>
           {% if site.telephone %}
           <i class="fa-fw fa fa-phone"></i> <a href="tel:{{ site.telephone.split|join:'-' }}">{{ site.telephone }}</a><br>
           {% endif %}

@@ -93,6 +93,12 @@ class Site(models.Model):
     def result_sets(self):
         return CycleResultSet.objects.filter(site=self).all()
 
+    def address_str(self):
+        parts = [self.address_1, self.address_2, self.address_3]
+        if self.province:
+            parts.append(self.province.name)
+        return ', '.join([p for p in parts if p])
+
 
 class CycleFrequency(models.Model):
     name = models.CharField(max_length=200, unique=True)
