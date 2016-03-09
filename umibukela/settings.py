@@ -144,9 +144,9 @@ PYSCSS_LOAD_PATHS = [
 PIPELINE_CSS = {
     'css': {
         'source_filenames': (
+            'stylesheets/app.scss',
             'bower_components/fontawesome/css/font-awesome.css',
             'bower_components/leaflet/dist/leaflet.css',
-            'stylesheets/app.scss',
         ),
         'output_filename': 'app.css',
     },
