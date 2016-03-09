@@ -16,7 +16,12 @@
 }
 
 .site-title{
-    padding: 1em 0;
+    padding: 0em;
+
+    @media (min-width: 768px) {
+        padding: 1em 0em;
+    }
+
     font-family: $font-family-sans-serif-2;
     font-size: 32px;
     font-weight: bold;
@@ -25,6 +30,23 @@
     }
     a:hover, a:active {
         color: $white;
+    }
+}
+
+.site-header .social-buttons {
+    float: right;
+    padding: 0em 0em 1em 0em;
+
+    @media (min-width: 768px) {
+        padding: 2em 0em;
+    }
+
+    a.social-media {
+        color: $white;
+
+        .fa {
+            color: $orange;
+        }
     }
 }
 
