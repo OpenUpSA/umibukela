@@ -13,6 +13,18 @@
 
 .site-header{
     background-color: $brand-primary;
+
+    .mailing-list-cta {
+        padding-top: 1.5em;
+        p {
+            margin: 0px 0px 5px;
+            color: $white;
+        }
+
+        button {
+            background-color: $brand-secondary-light;
+        }
+    }
 }
 
 .site-title{
@@ -677,7 +689,7 @@ footer.footer{
         font-family: $font-family-sans-serif-2;
         padding: 5px;
         border-radius: 3px;
-        h1, h2 { margin: 0; color: $white ;fa}
+        h1, h2 { margin: 0; color: $white; }
         h1 {
             font-size: 30px;
             font-weight: bold;
