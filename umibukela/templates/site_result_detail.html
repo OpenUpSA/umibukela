@@ -32,54 +32,46 @@
   <!-- section-header -->
   <div class="section-heading">
     <div class="container">
+      <h3><i class="fa fa-bar-chart-o"></i> Results</h3>
+
       <div class="row">
-        <div class="col-sm-11 col-xs-9">
-          <h3><i class="fa fa-bar-chart-o"></i> Results</h3>
-
-          <div class="row">
-            <div class="col-sm-5">
-              <h1>{{ result_set.site.name }} <br>{{ result_set.cycle.programme.name}} {{ result_set.cycle.name}}</h1>
-              <h2>{{ result_set.cycle.start_date|date:'j F Y' }}
-                  - {{ result_set.cycle.end_date|date:'j F Y' }}</h2>
-              <i class="fa-fw fa fa-group"></i> <a href="{% url 'partner' partner_slug=result_set.partner.slug %}">{{ result_set.partner.short_name }}</a><br>
-            </div>
-
-            <div class="col-sm-4">
-              <ul class="media-list resource-list">
-
-                <li class="media">
-                  <div class="media-left">
-                    <img class="media-object" src="{% static 'img/cbm-cycle_wide.png' %}" alt="">
-                  </div>
-                  <div class="media-body">
-                    <a href=""><i class="fa fa-download"></i> Cycle Poster <small>(46.6kb)</small></a>
-                  </div>
-                </li>
-
-                <li class="media">
-                  <div class="media-left">
-                    <img class="media-object" src="{% static 'img/community-women.jpg' %}" alt="">
-                  </div>
-                  <div class="media-body">
-                    <a href=""><i class="fa fa-download"></i> Cycle Poster <small>(1.2mb)</small></a>
-                  </div>
-                </li>
-
-              </ul>
-            </div>
-
-            <div class="col-sm-3">
-              <ul class="list-unstyled">
-                <li><a href=""><i class="fa fa-download"></i> Community handout <small>(1mb)</small></a></li>
-                <li><a href=""><i class="fa fa-download"></i> Narrative <small>(2mb)</small></a></li>
-                <li><a href=""><i class="fa fa-download"></i> Partner report <small>(2mb)</small></a></li>
-              </ul>
-            </div>
-          </div>
+        <div class="col-sm-5">
+          <h1>{{ result_set.site.name }} <br>{{ result_set.cycle.programme.name}} {{ result_set.cycle.name}}</h1>
+          <h2>{{ result_set.cycle.start_date|date:'j F Y' }}
+              - {{ result_set.cycle.end_date|date:'j F Y' }}</h2>
+          <i class="fa-fw fa fa-group"></i> <a href="{% url 'partner' partner_slug=result_set.partner.slug %}">{{ result_set.partner.short_name }}</a><br>
         </div>
 
-        <div class="col-sm-1 col-xs-3 text-right">
-          {% include '_social_buttons.html' %}
+        <div class="col-sm-4">
+          <ul class="media-list resource-list">
+
+            <li class="media">
+              <div class="media-left">
+                <img class="media-object" src="{% static 'img/cbm-cycle_wide.png' %}" alt="">
+              </div>
+              <div class="media-body">
+                <a href=""><i class="fa fa-download"></i> Cycle Poster <small>(46.6kb)</small></a>
+              </div>
+            </li>
+
+            <li class="media">
+              <div class="media-left">
+                <img class="media-object" src="{% static 'img/community-women.jpg' %}" alt="">
+              </div>
+              <div class="media-body">
+                <a href=""><i class="fa fa-download"></i> Cycle Poster <small>(1.2mb)</small></a>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+
+        <div class="col-sm-3">
+          <ul class="list-unstyled">
+            <li><a href=""><i class="fa fa-download"></i> Community handout <small>(1mb)</small></a></li>
+            <li><a href=""><i class="fa fa-download"></i> Narrative <small>(2mb)</small></a></li>
+            <li><a href=""><i class="fa fa-download"></i> Partner report <small>(2mb)</small></a></li>
+          </ul>
         </div>
 
       </div>

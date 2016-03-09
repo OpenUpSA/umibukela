@@ -1,9 +1,17 @@
 <header class="site-header">
 
-  <div class="site-title">
-    <div class="container">
-      <a href="/">{{ SITE_NAME }}</a>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-9">
+	<div class="site-title">
+	  <a href="/">{{ SITE_NAME }}</a>
+	</div>
+      </div>
+      <div class="col-sm-3">
+	{% include '_social_buttons.html' %}
+      </div>
     </div>
+
   </div>
 
   <nav class="navbar navbar-default">
