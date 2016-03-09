@@ -152,7 +152,6 @@ img.img-rounded-border {
             padding: 5px 10px;
             font-size: 0.9em;
             color: $white;
-            border-bottom-width: 1px;
             background: $brand-primary;
             border-color: $brand-primary-dark;
             &:hover{
@@ -185,15 +184,7 @@ img.img-rounded-border {
 //== Section
 
 .section{
-
     padding: 0 0;
-
-    a{
-        border-bottom: solid 2px $link-color;
-        &:hover{
-            border-color: $link-hover-color;
-        }
-    }
 
     .section-heading{
 
@@ -373,8 +364,7 @@ img.img-rounded-border {
 /* all links */
 
 .steps-sidebar .nav > li > a {
-    border-bottom: 0;
-	padding: 0px;
+    padding: 0px;
 }
 
 /* active & hover links */
