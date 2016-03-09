@@ -267,6 +267,14 @@ img.img-rounded-border {
     min-height: 200px;
 }
 
+.contact-us-box {
+    padding: 1em;
+    background-color: $brand-secondary-light;
+    a {
+        color: $white;
+    }
+}
+
 //== #home
 
 #home{
