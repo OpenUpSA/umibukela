@@ -139,8 +139,8 @@ class Cycle(models.Model):
         unique_together = ('name', 'programme')
 
     def __str__(self):
-        return "%s [%s to %s]" % (
-            self.programme.short_name, self.start_date, self.end_date
+        return "%s - %s [%s to %s]" % (
+            self.name, self.programme.short_name, self.start_date, self.end_date
         )
 
     def end_date_cmp(a, b):
