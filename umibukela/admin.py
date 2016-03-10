@@ -1,9 +1,11 @@
 from django.contrib import admin
 
 from .models import (
+    AttachmentNature,
     Cycle,
     CycleFrequency,
     CycleResultSet,
+    CycleResultSetAttachment,
     Partner,
     Programme,
     Province,
@@ -27,9 +29,22 @@ class SiteAdmin(admin.ModelAdmin):
     form = SiteForm
 
 
+class CycleResultSetAttachmentInline(admin.TabularInline):
+    model = CycleResultSetAttachment
+
+
+class CycleResultSetAdmin(admin.ModelAdmin):
+    inlines = [
+        CycleResultSetAttachmentInline,
+    ]
+
+
+admin.site.site_header = 'Umibukela administration'
+
+admin.site.register(AttachmentNature)
 admin.site.register(Cycle)
 admin.site.register(CycleFrequency)
-admin.site.register(CycleResultSet)
+admin.site.register(CycleResultSet, CycleResultSetAdmin)
 admin.site.register(Partner, PartnerAdmin)
 admin.site.register(Programme)
 admin.site.register(Province)
