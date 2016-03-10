@@ -103,6 +103,11 @@ class Site(models.Model):
             parts.append(self.province.name)
         return ', '.join([p for p in parts if p])
 
+    def partners(self):
+        partners = list(set(Partner.objects.filter(cycle_result_sets__site=self).all()))
+        partners.sort(key=lambda p: p.short_name)
+        return partners
+
     def get_absolute_url(self):
         return reverse('site', args=[self.slug])
 
