@@ -17,6 +17,12 @@ def image_filename(instance, filename):
     """
     return 'images/%s_%s' % (uuid.uuid4(), os.path.basename(filename))
 
+
+def attachment_filename(instance, filename):
+    """ Make attachment filenames
+    """
+    return 'attachments/%s/%s' % (uuid.uuid4(), os.path.basename(filename))
+
 # ------------------------------------------------------------------------------
 # Models
 # ------------------------------------------------------------------------------
@@ -216,6 +222,24 @@ class CycleResultSet(models.Model):
 
     def get_absolute_url(self):
         return reverse('site-result', args=[self.site.slug, str(self.id)])
+
+
+class AttachmentNature(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class CycleResultSetAttachment(models.Model):
+    cycle_result_set = models.ForeignKey(CycleResultSet, null=False, related_name='attachments')
+    nature = models.ForeignKey(AttachmentNature, null=False)
+    file = models.FileField(upload_to=attachment_filename, null=False)
+
+    def __str__(self):
+        return "%s -> %s (%s)" % (
+            self.cycle_result_set, self.file.name, self.nature.name,
+        )
 
 
 class Submission(models.Model):
