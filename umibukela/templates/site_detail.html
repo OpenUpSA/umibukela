@@ -88,7 +88,7 @@
             <dt>Community partners</dt>
             <dd>
             {% for partner in site.partners %}
-            <a href="{% url 'partner' partner_slug=site.latest_complete_result.partner.slug %}">{{ site.latest_complete_result.partner.short_name }}</a>{% if not forloop.last %}, {% endif %}
+            <a href="{% url 'partner' partner_slug=partner.slug %}">{{ partner.short_name }}</a>{% if not forloop.last %}, {% endif %}
             {% endfor %}
             </dd>
           </dl>
