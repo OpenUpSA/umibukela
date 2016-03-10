@@ -31,7 +31,7 @@ class SiteForm(forms.ModelForm):
                 longitude = float(data['longitude'])
                 data['coordinates'] = Point(longitude, latitude)
 
-        if 'instance' in kwargs and kwargs['instance'] is not None:
+        if 'instance' in kwargs and kwargs['instance'] is not None and kwargs['instance'].coordinates:
             coordinates = kwargs['instance'].coordinates.tuple
             initial = kwargs.get('initial', {})
             initial['longitude'] = coordinates[0]
