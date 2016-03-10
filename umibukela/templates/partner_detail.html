@@ -6,6 +6,7 @@
 
 <!-- breadcrumbs -->
 <div class="container breadcrumb-container">
+  {% include '_edit_button.html' with obj=partner %}
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="{% url 'partners' %}">Community Partners</a></li>

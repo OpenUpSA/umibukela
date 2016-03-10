@@ -13,6 +13,7 @@
 
 <!-- breadcrumbs -->
 <div class="container breadcrumb-container">
+  {% include '_edit_button.html' with obj=site %}
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="{% url 'sites' %}">Sites</a></li>

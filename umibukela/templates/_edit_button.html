@@ -1,0 +1,9 @@
+{% load lookup admin_urls %}
+
+{% if user.is_authenticated and user.is_staff %}
+<div class="admin-buttons">
+  {% with obj|meta as m %}
+  <a href="{% url m|admin_urlname:'change' obj.id %}" class="btn btn-success">Edit this page</a>
+  {% endwith %}
+</div>
+{% endif %}

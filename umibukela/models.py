@@ -5,6 +5,7 @@ from django.db import models
 from django.contrib.gis.db import models as gis_models
 import jsonfield
 from django.utils import timezone
+from django.core.urlresolvers import reverse
 
 # ------------------------------------------------------------------------------
 # General utilities
@@ -64,6 +65,9 @@ class Partner(models.Model):
         result_sets.reverse()
         return result_sets[0] if result_sets else None
 
+    def get_absolute_url(self):
+        return reverse('partner', args=[self.slug])
+
 
 class Site(models.Model):
     name = models.CharField(max_length=200, unique=True)
@@ -98,6 +102,9 @@ class Site(models.Model):
         if self.province:
             parts.append(self.province.name)
         return ', '.join([p for p in parts if p])
+
+    def get_absolute_url(self):
+        return reverse('site', args=[self.slug])
 
 
 class CycleFrequency(models.Model):
@@ -201,6 +208,9 @@ class CycleResultSet(models.Model):
             return result_sets[0]
         else:
             return None
+
+    def get_absolute_url(self):
+        return reverse('site-result', args=[self.site.slug, str(self.id)])
 
 
 class Submission(models.Model):
