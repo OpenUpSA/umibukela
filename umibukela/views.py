@@ -23,9 +23,9 @@ def contact(request):
     })
 
 
-def about(request):
-    return render(request, 'about.html', {
-        'active_tab': 'about',
+def learn(request):
+    return render(request, 'learn.html', {
+        'active_tab': 'learn',
     })
 
 
