@@ -28,6 +28,7 @@ Umibukela.General = function() {
       window.print();
     });
 
+    self.initTables();
     self.initSocial();
   };
 
@@ -106,7 +107,22 @@ Umibukela.General = function() {
                   "share", "width=364, height=250, scrollbars=no");
       ga('send', 'social', 'twitter', 'share', url);
     });
-  }
+  };
+
+  self.initTables = function() {
+    // init sorting tables
+    var $table = $('table.sortable');
+
+    $table
+      .stupidtable()
+      .bind("aftertablesort", function(event, data) {
+        $(this).find('th')
+          .removeClass('sorttable_sorted sorttable_sorted_reverse')
+          .eq(data.column)
+          .addClass(data.direction == 'asc' ? 'sorttable_sorted' : 'sorttable_sorted_reverse');
+      })
+      .find('th[data-sort]:first').stupidsort();
+  };
 };
 
 $(function() {

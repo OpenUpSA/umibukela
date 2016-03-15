@@ -156,6 +156,7 @@ PIPELINE_JS = {
         'source_filenames': (
             'bower_components/jquery/dist/jquery.min.js',
             'bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js',
+            'bower_components/jquery-stupid-table/stupidtable.min.js',
             'javascript/app.js',
         ),
         'output_filename': 'app.js',

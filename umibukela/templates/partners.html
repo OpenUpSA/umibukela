@@ -26,31 +26,33 @@
   <!-- partners-table -->
   <div class="partners-table">
     <div class="container">
-      <table class="table table-striped sortable">
-        <thead>
+      <div class="table-responsive">
+        <table class="table table-striped sortable">
+          <thead>
+            <tr>
+              <th data-sort="string" class="sorttable_sorted">Partner name</th>
+              <th data-sort="string">Latest Cycle Results</th>
+              <th data-sort="string">Sector</th>
+              <th data-sort="string">Province</th>
+            </tr>
+          </thead>
+  {% for partner in partners %}
           <tr>
-            <th>Partner name</th>
-            <th>Latest Cycle Results</th>
-            <th>Sector</th>
-            <th>Province</th>
+            <td><a href="{% url 'partner' partner.slug %}">{{ partner.short_name }}</a></td>
+            <td>
+              {% if partner.latest_complete_result %}
+              <a href="{% url 'site-result' site_slug=partner.latest_complete_result.site.slug result_id=partner.latest_complete_result.id %}">
+                {{ partner.latest_complete_result.cycle.start_date|date:'j F Y' }}
+                - {{ partner.latest_complete_result.cycle.end_date|date:'j F Y' }}
+              </a>
+              {% endif %}
+            </td>
+            <td>{{ partner.latest_complete_result.site.sector.name }}</td>
+            <td>{{ partner.latest_complete_result.site.province.name }}</td>
           </tr>
-        </thead>
-{% for partner in partners %}
-        <tr>
-          <td><a href="{% url 'partner' partner.slug %}">{{ partner.short_name }}</a></td>
-          <td>
-            {% if partner.latest_complete_result %}
-            <a href="{% url 'site-result' site_slug=partner.latest_complete_result.site.slug result_id=partner.latest_complete_result.id %}">
-              {{ partner.latest_complete_result.cycle.start_date|date:'j F Y' }}
-              - {{ partner.latest_complete_result.cycle.end_date|date:'j F Y' }}
-            </a>
-            {% endif %}
-          </td>
-          <td>{{ partner.latest_complete_result.site.sector.name }}</td>
-          <td>{{ partner.latest_complete_result.site.province.name }}</td>
-        </tr>
-{% endfor %}
-      </table>
+  {% endfor %}
+        </table>
+      </div>
     </div>
   </div>
 </div>
