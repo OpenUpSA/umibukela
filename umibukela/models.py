@@ -74,6 +74,11 @@ class Partner(models.Model):
     def get_absolute_url(self):
         return reverse('partner', args=[self.slug])
 
+    def sites(self):
+        sites = list(set(Site.objects.filter(cycle_result_sets__partner=self).all()))
+        sites.sort(key=lambda p: p.name)
+        return sites
+
 
 class Site(models.Model):
     name = models.CharField(max_length=200, unique=True)

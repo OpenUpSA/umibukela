@@ -64,6 +64,38 @@
     </div>
   </div>
   <!-- /partner-description -->
+  <div class="partner-sites page-section">
+    <div class="container">
+      <h3>Sites monitored by {{ partner.short_name }}</h3>
+
+      <div class="row">
+        <div class="col-md-6">
+          <ul class="list-unstyled">
+            {% for site in partner.sites %}
+            <li>
+              <div class="row">
+                <div class="col-xs-6">
+                  <a href="{% url 'site' site_slug=site.slug %}">{{ site.name }}</a>
+                  <br>
+                  {{ site.sector.name }}
+                </div>
+                <div class="col-xs-6">
+                  {% if site.latest_complete_result %}
+                  <a href="{% url 'site-result' site_slug=site.slug result_id=site.latest_complete_result.id %}">
+                    {{ site.latest_complete_result.cycle.start_date|date:'j F Y' }}
+                    - {{ site.latest_complete_result.cycle.end_date|date:'j F Y' }}
+                  </a>
+                  {% endif %}
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <!-- partner-context -->
   <div class="partner-context page-section">
