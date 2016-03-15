@@ -521,23 +521,35 @@ img.img-rounded-border {
     float: right;
 }
 
-//== Sortable Table
-
-/* add a number column at the beginning of sortable tables, that can't itself be sorted and doesn't change on sorting */
-table.sortable tbody {
-    counter-reset: sortabletablescope;
-    background-color: $white;
-}
-
 //== Forms
 input{
     font-family: $font-family-sans-serif-2;
     font-weight: bold;
 }
 
-/* add up and down arrows to columns to show that they are sortable */
-table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
-    content: " \25B4\25BE";
+//== Sortable Table
+
+table.sortable {
+    tbody {
+        background-color: $white;
+    }
+
+    th:hover {
+        cursor: pointer;
+    }
+
+    /* add up and down arrows to columns to show that they are sortable */
+    th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
+        content: " \25B4\25BE";
+    }
+
+    th.sorttable_sorted:after {
+        content: " \25B4";
+    }
+
+    th.sorttable_sorted_reverse:after {
+        content: " \25BE";
+    }
 }
 
 //== Blockquotes
