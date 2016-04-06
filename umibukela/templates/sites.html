@@ -25,33 +25,31 @@
   <!-- sites-table -->
   <div class="sites-table page-section">
     <div class="container">
-      <div class="table-responsive">
-        <table class="table table-striped sortable">
-          <thead>
-            <tr>
-              <th data-sort="string" class="sorttable_sorted">Site name</th>
-              <th data-sort="string">Latest Cycle Results</th>
-              <th data-sort="string">Sector</th>
-              <th data-sort="string">Province</th>
-            </tr>
-          </thead>
-{% for site in sites %}
+      <table class="table table-striped sortable">
+        <thead>
           <tr>
-            <td><a href="{% url 'site' site_slug=site.slug %}">{{ site.name }}</a></td>
-            <td>
-              {% if site.latest_complete_result %}
-              <a href="{% url 'site-result' site_slug=site.slug result_id=site.latest_complete_result.id %}">
-                {{ site.latest_complete_result.cycle.start_date|date:'j F Y' }}
-                - {{ site.latest_complete_result.cycle.end_date|date:'j F Y' }}
-              </a>
-              {% endif %}
-            </td>
-            <td>{{ site.sector.name }}</td>
-            <td>{{ site.province.name }}</td>
+            <th data-sort="string" class="sorttable_sorted">Site name</th>
+            <th data-sort="string" class="hidden-xs">Latest Cycle Results</th>
+            <th data-sort="string" class="hidden-xs hidden-sm">Sector</th>
+            <th data-sort="string" class="hidden-xs hidden-sm">Province</th>
           </tr>
+        </thead>
+{% for site in sites %}
+        <tr>
+          <td><a href="{% url 'site' site_slug=site.slug %}">{{ site.name }}</a></td>
+          <td class="hidden-xs">
+            {% if site.latest_complete_result %}
+            <a href="{% url 'site-result' site_slug=site.slug result_id=site.latest_complete_result.id %}">
+              {{ site.latest_complete_result.cycle.start_date|date:'j F Y' }}
+              - {{ site.latest_complete_result.cycle.end_date|date:'j F Y' }}
+            </a>
+            {% endif %}
+          </td>
+          <td class="hidden-xs hidden-sm">{{ site.sector.name }}</td>
+          <td class="hidden-xs hidden-sm">{{ site.province.name }}</td>
+        </tr>
 {% endfor %}
-        </table>
-      </div>
+      </table>
     </div>
   </div>
   <!-- /sites-table -->
