@@ -432,14 +432,21 @@ img.img-rounded-border {
 //== #sites
 .section#sites{
 
-	.section-heading h1 i{
-		color: $color-sites;
-	}
+	.section-heading {
+    h1 {
+      color: $white;
+    }
+    i {
+      color: $color-sites;
+    }
+    background: $color-sites-dark;
+    @include background-texture;
+  }
 
 	.sites-table{
 		background: $color-sites-dark;
 		@include background-texture;
-		padding: 2em 0;
+		padding: 0 0 2em 0;
 	}
 
 }
@@ -490,14 +497,21 @@ img.img-rounded-border {
 //== #partners
 .section#partners{
 
-	.section-heading h1 i{
-		color: $color-partners;
+	.section-heading {
+    h1 {
+      color: $white;
+    }
+    i {
+      color: $color-partners;
+    }
+    background: $color-partners-dark;
+    @include background-texture;
 	}
 
 	.partners-table{
 		background: $color-partners-dark;
 		@include background-texture;
-		padding: 2em 0;
+		padding: 0 0 2em 0;
 	}
 
 }
