@@ -113,9 +113,23 @@ h1,h2,h3,h4,h5,h6{ margin-top: 0; }
 .jumbotron{
 	margin-top: 3px;
 	margin-bottom: 0;
-	h1, .h1{
-		font-size: 32px;
-	}
+  position: relative;
+  &:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.jumbo-blurb {
+  z-index: 10;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 //== Images
@@ -390,12 +404,6 @@ img.img-rounded-border {
 			margin-bottom: 0px;
 		}
 	}
-}
-
-.jumbo-blurb {
-	background-color: rgba(0, 0, 0, 0.6);
-	padding-top: 10px;
-	padding-bottom: 10px;
 }
 
 /* all links */
