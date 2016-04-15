@@ -332,10 +332,11 @@ img.img-rounded-border {
 			left: 0px;
 			right: 0px;
 			top: 0px;
-			background-color: $gray-lighter;
+			background-color: $white;
 			z-index: 99;
 			text-align: center;
 			padding: 10px;
+      box-shadow: 0 2px 2px rgba(0,0,0,0.3);
 		}
 	}
 
