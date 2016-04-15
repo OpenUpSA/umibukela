@@ -108,14 +108,16 @@ $btn-primary-border: transparent;
 
 $btn-default-border: transparent;
 
-$btn-border-radius-base: 4px !default;
-$btn-border-radius-large: 50px;
+$btn-border-radius-base: 6px !default;
+$btn-border-radius-large: 10px !default;
+$btn-border-radius-small: 3px !default;
+
 
 //== Forms
 $input-color: $black !default;
 $input-border: transparent !default;
 $input-color-placeholder: $gray-light !default;
-$input-border-focus: $brand-primary !default;
+$input-border-focus: transparent !default;
 
 //============================================================================================
 

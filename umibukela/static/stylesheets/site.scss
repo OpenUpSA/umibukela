@@ -551,9 +551,8 @@ img.img-rounded-border {
 }
 
 //== Buttons
-.btn-lg{
+.btn, .btn-lg{
 	font-family: $font-family-sans-serif-2;
-	font-size: 1em;
 	letter-spacing: 1px;
 }
 
@@ -562,9 +561,15 @@ img.img-rounded-border {
 }
 
 //== Forms
-input{
+input {
 	font-family: $font-family-sans-serif-2;
 	font-weight: bold;
+}
+
+.input-group {
+  input.form-control {
+    height: 100%;
+  }
 }
 
 //== Sortable Table
