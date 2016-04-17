@@ -10,7 +10,7 @@ $white: #fff;
 $black: #000;
 
 $orange: #f6921d;
-$green: #8cc63f;
+$green: #669933;
 
 $blue: rgb(44,168,204);
 $teal: rgb(100,200,150);
@@ -60,13 +60,15 @@ $font-family-base: $font-family-sans-serif !default;
 
 $font-size-base: 16px !default;
 
+$text-color: $black !default;
+
 $headings-font-family: $font-family-sans-serif-2;
 $headings-color: $black;
 
 //== Links
 
 $link-color: $brand-primary !default;
-$link-hover-color: $brand-secondary-dark !default;
+$link-hover-color: $brand-secondary !default;
 $link-hover-decoration: none !default;
 
 //== Navbar
