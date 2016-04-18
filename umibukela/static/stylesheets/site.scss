@@ -92,6 +92,26 @@ h1,h2,h3,h4,h5,h6{ margin-top: 0; }
   -moz-box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
   -webkit-box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
   box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
+  .navbar-toggle, .navbar-toggle.collapsed:hover {
+    width: 100%;
+    margin: 10px 0 0 0;
+    border: 0;
+    border-radius: 0;
+    background-color: $brand-secondary-dark;
+    color: $white;
+    letter-spacing: 1px;
+    transition: all ease 0.2s;
+    i {
+      color: $brand-secondary-light;
+    }
+  }
+  .navbar-toggle.collapsed {
+    background-color: $brand-primary-dark;
+    transition: all ease 0.2s;
+    i {
+      color: $brand-primary-light;
+    }
+  }
 	li{
 		background-color: $black;
     border-top-left-radius: 10px;
@@ -107,6 +127,10 @@ h1,h2,h3,h4,h5,h6{ margin-top: 0; }
 		a#nav-sites:hover{ color: $color-sites; }
 		a#nav-partners:hover{ color: $color-partners; }
 	}
+}
+
+.navbar-collapse {
+  margin-top: 0;
 }
 
 //== Jumbotron
@@ -708,6 +732,37 @@ footer.footer{
 			margin-bottom: 2em;
 		}
 	}
+}
+
+//== Mobile-only styling
+@media (max-width: 767px) {
+
+  .site-header .navbar {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    li {
+      background: $brand-secondary;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      a {
+        color: $white;
+      }
+      &.active a {
+        color: $black;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+      a:hover, a:active {
+        background: $brand-primary-dark;
+        color: $white !important;
+      }
+      &.active a:hover {
+        color: $black !important;
+      }
+    }
+  }
+
 }
 
 //== Diagram: CBM Cycle (large screens)
