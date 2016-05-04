@@ -22,14 +22,25 @@
 
   <nav class="navbar navbar-default">
     <div class="container">
-      <ul class="nav navbar-nav">
-	<li class="{% if active_tab == 'home' %}active{% endif %}"><a href="/" id="nav-home">Home</a></li>
-	<li class="{% if active_tab == 'learn' %}active{% endif %}"><a href="{% url 'learn' %}" id="nav-learn">Learn about CBM</a></li>
-	<li class="{% if active_tab == 'resources' %}active{% endif %}"><a href="{% url 'resources' %}" id="nav-resources">Resources</a></li>
-	<li class="{% if active_tab == 'sites' %}active{% endif %}"><a href="{% url 'sites' %}" id="nav-sites">Sites</a></li>
-	<li class="{% if active_tab == 'partners' %}active{% endif %}"><a href="{% url 'partners' %}" id="nav-partners">Community Partners</a></li>
-	<li class="{% if active_tab == 'about' %}active{% endif %}"><a href="{% url 'about' %}" id="nav-about">About Us</a></li>
-      </ul>
+
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="glyphicon uppercase"><i class="fa fa-bars"></i> Navigation Menu</span>
+        </button>
+      </div>
+
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li class="{% if active_tab == 'home' %}active{% endif %}"><a href="/" id="nav-home">Home</a></li>
+          <li class="{% if active_tab == 'learn' %}active{% endif %}"><a href="{% url 'learn' %}" id="nav-learn">Learn about CBM</a></li>
+          <li class="{% if active_tab == 'resources' %}active{% endif %}"><a href="{% url 'resources' %}" id="nav-resources">Resources</a></li>
+          <li class="{% if active_tab == 'sites' %}active{% endif %}"><a href="{% url 'sites' %}" id="nav-sites">Sites</a></li>
+          <li class="{% if active_tab == 'partners' %}active{% endif %}"><a href="{% url 'partners' %}" id="nav-partners">Community Partners</a></li>
+          <li class="{% if active_tab == 'about' %}active{% endif %}"><a href="{% url 'about' %}" id="nav-about">About Us</a></li>
+        </ul>
+      </div>
+
     </div>
   </nav>
 

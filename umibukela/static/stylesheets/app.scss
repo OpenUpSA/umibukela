@@ -10,7 +10,7 @@ $white: #fff;
 $black: #000;
 
 $orange: #f6921d;
-$green: #8cc63f;
+$green: #669933;
 
 $blue: rgb(44,168,204);
 $teal: rgb(100,200,150);
@@ -52,7 +52,7 @@ $color-partners-light: lighten($color-partners, 20%);
 //== Typography
 
 @import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,800);
 
 $font-family-sans-serif: "Open Sans", Helvetica, Arial, sans-serif !default;
 $font-family-sans-serif-2: "Montserrat", Helvetica, Arial, sans-serif !default;
@@ -60,13 +60,15 @@ $font-family-base: $font-family-sans-serif !default;
 
 $font-size-base: 16px !default;
 
+$text-color: $black !default;
+
 $headings-font-family: $font-family-sans-serif-2;
 $headings-color: $black;
 
 //== Links
 
 $link-color: $brand-primary !default;
-$link-hover-color: $brand-secondary-dark !default;
+$link-hover-color: $brand-secondary !default;
 $link-hover-decoration: none !default;
 
 //== Navbar
@@ -74,7 +76,7 @@ $link-hover-decoration: none !default;
 $navbar-height: 20px !default;
 
 $navbar-default-color: $white !default;
-$navbar-default-bg: $brand-primary-dark !default;
+$navbar-default-bg: transparent !default;
 
 $navbar-default-link-color: #fff !default;
 $navbar-default-link-hover-color: $brand-secondary !default;
@@ -88,6 +90,7 @@ $navbar-default-link-active-bg: $white;
 //== Jumbotron
 
 $jumbotron-bg: $white;
+$jumbotron-font-size: ceil(($font-size-base * 1.2)) !default;
 
 //== Breadcrumbs
 $breadcrumb-padding-vertical: 0;
@@ -107,14 +110,16 @@ $btn-primary-border: transparent;
 
 $btn-default-border: transparent;
 
-$btn-border-radius-base: 4px !default;
-$btn-border-radius-large: 50px;
+$btn-border-radius-base: 6px !default;
+$btn-border-radius-large: 10px !default;
+$btn-border-radius-small: 3px !default;
+
 
 //== Forms
 $input-color: $black !default;
 $input-border: transparent !default;
 $input-color-placeholder: $gray-light !default;
-$input-border-focus: $brand-primary !default;
+$input-border-focus: transparent !default;
 
 //============================================================================================
 
