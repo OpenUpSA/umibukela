@@ -29,7 +29,9 @@
           <h2>{{ partner.full_name }}</h2>
           {% endif %}
           {% if partner.latest_complete_result %}
-          <a href="{% url 'site-result' site_slug=partner.latest_complete_result.site.slug result_id=partner.latest_complete_result.id %}" class="btn btn-primary btn-latest-results"><i class="fa fa-bar-chart"></i> View latest results</a>
+          <div class="btn-latest-results">
+            <a href="{% url 'site-result' site_slug=partner.latest_complete_result.site.slug result_id=partner.latest_complete_result.id %}" class="btn btn-primary"><i class="fa fa-bar-chart"></i> View latest results</a>
+          </div>
           {% endif %}
         </div>
 
