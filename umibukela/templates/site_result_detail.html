@@ -35,48 +35,56 @@
     <div class="container">
       <h3><i class="fa fa-bar-chart-o"></i> Results</h3>
 
-      <div class="row">
-        <div class="col-sm-5">
-          <h1>{{ result_set.site.name }} <br>{{ result_set.cycle.programme.name}} {{ result_set.cycle.name}}</h1>
-          <h2>{{ result_set.cycle.start_date|date:'j F Y' }}
-              - {{ result_set.cycle.end_date|date:'j F Y' }}</h2>
+      <h1>{{ result_set.site.name }}</h1>
 
-          <h4>Community partner</h4>
-          <p><a href="{% url 'partner' partner_slug=result_set.partner.slug %}">{{ result_set.partner.short_name }}</a></p>
+      <div class="row">
+        <div class="col-sm-8">
+          <h2>{{ result_set.cycle.programme.long_name}} {{ result_set.cycle.name}}</h2>
+          <h2>{{ result_set.cycle.start_date|date:'j F Y' }} - {{ result_set.cycle.end_date|date:'j F Y' }}</h2>
         </div>
 
         <div class="col-sm-4">
-          <ul class="media-list resource-list">
-
-            <li class="media">
-              {% for attachment in result_set.attachments.all %}
-                {% if attachment.nature.name == 'poster' %}
-                  <div class="media-left">
-                    <img class="media-object" src="{% static 'img/cbm-cycle_wide.png' %}" alt="">
-                  </div>
-                  <div class="media-body">
-                    <a href="{{ attachment.file.url }}"><i class="fa fa-download"></i> Poster <small>({{ attachment.file.size|filesizeformat }})</small></a>
-                  </div>
-                {% endif %}
-              {% endfor %}
-            </li>
-          </ul>
+          <h4>Community partner</h4>
+          <p><a href="{% url 'partner' partner_slug=result_set.partner.slug %}">{{ result_set.partner.short_name }}</a></p>
         </div>
-
-        <div class="col-sm-3">
-          <ul class="list-unstyled">
-            {% for attachment in result_set.attachments.all %}
-              {% if attachment.nature.name != 'poster' %}
-              <li><a href="{{ attachment.file.url }}"><i class="fa fa-download"></i> {{ attachment.nature.name|capfirst }} <small>({{ attachment.file.size|filesizeformat }})</small></a></li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-        </div>
-
       </div>
     </div>
   </div>
   <!-- /section-header -->
+
+  <div class="page-section cycle-outputs">
+    <div class="container">
+      <h3>Monitoring outputs</h3>
+
+      <div class="col-sm-4">
+        <ul class="media-list resource-list">
+
+          <li class="media">
+            {% for attachment in result_set.attachments.all %}
+              {% if attachment.nature.name == 'poster' %}
+                <div class="media-left">
+                  <img class="media-object" src="{% static 'img/cbm-cycle_wide.png' %}" alt="">
+                </div>
+                <div class="media-body">
+                  <a href="{{ attachment.file.url }}"><i class="fa fa-download"></i> Poster <small>({{ attachment.file.size|filesizeformat }})</small></a>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-sm-8">
+        <ul class="list-unstyled">
+          {% for attachment in result_set.attachments.all %}
+            {% if attachment.nature.name != 'poster' %}
+            <li><a href="{{ attachment.file.url }}"><i class="fa fa-download"></i> {{ attachment.nature.name|capfirst }} <small>({{ attachment.file.size|filesizeformat }})</small></a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
 
   <div class="stat-table stat-overview page-section">
     <div class="container">
