@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'pipeline',
     'django_extensions',
     'jsonfield',
+    'django_markup',
 
     'umibukela',
 )

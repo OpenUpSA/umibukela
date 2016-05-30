@@ -66,12 +66,14 @@ class Partner(models.Model):
     def __str__(self):
         return "[ID: %s] %s" % (self.id, self.short_name)
 
+    def completed_result_sets(self):
+        result_sets = list(self.cycle_result_sets.filter(cycle__end_date__lte=timezone.now()).all())
+        result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
+        return result_sets
+
     def latest_complete_result(self):
         """Return the latest ended CycleResultSet, otherwise None"""
-        result_sets = list(
-            self.cycle_result_sets.filter(cycle__end_date__lte=timezone.now()).all())
-        result_sets.sort(cmp=CycleResultSet.end_date_cmp)
-        result_sets.reverse()
+        result_sets = self.completed_result_sets()
         return result_sets[0] if result_sets else None
 
     def get_absolute_url(self):
@@ -207,6 +209,10 @@ class CycleResultSet(models.Model):
     # which don't necessarily have exactly the same survey
     survey_type = models.ForeignKey(SurveyType, null=True, blank=True)
     survey = models.ForeignKey(Survey, null=True, blank=True)
+
+    action_items = models.TextField(null=True, blank=True, help_text="Key challenges identified for improvement")
+    follow_up_date = models.DateField(null=True, blank=True, help_text="Date when follow up check was performed")
+    follow_up = models.TextField(null=True, blank=True, help_text="Follow ups to key challenges")
 
     class Meta:
         unique_together = ('cycle', 'site', 'survey_type')

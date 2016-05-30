@@ -1,8 +1,5 @@
 {% extends "layout.html" %}
-{% load pipeline %}
-{% load static %}
-{% load jsonify %}
-{% load lookup %}
+{% load pipeline static jsonify lookup markup_tags %}
 
 {% block title %}Results for {{ result_set.cycle.name }}{% endblock %}
 {% block description %}Results for {{ result_set.cycle.programme.name }} {{ result_set.cycle.name }} for {{result_set.site.name }}{% endblock %}
@@ -54,34 +51,30 @@
 
   <div class="page-section cycle-outputs">
     <div class="container">
-      <h3>Monitoring outputs</h3>
+      <h4>Monitoring outputs</h4>
 
-      <div class="col-sm-4">
-        <ul class="media-list resource-list">
-
-          <li class="media">
+      <div class="row">
+        <div class="col-sm-4">
+          <ul class="list-unstyled">
             {% for attachment in result_set.attachments.all %}
-              {% if attachment.nature.name == 'poster' %}
-                <div class="media-left">
-                  <img class="media-object" src="{% static 'img/cbm-cycle_wide.png' %}" alt="">
-                </div>
-                <div class="media-body">
-                  <a href="{{ attachment.file.url }}"><i class="fa fa-download"></i> Poster <small>({{ attachment.file.size|filesizeformat }})</small></a>
-                </div>
-              {% endif %}
+              <li><a href="{{ attachment.file.url }}"><i class="fa fa-download"></i> {{ attachment.nature.name|capfirst }} <small>()</small></a></li>
             {% endfor %}
-          </li>
-        </ul>
-      </div>
+          </ul>
+        </div>
 
-      <div class="col-sm-8">
-        <ul class="list-unstyled">
-          {% for attachment in result_set.attachments.all %}
-            {% if attachment.nature.name != 'poster' %}
-            <li><a href="{{ attachment.file.url }}"><i class="fa fa-download"></i> {{ attachment.nature.name|capfirst }} <small>({{ attachment.file.size|filesizeformat }})</small></a></li>
-            {% endif %}
-          {% endfor %}
-        </ul>
+        {% if result_set.action_items %}
+          <div class="col-sm-4">
+            <h5>Key Challenges Identified</h5>
+            {{ result_set.action_items|apply_markup:"markdown" }}
+          </div>
+        {% endif %}
+
+        {% if result_set.follow_up %}
+          <div class="col-md-4">
+            <h5>Follow Up {% if result_set.follow_up_date %} on {{ result_set.follow_up_date|date:'j F Y' }} {% endif %}</h5>
+            {{ result_set.follow_up|apply_markup:"markdown" }}
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
