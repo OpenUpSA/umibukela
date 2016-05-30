@@ -38,6 +38,16 @@
           {% if latest_result %}
           <a href="{% url 'site-result' site_slug=site.slug result_id=latest_result.id %}" class="btn btn-primary btn-latest-results"><i class="fa fa-bar-chart"></i> View latest results</a>
           {% endif %}
+
+          <h4>Sector</h4>
+          <p>{{ site.sector.name }}</p>
+
+          <h4>Community partners</h4>
+          <p>
+            {% for partner in site.partners %}
+            <a href="{% url 'partner' partner_slug=partner.slug %}">{{ partner.short_name }}</a>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </p>
         </div>
         <div class="col-sm-7">
           {% if site.coordinates.x and site.coordinates.y %}
@@ -50,50 +60,35 @@
   <!-- /section-header -->
 
   <!-- site-stats -->
-  <div class="page-section">
+  <div class="page-section site-cycles">
     <div class="container">
-      <div class="row">
-        <div class="col-sm-8">
-          <section class="row stat-row">
-            <div class="col-sm-3 col-xs-6">
-              <div class="stat stat-number">
-                <div class="value">{{ site.result_sets|length }}</div>
-                <div class="name">Monitoring cycles</div>
-              </div>
+      <h3>Monitoring cycles</h3>
+
+      {% for rs in site.completed_result_sets %}
+        <section class="row stat-row cycle">
+          <div class="col-xs-12 col-sm-3 col-md-4 stat">
+            <h3>{{ rs.cycle.programme.long_name }}</h3>
+            <div class="name">
+              <a href="{% url 'site-result' site_slug=site.slug result_id=rs.id %}">{{ rs.cycle.start_date|date:'j F Y' }} - {{ rs.cycle.end_date|date:'j F Y' }}</a>
             </div>
-            <div class="col-sm-3 col-xs-6">
-              <div class="stat stat-number">
-                <div class="value">{{ totals.total }}</div>
-                <div class="name">Participants</div>
-              </div>
-            </div>
-            <div class="col-sm-3 col-xs-6">
-              <div class="stat stat-number">
-                <div class="value">{{ totals.female }}</div>
-                <div class="name">Female</div>
-              </div>
-            </div>
-            <div class="col-sm-3 col-xs-6">
-              <div class="stat stat-number">
-                <div class="value">{{ totals.male }}</div>
-                <div class="name">Male</div>
-              </div>
-            </div>
-          </section>
-        </div>
-        <div class="col-sm-4">
-          <dl>
-            <dt>Sector</dt>
-            <dd>{{ site.sector.name }}</dd>
-            <dt>Community partners</dt>
-            <dd>
-            {% for partner in site.partners %}
-            <a href="{% url 'partner' partner_slug=partner.slug %}">{{ partner.short_name }}</a>{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-            </dd>
-          </dl>
-        </div>
-      </div>
+          </div>
+          <div class="col-xs-6 col-sm-3 col-md-2 stat">
+            <div class="value">{{ rs.summary.total }}</div>
+            <div class="name">Participants</div>
+          </div>
+          <div class="col-xs-6 col-sm-3 col-md-2 stat">
+            <div class="value">{{ rs.summary.female }}</div>
+            <div class="name">Female</div>
+          </div>
+          <div class="col-xs-6 col-sm-3 col-md-2 stat">
+            <div class="value">{{ rs.summary.male }}</div>
+            <div class="name">Male</div>
+          </div>
+          <div class="col-md-2 hidden-xs hidden-sm">
+            <a class="btn btn-primary" href="{% url 'site-result' site_slug=site.slug result_id=rs.id %}">View results</a>
+          </div>
+        </section>
+      {% endfor %}
     </div>
   </div>
   <!-- /site-stats -->
@@ -102,9 +97,7 @@
   <div class="site-current-programmes page-section">
     <div class="container">
       <div class="panel panel-default">
-        <div class="panel-heading">
-          Monitoring programmes
-        </div>
+        <div class="panel-heading">Monitoring programmes</div>
         <div class="panel-body">
           {% if site.latest_complete_result %}
           <div class="programme">

@@ -7,7 +7,6 @@ from .models import (
     CycleResultSet,
     Partner,
     Site,
-    Submission,
 )
 
 
@@ -46,18 +45,9 @@ def sites(request):
 
 def site(request, site_slug):
     site = get_object_or_404(Site, slug=site_slug)
-    submissions = Submission.objects.filter(cycle_result_set__site__exact=site)
-    site_responses = [s.answers for s in submissions.all()]
-    if site_responses:
-        df = pandas.DataFrame(site_responses)
-        site_totals = analysis.count_submissions(df)
-    else:
-        site_totals = {'male': 0, 'female': 0, 'total': 0}
-
     return render(request, 'site_detail.html', {
         'active_tab': 'sites',
         'site': site,
-        'totals': site_totals,
     })
 
 

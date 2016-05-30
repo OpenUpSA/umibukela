@@ -258,7 +258,7 @@ img.img-rounded-border {
 		margin: 0;
 		line-height: 150%;
 
-		h1,h2,h3{
+		h1, h2, h3, h4{
 			margin: 0;
 		}
 
@@ -284,6 +284,12 @@ img.img-rounded-border {
 			text-transform: uppercase;
 			line-height: 100%;
 			letter-spacing: 2px;
+		}
+		h4 {
+		  text-transform: uppercase;
+		  font-size: 0.9em;
+		  font-weight: bold;
+		  margin-top: 10px;
 		}
 
 		.btn-latest-results{
@@ -528,9 +534,6 @@ img.img-rounded-border {
 
 		h4 {
 		  margin: 10px 0px 0px;
-		  text-transform: uppercase;
-		  font-size: 0.9em;
-		  font-weight: bold;
 		}
 	}
 }
