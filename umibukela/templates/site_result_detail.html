@@ -57,7 +57,7 @@
         <div class="col-sm-4">
           <ul class="list-unstyled">
             {% for attachment in result_set.attachments.all %}
-              <li><a href="{{ attachment.file.url }}"><i class="fa fa-download"></i> {{ attachment.nature.name|capfirst }} <small>()</small></a></li>
+              <li><a href="{{ attachment.file.url }}"><i class="fa fa-download"></i> {{ attachment.nature.name|capfirst }} <small>({{ attachment.file.size|filesizeformat }})</small></a></li>
             {% endfor %}
           </ul>
         </div>

@@ -210,9 +210,9 @@ class CycleResultSet(models.Model):
     survey_type = models.ForeignKey(SurveyType, null=True, blank=True)
     survey = models.ForeignKey(Survey, null=True, blank=True)
 
-    action_items = models.TextField(null=True, blank=True, help_text="Key challenges identified for improvement")
+    action_items = models.TextField(null=True, blank=True, help_text="Key challenges identified for improvement. Markdown allowed.")
     follow_up_date = models.DateField(null=True, blank=True, help_text="Date when follow up check was performed")
-    follow_up = models.TextField(null=True, blank=True, help_text="Follow ups to key challenges")
+    follow_up = models.TextField(null=True, blank=True, help_text="Follow ups to key challenges. Markdown allowed.")
 
     class Meta:
         unique_together = ('cycle', 'site', 'survey_type')

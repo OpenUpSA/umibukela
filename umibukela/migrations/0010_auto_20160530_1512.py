@@ -14,12 +14,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='cycleresultset',
             name='action_items',
-            field=models.TextField(help_text=b'Key challenges identified for improvement', null=True, blank=True),
+            field=models.TextField(help_text=b'Key challenges identified for improvement. Markdown allowed.', null=True, blank=True),
         ),
         migrations.AddField(
             model_name='cycleresultset',
             name='follow_up',
-            field=models.TextField(help_text=b'Follow ups to key challenges', null=True, blank=True),
+            field=models.TextField(help_text=b'Follow ups to key challenges. Markdown allowed.', null=True, blank=True),
         ),
         migrations.AddField(
             model_name='cycleresultset',
