@@ -4,6 +4,7 @@ Werkzeug==0.10.1
 boto==2.38.0
 dj-database-url==0.3.0
 django-extensions==1.5.0
+django-markup==1.1
 django-jsonfield==0.9.15
 django-pipeline==1.5.1
 django-storages==1.1.8
@@ -12,6 +13,7 @@ futures==3.0.2
 gevent==1.0.1
 greenlet==0.4.5
 gunicorn==19.2.1
+markdown==2.6.6
 newrelic==2.46.0.37
 pandas==0.17.1
 pathlib==1.0.1

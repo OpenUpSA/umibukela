@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load static %}
+{% load static markup_tags %}
 
 {% block title %}{{ partner.short_name }}{% endblock %}
 {% block page-content %}
@@ -67,7 +67,7 @@
       <div class="row">
         <div class="col-md-8">
           <p><strong>{{ partner.intro_title }}</strong></p>
-          <p>{{ partner.intro_statement }}</p>
+          <p>{{ partner.intro_statement|apply_markup:"markdown" }}</p>
         </div>
         <div class="col-md-4 text-center">
           {% if partner.intro_image %}
@@ -102,6 +102,36 @@
     </div>
   </div>
   <!-- /partner-context -->
+
+  <div class="page-section partner-cycles">
+    <div class="container">
+      {% for rs in partner.completed_result_sets %}
+        <div class="partner-cycle">
+          <h3>
+            {{ rs.cycle.start_date|date:'j F Y' }} - {{ rs.cycle.end_date|date:'j F Y' }}
+            <a href="{% url 'site-result' site_slug=rs.site.slug result_id=rs.id %}" class="btn btn-primary btn-sm">View results</a>
+          </h3>
+          <h4><i class="fa fa-map-marker"></i> <a href="{% url 'site' site_slug=rs.site.slug %}">{{ rs.site.name }}</a></h4>
+
+          <div class="row">
+            {% if rs.action_items %}
+              <div class="col-md-6">
+                <h5>Key Challenges Identified</h5>
+                {{ rs.action_items|apply_markup:"markdown" }}
+              </div>
+            {% endif %}
+
+            {% if rs.follow_up %}
+              <div class="col-md-6">
+                <h5>Follow Up {% if rs.follow_up_date %} on {{ rs.follow_up_date|date:'j F Y' }} {% endif %}</h5>
+                {{ rs.follow_up|apply_markup:"markdown" }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
 
 </div>
 

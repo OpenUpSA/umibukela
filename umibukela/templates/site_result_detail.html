@@ -1,8 +1,5 @@
 {% extends "layout.html" %}
-{% load pipeline %}
-{% load static %}
-{% load jsonify %}
-{% load lookup %}
+{% load pipeline static jsonify lookup markup_tags %}
 
 {% block title %}Results for {{ result_set.cycle.name }}{% endblock %}
 {% block description %}Results for {{ result_set.cycle.programme.name }} {{ result_set.cycle.name }} for {{result_set.site.name }}{% endblock %}
@@ -35,48 +32,52 @@
     <div class="container">
       <h3><i class="fa fa-bar-chart-o"></i> Results</h3>
 
-      <div class="row">
-        <div class="col-sm-5">
-          <h1>{{ result_set.site.name }} <br>{{ result_set.cycle.programme.name}} {{ result_set.cycle.name}}</h1>
-          <h2>{{ result_set.cycle.start_date|date:'j F Y' }}
-              - {{ result_set.cycle.end_date|date:'j F Y' }}</h2>
+      <h1>{{ result_set.site.name }}</h1>
 
-          <h4>Community partner</h4>
-          <p><a href="{% url 'partner' partner_slug=result_set.partner.slug %}">{{ result_set.partner.short_name }}</a></p>
+      <div class="row">
+        <div class="col-sm-8">
+          <h2>{{ result_set.cycle.programme.long_name}} {{ result_set.cycle.name}}</h2>
+          <h2>{{ result_set.cycle.start_date|date:'j F Y' }} - {{ result_set.cycle.end_date|date:'j F Y' }}</h2>
         </div>
 
         <div class="col-sm-4">
-          <ul class="media-list resource-list">
-
-            <li class="media">
-              {% for attachment in result_set.attachments.all %}
-                {% if attachment.nature.name == 'poster' %}
-                  <div class="media-left">
-                    <img class="media-object" src="{% static 'img/cbm-cycle_wide.png' %}" alt="">
-                  </div>
-                  <div class="media-body">
-                    <a href="{{ attachment.file.url }}"><i class="fa fa-download"></i> Poster <small>({{ attachment.file.size|filesizeformat }})</small></a>
-                  </div>
-                {% endif %}
-              {% endfor %}
-            </li>
-          </ul>
+          <h4>Community partner</h4>
+          <p><a href="{% url 'partner' partner_slug=result_set.partner.slug %}">{{ result_set.partner.short_name }}</a></p>
         </div>
-
-        <div class="col-sm-3">
-          <ul class="list-unstyled">
-            {% for attachment in result_set.attachments.all %}
-              {% if attachment.nature.name != 'poster' %}
-              <li><a href="{{ attachment.file.url }}"><i class="fa fa-download"></i> {{ attachment.nature.name|capfirst }} <small>({{ attachment.file.size|filesizeformat }})</small></a></li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-        </div>
-
       </div>
     </div>
   </div>
   <!-- /section-header -->
+
+  <div class="page-section cycle-outputs">
+    <div class="container">
+      <h4>Monitoring outputs</h4>
+
+      <div class="row">
+        <div class="col-sm-4">
+          <ul class="list-unstyled">
+            {% for attachment in result_set.attachments.all %}
+              <li><a href="{{ attachment.file.url }}"><i class="fa fa-download"></i> {{ attachment.nature.name|capfirst }} <small>({{ attachment.file.size|filesizeformat }})</small></a></li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        {% if result_set.action_items %}
+          <div class="col-sm-4">
+            <h5>Key Challenges Identified</h5>
+            {{ result_set.action_items|apply_markup:"markdown" }}
+          </div>
+        {% endif %}
+
+        {% if result_set.follow_up %}
+          <div class="col-md-4">
+            <h5>Follow Up {% if result_set.follow_up_date %} on {{ result_set.follow_up_date|date:'j F Y' }} {% endif %}</h5>
+            {{ result_set.follow_up|apply_markup:"markdown" }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 
   <div class="stat-table stat-overview page-section">
     <div class="container">

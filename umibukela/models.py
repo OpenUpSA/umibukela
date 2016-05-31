@@ -1,11 +1,14 @@
 import os
 import uuid
 
+import pandas
 from django.db import models
 from django.contrib.gis.db import models as gis_models
 import jsonfield
 from django.utils import timezone
 from django.core.urlresolvers import reverse
+
+import analysis
 
 # ------------------------------------------------------------------------------
 # General utilities
@@ -63,12 +66,14 @@ class Partner(models.Model):
     def __str__(self):
         return "[ID: %s] %s" % (self.id, self.short_name)
 
+    def completed_result_sets(self):
+        result_sets = list(self.cycle_result_sets.filter(cycle__end_date__lte=timezone.now()).all())
+        result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
+        return result_sets
+
     def latest_complete_result(self):
         """Return the latest ended CycleResultSet, otherwise None"""
-        result_sets = list(
-            self.cycle_result_sets.filter(cycle__end_date__lte=timezone.now()).all())
-        result_sets.sort(cmp=CycleResultSet.end_date_cmp)
-        result_sets.reverse()
+        result_sets = self.completed_result_sets()
         return result_sets[0] if result_sets else None
 
     def get_absolute_url(self):
@@ -99,14 +104,18 @@ class Site(models.Model):
 
     def latest_complete_result(self):
         """Return the latest ended CycleResultSet, otherwise None"""
-        result_sets = list(
-            self.cycle_result_sets.filter(cycle__end_date__lte=timezone.now()).all())
-        result_sets.sort(cmp=CycleResultSet.end_date_cmp)
-        result_sets.reverse()
+        result_sets = self.completed_result_sets()
         return result_sets[0] if result_sets else None
 
+    def completed_result_sets(self):
+        result_sets = list(self.cycle_result_sets.filter(cycle__end_date__lte=timezone.now()).all())
+        result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
+        return result_sets
+
     def result_sets(self):
-        return CycleResultSet.objects.filter(site=self).all()
+        result_sets = list(CycleResultSet.objects.filter(site=self).all())
+        result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
+        return result_sets
 
     def address_str(self):
         parts = [self.address_1, self.address_2, self.address_3]
@@ -201,6 +210,10 @@ class CycleResultSet(models.Model):
     survey_type = models.ForeignKey(SurveyType, null=True, blank=True)
     survey = models.ForeignKey(Survey, null=True, blank=True)
 
+    action_items = models.TextField(null=True, blank=True, help_text="Key challenges identified for improvement. Markdown allowed.")
+    follow_up_date = models.DateField(null=True, blank=True, help_text="Date when follow up check was performed")
+    follow_up = models.TextField(null=True, blank=True, help_text="Follow ups to key challenges. Markdown allowed.")
+
     class Meta:
         unique_together = ('cycle', 'site', 'survey_type')
 
@@ -227,6 +240,16 @@ class CycleResultSet(models.Model):
 
     def get_absolute_url(self):
         return reverse('site-result', args=[self.site.slug, str(self.id)])
+
+    def summary(self):
+        if getattr(self, '_summary', None) is None:
+            answers = [s.answers for s in self.submissions.all()]
+            if answers:
+                df = pandas.DataFrame(answers)
+                self._summary = analysis.count_submissions(df)
+            else:
+                self._summary = {'male': 0, 'female': 0, 'total': 0}
+        return self._summary
 
 
 class AttachmentNature(models.Model):
