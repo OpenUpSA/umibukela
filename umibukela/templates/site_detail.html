@@ -69,23 +69,21 @@
           <div class="col-xs-12 col-sm-3 col-md-4 stat">
             <h3>{{ rs.cycle.programme.long_name }}</h3>
             <div class="name">
-              <a href="{% url 'site-result' site_slug=site.slug result_id=rs.id %}">{{ rs.cycle.start_date|date:'j F Y' }} - {{ rs.cycle.end_date|date:'j F Y' }}</a>
+              <p>{{ rs.cycle.start_date|date:'j F Y' }} - {{ rs.cycle.end_date|date:'j F Y' }}</p>
+              <a class="btn btn-primary" href="{% url 'site-result' site_slug=site.slug result_id=rs.id %}">View results</a>
             </div>
           </div>
-          <div class="col-xs-6 col-sm-3 col-md-2 stat">
+          <div class="col-xs-4 col-sm-3 col-md-3 stat">
             <div class="value">{{ rs.summary.total }}</div>
             <div class="name">Participants</div>
           </div>
-          <div class="col-xs-6 col-sm-3 col-md-2 stat">
+          <div class="col-xs-4 col-sm-3 col-md-2 stat">
             <div class="value">{{ rs.summary.female }}</div>
             <div class="name">Female</div>
           </div>
-          <div class="col-xs-6 col-sm-3 col-md-2 stat">
+          <div class="col-xs-4 col-sm-3 col-md-2 stat">
             <div class="value">{{ rs.summary.male }}</div>
             <div class="name">Male</div>
-          </div>
-          <div class="col-md-2 hidden-xs hidden-sm">
-            <a class="btn btn-primary" href="{% url 'site-result' site_slug=site.slug result_id=rs.id %}">View results</a>
           </div>
         </section>
       {% endfor %}
