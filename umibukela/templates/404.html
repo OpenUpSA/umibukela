@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block page-content %}
+<article class="general section">
+  <section class="section">
+    <div class="section-heading">
+      <div class="container">
+        <h1>We can't find that (404)</h1>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <p class="text-lead">
+        We can't find what you're looking for.
+      </p>
+
+      <p class="text-lead">
+        Try going <a href="/">back to the homepage</a> and starting from there, or contact us at <a href="mailto:cbm@code4sa.org">cbm@code4sa.org</a>
+      </p>
+    </div>
+  </section>
+</article>
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+ga('send', 'event', '404', document.location.pathname, document.referrer);
+{% endblock %}

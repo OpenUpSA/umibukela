@@ -377,12 +377,6 @@ img.img-rounded-border {
   }
 }
 
-#error-500 {
-  .section {
-    padding: 2em 0;
-  }
-}
-
 //== #about
 .section#about{
   .section-subnav {
@@ -607,10 +601,14 @@ img.img-rounded-border {
   }
 }
 
-//== #contact
-.section#contact {
+//== .general
+article.general {
   .section-heading {
     margin-bottom: 20px;
+  }
+  .section {
+    margin-top: 30px;
+    margin-bottom: 30px;
   }
 }
 
