@@ -14,10 +14,32 @@
           <p class="text-center">
             <a href="{% url 'learn' %}" class="btn btn-primary uppercase">Learn about why we do it</a>
           </p>
+
         </div>
       </div>
     </div>
   </div>
+
+  <section class="section explore-menu text-center">
+    <div class="container">
+      <a href="{% url 'sites' %}" class="btn btn-primary uppercase">Explore Sites</a>
+      <a href="{% url 'partners' %}" class="btn btn-primary uppercase">Explore Community partners</a>
+    </div>
+  </section>
+
+  <section class="section video-section text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <h2>Why Community-Based Monitoring is Important</h2>
+
+          <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embde-responsive-item" src="https://www.youtube.com/embed/f72yVtpkW-Q" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="section signup-cta-lg text-center">
     <div class="container">
@@ -28,13 +50,6 @@
 
           {% include '_mailing_list_form.html' %}
         </div>
-    </div>
-  </section>
-
-  <section class="section programme-explore-menu text-center">
-    <div class="container">
-      <a href="{% url 'sites' %}" class="btn btn-primary uppercase">Explore Sites</a>
-      <a href="{% url 'partners' %}" class="btn btn-primary uppercase">Explore Community partners</a>
     </div>
   </section>
 
