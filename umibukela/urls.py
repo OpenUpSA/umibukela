@@ -3,7 +3,9 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-urlpatterns = patterns('',
+
+urlpatterns = patterns(
+    '',
     url(r'^$', 'umibukela.views.home', name='home'),
     url(r'^about$', 'umibukela.views.about', name='about'),
     url(r'^learn-about-cbm$', 'umibukela.views.learn', name='learn'),
