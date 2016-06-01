@@ -358,8 +358,13 @@ img.img-rounded-border {
     padding: 2em 0;
   }
 
-  .programme-explore-menu{
+  .video-section {
     background-color: $brand-secondary-dark;
+    @include background-texture;
+  }
+
+  .explore-menu{
+    background-color: $brand-secondary-light;
     @include background-texture;
     a:first-child {
       margin-right: 10px;
