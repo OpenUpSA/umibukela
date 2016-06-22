@@ -810,13 +810,17 @@ footer.footer{
 
     width: 180px;
 
-    &#box-step1{ position: absolute; top: 145px; left: 255px; }
-    &#box-step2{ position: absolute; top: 235px; left: 430px; }
-    &#box-step3{ position: absolute; top: 435px; left: 470px; }
-    &#box-step4{ position: absolute; top: 625px; left: 360px; }
-    &#box-step5{ position: absolute; top: 625px; left: 165px; }
-    &#box-step6{ position: absolute; top: 445px; left: 50px; }
-    &#box-step7{ position: absolute; top: 240px; left: 85px; }
+    &#box-step1{ position: absolute; top: 140px; left: 278px; width: 170px; }
+    &#box-step2{ position: absolute; top: 205px; left: 425px; }
+    &#box-step3{ position: absolute; top: 372px; left: 490px; }
+    &#box-step4{ position: absolute; top: 540px; left: 430px; }
+    &#box-step5{ position: absolute; top: 620px; left: 260px; }
+    &#box-step6{ position: absolute; top: 545px; left: 92px; }
+    &#box-step7{ position: absolute; top: 378px; left: 22px; }
+    &#box-step8{ position: absolute; top: 204px; left: 94px; }
+
+    &#box-step1 .diagram-caption h2,
+    &#box-step2 .diagram-caption h2 { line-height: 12px; }
 
   }
   .diagram-caption{
@@ -850,8 +854,6 @@ footer.footer{
       h1{ color: $white; }
     }
   }
-
-  #box-step1 .diagram-caption h2{ line-height: 12px; }
 
   .diagram-comment{
     color: $white;
