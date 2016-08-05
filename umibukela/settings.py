@@ -27,6 +27,9 @@ else:
 
 GOOGLE_ANALYTICS_ID = 'UA-48399585-33'
 
+KOBO_USERNAME = os.environ.get('KOBO_USERNAME')
+KOBO_PASSWORD = os.environ.get('KOBO_PASSWORD')
+
 ALLOWED_HOSTS = ['*']
 
 
@@ -74,6 +77,21 @@ DATABASES = {
     'default': db_config,
 }
 DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+
+# Caches
+if DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+            'LOCATION': '/var/tmp/umibukela_cache',
+        }
+    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -214,6 +232,9 @@ LOGGING = {
         },
         'django': {
             'level': 'DEBUG' if DEBUG else 'INFO',
-        }
+        },
+        'requests': {
+            'level': 'DEBUG' if DEBUG else 'INFO',
+        },
     }
 }

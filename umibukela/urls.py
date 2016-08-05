@@ -18,6 +18,11 @@ urlpatterns = patterns(
     url(r'^partners$', 'umibukela.views.partners', name='partners'),
     url(r'^partners/(?P<partner_slug>[\w-]+)$', 'umibukela.views.partner', name='partner'),
 
+    # health-e
+    url(r'^stockouts/$', 'umibukela.healthe.views.home', name='healthe-home'),
+    url(r'^stockouts/download/$', 'umibukela.healthe.views.report_download', name='healthe-report-download'),
+    url(r'^stockouts/stats/$', 'umibukela.healthe.views.stats', name='healthe-stats'),
+
     url(r'^admin/', include(admin.site.urls)),
 
     # For when images are hosted locally
