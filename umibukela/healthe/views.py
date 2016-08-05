@@ -4,7 +4,9 @@ import math
 
 import arrow
 from django.shortcuts import render
+from django.conf import settings
 from django.http import HttpResponseBadRequest, HttpResponse
+from django.contrib.auth.decorators import user_passes_test
 
 from umibukela.healthe.reports import build_stockout_xlsx
 
@@ -12,6 +14,11 @@ from umibukela.healthe.reports import build_stockout_xlsx
 STOCKOUTS_COLLECTION_START = date(2015, 11, 30)
 
 
+def healthe_user(user):
+    return settings.DEBUG or user.username == 'healthe'
+
+
+@user_passes_test(healthe_user, login_url='/admin/login/')
 def home(request):
     # weeks for which stockout reports are available
     today = date.today()
@@ -25,6 +32,7 @@ def home(request):
     })
 
 
+@user_passes_test(healthe_user, login_url='/admin/login/')
 def report_download(request):
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
