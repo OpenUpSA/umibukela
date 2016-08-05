@@ -1,7 +1,11 @@
+from __future__ import division
+
 from csv import DictWriter
 from copy import copy
 import os.path
 from cStringIO import StringIO
+from collections import Counter
+from itertools import groupby
 
 from xlsxwriter.workbook import Workbook
 import requests
@@ -253,3 +257,55 @@ def build_stockout_xlsx(start_date, end_date):
 
     report_rows, fields = generate_report(period_rows)
     return build_xlsx(period_rows, report_rows, fields)
+
+
+def summary_stats(rows):
+    # count of stockouts by medicine
+    stockings = [(k.split("/")[0], r[k] == u'yes') for r in rows for k in r if k.endswith('-in_stock')]
+    instock = Counter([m[0] for m in stockings if m[1]])
+    stockouts = Counter([m[0] for m in stockings if not m[1]])
+
+    def yearmonth(row):
+        # YYYY-MM[-DD]
+        return row['today'][:7]
+
+    # availability by month
+    by_month = {}
+    for month, group in groupby(sorted(rows, key=yearmonth), yearmonth):
+        group = list(group)
+        n_instock = sum(1 for r in group for k in r if k.endswith('-in_stock') and r[k] == u'yes')
+        n_outstock = sum(1 for r in group for k in r if k.endswith('-in_stock') and r[k] == u'no')
+        by_month[month] = n_instock / (n_instock + n_outstock) * 100
+
+    return {
+        'medicine_stockouts': dict(stockouts),
+        'medicine_instock': dict(instock),
+        'monthly_availability': by_month,
+    }
+
+
+def stockout_stats(rows):
+    def facility(row):
+        if row['facility_details/facility'] == u'other':
+            return row['facility_details/facility_other']
+        else:
+            return row['facility_details/facility']
+
+    # count facilities
+    info = {
+        'total_clinics': len(set(facility(r) for r in rows)),
+        'country_stats': summary_stats(rows),
+        'provinces': [],
+        'medicines': MEDS,
+    }
+
+    # provinces
+    provinces = set(r['facility_details/province'] for r in rows)
+    for code in provinces:
+        info['provinces'].append({
+            'code': code,
+            'name': PROVINCES[code],
+            'stats': summary_stats([r for r in rows if r['facility_details/province'] == code]),
+        })
+
+    return info

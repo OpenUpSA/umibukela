@@ -5,10 +5,10 @@ import math
 import arrow
 from django.shortcuts import render
 from django.conf import settings
-from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.contrib.auth.decorators import user_passes_test
 
-from umibukela.healthe.reports import build_stockout_xlsx
+from umibukela.healthe.reports import build_stockout_xlsx, get_submissions, stockout_stats
 
 
 STOCKOUTS_COLLECTION_START = date(2015, 11, 30)
@@ -53,3 +53,12 @@ def report_download(request):
     filename = 'Stockout Report - %s to %s' % (start_date.isoformat(), end_date.isoformat()) + ".xlsx"
     response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
     return response
+
+
+def stats(request):
+    """ Return a bunch of historical stats in JSON,
+    for use in the https://www.health-e.org.za/medicine-stockouts/ page.
+    """
+    # TODO: what about start of next year?
+    rows = get_submissions(date(2016, 1, 1), date.today(), 'json')
+    return JsonResponse(stockout_stats(rows))
