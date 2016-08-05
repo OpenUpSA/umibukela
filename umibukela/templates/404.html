@@ -25,5 +25,7 @@
 
 {% block js %}
 {{ block.super }}
+<script>
 ga('send', 'event', '404', document.location.pathname, document.referrer);
+</script>
 {% endblock %}
