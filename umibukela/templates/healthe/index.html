@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}Health-e Stockout Reports{% endblock %}
+{% block page-content %}
+
+<article class="general section">
+
+  <!-- section-header -->
+  <div class="section-heading">
+    <div class="container">
+      <h1>Health-e News Medicine Stockout Reporting</h1>
+    </div>
+  </div>
+  <!-- /section-header -->
+
+  <div class="container">
+    <section>
+      <h2>Download Stockout Reports</h2>
+
+      <ul>
+      {% for start_date, end_date in weeks %}
+        <li><a href="{% url 'healthe-report' %}?start_date={{ start_date.isoformat }}&end_date={{ end_date.isoformat }}">{{ start_date }} - {{ end_date }}</a></li>
+      {% endfor %}
+      </ul>
+    </section>
+
+  </div>
+
+</article>
+
+{% endblock %}

@@ -27,6 +27,9 @@ else:
 
 GOOGLE_ANALYTICS_ID = 'UA-48399585-33'
 
+KOBO_USERNAME = os.environ.get('KOBO_USERNAME')
+KOBO_PASSWORD = os.environ.get('KOBO_PASSWORD')
+
 ALLOWED_HOSTS = ['*']
 
 
@@ -214,6 +217,9 @@ LOGGING = {
         },
         'django': {
             'level': 'DEBUG' if DEBUG else 'INFO',
-        }
+        },
+        'requests': {
+            'level': 'DEBUG' if DEBUG else 'INFO',
+        },
     }
 }
