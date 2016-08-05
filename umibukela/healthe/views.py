@@ -57,10 +57,11 @@ def report_download(request):
     return response
 
 
+@cache_page(3600)
 def stats(request):
     """ Return a bunch of historical stats in JSON,
     for use in the https://www.health-e.org.za/medicine-stockouts/ page.
     """
     # TODO: what about start of next year?
-    rows = get_submissions(date(2016, 1, 1), date.today(), 'json')
+    rows = get_submissions(date(2016, 1, 1), date.today() - timedelta(weeks=4), 'json')
     return JsonResponse(stockout_stats(rows))
