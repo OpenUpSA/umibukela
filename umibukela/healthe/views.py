@@ -16,7 +16,7 @@ STOCKOUTS_COLLECTION_START = date(2015, 11, 30)
 
 
 def healthe_user(user):
-    return settings.DEBUG or user.username == 'healthe'
+    return settings.DEBUG or user.is_superuser or user.username == 'healthe'
 
 
 @user_passes_test(healthe_user, login_url='/admin/login/')
