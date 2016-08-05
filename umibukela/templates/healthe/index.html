@@ -19,7 +19,11 @@
 
       <ul>
       {% for start_date, end_date in weeks %}
-        <li><a href="{% url 'healthe-report-download' %}?start_date={{ start_date.isoformat }}&end_date={{ end_date.isoformat }}">{{ start_date }} - {{ end_date }}</a></li>
+        <li>
+          <a href="{% url 'healthe-report-download' %}?start_date={{ start_date.isoformat }}&end_date={{ end_date.isoformat }}">
+            {{ start_date|date:"j F Y" }} - {{ end_date|date:"j F Y" }}
+          </a>
+        </li>
       {% endfor %}
       </ul>
     </section>
