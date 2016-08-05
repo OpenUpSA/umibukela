@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.conf import settings
 from django.http import HttpResponseBadRequest, HttpResponse, JsonResponse
 from django.contrib.auth.decorators import user_passes_test
+from django.views.decorators.cache import cache_page
 
 from umibukela.healthe.reports import build_stockout_xlsx, get_submissions, stockout_stats
 
@@ -33,6 +34,7 @@ def home(request):
 
 
 @user_passes_test(healthe_user, login_url='/admin/login/')
+@cache_page(3600)
 def report_download(request):
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
