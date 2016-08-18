@@ -269,6 +269,12 @@ def summary_stats(rows):
         # YYYY-MM[-DD]
         return row['today'][:7]
 
+    def facility(row):
+        if row['facility_details/facility'] == u'other':
+            return row['facility_details/facility_other']
+        else:
+            return row['facility_details/facility']
+
     # availability by month
     by_month = {}
     for month, group in groupby(sorted(rows, key=yearmonth), yearmonth):
@@ -278,6 +284,7 @@ def summary_stats(rows):
         by_month[month] = n_instock / (n_instock + n_outstock) * 100
 
     return {
+        'total_clinics': len(set(facility(r) for r in rows)),
         'medicine_stockouts': dict(stockouts),
         'medicine_instock': dict(instock),
         'monthly_availability': by_month,
@@ -285,15 +292,8 @@ def summary_stats(rows):
 
 
 def stockout_stats(rows):
-    def facility(row):
-        if row['facility_details/facility'] == u'other':
-            return row['facility_details/facility_other']
-        else:
-            return row['facility_details/facility']
-
     # count facilities
     info = {
-        'total_clinics': len(set(facility(r) for r in rows)),
         'country_stats': summary_stats(rows),
         'provinces': [],
         'medicines': MEDS,
