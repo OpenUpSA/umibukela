@@ -228,12 +228,14 @@ def make_fname(fname, suffix, ext=None):
     return ''.join([base, '-', suffix, ext])
 
 
-def get_submissions(start_date, end_date, fmt=None):
+def get_submissions(start_date, end_date, fmt=None, date='_submission_time'):
     """ Load the raw submissions for this date range.
     """
     fmt = fmt or 'json'
-    filters = '{"$and": [{"_submission_time": {"$gte": "%sT00:00:00Z"}}, {"_submission_time": {"$lte": "%sT23:59:59Z"}}]}' % (
+    filters = '{"$and": [{"%s": {"$gte": "%sT00:00:00Z"}}, {"%s": {"$lte": "%sT23:59:59Z"}}]}' % (
+        date,
         start_date.isoformat(),
+        date,
         end_date.isoformat())
 
     resp = requests.get('https://kc.kobotoolbox.org/api/v1/data/25889', params={
@@ -291,12 +293,14 @@ def summary_stats(rows):
     }
 
 
-def stockout_stats(rows):
+def stockout_stats(start, end, rows):
     # count facilities
     info = {
         'country_stats': summary_stats(rows),
         'provinces': [],
         'medicines': MEDS,
+        'start_date': start.isoformat(),
+        'end_date': end.isoformat(),
     }
 
     # provinces

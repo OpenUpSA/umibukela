@@ -63,5 +63,7 @@ def stats(request):
     for use in the https://www.health-e.org.za/medicine-stockouts/ page.
     """
     # TODO: what about start of next year?
-    rows = get_submissions(date(2016, 1, 1), date.today() - timedelta(weeks=4), 'json')
-    return JsonResponse(stockout_stats(rows))
+    start = date(2016, 1, 1)
+    end = date.today() - timedelta(weeks=4)
+    rows = get_submissions(start, end, 'json', 'start')
+    return JsonResponse(stockout_stats(start, end, rows))
