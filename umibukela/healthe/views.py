@@ -19,7 +19,7 @@ def healthe_user(user):
     return settings.DEBUG or user.is_superuser or user.username == 'healthe'
 
 
-@user_passes_test(healthe_user, login_url='/admin/login/')
+@user_passes_test(healthe_user, login_url='/login/')
 def home(request):
     # weeks for which stockout reports are available
     today = date.today()
@@ -33,7 +33,7 @@ def home(request):
     })
 
 
-@user_passes_test(healthe_user, login_url='/admin/login/')
+@user_passes_test(healthe_user, login_url='/login/')
 @cache_page(3600)
 def report_download(request):
     start_date = request.GET.get('start_date')

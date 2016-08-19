@@ -66,6 +66,7 @@ ROOT_URLCONF = 'umibukela.urls'
 WSGI_APPLICATION = 'umibukela.wsgi.application'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+LOGIN_REDIRECT_URL = '/'
 
 
 # Database

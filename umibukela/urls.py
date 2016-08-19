@@ -23,6 +23,7 @@ urlpatterns = patterns(
     url(r'^stockouts/download/$', 'umibukela.healthe.views.report_download', name='healthe-report-download'),
     url(r'^stockouts/stats/$', 'umibukela.healthe.views.stats', name='healthe-stats'),
 
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'admin/login.html'}),
     url(r'^admin/', include(admin.site.urls)),
 
     # For when images are hosted locally
