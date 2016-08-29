@@ -295,9 +295,15 @@ def summary_stats(rows):
 
 def stockout_stats(start, end, rows):
     # count facilities
+    nat = {
+        'code': 'ZA',
+        'name': 'Nationally',
+        'stats': summary_stats(rows)
+    }
+
     info = {
-        'country_stats': summary_stats(rows),
-        'provinces': [],
+        # 'country_stats': summary_stats(rows),
+        'provinces': [nat],
         'medicines': MEDS,
         'start_date': start.isoformat(),
         'end_date': end.isoformat(),
