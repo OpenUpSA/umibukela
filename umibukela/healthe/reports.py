@@ -296,8 +296,8 @@ def summary_stats(rows):
 def stockout_stats(start, end, rows):
     # count facilities
     info = {
-        'country_stats': summary_stats(rows),
-        'provinces': [],
+        # 'country_stats': summary_stats(rows),
+        'provinces': [summary_stats(rows)],
         'medicines': MEDS,
         'start_date': start.isoformat(),
         'end_date': end.isoformat(),
