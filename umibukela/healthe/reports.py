@@ -302,8 +302,7 @@ def stockout_stats(start, end, rows):
     }
 
     info = {
-        # 'country_stats': summary_stats(rows),
-        'provinces': [nat],
+        'jurisdictions': [nat],
         'medicines': MEDS,
         'start_date': start.isoformat(),
         'end_date': end.isoformat(),
@@ -312,7 +311,7 @@ def stockout_stats(start, end, rows):
     # provinces
     provinces = set(r['facility_details/province'] for r in rows)
     for code in provinces:
-        info['provinces'].append({
+        info['jurisdictions'].append({
             'code': code,
             'name': PROVINCES[code],
             'stats': summary_stats([r for r in rows if r['facility_details/province'] == code]),
