@@ -74,7 +74,7 @@ Umibukela.General = function() {
         });
         map.attributionControl.setPrefix('');
         new L.Control.Zoom({position: 'topright'}).addTo(map);
-        new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: 'Map © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
           maxZoom: 18
         }).addTo(map);
