@@ -77,6 +77,10 @@ def year_report(request):
     start_date = arrow.get('%s-01-01' % year).date()
     end_date = arrow.get('%s-12-31' % year).date()
 
+    cutoff = date.today() - timedelta(weeks=4)
+    if end_date > cutoff:
+        end_date = cutoff
+
     report = build_stockout_xlsx(start_date,end_date)
     response = HttpResponse(report, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     filename = 'Stockout Report - %s' % year + '.xlsx'
