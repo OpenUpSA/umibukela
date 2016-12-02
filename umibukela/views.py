@@ -99,18 +99,20 @@ def poster(request, site_slug, result_id):
         site__slug__exact=site_slug
     )
     site_responses = [s.answers for s in result_set.submissions.all()]
+    participants = { 'current': { 'male': 0, 'female': 0, 'total': 0 }, 'previous': { 'male': 0, 'female': 0, 'total': 0 } }
+    site_results = None
     if site_responses:
         df = pandas.DataFrame(site_responses)
         form = result_set.survey.form
-        site_totals = analysis.count_submissions(df)
+        participants['current'] = analysis.count_submissions(df)
         site_results = analysis.count_options(df, form['children'])
         site_results = analysis.calc_q_percents(site_results)
         prev_result_set = result_set.get_previous()
         if prev_result_set:
             prev_responses = [s.answers for s in prev_result_set.submissions.all()]
             if prev_responses:
-                site_totals = analysis.count_submissions(
-                    pandas.DataFrame(site_responses + prev_responses))
+                participants['previous'] = analysis.count_submissions(
+                    pandas.DataFrame(prev_responses))
                 prev_df = pandas.DataFrame(prev_responses)
                 prev_form = prev_result_set.survey.form
                 prev_results = analysis.count_options(prev_df, prev_form['children'])
@@ -120,16 +122,14 @@ def poster(request, site_slug, result_id):
         else:
             prev_results = None
         analysis.combine_curr_hist(site_results, prev_results)
-    else:
-        site_totals = {'male': 0, 'female': 0, 'total': 0}
-        site_results = None
 
     return render(request, 'poster_layout.html', {
         'active_tab': 'poster',
         'result_set': result_set,
+        'prev_date': prev_result_set.cycle.start_date,
         'results': {
             'questions_dict': site_results,
-            'totals': site_totals,
+            'participants': participants,
         }
     })
 
@@ -139,14 +139,26 @@ def brochure(request, site_slug, result_id):
         id=result_id,
         site__slug__exact=site_slug
     )
-
+    prev_result_set = result_set.get_previous()
     site = Site.objects.get(id=result_set.site_id)
     partner = Partner.objects.get(id=result_set.partner_id)
+    site_responses = [s.answers for s in result_set.submissions.all()]
 
-    return render(request, 'brochure_layout.html', {
-        'partner': partner,
-        'site': site.name
-    })
+    context = {
+        'result_set': result_set,
+        'partner': result_set.partner,
+        'site': result_set.site.name,
+        'prev_date': None,
+        'totals': { 'male': 0, 'female': 0, 'total': 0 }
+    }
+
+    if prev_result_set:
+        context['prev_date'] = prev_result_set.cycle.start_date
+
+    if site_responses:
+        context['totals'] = analysis.count_submissions(pandas.DataFrame(site_responses))
+
+    return render(request, 'brochure_layout.html', context)
 
 
 def partners(request):

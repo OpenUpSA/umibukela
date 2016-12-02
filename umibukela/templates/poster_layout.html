@@ -16,12 +16,10 @@
 <div class="print poster container">
   <header class="header">
     <img class="banner" alt="Citizen monitoring" src="{% static 'img/banner-large.png' %}" />
-    <div class="banner-text">
-      <h3 class="monitor">{{ result_set.partner.short_name }}</h3>
-    </div>
-    <h4 class="date text-xs-right">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h4>
-    <h2 class="programme">
-      <span><em><b>{{ result_set.site.name }}</b></em></span> <span id="facility"></span>
+    <h1 class="partner text-uppercase">{{ result_set.partner.short_name }}</h1>
+    <h3 class="date text-right text-uppercase">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
+    <h2 class="site">
+      <em><b>{{ result_set.site.name }}</b></em>
     </h2>
     <h3 class="area"></h3>
   </header>
@@ -158,22 +156,22 @@
           <div class="row text-medium">
             <div class="col-xs-8"></div>
             <div class="col-xs-2"><b>{{ result_set.cycle.end_date|date:'Y' }}</b></div>
-            <div class="col-xs-2"><b>{{ result_set.cycle.start_date|date:'Y' }}</b></div>
+            <div class="col-xs-2"><b>{{ prev_date|date:'Y' }}</b></div>
           </div>
           <div class="row text-large">
             <div class="col-xs-8 heading text-uppercase">Participants:</div>
-            <div class="col-xs-2">{{ results.totals.total }}</div>
-            <div class="col-xs-2"></div>
+            <div class="col-xs-2">{{ results.participants.current.total }}</div>
+            <div class="col-xs-2">{{ results.participants.previous.total }}</div>
           </div>
           <div class="row">
             <div class="col-xs-8 heading text-uppercase">Female:</div>
-            <div class="col-xs-2">{{ results.totals.female }}</div>
-            <div class="col-xs-2"></div>
+            <div class="col-xs-2">{{ results.participants.current.female }}</div>
+            <div class="col-xs-2">{{ results.participants.previous.female }}</div>
           </div>
           <div class="row">
             <div class="col-xs-8 heading text-uppercase">Male:</div>
-            <div class="col-xs-2">{{ results.totals.male }}</div>
-            <div class="col-xs-2"></div>
+            <div class="col-xs-2">{{ results.participants.current.male }}</div>
+            <div class="col-xs-2">{{ results.participants.previous.male }}</div>
           </div>
         </div>
       </div>

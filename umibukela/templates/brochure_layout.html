@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load pipeline static jsonify lookup markup_tags %}
+{% load pipeline static lookup markup_tags %}
 {% block content %}
 
 <div class="container brochure print">
@@ -7,20 +7,22 @@
       <div class="col-xs-6 left">
         <header class="header">
           <img class="banner" alt="Citizen monitoring" src="{% static 'img/banner-small.png' %}" />
-          <h1 class="partner">{{ partner.full_name }}</h1>
+          <h1 class="partner">{{ partner.short_name }}</h1>
         </header>
         <section class="content border-top-dashed">
-          <p class="tab margin-bottom">
-            {{ partner.intro_statement }}
-          </p>
-          <p class="tab">
-            The monitors for this project are
-          </p>
-          <ul class="tab margin-bottom">
-            <li>
-              Peter Makwel
-            </li>
-          </ul>
+          <div class="top-box">
+            <p class="tab margin-bottom">
+              {{ partner.intro_statement }}
+            </p>
+            <p class="tab">
+              The monitors for this project are
+            </p>
+            <ul class="tab margin-bottom">
+              <li>
+                Peter Makwel
+              </li>
+            </ul>
+          </div>
           <div class="border-solid contact-details">
             <h4>
               Contact Details
@@ -35,8 +37,8 @@
           </div>
         </section>
         <footer class="mavc-footer">
-          <div class="row border-hor-dashed">
-            <div class="col-xs-9">
+          <div class="row">
+            <div class="col-xs-8">
               <p>
                 BLACK SASH<br />
                 Black Sash National Office<br />
@@ -50,7 +52,7 @@
                 info@blacksash.org.za
               </p>
             </div>
-            <div class="col-xs-3">
+            <div class="col-xs-4">
               <img src="{% static 'img/mavc-logo.png' %}" alt="MAVC" />
             </div>
           </div>
@@ -59,12 +61,12 @@
       <div class="col-xs-6 right">
         <header class="header">
           <img class="banner" alt="Citizen monitoring" src="{% static 'img/banner-large.png' %}" />
-          <h1 class="partner"><b>{{ partner.full_name }}</b></h1>
-          <h3 class="date text-xs-right">June / July 2015</h3>
+          <h1 class="partner"><b>{{ partner.short_name }}</b></h1>
+          <h3 class="date text-xs-right">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
           <h2 class="site"><b><em>{{ site }}</em></b></h2>
         </header>
-        <section class="content border-top-dashed">
-          <div class="row margin-bottom row-not-flex">
+        <section class="content border-top-dashed what-is">
+          <div class="row margin-bottom">
             <div class="col-xs-8 tab-p">
               <h4 class="text-uppercase"><b>What is citizen-based monitoring (cbm)?</b></h4>
               <p>Citizen-based monitoring seeks to give citizens a voice in how public services are managed.</p>
@@ -74,15 +76,17 @@
               <p>We hope that it will help facility staff become more responsive to citizen needs, and encourage citizens to become more confident to use and get actively involved in how services are delivered in their communities.</p>
               <p>We hope that these citizen-based performance reports together with frontline staff feedback reports as well as the Improvement Plans developed and adopted at the Dialogues, will help District Provincial and National managers to act quickly to fix problems that citizens and staff identify. We invite comments and suggestions from everyone on how this can be improved so that together we can contribute to better services and better relationships between government departments and the people they serve.</p>
             </div>
-            <div class="col-xs-4 border-solid">
-              <h4 class="text-uppercase"><b>How data was collected</b></h4>
-              <p>In each community, members of a community partner were recruited and trained how to conduct a micro-survey of citizens’ and frontline staff’s perceptions and experiences.</p>
-              <p>Survey respondents were not identified, so they could express their opinions freely. The questionnaire was developed by the Black Sash based on its own work and the DPME’s tools. The surveys try to highlight the VOICES of poor people and in particular that of women and girls.</p>
-              <p>The first survey was conducted in 2014. The second survey was done in June / July 2015.</p>
+            <div class="col-xs-4 how-data">
+              <div class="how-data-box">
+                <h4 class="text-uppercase"><b>How data was collected</b></h4>
+                <p>In each community, members of a community partner were recruited and trained how to conduct a micro-survey of citizens’ and frontline staff’s perceptions and experiences.</p>
+                <p>Survey respondents were not identified, so they could express their opinions freely. The questionnaire was developed by the Black Sash based on its own work and the DPME’s tools. The surveys try to highlight the VOICES of poor people and in particular that of women and girls.</p>
+                <p>The first survey was conducted in 2014. The second survey was done in June / July 2015.</p>
+              </div>
             </div>
           </div>
           <div class="row margin-bottom">
-            <div class="col-xs-12 border-dashed">
+            <div class="col-xs-12 dashed-box">
               <h4 class="text-uppercase"><b>How to read this report</b></h4>
               <p>
                 There are three types of questions:
@@ -112,7 +116,7 @@ some room for improvement.
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-12 border-dashed">
+            <div class="col-xs-12 dashed-box">
               <h4><b>Cycle 1 and Cycle 2 comparisons:</b></h4>
               <p>
                 It is important to be able to track the changes coming from the CBM surveys, over time. In order to do so, we need to compare the results of Cycle 1, to Cycle 2.
@@ -132,7 +136,7 @@ some room for improvement.
             </div>
           </div>
         </section>
-        <footer class="text-right">
+        <footer class="text-right code4sa-footer">
           <img class="code4sa-logo" alt="Code4SA" src="{% static 'img/logo-code4sa.png' %}" />
         </footer>
       </div>
@@ -146,13 +150,13 @@ some room for improvement.
                 <h2><b><em>{{ site }}</em></b></h2>
                 <div class="statistics text-center">
                   <p>
-                    <b>TOTAL: 339</b>
+                    <b>TOTAL: {{ totals.total }}</b>
                   </p>
                   <p>
-                    Male: 67
+                    Male: {{ totals.male }}
                   </p>
                   <p>
-                    Female: 272
+                    Female: {{ totals.female }}
                   </p>
                 </div>
               </div>
