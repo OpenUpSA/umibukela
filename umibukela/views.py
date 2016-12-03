@@ -7,6 +7,7 @@ from .models import (
     CycleResultSet,
     Partner,
     Site,
+    Sector
 )
 
 
@@ -98,20 +99,27 @@ def poster(request, site_slug, result_id):
         id=result_id,
         site__slug__exact=site_slug
     )
+    sector_id = result_set.site.sector.id
+    sector_name = Sector.objects.get(id=sector_id).name
+    site = result_set.site.name.split(' ',1)[0]
+    layout_class = '-'.join(sector_name.lower().split(' '))
+    location = None
+    template = 'posters/'
     site_responses = [s.answers for s in result_set.submissions.all()]
-    participants = { 'current': { 'male': 0, 'female': 0, 'total': 0 }, 'previous': { 'male': 0, 'female': 0, 'total': 0 } }
+    totals = { 'current': { 'male': 0, 'female': 0, 'total': 0 }, 'previous': { 'male': 0, 'female': 0, 'total': 0 } }
     site_results = None
+
     if site_responses:
         df = pandas.DataFrame(site_responses)
         form = result_set.survey.form
-        participants['current'] = analysis.count_submissions(df)
+        totals['current'] = analysis.count_submissions(df)
         site_results = analysis.count_options(df, form['children'])
         site_results = analysis.calc_q_percents(site_results)
         prev_result_set = result_set.get_previous()
         if prev_result_set:
             prev_responses = [s.answers for s in prev_result_set.submissions.all()]
             if prev_responses:
-                participants['previous'] = analysis.count_submissions(
+                totals['previous'] = analysis.count_submissions(
                     pandas.DataFrame(prev_responses))
                 prev_df = pandas.DataFrame(prev_responses)
                 prev_form = prev_result_set.survey.form
@@ -123,14 +131,31 @@ def poster(request, site_slug, result_id):
             prev_results = None
         analysis.combine_curr_hist(site_results, prev_results)
 
-    return render(request, 'poster_layout.html', {
-        'active_tab': 'poster',
+    if sector_id == Sector.SASSA_PAYPOINT:
+        template += 'paypoint_poster.html'
+    elif sector_id == Sector.LOCAL_GOV:
+        template += 'local_gov_poster.html'
+        sector_name = 'Participatory Governance'
+        location = result_set.site.name
+        site = 'Western Cape'
+    elif sector_id == Sector.HEALTH_CLINIC:
+        template += 'health_clinic_poster.html'
+        sector_name += ' Clinic'
+    elif sector_id == Sector.SASSA_SERVICE_OFFICE:
+        template += 'service_office_poster.html'
+        sector_name = 'SASSA Service Office'
+    else:
+        template += 'poster_layout.html'
+
+    return render(request, template, {
         'result_set': result_set,
         'prev_date': prev_result_set.cycle.start_date,
-        'results': {
-            'questions_dict': site_results,
-            'participants': participants,
-        }
+        'totals': totals,
+        'site': site,
+        'sector': sector_name,
+        'location': location,
+        'questions_dict': site_results,
+        'layout_class': layout_class
     })
 
 def brochure(request, site_slug, result_id):

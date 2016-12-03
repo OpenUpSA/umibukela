@@ -1,0 +1,138 @@
+{% extends 'posters/poster_layout.html' %}
+{% load pipeline lookup static markup_tags %}
+{% block survey %}
+<div class="row border-top-dashed">
+  <div class="survey-item col-xs-6">
+    <h4 class="question text-center">{{ questions_dict.visit_reason.label }}</h4>
+    <div class="response">
+      <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
+    </div>
+  </div>
+  <div class="survey-item col-xs-6">
+    <h4 class="question text-center">{{ questions_dict.waiting_time.label }}</h4>
+    <div class="response">
+      <img alt="chart-2" src="{% static 'img/charts/chart 2.png' %}" />
+    </div>
+  </div>
+</div>
+<div class="row border-top-dashed">
+  <div class="survey-item col-xs-4">
+    {% with q1=questions_dict|get:'yes_no_group/deductions' %}
+    <h4 class="question text-center">{{ q1.label }}</h4>
+    {% endwith %}
+    <div class="response">
+      <img alt="chart-3" src="{% static 'img/charts/chart 3.png' %}" />
+    </div>
+  </div>
+  <div class="survey-item col-xs-4">
+    {% with q2=questions_dict|get:'yes_no_group/complaint' %}
+    <h4 class="question text-center">{{ q2.label }}</h4>
+    {% endwith %}
+    <div class="response">
+      <img alt="chart-4" src="{% static 'img/charts/chart 4.png' %}" />
+    </div>
+  </div>
+  <div class="survey-item col-xs-4">
+    {% with q3=questions_dict|get:'yes_no_group/response' %}
+    <h4 class="question text-center">{{ q3.label }}</h4>
+    {% endwith %}
+    <div class="response">
+      <img alt="chart-5" src="{% static 'img/charts/chart 5.png' %}" />
+    </div>
+  </div>
+</div>
+<div class="row border-top-dashed">
+  <div class="survey-item col-xs-3">
+    <h4 class="question text-center">{{ questions_dict.ease_access.label }}</h4>
+    <div class="response">
+      <img alt="chart-6" src="{% static 'img/charts/chart 6.png' %}" />
+    </div>
+  </div>
+  <div class="survey-item col-xs-3">
+    <h4 class="question text-center">{{ questions_dict.transport_amount.label }}</h4>
+    <div class="response">
+      <img alt="chart-7" src="{% static 'img/charts/chart 7.png' %}" />
+    </div>
+  </div>
+  <div class="survey-item col-xs-3">
+    {% with q8=questions_dict|get:'yes_no_group/documents' %}
+    <h4 class="question text-center">{{ q8.label }}</h4>
+    {% endwith %}
+    <div class="response">
+      <img alt="chart-8" src="{% static 'img/charts/chart 8.png' %}" />
+    </div>
+  </div>
+  <div class="survey-item col-xs-3">
+    {% with q9=questions_dict|get:'yes_no_group/safety' %}
+    <h4 class="question text-center">{{ q9.label }}</h4>
+    {% endwith %}
+    <div class="response">
+      <img alt="chart-9" src="{% static 'img/charts/chart 9.png' %}" />
+    </div>
+  </div>
+</div>
+<div class="row border-top-dashed">
+  <div class="survey-item col-xs-3">
+    {% with q10=questions_dict|get:'yes_no_group/bribe' %}
+    <h4 class="question text-center">{{ q10.label }}</h4>
+    {% endwith %}
+    <div class="response">
+      <img alt="chart-10" src="{% static 'img/charts/chart 10.png' %}" />
+    </div>
+  </div>
+  <div class="survey-item col-xs-3">
+    {% with q11=questions_dict|get:'performance_group/clean' %}
+    <h4 class="question text-center">{{ q11.label }}</h4>
+    {% endwith %}
+    <div class="response">
+      <img alt="chart-11" src="{% static 'img/charts/chart 11.png' %}" />
+    </div>
+  </div>
+  <div class="survey-item col-xs-3">
+    {% with q12=questions_dict|get:'performance_group/queues' %}
+    <h4 class="question text-center">{{ q12.label }}</h4>
+    {% endwith %}
+    <div class="response">
+      <img alt="chart-12" src="{% static 'img/charts/chart 12.png' %}" />
+    </div>
+  </div>
+  <div class="survey-item col-xs-3">
+    {% with q13=questions_dict|get:'performance_group/respect' %}
+    <h4 class="question text-center">{{ q13.label }}</h4>
+    {% endwith %}
+    <div class="response">
+      <img alt="chart-13" src="{% static 'img/charts/chart 13.png' %}" />
+    </div>
+  </div>
+</div>
+<div class="row border-top-dashed">
+  <div class="survey-item col-xs-3">
+    {% with q14=questions_dict|get:'performance_group/assistance' %}
+    <h4 class="question text-center">{{ q14.label }}</h4>
+    {% endwith %}
+    <div class="response">
+      <img alt="chart-14" src="{% static 'img/charts/chart 14.png' %}" />
+    </div>
+  </div>
+  <div class="survey-item col-xs-3">
+    {% with q15=questions_dict|get:'yes_no_group/money_lenders' %}
+    <h4 class="question text-center">{{ q15.label }}</h4>
+    {% endwith %}
+    <div class="response">
+      <img alt="chart-15" src="{% static 'img/charts/chart 15.png' %}" />
+    </div>
+  </div>
+  <div class="survey-item col-xs-3">
+    <h4 class="question text-center">{{ questions_dict.clinic_feedback.label }}</h4>
+    <div class="response">
+      <img alt="chart-16" src="{% static 'img/charts/chart 16.png' %}" />
+    </div>
+  </div>
+  <div class="col-xs-3">
+    {% include 'posters/_survey_totals.html' %}
+  </div>
+</div>
+<footer class="text-right border-top-dashed">
+  <img class="code4sa-logo" alt="Code4SA" src="{% static 'img/logo-code4sa.png' %}" />
+</footer>
+{% endblock %}
