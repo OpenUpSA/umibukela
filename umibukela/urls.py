@@ -22,6 +22,7 @@ urlpatterns = patterns(
     url(r'^stockouts/$', 'umibukela.healthe.views.home', name='healthe-home'),
     url(r'^stockouts/download/$', 'umibukela.healthe.views.report_download', name='healthe-report-download'),
     url(r'^stockouts/stats/$', 'umibukela.healthe.views.stats', name='healthe-stats'),
+    url(r'^stockouts/year/report$', 'umibukela.healthe.views.year_report', name='healthe-year-report'),
 
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'admin/login.html'}),
     url(r'^admin/', include(admin.site.urls)),
