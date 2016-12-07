@@ -129,3 +129,14 @@ $input-border-focus: transparent !default;
 @import "site.scss";
 @import "stats.scss";
 @import "healthe.scss";
+
+.response {
+  text {
+    &.label {
+      font-weight:normal;
+      border:1px dashed $black;
+      display:block;
+      text-align:center;
+    }
+  }
+}
