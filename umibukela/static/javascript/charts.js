@@ -9,7 +9,8 @@ Umibukela.Poster = function() {
     if(!!questions) {
       var responses = d3.selectAll('.response');
       var margin = { top: 10, right: 10, bottom: 10, left: 10 };
-      var height = 350 - margin.left - margin.right;
+      var figureHeight = 455 - margin.top - margin.bottom;
+      var height = 350;
       var orange = '#f6921d';
       var colorMale = d3.scaleOrdinal()
         .range(['#000000',orange]);
@@ -38,31 +39,23 @@ Umibukela.Poster = function() {
             switch(key) {
               case 'more-six':
                 labels.push({ key: 'more-six', label: '6 hrs +' });
-                console.log('six');
               break;
               case 'four_six':
                 labels.push({ key: 'four_six', label: '4-6 hrs' });
-                console.log('four');
               break;
               case 'two_four':
                 labels.push({ key: 'two_four', label: '2-4 hrs' });
-                console.log('two');
               break;
               case 'one_two':
                 labels.push({ key: 'one_two', label: '1-2 hrs' });
-                console.log('one');
               break;
               case 'thirty_one':
                 labels.push({ key: 'thirty_one', label: '30mins-1hr' });
-                console.log('thirty');
               break;
               case 'under_thirty':
                 labels.push({ key: 'under_thirty', label: '>30 mins' });
-                console.log('under');
               break;
             }
-
-            console.log(labels);
           });
 
           male_data.reverse();
@@ -78,10 +71,11 @@ Umibukela.Poster = function() {
           var y0 = d3.scaleBand()
             .domain(male_data.map(function(d) { return d.label }))
             .rangeRound([0, height])
-            .paddingInner(0);
+            .padding(0);
           var y1 = d3.scaleBand()
             .domain(['current','prev'])
-            .rangeRound([0, y0.bandwidth()]);
+            .rangeRound([0, y0.bandwidth()])
+            .padding(0);
           var xRight = d3.scaleLinear()
             .domain([0,rightMax])
             .range([0,sideWidth]);
@@ -90,77 +84,132 @@ Umibukela.Poster = function() {
             .range([0,sideWidth]);
 
           var svg = response.append('svg')
-            .attr('height',height + margin.top + margin.bottom)
+            .attr('height',figureHeight)
             .attr('width',width + margin.left + margin.right)
           .append('g')
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-          var right = svg.selectAll('rect.right')
-              .data(female_data)
-            .enter().append('rect')
-              .attr('transform', function(d) { return 'translate(0,' + y0(d.label) + ')'; })
-              .attr('class','right')
-              .attr('height', function(d) {
-                var rectHeight = y1.bandwidth();
-
-                if(d.name == 'prev') {
-                  rectHeight = rectHeight / 3;
-                }
-
-                return rectHeight - 2;
-              })
-              .attr('x',rightOffset)
-              .attr('y', function(d) { return y1(d.name); })
-              .attr('width', function(d) { return xRight(d.value) - 2; })
-              .attr('fill', function(d) { return colorFemale(d.name); })
-              .attr('stroke',function(d) { return d.name == 'current' ? '#000000' : orange; });
-
-          var left = svg.selectAll('rect.left')
-              .data(male_data)
-            .enter().append('rect')
-              .attr('transform', function(d) { return 'translate(0,' + y0(d.label) + ')'; })
-              .attr('class','left')
-              .attr('height', function(d) {
-                var rectHeight = y1.bandwidth();
-
-                if(d.name == 'prev') {
-                  rectHeight = rectHeight / 3;
-                }
-
-                return rectHeight - 2;
-              })
-              .attr('x',function(d) { return sideWidth - xLeft(d.value); })
-              .attr('y', function(d) { return y1(d.name); })
-              .attr('width', function(d) { return xLeft(d.value) - 2; })
-              .attr('fill', function(d) { return colorMale(d.name); })
-              .attr('stroke',function(d) { return d.name == 'current' ? '#000000' : orange; });
-
-          var rightLabels = svg.selectAll('text.right')
+          var right = svg.selectAll('g.right')
             .data(female_data)
-          .enter().append('text')
-            .attr('x',function(d) { return rightOffset + xRight(d.value) + 5; })
-            .attr('y',function(d) { return y0(d.label) + y1.bandwidth() / 2 + 4; })
+          .enter().append('g')
+            .attr('transform', function(d) { return 'translate(' + rightOffset + ',' + y0(d.label) + ')'; })
+            .attr('class','right');
+
+          right.append('rect')
+            .attr('height', function(d) {
+              var rectHeight = y1.bandwidth();
+
+              if(d.name == 'prev') {
+                rectHeight = rectHeight / 3;
+              }
+
+              return rectHeight - 2;
+            })
+            .attr('y', function(d) { return y1(d.name); })
+            .attr('width', function(d) { return xRight(d.value) - 2; })
+            .attr('fill', function(d) { return colorFemale(d.name); })
+            .attr('stroke',function(d) { return d.name == 'current' ? '#000000' : orange; });
+
+          right.append('text')
+            .attr('dx',function(d) { return xRight(d.value) + 5; })
+            .attr('dy',function(d) { return y1.bandwidth() / 2 + 4; })
             .attr('font-size','10px')
             .text(function(d) { return d.value > 0 && d.name == 'current' ? d.value : ''; });
 
-          var leftLabels = svg.selectAll('text.left')
+          var left = svg.selectAll('g.left')
             .data(male_data)
-          .enter().append('text')
-            .attr('x',function(d) { return sideWidth - xLeft(d.value) - 15; })
-            .attr('y',function(d) { return y0(d.label) + y1.bandwidth() / 2 + 4; })
+          .enter().append('g')
+            .attr('transform', function(d) { return 'translate(0,' + y0(d.label) + ')'; })
+            .attr('class','left');
+
+          left.append('rect')
+            .attr('height', function(d) {
+              var rectHeight = y1.bandwidth();
+
+              if(d.name == 'prev') {
+                rectHeight = rectHeight / 3;
+              }
+
+              return rectHeight - 2;
+            })
+            .attr('x',function(d) { return sideWidth - xLeft(d.value); })
+            .attr('y', function(d) { return y1(d.name); })
+            .attr('width', function(d) { return xLeft(d.value) - 2; })
+            .attr('fill', function(d) { return colorMale(d.name); })
+            .attr('stroke',function(d) { return d.name == 'current' ? '#000000' : orange; });
+
+          left.append('text')
+            .attr('dx',function(d) { return sideWidth - xLeft(d.value) - 15; })
+            .attr('dy',function(d) { return y1.bandwidth() / 2 + 4; })
             .attr('font-size','10px')
             .text(function(d) { return d.value > 0 && d.name == 'current' ? d.value : ''; });
 
-          var centerLabels = svg.selectAll('text.label')
-            .data(labels)
-          .enter().append('text')
-            .attr('class','label')
+          var centerBoxes = svg.selectAll('g.center')
+              .data(labels)
+            .enter().append('g')
+              .attr('transform',function(d) { return 'translate(' + (leftOffset - 1) + ',' + (y0(d.key) + 1) + ')' })
+              .attr('class','center');
+
+          centerBoxes.append('rect')
+            .attr('class','box')
             .attr('width',70)
-            .attr('height',35)
-            .attr('x', leftOffset)
-            .attr('y', function(d) { return y0(d.key) + y1.bandwidth() / 2; })
+            .attr('height',34);
+
+          centerBoxes.append('text')
+            .attr('class','label')
+            .attr('dx', 35)
+            .attr('dy', 17.5)
             .attr('font-size','11px')
             .text(function(d) { return d.label; });
+
+          var legend = svg.append('svg')
+              .attr('class','legend')
+              //.attr('transform','translate(' + (width / 2 - 108) + ',' + (figureHeight - 124) + ')')
+              .attr('x',width / 2 - 75)
+              .attr('y',figureHeight - 105)
+              .attr('width',150)
+              .attr('height',105);
+
+          legend.append('image')
+            .attr('xlink:href','/static/img/man-icon.png')
+            .attr('x',5)
+            .attr('y',0)
+            .attr('height',74)
+            .attr('width',40);
+
+          legend.append('image')
+            .attr('xlink:href','/static/img/woman-icon.png')
+            .attr('x',105)
+            .attr('y',0)
+            .attr('height',74)
+            .attr('width',40);
+
+          legend.append('rect')
+            .attr('fill',orange)
+            .attr('width',40)
+            .attr('height',20)
+            .attr('x',55)
+            .attr('y',20);
+
+          legend.append('text')
+            .attr('class','male')
+            .text(2015)
+            .attr('dx',8)
+            .attr('dy',91);
+
+          legend.append('text')
+            .attr('class','female')
+            .text(2015)
+            .attr('dx',107)
+            .attr('dy',91);
+
+          legend.append('text')
+            .attr('class','previous')
+            .text(2014)
+            .attr('dx',57)
+            .attr('dy',60);
+
+          legend.append()
         }
       });
     }

@@ -131,12 +131,23 @@ $input-border-focus: transparent !default;
 @import "healthe.scss";
 
 .response {
+  rect {
+    &.box {
+      border:1px dashed $black;
+      fill:transparent;
+      stroke: #111;
+      stroke-width: 1;
+      stroke-dasharray:2,3;
+    }
+  }
+
   text {
     &.label {
       font-weight:normal;
-      border:1px dashed $black;
-      display:block;
       text-align:center;
+      text-anchor:middle;
+      alignment-baseline:central;
+      dominant-baseline:central;
     }
   }
 }
