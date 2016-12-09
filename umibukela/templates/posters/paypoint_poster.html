@@ -18,9 +18,7 @@
     {% with q1=questions_dict|get:'yes_no_group/deductions' %}
     <h4 class="question text-center">{{ q1.label }}</h4>
     {% endwith %}
-    <div class="response">
-      <img alt="chart-3" src="{% static 'img/charts/chart 3.png' %}" />
-    </div>
+    <div class="response" data-key="yes_no_group/deductions" data-type="2"></div>
   </div>
   <div class="survey-item col-xs-4">
     {% with q2=questions_dict|get:'yes_no_group/complaint' %}
