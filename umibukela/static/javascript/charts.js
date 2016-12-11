@@ -211,7 +211,7 @@ Umibukela.Poster = function() {
               .attr('dx',57)
               .attr('dy',60);
           } else if(type == '2') {
-            var width = 350;
+            var width = 340;
             var legendWidth = 50;
             var gutter = 70;
             var colWidth = (width - legendWidth - gutter) / 2;
