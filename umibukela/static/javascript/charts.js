@@ -222,6 +222,8 @@ Umibukela.Poster = function() {
             var years = [2014,2015];
             var icon = { width: 40, height: 175 };
 
+            optionTypes.reverse();
+
             for(var i=0;i < optionKeys.length;i++) {
               var type = optionKeys[i];
 
@@ -283,12 +285,19 @@ Umibukela.Poster = function() {
             male.selectAll('rect')
                 .data(function(d) { return d; })
               .enter().append('rect')
-                .attr('x', function(d) { return legendWidth + x(d.data.type); })
+                .attr('x', function(d) {
+                  var type = d.data.type;
+                  var shift = 0;
+
+                  if(type == 'current') shift = .9 * x.bandwidth();
+
+                  return legendWidth + x(d.data.type) - shift;
+                })
                 .attr('y', function(d) { return y(d[1]); })
                 .attr('height', function(d) { return y(d[0]) - y(d[1]); })
                 .attr('width', function(d) {
                   var type = d.data.type;
-                  var coefficient = type == 'current' ? 1 : .1;
+                  var coefficient = type == 'current' ? 1.9 : .1;
 
                   return x.bandwidth() * coefficient;
                 });
@@ -298,7 +307,7 @@ Umibukela.Poster = function() {
               .enter().append('text')
                 .attr('class','count')
                 .attr('y',function(d) { return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2; })
-                .attr('x',colWidth + legendWidth)
+                .attr('x',colWidth + legendWidth - 5)
                 .attr('fill','#000')
                 .attr('font-size','10px')
                 .text(function(d) { return d.data.type == 'current' ? d[1] - d[0] : ''; });
@@ -321,12 +330,19 @@ Umibukela.Poster = function() {
             female.selectAll('rect')
                 .data(function(d) { return d; })
               .enter().append('rect')
-                .attr('x', function(d) { return legendWidth + colWidth + gutter + x(d.data.type); })
+                .attr('x', function(d) {
+                  var type = d.data.type;
+                  var shift = 0;
+
+                  if(type == 'current') shift = .9 * x.bandwidth();
+
+                  return legendWidth + colWidth + gutter + x(d.data.type) - shift;
+                })
                 .attr('y', function(d) { return y(d[1]); })
                 .attr('height', function(d) { return y(d[0]) - y(d[1]); })
                 .attr('width', function(d) {
                   var type = d.data.type;
-                  var coefficient = type == 'current' ? 1 : .1;
+                  var coefficient = type == 'current' ? 1.9 : .1;
 
                   return x.bandwidth() * coefficient;
                 });
@@ -336,7 +352,7 @@ Umibukela.Poster = function() {
               .enter().append('text')
                 .attr('class','count')
                 .attr('y',function(d) { return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2; })
-                .attr('x',colWidth * 2 + gutter + x.bandwidth())
+                .attr('x',colWidth * 2 + gutter + x.bandwidth() + 5)
                 .attr('fill','#000')
                 .attr('font-size','10px')
                 .text(function(d) { return d.data.type == 'current' ? d[1] - d[0] : ''; });
