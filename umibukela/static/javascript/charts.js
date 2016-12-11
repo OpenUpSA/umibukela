@@ -213,19 +213,24 @@ Umibukela.Poster = function() {
           } else if(type == '2') {
             var width = 350;
             var legendWidth = 50;
-            var gutter = 50;
+            var gutter = 70;
             var colWidth = (width - legendWidth - gutter) / 2;
             var optionKeys = Object.keys(options[0]);
             var labels = [];
             var male_data = [];
             var female_data = [];
+            var years = [2014,2015];
+            var icon = { width: 40, height: 175 };
 
             for(var i=0;i < optionKeys.length;i++) {
-              male_data.push({ type: optionKeys[i] });
-              female_data.push({ type: optionKeys[i] });
+              var type = optionKeys[i];
+
+              male_data.push({ type: type, year: type == 'current' ? years[1] : years[0] });
+              female_data.push({ type: type, year: type == 'current' ? years[1] : years[0] });
             }
 
-            console.log(options);
+            male_data.reverse();
+            female_data.reverse();
 
             options.forEach(function(option) {
               for(type in option) {
@@ -247,7 +252,7 @@ Umibukela.Poster = function() {
               d.total = d.yes + d.no;
             });
 
-            var max = d3.max(male_data.concat(female_data).map(function(d) { return d.total }));
+            var max = d3.max(male_data.concat(female_data).map(function(d) { return d.total; }));
 
             var x = d3.scaleBand()
               .domain(optionTypes)
@@ -260,7 +265,8 @@ Umibukela.Poster = function() {
               .domain(labels)
               .range(['#00000',orange]);
 
-            var stack = d3.stack();
+            var male_stack = d3.stack().keys(labels)(male_data);
+            var female_stack = d3.stack().keys(labels)(female_data);
 
             var svg = response.append('svg')
               .attr('height',figureHeight)
@@ -268,41 +274,130 @@ Umibukela.Poster = function() {
             .append('g')
               .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-            svg.selectAll('.male')
-                .data(stack.keys(labels)(male_data))
+            var male = svg.selectAll('.male')
+                .data(male_stack)
               .enter().append('g')
                 .attr('class','male')
-                .attr('fill',function(d) { return z(d.key); })
-              .selectAll('rect')
+                .attr('fill',function(d) { return z(d.key); });
+
+            male.selectAll('rect')
                 .data(function(d) { return d; })
               .enter().append('rect')
-                .attr('x', function(d) { return x(d.data.type); })
+                .attr('x', function(d) { return legendWidth + x(d.data.type); })
                 .attr('y', function(d) { return y(d[1]); })
                 .attr('height', function(d) { return y(d[0]) - y(d[1]); })
-                .attr('width', x.bandwidth());
+                .attr('width', function(d) {
+                  var type = d.data.type;
+                  var coefficient = type == 'current' ? 1 : .1;
 
-            svg.selectAll('.female')
-                .data(stack.keys(labels)(female_data))
+                  return x.bandwidth() * coefficient;
+                });
+
+            male.selectAll('text.count')
+                .data(function(d) { return d; })
+              .enter().append('text')
+                .attr('class','count')
+                .attr('y',function(d) { return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2; })
+                .attr('x',colWidth + legendWidth)
+                .attr('fill','#000')
+                .attr('font-size','10px')
+                .text(function(d) { return d.data.type == 'current' ? d[1] - d[0] : ''; });
+
+            male.selectAll('text.year')
+                .data(years)
+              .enter().append('text')
+                .attr('class','year')
+                .attr('x',function(d,i) { return (x.bandwidth() * 1.25) * i + icon.width + 23; })
+                .attr('y',height + 20)
+                .attr('fill','#000')
+                .text(function(d) { return d; });
+
+            var female = svg.selectAll('.female')
+                .data(female_stack)
               .enter().append('g')
                 .attr('class','female')
-                .attr('fill',function(d) { return z(d.key); })
-              .selectAll('rect')
+                .attr('fill',function(d) { return z(d.key); });
+
+            female.selectAll('rect')
                 .data(function(d) { return d; })
               .enter().append('rect')
-                .attr('x', function(d) { return colWidth + gutter + x(d.data.type); })
+                .attr('x', function(d) { return legendWidth + colWidth + gutter + x(d.data.type); })
                 .attr('y', function(d) { return y(d[1]); })
                 .attr('height', function(d) { return y(d[0]) - y(d[1]); })
-                .attr('width', x.bandwidth());
+                .attr('width', function(d) {
+                  var type = d.data.type;
+                  var coefficient = type == 'current' ? 1 : .1;
+
+                  return x.bandwidth() * coefficient;
+                });
+
+            female.selectAll('text.count')
+                .data(function(d) { return d; })
+              .enter().append('text')
+                .attr('class','count')
+                .attr('y',function(d) { return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2; })
+                .attr('x',colWidth * 2 + gutter + x.bandwidth())
+                .attr('fill','#000')
+                .attr('font-size','10px')
+                .text(function(d) { return d.data.type == 'current' ? d[1] - d[0] : ''; });
+
+            female.selectAll('text.year')
+                .data(years)
+              .enter().append('text')
+                .attr('class','year')
+                .attr('x',function(d,i) { return colWidth + gutter + (x.bandwidth() * 1.25) * i + icon.width + 23; })
+                .attr('y',height + 20)
+                .attr('fill','#000')
+                .text(function(d) { return d; });
 
             svg.append('line')
-              .attr('x1',colWidth + gutter / 2)
-              .attr('x2',colWidth + gutter / 2)
+              .attr('x1',legendWidth + colWidth + gutter / 3)
+              .attr('x2',legendWidth + colWidth + gutter / 3)
               .attr('y1',0)
               .attr('y2',height)
               .attr('height',height)
               .attr('width',1)
               .attr('stroke','#000')
               .attr('stroke-dasharray','2,3');
+
+              svg.append('image')
+                .attr('xlink:href','/static/img/man-icon.png')
+                .attr('x',0)
+                .attr('y',max)
+                .attr('height',icon.height)
+                .attr('width',icon.width);
+
+              svg.append('image')
+                .attr('xlink:href','/static/img/woman-icon.png')
+                .attr('x',legendWidth + colWidth + gutter / 2)
+                .attr('y',max)
+                .attr('height',icon.height)
+                .attr('width',icon.width);
+
+            var legend = svg.append('g')
+              .attr('class','legend');
+
+            legend.append('rect')
+              .attr('fill','#000000')
+              .attr('height',30)
+              .attr('width',30);
+
+            legend.append('rect')
+              .attr('fill',orange)
+              .attr('height',30)
+              .attr('width',30)
+              .attr('y',40);
+
+            legend.append('text')
+              .attr('x',40)
+              .attr('y',20)
+              .text('YES');
+
+            legend.append('text')
+              .attr('x',40)
+              .attr('y',60)
+              .text('NO');
+
           }
         }
       });
