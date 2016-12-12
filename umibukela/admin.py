@@ -17,6 +17,7 @@ from .models import (
 
 from .forms import (
     SiteForm,
+    SurveyForm,
 )
 
 
@@ -39,6 +40,10 @@ class CycleResultSetAdmin(admin.ModelAdmin):
     ]
 
 
+class SurveyAdmin(admin.ModelAdmin):
+    form = SurveyForm
+
+
 admin.site.site_header = 'Umibukela administration'
 
 admin.site.register(AttachmentNature)
@@ -50,5 +55,5 @@ admin.site.register(Programme)
 admin.site.register(Province)
 admin.site.register(Sector)
 admin.site.register(Site, SiteAdmin)
-admin.site.register(Survey)
+admin.site.register(Survey, SurveyAdmin)
 admin.site.register(SurveyType)
