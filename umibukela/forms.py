@@ -66,6 +66,7 @@ class SurveyFormWidget(JSONWidget):
             "<textarea name=\"%s\">%s</textarea>" % (name, json.dumps(value))
             + render_to_string('survey-form.html', {
                 'kobo_client_id': settings.KOBO_CLIENT_ID,
+                'form_url': 'http://localhost:8000/admin/umibukela/survey/6/'
             })
             + '<pre bobob>\n'
             + json.dumps(
