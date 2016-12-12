@@ -142,6 +142,8 @@ $input-border-focus: transparent !default;
   }
 
   text {
+    fill: $black !important;
+
     &.label {
       font-weight:normal;
       text-align:center;

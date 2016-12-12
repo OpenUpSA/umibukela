@@ -10,7 +10,7 @@
   </div>
   <div class="survey-item col-xs-6">
     <h4 class="question text-center">{{ questions_dict.waiting_time.label }}</h4>
-    <div class="response" data-key="waiting_time" data-type="1"></div>
+    <div class="response" data-key="waiting_time" data-type="1" data-width="540"></div>
   </div>
 </div>
 <div class="row border-top-dashed">
@@ -18,7 +18,7 @@
     {% with q1=questions_dict|get:'yes_no_group/deductions' %}
     <h4 class="question text-center">{{ q1.label }}</h4>
     {% endwith %}
-    <div class="response" data-key="yes_no_group/deductions" data-type="2"></div>
+    <div class="response" data-key="yes_no_group/deductions" data-type="2" data-width="340"></div>
   </div>
   <div class="survey-item col-xs-4">
     {% with q2=questions_dict|get:'yes_no_group/complaint' %}
