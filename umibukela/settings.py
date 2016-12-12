@@ -36,6 +36,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = (
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,6 +54,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -68,6 +70,14 @@ WSGI_APPLICATION = 'umibukela.wsgi.application'
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 LOGIN_REDIRECT_URL = '/'
 
+CORS_ORIGIN_ALLOW_ALL = True
+# NB This is necessary for people who've gotten a cookie from this domain
+# and now want to view stockouts on an embedding site. It also means credentials
+# may be sent to the URLs where we accept cross-origin requests, so we need
+# to consider this when adding access-controlled resources to the the
+# cross-origin-enabled URLs.
+CORS_ALLOW_CREDENTIALS = True
+CORS_URLS_REGEX = r'^/stockouts/.*$'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
