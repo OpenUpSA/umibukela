@@ -1,14 +1,15 @@
 {% extends "admin/change_form.html" %}
 {% block object-tools %}
 <p>objet-tools</p>
-<pre>
+<script>
   {% if kobo_access_token %}
-  kobo_access_token = {{ kobo_access_token }}
+  var kobo_authed = true;
+  var kobo_access_token = {{ kobo_access_token }};
   {% else %}
-  login
+  var kobo_authed = false;
   {% endif %}
-  form_url = {{ form_url }}
-</pre>
+  var path = {{ path }}
+</script>
 {% block object-tools-items %}
 <p>hello</p>
 {%

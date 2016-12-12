@@ -46,7 +46,7 @@ class SurveyAdmin(admin.ModelAdmin):
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         extra_context['kobo_access_token'] = request.session.get('kobo_access_token', None)
-        extra_context['form_url'] = form_url
+        extra_context['path'] = request.path
         return super(SurveyAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
 
