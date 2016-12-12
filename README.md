@@ -25,7 +25,7 @@ Umibukela runs on dokku, a Heroku-like environment. To deploy changes, just push
 A new production deployment
 ---------------------------
 
-Umibukela runs on dokku, a Heroku-like environment. 
+Umibukela runs on dokku, a Heroku-like environment, or Heroku itself.
 
 You will need:
 
