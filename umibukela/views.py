@@ -272,5 +272,5 @@ def kobo_oauth(request):
                      params=payload,
                      auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
     r.raise_for_status()
-    request.session['access_token'] = r.json['access_token']
+    request.session['kobo_access_token'] = r.json()['access_token']
     return redirect(state)
