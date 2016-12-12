@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 import pandas
 import analysis
+import requests
+import settings
 
 from .models import (
     CycleResultSet,
@@ -256,3 +258,19 @@ def partner(request, partner_slug):
         'active_tab': 'partners',
         'partner': partner,
     })
+
+
+def kobo_oauth(request):
+    state = request.GET.get('state')
+    code = request.GET.get('code')
+    payload = {
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': 'http://localhost:8000/admin/kobo-oauth'
+    }
+    r = requests.post("https://kc.kobotoolbox.org/o/token/",
+                     params=payload,
+                     auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
+    r.raise_for_status()
+    request.session['access_token'] = r.json['access_token']
+    return redirect(state)

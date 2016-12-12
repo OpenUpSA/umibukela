@@ -1,8 +1,10 @@
 from django import forms
 from django.contrib.gis.geos import Point
+from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from jsonfield.widgets import JSONWidget
 import json
+from umibukela import settings
 
 from .models import (
     Site,
@@ -52,12 +54,23 @@ class SurveyForm(forms.ModelForm):
 class SurveyFormWidget(JSONWidget):
     class Media:
         css = {
-            'all': ('survey-form.css',)
+            'all': ('stylesheets/survey-form.css',)
         }
-        js = ('survey-form.js',)
+        js = ('javascript/survey-form.js',)
 
     def __init__(self, *args, **kwargs):
         super(SurveyFormWidget, self).__init__(*args, **kwargs)
 
     def render(self, name, value, attrs=None):
-        return mark_safe('<pre bobob>' + json.dumps(value) + '</pre>')
+        return mark_safe(
+            "<textarea name=\"%s\">%s</textarea>" % (name, json.dumps(value))
+            + render_to_string('survey-form.html', {
+                'kobo_client_id': settings.KOBO_CLIENT_ID,
+            })
+            + '<pre bobob>\n'
+            + json.dumps(
+                value,
+                sort_keys=True,
+                indent=4, separators=(',', ': '))
+            + '</pre>'
+        )
