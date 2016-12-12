@@ -25,6 +25,7 @@ urlpatterns = patterns(
     url(r'^stockouts/year/report$', 'umibukela.healthe.views.year_report', name='healthe-year-report'),
 
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'admin/login.html'}),
+    url(r'^admin/kobo-oauth', 'umibukela.views.kobo_oauth', name='kobo-oauth'),
     url(r'^admin/', include(admin.site.urls)),
 
     # For when images are hosted locally

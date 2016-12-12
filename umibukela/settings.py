@@ -27,8 +27,13 @@ else:
 
 GOOGLE_ANALYTICS_ID = 'UA-48399585-33'
 
-KOBO_USERNAME = os.environ.get('KOBO_USERNAME')
-KOBO_PASSWORD = os.environ.get('KOBO_PASSWORD')
+HEALTHE_KOBO_USERNAME = os.environ.get('HEALTHE_KOBO_USERNAME')
+HEALTHE_KOBO_PASSWORD = os.environ.get('HEALTHE_KOBO_PASSWORD')
+BLACKSASH_KOBO_USERNAME = os.environ.get('BLACKSASH_KOBO_USERNAME')
+BLACKSASH_KOBO_PASSWORD = os.environ.get('BLACKSASH_KOBO_PASSWORD')
+
+KOBO_CLIENT_ID = os.environ.get('KOBO_CLIENT_ID')
+KOBO_CLIENT_SECRET = os.environ.get('KOBO_CLIENT_SECRET')
 
 ALLOWED_HOSTS = ['*']
 
@@ -170,6 +175,12 @@ PIPELINE_CSS = {
         ),
         'output_filename': 'app.css',
     },
+    'survey-form': {
+        'source_filenames': (
+            'stylesheets/survey-form.scss',
+        ),
+        'output_filename': 'survey-form.css',
+    },
 }
 PIPELINE_JS = {
     'js': {
@@ -190,6 +201,12 @@ PIPELINE_JS = {
         ),
         'output_filename': 'site.js',
     },
+    'survey-form': {
+        'source_filenames': (
+            'javascript/survey-form.js',
+        ),
+        'output_filename': 'survey-form.js',
+    }
 }
 PIPELINE_CSS_COMPRESSOR = None
 PIPELINE_JS_COMPRESSOR = None
