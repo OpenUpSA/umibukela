@@ -17,10 +17,15 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Production deployment
----------------------
+Deploying Changes
+-----------------
 
-Production deployment assumes you're running on Heroku.
+Umibukela runs on dokku, a Heroku-like environment. To deploy changes, just push to dokku: ``git push dokku``.
+
+A new production deployment
+---------------------------
+
+Umibukela runs on dokku, a Heroku-like environment. 
 
 You will need:
 
