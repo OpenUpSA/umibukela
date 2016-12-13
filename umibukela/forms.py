@@ -4,7 +4,6 @@ from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from jsonfield.widgets import JSONWidget
 import json
-from umibukela import settings
 
 from .models import (
     Site,
@@ -65,7 +64,6 @@ class SurveyFormWidget(JSONWidget):
         return mark_safe(
             "<textarea name=\"%s\">%s</textarea>" % (name, json.dumps(value))
             + render_to_string('survey-form.html', {
-                'kobo_client_id': settings.KOBO_CLIENT_ID,
                 'form_url': 'http://localhost:8000/admin/umibukela/survey/6/'
             })
             + '<pre bobob>\n'

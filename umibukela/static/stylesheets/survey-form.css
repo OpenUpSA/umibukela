@@ -1,7 +1,13 @@
 .kobo-import {
-    background-color: #AAA;
+    background-color: #DDD;
 }
 
 .add-button {
     width: 14em;
+    display: inline;
+    cursor: default;
+}
+
+.disabled {
+    color: grey;
 }
