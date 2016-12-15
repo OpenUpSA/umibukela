@@ -31,7 +31,8 @@ class AdminSite(AdminSite):
         from django.conf.urls import url
         urls = super(AdminSite, self).get_urls()
         urls = [
-            url(r'^umibukela/survey/(?P<survey_id>\d+)/sources/$', self.admin_view(views.survey_sources))
+            url(r'^umibukela/survey/(?P<survey_id>\d+)/sources/$', self.admin_view(views.survey_sources)),
+            url(r'^umibukela/survey/(?P<survey_id>\d+)/preview/$', self.admin_view(views.survey_sources_preview)),
         ] + urls
         return urls
 

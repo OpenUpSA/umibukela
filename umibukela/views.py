@@ -115,11 +115,10 @@ def partner(request, partner_slug):
 
 
 def survey_sources(request, survey_id):
-    survey = Survey.objects.get(pk=survey_id)
-    kobo_expiry = request.session.get('kobo_access_token_expiry', None)
-    if not kobo_expiry or kobo_expiry <= datetime.utcnow().isoformat():
+    if not is_kobo_authed(request):
         return start_kobo_oauth(request)
     else:
+        survey = Survey.objects.get(pk=survey_id)
         headers = {
             'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
         }
@@ -132,14 +131,14 @@ def survey_sources(request, survey_id):
             if request.POST['action'] == 'add':
                 formid = request.POST['form_id']
                 r = requests.get(
-                    "https://kc.kobotoolbox.org/api/v1/forms/%s" % formid,
+                    "https://kc.kobotoolbox.org/api/v1/forms/%s/form.json" % formid,
                     headers=headers)
                 r.raise_for_status()
                 form = r.json()
                 source = SurveySource(
                     survey=survey,
                     form_id=formid,
-                    name=form['description'],
+                    name=form['title'],
                     cached_form=form,
                     cache_date=datetime.utcnow()
                 )
@@ -157,10 +156,29 @@ def survey_sources(request, survey_id):
         return render(request, 'survey_sources.html', {
             'survey_name': survey.name,
             'survey_id': survey_id,
-            'kobo_access_token_expiry': kobo_expiry,
+            'kobo_access_token_expiry': request.session.get('kobo_access_token_expiry'),
             'other_forms': other_forms,
             'current_sources': current_sources,
         })
+
+
+def survey_sources_preview(request, survey_id):
+    if not is_kobo_authed(request):
+        return start_kobo_oauth(request)
+    else:
+        survey = Survey.objects.get(pk=survey_id)
+        current_sources = survey.surveysource_set.all()
+        return render(request, 'survey_preview.html', {
+            'survey_name': survey.name,
+            'survey_id': survey_id,
+            'kobo_access_token_expiry': request.session.get('kobo_access_token_expiry'),
+            'current_sources': current_sources,
+        })
+
+
+def is_kobo_authed(request):
+    kobo_expiry = request.session.get('kobo_access_token_expiry', None)
+    return kobo_expiry and kobo_expiry > datetime.utcnow().isoformat()
 
 
 def start_kobo_oauth(request):
