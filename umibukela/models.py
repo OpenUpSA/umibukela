@@ -188,6 +188,15 @@ class Survey(models.Model):
         return self.name
 
 
+class SurveySource(models.Model):
+    survey = models.ForeignKey(Survey, null=False, blank=False)
+    project_url = models.TextField(unique=True, null=False, blank=False)
+    project_name = models.TextField(null=False, blank=False)
+
+    def __str__(self):
+        return "%s - %s" % (self.project_name, self.project_url)
+
+
 class CycleResultSet(models.Model):
     """
     An entity representing the data collection cycle for a given site

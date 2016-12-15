@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+from umibukela.admin import admin_site
 
 
 urlpatterns = patterns(
@@ -26,7 +26,7 @@ urlpatterns = patterns(
 
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'admin/login.html'}),
     url(r'^admin/kobo-oauth', 'umibukela.views.kobo_oauth', name='kobo-oauth'),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin_site.urls)),
 
     # For when images are hosted locally
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
