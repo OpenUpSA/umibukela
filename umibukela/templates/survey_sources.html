@@ -2,14 +2,26 @@
 
 <body>
   {% block object-tools %}
-
+  <h2>{{ survey_name }}</h2>
   <div><a href="/admin/umibukela/survey/{{ survey_id }}/">Back to Survey</a></div>
   <div>Kobo session expires {{ kobo_access_token_expiry }}</div>
 
-  <ul>
-    {% for form in forms %}
-    <li>{{ form.title }} - {{ form.url }}</li>
+  <h3>Current sources</h3>
+
+  <h3>Other available sources</h3>
+  <table>
+    {% for form in other_forms %}
+    <tr>
+      <td>{{ form.title }}</td>
+      <td>
+        <form method="post" action="{{ path }}">{% csrf_token %}
+          <input type="submit" value="Add">
+          <input type="hidden" name="form_id" value="{{ form.formid }}">
+          <input type="hidden" name="action" value="add">
+        </form>
+      </td>
+    </tr>
     {% endfor %}
-  </ul>
+  </table>
 {% endblock %}
 </body>
