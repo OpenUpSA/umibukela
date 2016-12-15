@@ -112,6 +112,37 @@ def partner(request, partner_slug):
     })
 
 
+def survey_sources(request, survey_id):
+    kobo_expiry = request.session.get('kobo_access_token_expiry', None)
+    if not kobo_expiry or kobo_expiry <= datetime.utcnow().isoformat():
+        return start_kobo_oauth(request)
+    else:
+        headers = {
+            'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
+        }
+        r = requests.get("https://kc.kobotoolbox.org/api/v1/forms",
+                         headers=headers)
+        print r.text
+        r.raise_for_status()
+        forms = r.json()
+
+        if request.method == 'GET':
+            pass
+        else:
+            pass
+
+        return render(request, 'survey_sources.html', {
+            'survey_id': survey_id,
+            'kobo_access_token_expiry': kobo_expiry,
+            'forms': forms,
+        })
+
+
+def start_kobo_oauth(request):
+    state = request.path
+    return redirect("https://kc.kobotoolbox.org/o/authorize?client_id=%s&response_type=code&scope=read&state=%s" % (settings.KOBO_CLIENT_ID, state))
+
+
 def kobo_oauth_return(request):
     state = request.GET.get('state')
     code = request.GET.get('code')
@@ -123,36 +154,9 @@ def kobo_oauth_return(request):
     r = requests.post("https://kc.kobotoolbox.org/o/token/",
                      params=payload,
                      auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
+    print r.text
     r.raise_for_status()
     request.session['kobo_access_token'] = r.json()['access_token']
     expiry_datetime = datetime.utcnow() + timedelta(seconds=r.json()['expires_in'])
     request.session['kobo_access_token_expiry'] = expiry_datetime.isoformat()
     return redirect(state)
-
-
-def survey_sources(request, survey_id):
-    kobo_expiry = request.session.get('kobo_access_token_expiry', None)
-    if kobo_expiry and kobo_expiry > datetime.utcnow().isoformat():
-        # r = requests.get("https://kc.kobotoolbox.org/api/v1/projects",
-        #                 auth=())
-        # r.raise_for_status()
-        #extra_context['kobo_access_token'] =
-#        extra_context['kobo_client_id'] = settings.KOBO_CLIENT_ID
-        pass
-    else:
-        return start_kobo_oauth(request)
-
-    if request.method == 'GET':
-        pass
-    else:
-        pass
-
-    return render(request, 'survey_sources.html', {
-        'survey_id': survey_id,
-        'kobo_access_token_expiry': kobo_expiry,
-    })
-
-
-def start_kobo_oauth(request):
-    state = request.path
-    return redirect("https://kc.kobotoolbox.org/o/authorize?client_id=%s&response_type=code&scope=read&state=%s" % (settings.KOBO_CLIENT_ID, state))

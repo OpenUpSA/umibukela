@@ -6,5 +6,10 @@
   <div><a href="/admin/umibukela/survey/{{ survey_id }}/">Back to Survey</a></div>
   <div>Kobo session expires {{ kobo_access_token_expiry }}</div>
 
+  <ul>
+    {% for form in forms %}
+    <li>{{ form.title }} - {{ form.url }}</li>
+    {% endfor %}
+  </ul>
 {% endblock %}
 </body>
