@@ -1,13 +1,6 @@
 {% extends "admin/change_form.html" %}
 {% block object-tools %}
 <script>
-  {% if kobo_access_token %}
-  var kobo_authed = true;
-  var kobo_access_token = "{{ kobo_access_token }}";
-  {% else %}
-  var kobo_authed = false;
-  {% endif %}
-  var kobo_client_id = "{{ kobo_client_id }}";
   var path = "{{ path }}";
 </script>
 {% endblock %}

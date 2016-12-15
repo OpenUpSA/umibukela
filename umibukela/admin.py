@@ -1,5 +1,8 @@
 from django.contrib import admin
+from django.contrib.admin import AdminSite
+from django.http import HttpResponse
 from umibukela import settings
+from umibukela import views
 
 from .models import (
     AttachmentNature,
@@ -20,6 +23,17 @@ from .forms import (
     SiteForm,
     SurveyForm,
 )
+
+
+class AdminSite(AdminSite):
+
+    def get_urls(self):
+        from django.conf.urls import url
+        urls = super(AdminSite, self).get_urls()
+        urls = [
+            url(r'^umibukela/survey/(?P<survey_id>\d+)/sources/$', self.admin_view(views.survey_sources))
+        ] + urls
+        return urls
 
 
 class PartnerAdmin(admin.ModelAdmin):
@@ -46,22 +60,22 @@ class SurveyAdmin(admin.ModelAdmin):
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
-        extra_context['kobo_access_token'] = request.session.get('kobo_access_token', None)
-        extra_context['kobo_client_id'] = settings.KOBO_CLIENT_ID
         extra_context['path'] = request.path
         return super(SurveyAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
 
-admin.site.site_header = 'Umibukela administration'
+admin_site = AdminSite()
 
-admin.site.register(AttachmentNature)
-admin.site.register(Cycle)
-admin.site.register(CycleFrequency)
-admin.site.register(CycleResultSet, CycleResultSetAdmin)
-admin.site.register(Partner, PartnerAdmin)
-admin.site.register(Programme)
-admin.site.register(Province)
-admin.site.register(Sector)
-admin.site.register(Site, SiteAdmin)
-admin.site.register(Survey, SurveyAdmin)
-admin.site.register(SurveyType)
+admin_site.site_header = 'Umibukela administration'
+
+admin_site.register(AttachmentNature)
+admin_site.register(Cycle)
+admin_site.register(CycleFrequency)
+admin_site.register(CycleResultSet, CycleResultSetAdmin)
+admin_site.register(Partner, PartnerAdmin)
+admin_site.register(Programme)
+admin_site.register(Province)
+admin_site.register(Sector)
+admin_site.register(Site, SiteAdmin)
+admin_site.register(Survey, SurveyAdmin)
+admin_site.register(SurveyType)

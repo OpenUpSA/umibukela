@@ -61,15 +61,11 @@ class SurveyFormWidget(JSONWidget):
         super(SurveyFormWidget, self).__init__(*args, **kwargs)
 
     def render(self, name, value, attrs=None):
-        return mark_safe(
-            "<textarea name=\"%s\">%s</textarea>" % (name, json.dumps(value))
-            + render_to_string('survey-form.html', {
-                'form_url': 'http://localhost:8000/admin/umibukela/survey/6/'
-            })
-            + '<pre bobob>\n'
-            + json.dumps(
+        return mark_safe(render_to_string('survey-form.html', {
+            'name': name,
+            'formatted_json': json.dumps(
                 value,
                 sort_keys=True,
-                indent=4, separators=(',', ': '))
-            + '</pre>'
-        )
+                indent=4,
+                separators=(',', ': ')),
+        }))

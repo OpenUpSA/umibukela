@@ -274,3 +274,14 @@ def kobo_oauth(request):
     r.raise_for_status()
     request.session['kobo_access_token'] = r.json()['access_token']
     return redirect(state)
+
+
+def survey_sources(request, survey_id):
+    # r = requests.get("https://kc.kobotoolbox.org/api/v1/projects",
+    #                 auth=())
+    # r.raise_for_status()
+    #        extra_context['kobo_access_token'] = request.session.get('kobo_access_token', None)
+    #        extra_context['kobo_client_id'] = settings.KOBO_CLIENT_ID
+    return render(request, 'survey_sources.html', {
+        'survey_id': survey_id,
+    })
