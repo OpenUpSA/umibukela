@@ -11,7 +11,9 @@ from .models import (
     CycleResultSet,
     Partner,
     Site,
-    Sector
+    Sector,
+    Survey,
+    SurveySource,
 )
 
 
@@ -262,6 +264,7 @@ def partner(request, partner_slug):
 
 
 def survey_sources(request, survey_id):
+    survey = Survey.objects.get(pk=survey_id)
     kobo_expiry = request.session.get('kobo_access_token_expiry', None)
     if not kobo_expiry or kobo_expiry <= datetime.utcnow().isoformat():
         return start_kobo_oauth(request)
@@ -271,19 +274,31 @@ def survey_sources(request, survey_id):
         }
         r = requests.get("https://kc.kobotoolbox.org/api/v1/forms",
                          headers=headers)
-        print r.text
         r.raise_for_status()
         forms = r.json()
 
-        if request.method == 'GET':
-            pass
-        else:
-            pass
+        if request.method == 'POST':
+            if request.POST['action'] == 'add':
+                formid = request.POST['form_id']
+                r = requests.get(
+                    "https://kc.kobotoolbox.org/api/v1/forms/%s" % formid,
+                    headers=headers)
+                r.raise_for_status()
+                form = r.json()
+                source = SurveySource(
+                    survey=survey,
+                    form_id=formid,
+                    name=form['description'],
+                    cached_form=form,
+                    cache_date=datetime.utcnow()
+                )
+                source.save()
 
         return render(request, 'survey_sources.html', {
+            'survey_name': survey.name,
             'survey_id': survey_id,
             'kobo_access_token_expiry': kobo_expiry,
-            'forms': forms,
+            'other_forms': forms,
         })
 
 
@@ -303,7 +318,6 @@ def kobo_oauth_return(request):
     r = requests.post("https://kc.kobotoolbox.org/o/token/",
                      params=payload,
                      auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
-    print r.text
     r.raise_for_status()
     request.session['kobo_access_token'] = r.json()['access_token']
     expiry_datetime = datetime.utcnow() + timedelta(seconds=r.json()['expires_in'])
