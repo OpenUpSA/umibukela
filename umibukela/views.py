@@ -6,6 +6,8 @@ import analysis
 import requests
 import settings
 from datetime import datetime, timedelta
+from deep_eq import deep_eq
+from copy import deepcopy
 
 from .models import (
     CycleResultSet,
@@ -316,12 +318,19 @@ def survey_sources_preview(request, survey_id):
         return start_kobo_oauth(request)
     else:
         survey = Survey.objects.get(pk=survey_id)
-        current_sources = survey.surveysource_set.all()
+        current_sources = list(survey.surveysource_set.all())
+        first_form = current_sources[0].cached_form
+        siteless_first = deepcopy(first_form)
+        for source in current_sources[1:]:
+            siteless_n = deepcopy(source.cached_form)
+            deep_eq(siteless_first, siteless_n, _assert=True)
+
         return render(request, 'survey_preview.html', {
             'survey_name': survey.name,
             'survey_id': survey_id,
             'kobo_access_token_expiry': request.session.get('kobo_access_token_expiry'),
             'current_sources': current_sources,
+            'form': first_form,
         })
 
 

@@ -1,0 +1,35 @@
+{% extends "admin/base_site.html" %}
+
+<body>
+  {% block object-tools %}
+  <h1>Preview</h1>
+  <h2>{{ survey_name }}</h2>
+  <div><a href="/admin/umibukela/survey/{{ survey_id }}/">Back to Survey</a></div>
+  <div><a href="/admin/umibukela/survey/{{ survey_id }}/preview">Preview Survey Sources</a></div>
+  <div>Kobo session expires {{ kobo_access_token_expiry }}</div>
+
+  <h3>Sources</h3>
+  <table>
+    {% for source in current_sources %}
+    <tr>
+      <td>{{ source.name }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <h3>Form</h3>
+  <ul>
+    {% for child in form.children %}
+    <li>{{ child.name }} - {{ child.hint }}
+      {% if child.type == 'select one' or child.type == 'select all that apply' or child.type == yes_no_group %}
+      <p>{{ child.type }}</p>
+      <ul>
+        {% for option in child.children %}
+        <li>{{ option.name }} - {{ option.label }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+</body>
