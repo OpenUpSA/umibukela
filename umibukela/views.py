@@ -5,6 +5,7 @@ import pandas
 import analysis
 import requests
 import settings
+from datetime import datetime, timedelta
 
 from .models import (
     CycleResultSet,
@@ -260,7 +261,7 @@ def partner(request, partner_slug):
     })
 
 
-def kobo_oauth(request):
+def kobo_oauth_return(request):
     state = request.GET.get('state')
     code = request.GET.get('code')
     payload = {
@@ -273,15 +274,34 @@ def kobo_oauth(request):
                      auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
     r.raise_for_status()
     request.session['kobo_access_token'] = r.json()['access_token']
+    expiry_datetime = datetime.utcnow() + timedelta(seconds=r.json()['expires_in'])
+    request.session['kobo_access_token_expiry'] = expiry_datetime.isoformat()
     return redirect(state)
 
 
 def survey_sources(request, survey_id):
-    # r = requests.get("https://kc.kobotoolbox.org/api/v1/projects",
-    #                 auth=())
-    # r.raise_for_status()
-    #        extra_context['kobo_access_token'] = request.session.get('kobo_access_token', None)
-    #        extra_context['kobo_client_id'] = settings.KOBO_CLIENT_ID
+    kobo_expiry = request.session.get('kobo_access_token_expiry', None)
+    if kobo_expiry and kobo_expiry > datetime.utcnow().isoformat():
+        # r = requests.get("https://kc.kobotoolbox.org/api/v1/projects",
+        #                 auth=())
+        # r.raise_for_status()
+        #extra_context['kobo_access_token'] =
+#        extra_context['kobo_client_id'] = settings.KOBO_CLIENT_ID
+        pass
+    else:
+        return start_kobo_oauth(request)
+
+    if request.method == 'GET':
+        pass
+    else:
+        pass
+
     return render(request, 'survey_sources.html', {
         'survey_id': survey_id,
+        'kobo_access_token_expiry': kobo_expiry,
     })
+
+
+def start_kobo_oauth(request):
+    state = request.path
+    return redirect("https://kc.kobotoolbox.org/o/authorize?client_id=%s&response_type=code&scope=read&state=%s" % (settings.KOBO_CLIENT_ID, state))
