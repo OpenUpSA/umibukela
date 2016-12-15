@@ -2,8 +2,10 @@
 
 <body>
   {% block object-tools %}
+  <h1>Sources</h1>
   <h2>{{ survey_name }}</h2>
   <div><a href="/admin/umibukela/survey/{{ survey_id }}/">Back to Survey</a></div>
+  <div><a href="/admin/umibukela/survey/{{ survey_id }}/preview">Preview Survey Sources</a></div>
   <div>Kobo session expires {{ kobo_access_token_expiry }}</div>
 
   <h3>Current sources</h3>
