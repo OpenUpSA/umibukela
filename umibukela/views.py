@@ -126,7 +126,7 @@ def survey_sources(request, survey_id):
         r = requests.get("https://kc.kobotoolbox.org/api/v1/forms",
                          headers=headers)
         r.raise_for_status()
-        forms = r.json()
+        available_forms = r.json()
 
         if request.method == 'POST':
             if request.POST['action'] == 'add':
@@ -144,12 +144,22 @@ def survey_sources(request, survey_id):
                     cache_date=datetime.utcnow()
                 )
                 source.save()
+            elif request.POST['action'] == 'delete':
+                source_id = request.POST['source_id']
+                source = SurveySource.objects.get(pk=source_id).delete()
+            else:
+                raise Exception()
+
+        current_sources = survey.surveysource_set.all()
+        current_form_ids = [x.form_id for x in current_sources]
+        other_forms = [x for x in available_forms if int(x['formid']) not in current_form_ids]
 
         return render(request, 'survey_sources.html', {
             'survey_name': survey.name,
             'survey_id': survey_id,
             'kobo_access_token_expiry': kobo_expiry,
-            'other_forms': forms,
+            'other_forms': other_forms,
+            'current_sources': current_sources,
         })
 
 

@@ -7,7 +7,20 @@
   <div>Kobo session expires {{ kobo_access_token_expiry }}</div>
 
   <h3>Current sources</h3>
-
+  <table>
+    {% for source in current_sources %}
+    <tr>
+      <td>{{ source.name }}</td>
+      <td>
+        <form method="post" action="{{ path }}">{% csrf_token %}
+          <input type="submit" value="Delete">
+          <input type="hidden" name="source_id" value="{{ source.id }}">
+          <input type="hidden" name="action" value="delete">
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
   <h3>Other available sources</h3>
   <table>
     {% for form in other_forms %}
