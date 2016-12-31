@@ -7,6 +7,7 @@ from django.contrib.gis.db import models as gis_models
 import jsonfield
 from django.utils import timezone
 from django.core.urlresolvers import reverse
+import settings
 
 import analysis
 
@@ -259,10 +260,23 @@ class AttachmentNature(models.Model):
         return self.name
 
 
+class FileField(models.FileField):
+    def __init__(self, *args, **kwargs):
+        super(FileField, self).__init__(*args, **kwargs)
+
+    @property
+    def size(self):
+        print "debugging?", settings.DEBUG
+        if settings.DEBUG:
+            return '1337kb'
+        else:
+            return super(FileField, self).size(self)
+
+
 class CycleResultSetAttachment(models.Model):
     cycle_result_set = models.ForeignKey(CycleResultSet, null=False, related_name='attachments')
     nature = models.ForeignKey(AttachmentNature, null=False)
-    file = models.FileField(upload_to=attachment_filename, null=False)
+    file = FileField(upload_to=attachment_filename, null=False)
 
     def __str__(self):
         return "%s -> %s (%s)" % (
