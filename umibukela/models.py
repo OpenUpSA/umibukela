@@ -34,6 +34,11 @@ def attachment_filename(instance, filename):
 class Sector(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
+    SASSA_PAYPOINT = 1
+    LOCAL_GOV = 2
+    HEALTH_CLINIC = 3
+    SASSA_SERVICE_OFFICE = 4
+
     def __str__(self):
         return self.name
 
