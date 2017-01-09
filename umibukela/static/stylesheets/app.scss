@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-// BOOTSTRAP VARIABLE OVERIDES 
+// BOOTSTRAP VARIABLE OVERIDES
 
 $icon-font-path: '../bower_components/bootstrap-sass/assets/fonts/bootstrap/';
 
@@ -129,3 +129,27 @@ $input-border-focus: transparent !default;
 @import "site.scss";
 @import "stats.scss";
 @import "healthe.scss";
+
+.response {
+  rect {
+    &.box {
+      border:1px dashed $black;
+      fill:transparent;
+      stroke: #111;
+      stroke-width: 1;
+      stroke-dasharray:2,3;
+    }
+  }
+
+  text {
+    fill: $black !important;
+
+    &.label {
+      font-weight:normal;
+      text-align:center;
+      text-anchor:middle;
+      alignment-baseline:central;
+      dominant-baseline:central;
+    }
+  }
+}

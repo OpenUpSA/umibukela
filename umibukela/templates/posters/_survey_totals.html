@@ -1,0 +1,23 @@
+
+<div class="totals-table">
+  <div class="row no-border text-medium">
+    <div class="col-xs-8"></div>
+    <div class="col-xs-2"><b>{{ result_set.cycle.end_date|date:'Y' }}</b></div>
+    <div class="col-xs-2"><b>{{ prev_date|date:'Y' }}</b></div>
+  </div>
+  <div class="row no-border text-large">
+    <div class="col-xs-8 heading text-uppercase">Participants:</div>
+    <div class="col-xs-2">{{ totals.current.total }}</div>
+    <div class="col-xs-2">{{ totals.previous.total }}</div>
+  </div>
+  <div class="row no-border">
+    <div class="col-xs-8 heading text-uppercase">Female:</div>
+    <div class="col-xs-2">{{ totals.current.female }}</div>
+    <div class="col-xs-2">{{ totals.previous.female }}</div>
+  </div>
+  <div class="row no-border">
+    <div class="col-xs-8 heading text-uppercase">Male:</div>
+    <div class="col-xs-2">{{ totals.current.male }}</div>
+    <div class="col-xs-2">{{ totals.previous.male }}</div>
+  </div>
+</div>
