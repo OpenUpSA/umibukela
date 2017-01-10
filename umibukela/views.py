@@ -6,8 +6,6 @@ import analysis
 import requests
 import settings
 from datetime import datetime, timedelta
-from deep_eq import deep_eq
-from copy import deepcopy
 
 from .models import (
     CycleResultSet,
@@ -15,7 +13,6 @@ from .models import (
     Site,
     Sector,
     Survey,
-    SurveySource,
 )
 
 
@@ -265,73 +262,93 @@ def partner(request, partner_slug):
     })
 
 
-def survey_sources(request, survey_id):
+def kobo_forms(request):
     if not is_kobo_authed(request):
         return start_kobo_oauth(request)
     else:
-        survey = Survey.objects.get(pk=survey_id)
         headers = {
             'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
         }
         r = requests.get("https://kc.kobotoolbox.org/api/v1/forms",
                          headers=headers)
         r.raise_for_status()
-        available_forms = r.json()
-
-        if request.method == 'POST':
-            if request.POST['action'] == 'add':
-                formid = request.POST['form_id']
-                r = requests.get(
-                    "https://kc.kobotoolbox.org/api/v1/forms/%s/form.json" % formid,
-                    headers=headers)
+        available_surveys = r.json()
+        surveys = []
+        for survey_json in available_surveys:
+            survey = {
+                'title': survey_json['title'],
+                'num_of_submissions': survey_json['num_of_submissions'],
+            }
+            if 'formid' in survey_json:
+                survey['kobo_survey_id'] = survey_json['formid']
+                r = requests.get("https://kc.kobotoolbox.org/api/v1/forms/%d/form.json" % survey_json['formid'],
+                                 headers=headers)
                 r.raise_for_status()
                 form = r.json()
-                source = SurveySource(
-                    survey=survey,
-                    form_id=formid,
-                    name=form['title'],
-                    cached_form=form,
-                    cache_date=datetime.utcnow()
-                )
-                source.save()
-            elif request.POST['action'] == 'delete':
-                source_id = request.POST['source_id']
-                source = SurveySource.objects.get(pk=source_id).delete()
-            else:
-                raise Exception()
-
-        current_sources = survey.surveysource_set.all()
-        current_form_ids = [x.form_id for x in current_sources]
-        other_forms = [x for x in available_forms if int(x['formid']) not in current_form_ids]
+                fields = form.get('children', [])
+                facility_fields = [c for c in fields if c.get('name', None) == 'facility']
+                print facility_fields
+                if facility_fields:
+                    survey['facilities'] = facility_fields[0]['children']
+            surveys.append(survey)
 
         return render(request, 'survey_sources.html', {
-            'survey_name': survey.name,
-            'survey_id': survey_id,
             'kobo_access_token_expiry': request.session.get('kobo_access_token_expiry'),
-            'other_forms': other_forms,
-            'current_sources': current_sources,
+            'forms': surveys,
         })
 
 
-def survey_sources_preview(request, survey_id):
+def survey_site_preview(request, kobo_survey_id, site_name):
     if not is_kobo_authed(request):
         return start_kobo_oauth(request)
     else:
-        survey = Survey.objects.get(pk=survey_id)
-        current_sources = list(survey.surveysource_set.all())
-        first_form = current_sources[0].cached_form
-        siteless_first = deepcopy(first_form)
-        for source in current_sources[1:]:
-            siteless_n = deepcopy(source.cached_form)
-            deep_eq(siteless_first, siteless_n, _assert=True)
+        print kobo_survey_id
+        print site_name
+        headers = {
+            'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
+        }
+        r = requests.get("https://kc.kobotoolbox.org/api/v1/forms/%s/form.json" % kobo_survey_id, headers=headers)
+        r.raise_for_status()
+        form = r.json()
+        r = requests.get("https://kc.kobotoolbox.org/api/v1/data/%s" % kobo_survey_id, headers=headers)
+        r.raise_for_status()
+        submissions = r.json()
+        site_responses = [s for s in submissions if s['facility'] == site_name]
+        print len(site_responses)
+        if site_responses:
+            df = pandas.DataFrame(site_responses)
+            site_totals = analysis.count_submissions(df)
+            site_results = analysis.count_options(df, form['children'])
+            site_results = analysis.calc_q_percents(site_results)
+            prev_results = None
+            analysis.combine_curr_hist(site_results, prev_results)
+        else:
+            site_totals = {'male': 0, 'female': 0, 'total': 0}
+            site_results = None
 
         return render(request, 'survey_preview.html', {
-            'survey_name': survey.name,
-            'survey_id': survey_id,
-            'kobo_access_token_expiry': request.session.get('kobo_access_token_expiry'),
-            'current_sources': current_sources,
-            'form': first_form,
+            'questions_dict': site_results,
+            'totals': site_totals,
         })
+
+
+def delete_what_may_differ(form):
+    del form['sms_keyword']
+    del form['id_string']
+    del form['name']
+    del form['title']
+    del form['version']
+
+    what_may_differ = (
+        'facility',
+        'sim_imei',
+        '__version__',
+    )
+    print
+    for c in form['children']:
+        print c.get('name', None)
+    children = [c for c in form['children'] if not c.get('name', None) in what_may_differ]
+    form['children'] = children
 
 
 def is_kobo_authed(request):

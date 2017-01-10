@@ -193,17 +193,6 @@ class Survey(models.Model):
         return self.name
 
 
-class SurveySource(models.Model):
-    survey = models.ForeignKey(Survey, null=False, blank=False)
-    form_id = models.IntegerField(unique=True, null=False, blank=False)
-    name = models.TextField(null=False, blank=False)
-    cached_form = jsonfield.JSONField(blank=False, null=False)
-    cache_date = models.DateField(null=False, blank=False)
-
-    def __str__(self):
-        return "%s - %s" % (self.name, self.form_id)
-
-
 class CycleResultSet(models.Model):
     """
     An entity representing the data collection cycle for a given site

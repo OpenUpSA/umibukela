@@ -1,35 +1,143 @@
-{% extends "admin/base_site.html" %}
+{% extends "layout.html" %}
+{% load pipeline static jsonify lookup markup_tags %}
 
-<body>
-  {% block object-tools %}
-  <h1>Preview</h1>
-  <h2>{{ survey_name }}</h2>
-  <div><a href="/admin/umibukela/survey/{{ survey_id }}/">Back to Survey</a></div>
-  <div><a href="/admin/umibukela/survey/{{ survey_id }}/preview">Preview Survey Sources</a></div>
-  <div>Kobo session expires {{ kobo_access_token_expiry }}</div>
+{% block title %}Results for {{ result_set.cycle.name }}{% endblock %}
+{% block description %}Results for {{ result_set.cycle.programme.name }} {{ result_set.cycle.name }} for {{result_set.site.name }}{% endblock %}
 
-  <h3>Sources</h3>
-  <table>
-    {% for source in current_sources %}
-    <tr>
-      <td>{{ source.name }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-  <h3>Form</h3>
-  <ul>
-    {% for child in form.children %}
-    <li>{{ child.name }} - {{ child.hint }}
-      {% if child.type == 'select one' or child.type == 'select all that apply' or child.type == yes_no_group %}
-      <p>{{ child.type }}</p>
-      <ul>
-        {% for option in child.children %}
-        <li>{{ option.name }} - {{ option.label }}</li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-    </li>
-    {% endfor %}
-  </ul>
+{% block js %}
+{{ block.super }}
+<script type="application/javascript">
+  questions = {{ results.questions_dict|jsonify }};
+</script>
+{% javascript "site" %}
 {% endblock %}
-</body>
+
+{% block page-content %}
+
+<!-- breadcrumbs -->
+<div class="container breadcrumb-container">
+</div>
+<!-- /breadcrumbs -->
+
+<div class="section cycle-results">
+
+  <div class="stat-table stat-overview page-section">
+    <div class="container">
+      <section class="row">
+        <div class="col-sm-4">
+          <div class="stat stat-number">
+            <div class="value">{{ results.totals.total }}</div>
+            <div class="name">Participants</div>
+          </div>
+        </div>
+
+        <div class="col-sm-4">
+          <div class="stat stat-number">
+            <div class="value">{{ results.totals.female }}</div>
+            <div class="name">Female</div>
+          </div>
+        </div>
+
+        <div class="col-sm-4">
+          <div class="stat stat-number">
+            <div class="value">{{ results.totals.male }}</div>
+            <div class="name">Male</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="stat-table page-section">
+      {% for question_key in results.questions_dict.keys %}
+      {% with question=results.questions_dict|get:question_key %}
+      {% if question.options|length <= 3 %}
+      <section class="row stat-row">
+        <div class="col-sm-4">
+          <h3>
+            {% with group_count=question.group_labels|length %}
+            {% if group_count > 0 %}
+            {{ question.group_labels | join:" - " }} -
+            {% endif %}
+            {% endwith %}
+            {{ question.label }}
+          </h3>
+        </div>
+        {% for option in question.options %}
+        {% if forloop.counter0 == 0 %}
+        <div class="col-sm-2">
+          <h5>Female</h5>
+          <div class="stat stat-number">
+            <div class="value">{{ option.current.pct.female|floatformat }}%</div>
+            <div class="name">{{ option.current.label }}</div>
+            {% if option.prev %}
+            <div class="context">
+              <strong>
+                {% if option.prev.pct.female > option.current.pct.female %} Down
+                {% else %} Up
+                {% endif %}
+                from {{ option.prev.pct.female|floatformat }}%
+              </strong> in the previous cycle</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <div class="chart chart-column" data-indicator="{{ question.key }}:female"></div>
+        </div>
+
+        <div class="col-sm-2">
+          <h5>Male</h5>
+          <div class="stat stat-number">
+            <div class="value">{{ option.current.pct.male|floatformat }}%</div>
+            <div class="name">{{ option.current.label }}</div>
+            {% if option.prev %}
+            <div class="context">
+              <strong>
+                {% if option.prev.pct.male > option.current.pct.male %} Down
+                {% else %} Up
+                {% endif %}
+                from {{ option.prev.pct.male|floatformat }}%
+              </strong> in the previous cycle</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <div class="chart chart-column" data-indicator="{{ question.key }}:male"></div>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </section>
+      {% else %}
+      <section class="row stat-row">
+        <div class="col-sm-4">
+          <h3>
+            {% with group_count=question.group_labels|length %}
+            {% if group_count > 0 %}
+            {{ question.group_labels | join:" - " }} -
+            {% endif %}
+            {% endwith %}
+            {{ question.label }}
+          </h3>
+        </div>
+
+        <div class="col-sm-4">
+          <h5>Female</h5>
+          <div class="chart chart-bar" data-indicator="{{ question.key }}:female"></div>
+        </div>
+
+        <div class="col-sm-4">
+          <h5>Male</h5>
+          <div class="chart chart-bar" data-indicator="{{ question.key }}:male"></div>
+        </div>
+      </section>
+      {% endif %}
+      {% endwith %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
