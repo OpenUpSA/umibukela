@@ -331,6 +331,7 @@ def survey_site_preview(request, kobo_survey_id, site_name):
                     site_label = option['label']
         return render(request, 'survey_preview.html', {
             'site_name': site_label,
+            'form_title': form['title'],
             'results': {
                 'questions_dict': site_results,
                 'totals': site_totals,
