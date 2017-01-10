@@ -165,6 +165,7 @@ def survey_site_preview(request, kobo_survey_id, site_name):
         r.raise_for_status()
         submissions = r.json()
         site_responses = [s for s in submissions if s['facility'] == site_name]
+        site_responses = field_per_SATA_option(form, site_responses)
         print len(site_responses)
         if site_responses:
             df = pandas.DataFrame(site_responses)
@@ -176,30 +177,34 @@ def survey_site_preview(request, kobo_survey_id, site_name):
         else:
             site_totals = {'male': 0, 'female': 0, 'total': 0}
             site_results = None
-
+        print site_results
+        print site_totals
         return render(request, 'survey_preview.html', {
-            'questions_dict': site_results,
-            'totals': site_totals,
+            'results': {
+                'questions_dict': site_results,
+                'totals': site_totals,
+            }
         })
 
 
-def delete_what_may_differ(form):
-    del form['sms_keyword']
-    del form['id_string']
-    del form['name']
-    del form['title']
-    del form['version']
+def field_per_SATA_option(form, submissions):
+    SATAs = [q for q in form['children'] if q['type'] == 'select all that apply']
+    for SATA in SATAs:
+        vals = [o['name'] for o in SATA['children']]
+        submissions = map(
+            lambda x: set_select_all_that_apply_fields(x, SATA['name'], vals),
+            submissions
+        )
+    return submissions
 
-    what_may_differ = (
-        'facility',
-        'sim_imei',
-        '__version__',
-    )
-    print
-    for c in form['children']:
-        print c.get('name', None)
-    children = [c for c in form['children'] if not c.get('name', None) in what_may_differ]
-    form['children'] = children
+
+def set_select_all_that_apply_fields(dict, q_key, possible_vals):
+    for val in possible_vals:
+        dict['/'.join([q_key, val])] = 'False'
+    for val in dict[q_key].split(','):
+        dict['/'.join([q_key, val])] = 'True'
+    del dict[q_key]
+    return dict
 
 
 def is_kobo_authed(request):

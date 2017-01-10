@@ -2,38 +2,21 @@
 
 <body>
   {% block object-tools %}
-  <h1>Sources</h1>
-  <h2>{{ survey_name }}</h2>
-  <div><a href="/admin/umibukela/survey/{{ survey_id }}/">Back to Survey</a></div>
-  <div><a href="/admin/umibukela/survey/{{ survey_id }}/preview">Preview Survey Sources</a></div>
+  <h1>Kobo Forms</h1>
   <div>Kobo session expires {{ kobo_access_token_expiry }}</div>
 
-  <h3>Current sources</h3>
-  <table>
-    {% for source in current_sources %}
-    <tr>
-      <td>{{ source.name }}</td>
-      <td>
-        <form method="post" action="{{ path }}">{% csrf_token %}
-          <input type="submit" value="Delete">
-          <input type="hidden" name="source_id" value="{{ source.id }}">
-          <input type="hidden" name="action" value="delete">
-        </form>
-      </td>
-    </tr>
-    {% endfor %}
-  </table>
   <h3>Other available sources</h3>
   <table>
-    {% for form in other_forms %}
+    {% for form in forms %}
     <tr>
       <td>{{ form.title }}</td>
+      <td>{{ form.num_of_submissions }}</td>
       <td>
-        <form method="post" action="{{ path }}">{% csrf_token %}
-          <input type="submit" value="Add">
-          <input type="hidden" name="form_id" value="{{ form.formid }}">
-          <input type="hidden" name="action" value="add">
-        </form>
+        <ul>
+          {% for facility in form.facilities %}
+          <li><a href="/admin/umibukela/kobo_survey/{{ form.kobo_survey_id }}/site/{{ facility.name }}/preview">{{ facility.label }}</a></li>
+          {% endfor %}
+        </ul>
       </td>
     </tr>
     {% endfor %}
