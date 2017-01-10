@@ -302,8 +302,6 @@ def survey_site_preview(request, kobo_survey_id, site_name):
     if not is_kobo_authed(request):
         return start_kobo_oauth(request)
     else:
-        print kobo_survey_id
-        print site_name
         headers = {
             'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
         }
@@ -315,7 +313,7 @@ def survey_site_preview(request, kobo_survey_id, site_name):
         submissions = r.json()
         site_responses = [s for s in submissions if s['facility'] == site_name]
         site_responses = field_per_SATA_option(form, site_responses)
-        print len(site_responses)
+
         if site_responses:
             df = pandas.DataFrame(site_responses)
             site_totals = analysis.count_submissions(df)
@@ -326,9 +324,13 @@ def survey_site_preview(request, kobo_survey_id, site_name):
         else:
             site_totals = {'male': 0, 'female': 0, 'total': 0}
             site_results = None
-        print site_results
-        print site_totals
+
+        for q in form['children']:
+            for option in q.get('children', []):
+                if option['name'] == site_name:
+                    site_label = option['label']
         return render(request, 'survey_preview.html', {
+            'site_name': site_label,
             'results': {
                 'questions_dict': site_results,
                 'totals': site_totals,

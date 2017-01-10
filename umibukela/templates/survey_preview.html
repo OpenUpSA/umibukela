@@ -1,8 +1,7 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
 {% load pipeline static jsonify lookup markup_tags %}
 
-{% block title %}Results for {{ result_set.cycle.name }}{% endblock %}
-{% block description %}Results for {{ result_set.cycle.programme.name }} {{ result_set.cycle.name }} for {{result_set.site.name }}{% endblock %}
+{% block title %}Results for {{ site_name }}{% endblock %}
 
 {% block js %}
 {{ block.super }}
@@ -11,13 +10,23 @@
 </script>
 {% javascript "site" %}
 {% endblock %}
+{% block content %}
 
 {% block page-content %}
+    <div class="page-content">
+      <div class="wrapper">
 
-<!-- breadcrumbs -->
-<div class="container breadcrumb-container">
-</div>
-<!-- /breadcrumbs -->
+<div class="section cycle-results">
+  <!-- section-header -->
+  <div class="section-heading cycle-results-heading">
+    <div class="container">
+      <h3><i class="fa fa-bar-chart-o"></i> Results Preview</h3>
+
+      <h1>{{ site_name }}</h1>
+
+    </div>
+  </div>
+  <!-- /section-header -->
 
 <div class="section cycle-results">
 
@@ -139,5 +148,8 @@
     </div>
   </div>
 </div>
+      </div>
+    </div>
 
+{% endblock %}
 {% endblock %}
