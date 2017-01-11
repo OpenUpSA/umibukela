@@ -7,18 +7,19 @@
 
   <h3>Other available sources</h3>
   <table>
+    <tr><th>Form</th><th>No of responses</th><th>Facility name</th><tr>
     {% for form in forms %}
+    {% for facility in form.facilities %}
     <tr>
-      <td>{{ form.title }}</td>
-      <td>{{ form.num_of_submissions }}</td>
-      <td>
-        <ul>
-          {% for facility in form.facilities %}
-          <li><a href="/admin/umibukela/kobo_survey/{{ form.kobo_survey_id }}/site/{{ facility.name }}/preview">{{ facility.label }}</a></li>
-          {% endfor %}
+      {% if forloop.first %}
+      <td rowspan="{{ form.facilities|length }}">{{ form.title }}</td>
+      <td rowspan="{{ form.facilities|length }}">{{ form.num_of_submissions }}</td>
+      {% endif %}
+      <td><a href="/admin/umibukela/kobo_survey/{{ form.kobo_survey_id }}/site/{{ facility.name }}/preview">{{ facility.label }}</a></li>
         </ul>
       </td>
     </tr>
+    {% endfor %}
     {% endfor %}
   </table>
 {% endblock %}
