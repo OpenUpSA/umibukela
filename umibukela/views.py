@@ -138,7 +138,6 @@ def kobo_forms(request):
                 form = r.json()
                 fields = form.get('children', [])
                 facility_fields = [c for c in fields if c.get('name', None) in ('facility', 'site')]
-                print facility_fields
                 if facility_fields:
                     survey['facilities'] = facility_fields[0]['children']
             surveys.append(survey)
