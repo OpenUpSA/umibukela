@@ -1,10 +1,14 @@
-from django.shortcuts import render, redirect
+from datetime import datetime, timedelta
 from django.shortcuts import get_object_or_404
-import pandas
+from django.shortcuts import render, redirect
+from django.views.generic.base import TemplateView
+from wkhtmltopdf.utils import wkhtmltopdf
+from wkhtmltopdf.views import PDFResponse
 import analysis
+import pandas
 import requests
 import settings
-from datetime import datetime, timedelta
+import unicodedata
 
 from .models import (
     CycleResultSet,
@@ -148,16 +152,53 @@ def kobo_forms(request):
         })
 
 
-def survey_site_preview(request, kobo_survey_id, site_name):
-    if not is_kobo_authed(request):
-        return start_kobo_oauth(request)
-    else:
+class SurveySitePreviewPDF(TemplateView):
+    def get(self, request, *args, **kwargs):
+        if is_kobo_authed(request):
+            kobo_survey_id = kwargs.get('kobo_survey_id')
+            site_name = kwargs.get('site_name')
+            headers = {
+                'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
+            }
+            r = requests.get("https://kc.kobotoolbox.org/api/v1/forms/%s/form.json" % kobo_survey_id, headers=headers)
+            r.raise_for_status()
+            form = r.json()
+            for q in form['children']:
+                for option in q.get('children', []):
+                    if option['name'] == site_name:
+                        site_label = option['label']
+
+            # render as pdf
+            url = request.build_absolute_uri('preview.pdf')
+            pdf = wkhtmltopdf(url, zoom=0.7)
+            filename = '%s - %s.pdf' % (form['title'], site_label)
+            filename = unicodedata.normalize('NFKD', filename).encode('ascii','ignore')
+            return PDFResponse(pdf, filename=filename)
+        else:
+            return start_kobo_oauth(request)
+
+
+class SurveySitePreview(TemplateView):
+    template_name = 'survey_preview.html'
+
+    def dispatch(self, *args, **kwargs):
+        request = self.request
+        if is_kobo_authed(request):
+            return super(SurveySitePreview, self).dispatch(*args, **kwargs)
+        else:
+            return start_kobo_oauth(request)
+
+    def get_context_data(self, *args, **kwargs):
+        request = self.request
+        kobo_survey_id = kwargs.get('kobo_survey_id')
+        site_name = kwargs.get('site_name')
         headers = {
             'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
         }
         r = requests.get("https://kc.kobotoolbox.org/api/v1/forms/%s/form.json" % kobo_survey_id, headers=headers)
         r.raise_for_status()
         form = r.json()
+        map_question_names(form)
         r = requests.get("https://kc.kobotoolbox.org/api/v1/data/%s" % kobo_survey_id, headers=headers)
         r.raise_for_status()
         submissions = r.json()
@@ -179,14 +220,23 @@ def survey_site_preview(request, kobo_survey_id, site_name):
             for option in q.get('children', []):
                 if option['name'] == site_name:
                     site_label = option['label']
-        return render(request, 'survey_preview.html', {
+        return {
             'site_name': site_label,
             'form_title': form['title'],
             'results': {
                 'questions_dict': site_results,
                 'totals': site_totals,
             }
-        })
+        }
+
+
+def map_question_names(form):
+    names = {
+        'Please_select_your_gender': 'gender'
+    }
+    for q in form.get('children', []):
+        if q.get('name', None) in names:
+            q['name'] = names[q['name']]
 
 
 def field_per_SATA_option(form, submissions):

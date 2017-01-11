@@ -32,7 +32,8 @@ class AdminSite(AdminSite):
         urls = super(AdminSite, self).get_urls()
         urls = [
             url(r'^umibukela/kobo_forms$', self.admin_view(views.kobo_forms)),
-            url(r'^umibukela/kobo_survey/(?P<kobo_survey_id>\d+)/site/(?P<site_name>\w+)/preview$', self.admin_view(views.survey_site_preview)),
+            url(r'^umibukela/kobo_survey/(?P<kobo_survey_id>\d+)/site/(?P<site_name>[\w-]+)/preview$', self.admin_view(views.SurveySitePreview.as_view())),
+            url(r'^umibukela/kobo_survey/(?P<kobo_survey_id>\d+)/site/(?P<site_name>[\w-]+)/preview.pdf$', self.admin_view(views.SurveySitePreviewPDF.as_view())),
         ] + urls
         return urls
 
