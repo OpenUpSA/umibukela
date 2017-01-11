@@ -137,7 +137,7 @@ def kobo_forms(request):
                 r.raise_for_status()
                 form = r.json()
                 fields = form.get('children', [])
-                facility_fields = [c for c in fields if c.get('name', None) == 'facility']
+                facility_fields = [c for c in fields if c.get('name', None) in ('facility', 'site')]
                 print facility_fields
                 if facility_fields:
                     survey['facilities'] = facility_fields[0]['children']
@@ -162,7 +162,7 @@ def survey_site_preview(request, kobo_survey_id, site_name):
         r = requests.get("https://kc.kobotoolbox.org/api/v1/data/%s" % kobo_survey_id, headers=headers)
         r.raise_for_status()
         submissions = r.json()
-        site_responses = [s for s in submissions if s['facility'] == site_name]
+        site_responses = [s for s in submissions if s.get('facility', s.get('site', None)) == site_name]
         site_responses = field_per_SATA_option(form, site_responses)
 
         if site_responses:
