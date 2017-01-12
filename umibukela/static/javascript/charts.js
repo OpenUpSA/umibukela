@@ -616,7 +616,7 @@ Umibukela.Poster = function() {
           .attr('x', width - 67)
           .attr('fill',self.BLACK)
           .attr('font-size','10px')
-          .text(function(d) { console.log (d); return d; });
+          .text(function(d) { return d; });
 
         svg.append('image')
           .attr('xlink:href','/static/img/man-icon.png')
@@ -664,56 +664,54 @@ Umibukela.Poster = function() {
     },
     typeFour: function(options) {
       var responses = options.responses;
-      var data= [];
+      var data = [];
+      var response = options.el;
 
       data.push({
-        type: 'affiliated', 
+        type: 'Affiliated', 
         total: 0
       });
 
       data.push({
-        type: 'unaffiliated', 
+        type: 'Not affiliated', 
         total: 0
       });
-
-      var affiliatedTotal = data[0].total;
-      var unaffiliatedTotal = data[1].total;
 
       responses.forEach(function(response){
         if(response.current) {
           if(response.current.key != 'none') {
-            affiliatedTotal += response.current.male;
-            affiliatedTotal += response.current.female;
+            data[0].total += response.current.count.male;
+            data[0].total += response.current.count.female;
           } else {
-            unaffiliatedTotal += response.current.male;
-            unaffiliatedTotal += response.current.female;
+            data[1].total += response.current.count.male;
+            data[1].total += response.current.count.female;
           }
         }
 
       })
 
-      var width = 800,
-        height = 250,
-        radius = Math.min(width, height) / 2;
+      var width = 300,
+        height = 300,
+        radius = Math.min(width, height) / 3;
 
       var color = d3.scaleOrdinal()
-        .range(["#98abc5", "#8a89a6"]);
+        .range([self.ORANGE, self.BLACK]);
 
       var arc = d3.arc()
         .outerRadius(radius - 10)
-        .innerRadius(radius - 70);
+        .innerRadius(0);
 
       var pie = d3.pie()
         .sort(null)
         .value(function (d) {
-        return d.totalCrimes;
+        return d.total;
       });
 
-      var svg = d3.select(".response").append("svg")
+      var svg = response.append('svg')
         .attr("width", width)
         .attr("height", height)
         .append("g")
-        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+        .attr("transform", "translate(" + width / 2 + "," + height / 3 + ")");
 
         var g = svg.selectAll(".arc")
           .data(pie(data))
@@ -723,18 +721,56 @@ Umibukela.Poster = function() {
         g.append("path")
           .attr("d", arc)
           .style("fill", function (d) {
-          return color(d.data.crimeType);
+          return color(d.data.type);
         });
 
         g.append("text")
           .attr("transform", function (d) {
-          return "translate(" + arc.centroid(d) + ")";
+            return "translate(-103,160)";
         })
           .attr("dy", ".35em")
           .style("text-anchor", "middle")
-          .text(function (d) {
-          return d.data.crimeType;
+          .text(function(d) { return d.data.type == 'Affiliated' ? d.data.total : '';
         });
+
+        g.append("text")
+          .attr("transform", function (d) {
+          return "translate(19,160)";
+        })
+          .attr("dy", ".35em")
+          .style("text-anchor", "middle")
+          .text(function(d) { 
+          return d.data.type == 'Not affiliated' ? d.data.total : '';
+        });
+
+        var legend = svg.append('g')
+          .attr('class','legend');
+
+        legend.append('rect')
+          .attr('fill',self.ORANGE)
+          .attr('height',26)
+          .attr('width',26)
+          .attr('y',120)
+          .attr('x', -115);
+
+        legend.append('rect')
+          .attr('fill',self.BLACK)
+          .attr('height',26)
+          .attr('width',26)
+          .attr('y',120)
+          .attr('x', 8);
+
+        legend.append('text')
+          .attr('y',138)
+          .attr('x', -85)
+          .attr('font-size','11px')
+          .text('AFFILIATED');
+
+        legend.append('text')
+          .attr('y',138)
+          .attr('x', 38)
+          .attr('font-size','11px')
+          .text('NOT AFFILIATED');
     }
   }
 
