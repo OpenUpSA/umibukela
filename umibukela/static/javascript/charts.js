@@ -704,7 +704,7 @@ Umibukela.Poster = function() {
       var pie = d3.pie()
         .sort(null)
         .value(function (d) {
-        return d.total;
+          return d.total;
       });
 
       var svg = response.append('svg')
@@ -721,7 +721,7 @@ Umibukela.Poster = function() {
         g.append("path")
           .attr("d", arc)
           .style("fill", function (d) {
-          return color(d.data.type);
+            return color(d.data.type);
         });
 
         g.append("text")
@@ -730,17 +730,18 @@ Umibukela.Poster = function() {
         })
           .attr("dy", ".35em")
           .style("text-anchor", "middle")
-          .text(function(d) { return d.data.type == 'Affiliated' ? d.data.total : '';
+          .text(function(d) { 
+            return d.data.type == 'Affiliated' ? d.data.total : '';
         });
 
         g.append("text")
           .attr("transform", function (d) {
-          return "translate(19,160)";
+            return "translate(19,160)";
         })
           .attr("dy", ".35em")
           .style("text-anchor", "middle")
           .text(function(d) { 
-          return d.data.type == 'Not affiliated' ? d.data.total : '';
+            return d.data.type == 'Not affiliated' ? d.data.total : '';
         });
 
         var legend = svg.append('g')
@@ -771,6 +772,17 @@ Umibukela.Poster = function() {
           .attr('x', 38)
           .attr('font-size','11px')
           .text('NOT AFFILIATED');
+
+        var table = svg.append('g')
+          .attr('class','table');
+
+        table.append('text')
+          .attr('y',138)
+          .attr('x', 38)
+          .attr('font-size','11px')
+          .text(function(d) { 
+            return console.log(data.total); data.total ;
+          });
     }
   }
 
