@@ -251,9 +251,11 @@ def field_per_SATA_option(form, submissions):
 
 
 def set_select_all_that_apply_fields(dict, q_key, possible_vals):
+    if q_key not in dict:
+        dict[q_key] = 'False'
     for val in possible_vals:
         dict['/'.join([q_key, val])] = 'False'
-    for val in dict[q_key].split(','):
+    for val in dict[q_key].split(' '):
         dict['/'.join([q_key, val])] = 'True'
     del dict[q_key]
     return dict
