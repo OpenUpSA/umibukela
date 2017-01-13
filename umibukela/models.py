@@ -218,6 +218,7 @@ class CycleResultSet(models.Model):
     action_items = models.TextField(null=True, blank=True, help_text="Key challenges identified for improvement. Markdown allowed.")
     follow_up_date = models.DateField(null=True, blank=True, help_text="Date when follow up check was performed")
     follow_up = models.TextField(null=True, blank=True, help_text="Follow ups to key challenges. Markdown allowed.")
+    published = models.BooleanField(null=False, blank=False, help_text="Whether the results may be listed publicly with the assumption that it's somewhat validated", default=False)
 
     class Meta:
         unique_together = ('cycle', 'site', 'survey_type')
