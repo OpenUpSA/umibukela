@@ -108,7 +108,10 @@ class Site(models.Model):
         return result_sets[0] if result_sets else None
 
     def completed_result_sets(self):
-        result_sets = list(self.cycle_result_sets.filter(cycle__end_date__lte=timezone.now()).all())
+        result_sets = list(self.cycle_result_sets.filter(
+            cycle__end_date__lte=timezone.now(),
+            published=True
+        ).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
         return result_sets
 
@@ -231,6 +234,7 @@ class CycleResultSet(models.Model):
             cycle__end_date__lte=self.cycle.start_date,
             site__exact=self.site,
             survey_type=self.survey_type,
+            published=True
         ).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp)
         result_sets.reverse()
