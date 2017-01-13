@@ -14,7 +14,8 @@
       <td>
         <form action="/admin/umibukela/survey_from_kobo" method="post">
           <input type="submit" value="Add">
-          <input type="hidden" name="form_id" value="{{ form.kobo_survey_id }}">
+          <input type="hidden" name="form_id" value="{{ form.formid }}">
+          {% csrf_token %}
         </form>
       </td>
     </tr>

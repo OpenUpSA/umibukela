@@ -121,13 +121,23 @@ def survey_from_kobo(request):
         headers = {
             'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
         }
-        r = requests.get("https://kc.kobotoolbox.org/api/v1/forms",
-                         headers=headers)
-        r.raise_for_status()
-        available_surveys = r.json()
-        return render(request, 'survey_from_kobo.html', {
-            'forms': available_surveys,
-        })
+        if request.method == 'POST':
+            form_id = request.POST['form_id']
+            r = requests.get("https://kc.kobotoolbox.org/api/v1/forms/%s/form.json" % form_id,
+                             headers=headers)
+            r.raise_for_status()
+            form = r.json()
+            survey = Survey(name=form['title'], form=r.text)
+            survey.save()
+            return redirect('/admin/umibukela/survey/%d' % survey.id)
+        else:
+            r = requests.get("https://kc.kobotoolbox.org/api/v1/forms",
+                             headers=headers)
+            r.raise_for_status()
+            available_surveys = r.json()
+            return render(request, 'survey_from_kobo.html', {
+                'forms': available_surveys,
+            })
 
 
 def kobo_forms(request):
