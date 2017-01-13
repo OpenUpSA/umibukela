@@ -118,10 +118,14 @@ def count_options(submissions, children, path=None, group_labels=None, results=N
         elif child.get('type') == 'group' and child['name'] in SKIP_GROUP_NAMES:
             pass
         elif child.get('type') == 'group':
-            deeper_group_labels = group_labels + [child['label']]
+            deeper_group_labels = group_labels + [child.get('label', child['name'])]
             results = count_options(submissions, child['children'],
                                     deeper_path, deeper_group_labels, results)
         elif child.get('type') == 'select one':
+            control = child.get('control', None)
+            if control:
+                if control.get('appearance') == 'label':
+                    continue
             question = SelectOne(child, path, group_labels)
             results = count_select_one(submissions, question, results)
         elif child.get('type') == 'select all that apply':

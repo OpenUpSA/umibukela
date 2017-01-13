@@ -312,6 +312,7 @@ def survey_site_preview(request, kobo_survey_id, site_name):
         submissions = r.json()
         site_responses = [s for s in submissions if s.get('facility', s.get('site', None)) == site_name]
         site_responses = field_per_SATA_option(form, site_responses)
+        map_questions(form, site_responses)
 
         if site_responses:
             df = pandas.DataFrame(site_responses)
@@ -336,6 +337,25 @@ def survey_site_preview(request, kobo_survey_id, site_name):
                 'totals': site_totals,
             }
         })
+
+
+def map_questions(form, submissions):
+    wrong_name = 'Select_your_gender'
+    for i, q in enumerate(form.get('children', [])):
+        if q.get('name', None) == wrong_name:
+            q['name'] = 'gender'
+            form['children'].append({
+                "label": "Some questions about you",
+                "type": "group",
+                "children": [q],
+                "name": "demographics_group"
+            })
+            del form['children'][i]
+            for s in submissions:
+                s['demographics_group/gender'] = s[wrong_name]
+                del s[wrong_name]
+                print s['demographics_group/gender']
+            break
 
 
 def field_per_SATA_option(form, submissions):
