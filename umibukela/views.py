@@ -114,6 +114,22 @@ def partner(request, partner_slug):
     })
 
 
+def survey_from_kobo(request):
+    if not is_kobo_authed(request):
+        return start_kobo_oauth(request)
+    else:
+        headers = {
+            'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
+        }
+        r = requests.get("https://kc.kobotoolbox.org/api/v1/forms",
+                         headers=headers)
+        r.raise_for_status()
+        available_surveys = r.json()
+        return render(request, 'survey_from_kobo.html', {
+            'forms': available_surveys,
+        })
+
+
 def kobo_forms(request):
     if not is_kobo_authed(request):
         return start_kobo_oauth(request)
