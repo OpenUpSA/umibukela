@@ -546,9 +546,10 @@ Umibukela.Poster = function() {
       var female_data = [];
       var labels = [];
       var height = options.height;
-      var width = 280; // 370
-      var gutter = 40;
-      var colWidth = (width - gutter) / 2;
+      var width = options.width; // 370
+      var margin = options.margin;
+      var gutter = 20;
+      var colHeight = (height - gutter - margin.bottom) / 2;
       var optionTypes = options.optionTypes;
       var optionKeys = Object.keys(options.responses[0]);
       var labels = [];
@@ -559,30 +560,29 @@ Umibukela.Poster = function() {
       var colorMale = self.colorMale;
       var colorFemale = self.colorFemale;
       var orange = self.ORANGE;
-      var margin = options.margin;
-      var figureHeight = options.figureHeight;
-      var widthCoefficient = 0.8
-      optionTypes.reverse();
+      var figureHeight = height * 0.8;
+      var widthCoefficient = 0.8;
 
       for(var i=0;i < optionKeys.length;i++) {
-        var type = optionKeys[i];
+        var period = optionKeys[i];
 
-        male_data.push({ type: type, year: type == 'current' ? years[1] : years[0] });
-        female_data.push({ type: type, year: type == 'current' ? years[1] : years[0] });
+        male_data.push({ period: period, year: period == 'current' ? years[1] : years[0] });
+        female_data.push({ period: period, year: period == 'current' ? years[1] : years[0] });
       }
 
       male_data.reverse();
       female_data.reverse();
 
       responses.forEach(function(response) {
-        for(type in response) {
-          var male_datum = male_data.find(function(item) { return item.type == type });
-          var female_datum = female_data.find(function(item) { return item.type == type });
+        console.log(response);
+        for(period in response) {
+          var male_datum = male_data.find(function(item) { return item.period == period });
+          var female_datum = female_data.find(function(item) { return item.period == period });
 
-          if(response[type].key) labels.push(response[type].key);
+          if(response[period].key) labels.push(response[period].key);
 
-          male_datum[response[type].label.toLowerCase()] = response[type].count.male;
-          female_datum[response[type].label.toLowerCase()] = response[type].count.female;
+          male_datum[response[period].label.toLowerCase()] = response[period].count.male;
+          female_datum[response[period].label.toLowerCase()] = response[period].count.female;
         }
       });
 
@@ -598,21 +598,20 @@ Umibukela.Poster = function() {
 
       var y = d3.scaleBand()
         .domain(optionTypes)
-        .rangeRound([0, colWidth])
-        .padding(0.2);
+        .rangeRound([0, colHeight])
+        .paddingInner(0.1);
       var x = d3.scaleLinear()
         .domain([0, max])
         .range([0, width]);
       var z = d3.scaleOrdinal()
         .domain(labels)
         .range(['#00000',orange]);
-
       var female_stack = d3.stack().keys(labels)(female_data);
       var male_stack = d3.stack().keys(labels)(male_data);
 
       var svg = response.append('svg')
-        .attr('height', 140)
-        .attr('width', width + margin.left + margin.right + 35)
+        .attr('height', height)
+        .attr('width', width + margin.left + margin.right)
       .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
@@ -626,20 +625,20 @@ Umibukela.Poster = function() {
           .data(function(d) { return d; })
         .enter().append('rect')
           .attr('y', function(d) {
-            var type = d.data.type;
+            var period = d.data.period;
             var shift = 0;
 
-            if(type == 'current') shift = 35;
+            if(period != 'current') shift = .7 * y.bandwidth();
 
-            return gutter - shift;
+            return y(d.data.period) + shift;
           })
           .attr('x', function(d) { return x(d[0]) * widthCoefficient + 35; })
           .attr('width', function(d) { return Math.abs(x(d[1]) - x(d[0])) * widthCoefficient })
           .attr('height', function(d) {
-            var type = d.data.type;
-            var coefficient = type == 'current' ? 30 : 10;
+            var period = d.data.period;
+            var coefficient = period == 'current' ? 1.7 : .3;
 
-            return coefficient;
+            return y.bandwidth() * coefficient;
           });
 
       female.selectAll('text.count')
@@ -650,7 +649,7 @@ Umibukela.Poster = function() {
           .attr('y', 0 )
           .attr('fill',self.BLACK)
           .attr('font-size','10px')
-          .text(function(d) { return d.data.type == 'current' ? d[1] - d[0] : ''; });
+          .text(function(d) { return d.data.period == 'current' ? d[1] - d[0] : ''; });
 
       female.selectAll('text.year')
           .data(years)
@@ -672,20 +671,20 @@ Umibukela.Poster = function() {
           .data(function(d) { return d; })
         .enter().append('rect')
           .attr('y', function(d) {
-            var type = d.data.type;
-            var shift = -70;
+            var period = d.data.period;
+            var shift = 0;
 
-            if(type == 'current') shift = -35;
+            if(period != 'current') shift = .9 * y.bandwidth();
 
-            return gutter - shift;
+            return y(d.data.period) + shift + colHeight + gutter;
           })
           .attr('x', function(d) { return x(d[0]) * widthCoefficient + 35; })
           .attr('width', function(d) { return Math.abs(x(d[1]) - x(d[0])) * widthCoefficient })
           .attr('height', function(d) {
-            var type = d.data.type;
-            var coefficient = type == 'current' ? 30 : 10;
+            var period = d.data.period;
+            var coefficient = period == 'current' ? 1.9 : .1;
 
-            return coefficient;
+            return y.bandwidth()  * coefficient;
           });
 
       male.selectAll('text.count')
@@ -694,17 +693,17 @@ Umibukela.Poster = function() {
           .attr('class','count')
           .attr('x', function(d) { return x(d[0]) * widthCoefficient + Math.abs(x(d[1]) - x(d[0])) * widthCoefficient/ 2 + 35 })
           .attr('y', function(d) {
-            var type = d.data.type;
+            var period = d.data.period;
             var shift = -68;
 
-            if(type == 'current') shift = -33;
+            if(period == 'current') shift = -33;
 
             return gutter - shift;
           })
 
           .attr('fill',self.BLACK)
           .attr('font-size','10px')
-          .text(function(d) { return d.data.type == 'current' ? d[1] - d[0] : ''; });
+          .text(function(d) { return d.data.period == 'current' ? d[1] - d[0] : ''; });
 
       male.selectAll('text.year')
           .data(years)
