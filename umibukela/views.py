@@ -61,7 +61,8 @@ def site_result(request, site_slug, result_id):
     result_set = get_object_or_404(
         CycleResultSet,
         id=result_id,
-        site__slug__exact=site_slug
+        site__slug__exact=site_slug,
+        published=True
     )
     site_responses = [s.answers for s in result_set.submissions.all()]
     if site_responses:
