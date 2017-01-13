@@ -462,8 +462,6 @@ Umibukela.Poster = function() {
               .enter().append('g')
                 .attr('transform', function(d, i) {
                   var iconOffset = format == 'bar' ? i * labelWidth : i * (legendIcon.height + height / 20);
-                  console.log('icon offset',iconOffset);
-
                   if(format == 'bar') {
                     return 'translate(' + iconOffset + ',' + 0 + ')';
                   } else {
@@ -574,7 +572,6 @@ Umibukela.Poster = function() {
       female_data.reverse();
 
       responses.forEach(function(response) {
-        console.log(response);
         for(period in response) {
           var male_datum = male_data.find(function(item) { return item.period == period });
           var female_datum = female_data.find(function(item) { return item.period == period });
@@ -628,7 +625,7 @@ Umibukela.Poster = function() {
             var period = d.data.period;
             var shift = 0;
 
-            if(period != 'current') shift = .7 * y.bandwidth();
+            if(period != 'current') shift = .5 * y.bandwidth();
 
             return y(d.data.period) + shift;
           })
@@ -636,7 +633,7 @@ Umibukela.Poster = function() {
           .attr('width', function(d) { return Math.abs(x(d[1]) - x(d[0])) * widthCoefficient })
           .attr('height', function(d) {
             var period = d.data.period;
-            var coefficient = period == 'current' ? 1.7 : .3;
+            var coefficient = period == 'current' ? 1.5 : .5;
 
             return y.bandwidth() * coefficient;
           });
@@ -674,17 +671,16 @@ Umibukela.Poster = function() {
             var period = d.data.period;
             var shift = 0;
 
-            if(period != 'current') shift = .9 * y.bandwidth();
-
+            if(period != 'current') shift = .5 * y.bandwidth();
             return y(d.data.period) + shift + colHeight + gutter;
           })
           .attr('x', function(d) { return x(d[0]) * widthCoefficient + 35; })
           .attr('width', function(d) { return Math.abs(x(d[1]) - x(d[0])) * widthCoefficient })
           .attr('height', function(d) {
             var period = d.data.period;
-            var coefficient = period == 'current' ? 1.9 : .1;
+            var coefficient = period == 'current' ? 1.5 : .5;
 
-            return y.bandwidth()  * coefficient;
+            return y.bandwidth() * coefficient;
           });
 
       male.selectAll('text.count')
@@ -718,43 +714,43 @@ Umibukela.Poster = function() {
         svg.append('image')
           .attr('xlink:href','/static/img/man-icon.png')
           .attr('x',0)
-          .attr('y',32)
-          .attr('height',icon.height)
-          .attr('width',icon.width);
+          .attr('y',colHeight + gutter)
+          .attr('height',colHeight)
+          .attr('width',colHeight * 0.54);
 
         svg.append('image')
           .attr('xlink:href','/static/img/woman-icon.png')
           .attr('x',0)
-          .attr('y',-38)
-          .attr('height',icon.height)
-          .attr('width',icon.width);
+          .attr('y',0)
+          .attr('height',colHeight)
+          .attr('width',colHeight * 0.54);
 
       var legend = svg.append('g')
         .attr('class','legend');
 
       legend.append('rect')
         .attr('fill',self.BLACK)
-        .attr('height',20)
-        .attr('width',20)
-        .attr('y',75)
-        .attr('x', 255);
+        .attr('height', colHeight * 0.45)
+        .attr('width', colHeight * 0.45)
+        .attr('y', colHeight + gutter)
+        .attr('x', width - margin.right - (width / 12.5));
 
       legend.append('rect')
         .attr('fill',orange)
-        .attr('height',20)
-        .attr('width',20)
-        .attr('y',100)
-        .attr('x', 255);
+        .attr('height', colHeight * 0.45)
+        .attr('width', colHeight * 0.45)
+        .attr('y', colHeight * 1.55 + gutter)
+        .attr('x', width - margin.right - (width / 12.5));
 
       legend.append('text')
-        .attr('y',90)
-        .attr('x', 278)
+        .attr('y', colHeight * 1.3375 + gutter)
+        .attr('x', width - margin.right)
         .attr('font-size','10px')
         .text('YES');
 
       legend.append('text')
-        .attr('y',115)
-        .attr('x', 278)
+        .attr('y', colHeight * 1.8875 + gutter)
+        .attr('x', width - margin.right)
         .attr('font-size','10px')
         .text('NO');
     },
