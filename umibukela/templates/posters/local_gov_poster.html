@@ -47,8 +47,7 @@
     {% with q=questions_dict|get:'affiliation' %}
       <h4 class="question text-center">{{ q.label }}</h4>
     {% endwith %}
-    <div class="response">
-      <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
+    <div class="response" data-key="affiliation" data-type="4" data-width="300">
     </div>
   </div>
 </div>
@@ -56,13 +55,13 @@
 <div class="row no-border">
   <div class="col-xs-5">
     <div class="row no-border">
-      <div class="survey-item col-xs-6 no-border">
+      <div class="survey-item col-xs-5 no-border">
         {% with q=questions_dict|get:'previous_meeting' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
         <div class="response" data-key="previous_meeting" data-type="2" data-width="225" data-legend="yes/no" data-height="350"></div>
       </div>
-      <div class="survey-item col-xs-6">
+      <div class="survey-item col-xs-7">
         {% with q=questions_dict|get:'meeting_type' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
@@ -86,16 +85,14 @@
         {% with q=questions_dict|get:'meeting_group/ease' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
+        <div class="response" data-key="meeting_group/ease" data-type="3" data-width="300">
         </div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'meeting_group/notification' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
+        <div class="response" data-key="meeting_group/notification" data-type="3" data-width="300">
         </div>
       </div>
     </div>
@@ -104,16 +101,14 @@
         {% with q=questions_dict|get:'meeting_group/documentation' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
+        <div class="response" data-key="meeting_group/documentation" data-type="3" data-width="300">
         </div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'meeting_group/doc_understood' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
+        <div class="response" data-key="meeting_group/doc_understood" data-type="3" data-width="300">
         </div>
       </div>
     </div>
@@ -122,16 +117,14 @@
         {% with q=questions_dict|get:'meeting_group/info_withheld' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
+        <div class="response" data-key="meeting_group/info_withheld" data-type="3" data-width="300">
         </div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'meeting_group/discussion_understood' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
+        <div class="response" data-key="meeting_group/discussion_understood" data-type="3" data-width="300">
         </div>
       </div>
     </div>
@@ -140,16 +133,14 @@
         {% with q=questions_dict|get:'meeting_group/questions' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
+        <div class="response" data-key="meeting_group/questions" data-type="3" data-width="300">
         </div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'meeting_group/vulnerable_groups' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
+        <div class="response" data-key="meeting_group/vulnerable_groups" data-type="3" data-width="300">
         </div>
       </div>
     </div>
