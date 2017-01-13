@@ -655,7 +655,6 @@ Umibukela.Poster = function() {
         .attr('font-size','10px')
         .text('YES');
 
-
       legend.append('text')
         .attr('y',115)
         .attr('x', 278)
@@ -666,6 +665,8 @@ Umibukela.Poster = function() {
       var responses = options.responses;
       var data = [];
       var response = options.el;
+      var labels = [];
+      var count = [];
 
       data.push({
         type: 'Affiliated', 
@@ -688,11 +689,14 @@ Umibukela.Poster = function() {
           }
         }
 
+        labels.push(response.current.label);
+        count.push(response.current.count.male + response.current.count.female);
       })
 
-      var width = 300,
+
+      var width = 600,
         height = 300,
-        radius = Math.min(width, height) / 3;
+        radius = 100;
 
       var color = d3.scaleOrdinal()
         .range([self.ORANGE, self.BLACK]);
@@ -711,7 +715,7 @@ Umibukela.Poster = function() {
         .attr("width", width)
         .attr("height", height)
         .append("g")
-        .attr("transform", "translate(" + width / 2 + "," + height / 3 + ")");
+        .attr("transform", "translate( 120, 100)");
 
         var g = svg.selectAll(".arc")
           .data(pie(data))
@@ -730,7 +734,7 @@ Umibukela.Poster = function() {
         })
           .attr("dy", ".35em")
           .style("text-anchor", "middle")
-          .text(function(d) { 
+          .text(function(d) {
             return d.data.type == 'Affiliated' ? d.data.total : '';
         });
 
@@ -743,6 +747,14 @@ Umibukela.Poster = function() {
           .text(function(d) { 
             return d.data.type == 'Not affiliated' ? d.data.total : '';
         });
+
+        svg.append('line')
+          .attr('x1', 60)
+          .attr('x2', 160)
+          .attr('y1', 0)
+          .attr('y2', 0)
+          .attr('width',1)
+          .attr('stroke',self.BLACK)
 
         var legend = svg.append('g')
           .attr('class','legend');
@@ -774,15 +786,41 @@ Umibukela.Poster = function() {
           .text('NOT AFFILIATED');
 
         var table = svg.append('g')
-          .attr('class','table');
+          .attr('class','table')
+          .attr('height', 280)
+          .attr('width', 275)
+          .attr('y', -100)
+          .attr('x', 160);
 
-        table.append('text')
-          .attr('y',138)
-          .attr('x', 38)
-          .attr('font-size','11px')
-          .text(function(d) { 
-            return console.log(data.total); data.total ;
-          });
+        table.append('rect')
+          .attr('fill', 'none')
+          .style("stroke", self.BLACK)
+          .attr('height', 280)
+          .attr('width', 275)
+          .attr('y', -100)
+          .attr('x', 160);
+
+        var ulLabels = d3.select('.table').append('g');
+        var ulCount = d3.select('.table').append('g');
+
+        var text = ulLabels.selectAll('text')
+          .data(labels)
+          .enter()
+          .append('text')
+          .text(function(d){return d});
+          text.attr('x', 170)
+          text.attr('y', function(d,i) { return i * (text.node().getBBox().height + 2) - 75 })
+          text.attr('font-size','12px')
+
+        var count = ulCount.selectAll('text')
+          .data(count)
+          .enter()
+          .append('text')
+          .text(function(d){return d});
+          count.attr('x', 400)
+          count.attr('y', function(d,i) { return i * (text.node().getBBox().height + 7) - 75 })
+          count.attr('font-size','12px')
+
     }
   }
 
