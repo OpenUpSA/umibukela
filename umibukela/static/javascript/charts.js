@@ -46,9 +46,7 @@ Umibukela.Poster = function() {
       var optionTypes = options.optionTypes;
       var colorMale = self.colorMale;
       var colorFemale = self.colorFemale;
-      var margin = {
-        top: 15, right: 25, bottom: 15, left: 25
-      };
+      var margin = options.margin;
 
       options.responses.forEach(function(response) {
         var key = response.current.key;
@@ -72,9 +70,10 @@ Umibukela.Poster = function() {
       var leftMax = d3.max(male_data.map(function(d) { return d.value }));
 
       var y0 = d3.scaleBand()
-        .domain(male_data.map(function(d) { return d.label }))
+        .domain(male_data.map(function(d) { return d.label; }))
         .rangeRound([0, figureHeight])
-        .padding(0.2);
+        .paddingInner(0.2)
+        .paddingOuter(0);
       var y1 = d3.scaleBand()
         .domain(optionTypes)
         .rangeRound([0, y0.bandwidth()])
@@ -85,41 +84,6 @@ Umibukela.Poster = function() {
       var xLeft = d3.scaleLinear()
         .domain([0,leftMax])
         .range([0,sideWidth]);
-
-      function wrap(text, width, height) {
-        text.each(function() {
-          var text = d3.select(this),
-              words = text.text().split(/\s+/).reverse(),
-              word,
-              line = [],
-              lineNumber = 0,
-              lineHeight = 1.1, // ems
-              y = text.attr('y'),
-              dy = parseFloat(text.attr('dy')),
-              x = parseFloat(text.attr('x')),
-              tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy).attr('font-size',fontSize);
-          while (word = words.pop()) {
-            line.push(word);
-            tspan.text(line.join(' '));
-            if (tspan.node().getComputedTextLength() > width && line.length > 1) {
-              line.pop();
-              tspan.text(line.join(' '));
-              line = [word];
-              tspan = text.append('tspan').attr('x', x).attr('y', y).attr('dy', ++lineNumber * fontSize * lineHeight + dy).attr('font-size',fontSize).text(word);
-            }
-          }
-
-          var tspans = text.selectAll('tspan');
-
-          tspans.each(function(d, i){
-            var tspan = d3.select(this);
-            var dy = parseFloat(tspan.attr('dy'));
-            console.log(parseFloat(text.attr('height')) / (tspans.size()));
-
-            tspan.attr('dy',dy + parseFloat(text.attr('height')) / (tspans.size() + 1) - 2);
-          });
-        });
-      }
 
       var svg = response.append('svg')
         .attr('height',height)
@@ -182,10 +146,16 @@ Umibukela.Poster = function() {
         .attr('font-size',fontSize)
         .text(function(d) { return d.value > 0 && d.name == 'current' ? d.value : ''; });
 
+      var labelOffset = 0;
+
       var centerBoxes = svg.selectAll('g.center')
           .data(labels)
         .enter().append('g')
-          .attr('transform',function(d) { return 'translate(' + (leftOffset) + ',' + (y0(d.key) + 1) + ')' })
+          .attr('transform',function(d, i) {
+            if(i == labels.length - 1) labelOffset = y0(d.key);
+
+            return 'translate(' + leftOffset + ',' + y0(d.key) + ')';
+          })
           .attr('class','center');
 
       centerBoxes.append('rect')
@@ -195,12 +165,10 @@ Umibukela.Poster = function() {
 
       centerBoxes.append('text')
           .attr('class','label')
-          .attr('dy', 0)
           .attr('x',labelWidth / 2)
-          .attr('y',0)
-          .attr('height',y0.bandwidth())
+          .attr('y',labelOffset)
           .text(function(d) { return d.label; })
-          .call(wrap, labelWidth - 4);
+          .call(self.wrap, labelWidth - 6, fontSize, y0.bandwidth());
 
       var legend = svg.append('g')
           .attr('class','legend')
@@ -249,7 +217,6 @@ Umibukela.Poster = function() {
         .attr('font-size',fontSize);
     },
     typeTwo: function(options) {
-      console.log(options);
       var responses = options.responses;
       var response = options.el;
       var male_data = [];
@@ -277,9 +244,10 @@ Umibukela.Poster = function() {
         height: height / 10,
         width: width / 10
       };
-      var legendFontSize = legendIcon.height * .6;
-      var labelFontSize = height / 20;
-console.log('var set');
+      var legendFontSize = legendIcon.width * .6;
+      var labelFontSize = width / 20;
+      var legendFormat = options.legendFormat;
+
       optionTypes.reverse();
 
       for(var i=0;i < optionKeys.length;i++) {
@@ -291,7 +259,7 @@ console.log('var set');
 
       male_data.reverse();
       female_data.reverse();
-console.log('data created');
+
       responses.forEach(function(response, i) {
         for(period in response) {
           var male_datum = male_data.find(function(item) { return item.period == period });
@@ -306,7 +274,7 @@ console.log('data created');
           female_datum[labels[i]] = response[period].count.female;
         }
       });
-console.log('data set, labels created',labels);
+
       // Range depends on number of response types
       var zRange;
 
@@ -325,7 +293,7 @@ console.log('data set, labels created',labels);
           break;
         }
       }
-console.log('zRange set');
+
       male_data.forEach(function(d) {
         d.total = 0;
 
@@ -341,33 +309,25 @@ console.log('zRange set');
           d.total += d[label];
         });
       });
-console.log('totals set');
+
       var max = d3.max(male_data.concat(female_data).map(function(d) { return d.total; }));
-console.log('max set');
-      var x = d3.scaleBand()
-        .domain(optionTypes)
-        .rangeRound([0, colWidth])
-        .padding(0.2);
-        console.log('xscale set');
-      var y = d3.scaleLinear()
-        .domain([0, max])
-        .range([figureHeight,0]);
-        console.log('yscale set');
-      var z = d3.scaleOrdinal()
-        .domain(labels)
-        .range(zRange);
-console.log('zscale set');
+
       var male_stack = d3.stack().keys(labels)(male_data);
       var female_stack = d3.stack().keys(labels)(female_data);
-console.log('stacks created');
+
       var svg = response.append('svg')
         .attr('height',height + margin.bottom)
         .attr('width',width + margin.right + margin.left)
       .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-console.log('svg setup');
+
       function setupBands(el, selector, className, data) {
-        return el.selectAll(selector)
+        return el.append('g')
+          .attr('transform',function() {
+            if(legendFormat == 'bar') return 'translate(0,' + legendHeight + ')';
+            else return 'translate(0,0)';
+          })
+          .selectAll(selector)
             .data(data)
           .enter().append('g')
             .attr('class',className)
@@ -387,12 +347,10 @@ console.log('svg setup');
 
               if(period == 'current') shift = .9 * x.bandwidth();
 
-              console.log('x value',x(d.data.period),addedShift);
-
               return legendWidth + x(d.data.period) - shift + addedShift;
             })
             .attr('y', function(d) { return y(d[1]); })
-            .attr('height', function(d) { console.log(d); return y(d[0]) - y(d[1]); })
+            .attr('height', function(d) { return y(d[0]) - y(d[1]); })
             .attr('width', function(d) {
               var period = d.data.period;
               var coefficient = period == 'current' ? 1.9 : .1;
@@ -431,12 +389,10 @@ console.log('svg setup');
             .text(function(d) { return d; });
       }
 
-      function drawLegend(svg, type, labels) {
+      function drawLegend(svg, type, format, labels) {
         var legend = svg.append('g')
           .attr('transform','translate(0,0)')
           .attr('class','legend');
-
-          console.log('adding legend',type);
 
         switch(type) {
           case 'yes/no':
@@ -467,7 +423,6 @@ console.log('svg setup');
               .text('NO');
           break;
           case 'yes/dk/no':
-          console.log('setting legend yes/dk/no');
           zRange.reverse().forEach(function(color,i) {
             legend.append('rect')
               .attr('fill',color)
@@ -487,31 +442,43 @@ console.log('svg setup');
           });
           break;
           case 'attitude':
-            legend.append('image')
-              .attr('xlink:href','/static/img/negative_face.png')
-              .attr('width',legendIcon.height)
-              .attr('height',legendIcon.width)
-              .attr('y',0);
+            // Default to vertical alignment
+            var icons = ['/static/img/negative_face.png','/static/img/neutral_face.png','/static/img/positive_face.png'];
+            var labelWidth = format == 'bar' ? figureWidth / 3 : 0;
+            var data = [];
 
-            legend.append('image')
-              .attr('xlink:href','/static/img/neutral_face.png')
-              .attr('width',legendIcon.height)
-              .attr('height',legendIcon.width)
-              .attr('y',legendIcon.height + height / 20);
-
-            legend.append('image')
-              .attr('xlink:href','/static/img/positive_face.png')
-              .attr('width',legendIcon.height)
-              .attr('height',legendIcon.width)
-              .attr('y',(legendIcon.height + height / 20) * 2);
-
-            labels.forEach(function(label,i) {
-              legend.append('text')
-                .attr('x',legendIcon.width + width / 40)
-                .attr('y',legendIcon.height * .75 + (legendIcon.height + height / 20) * i)
-                .attr('font-size',legendFontSize)
-                .text(label);
+            icons.forEach(function(icon, i) {
+              data.push({ icon: icon, label: labels[i] });
             });
+
+            var g = legend.selectAll('g')
+                .data(data)
+              .enter().append('g')
+                .attr('transform', function(d, i) {
+                  var iconOffset = format == 'bar' ? i * labelWidth : i * (legendIcon.height + height / 20);
+                  console.log('icon offset',iconOffset);
+
+                  if(format == 'bar') {
+                    return 'translate(' + iconOffset + ',' + 0 + ')';
+                  } else {
+                    return 'translate(' + 0 + ',' + iconOffset + ')';
+                  }
+                });
+
+
+            g.append('image')
+              .attr('xlink:href',function(d) { return d.icon })
+              .attr('width',legendIcon.height)
+              .attr('height',legendIcon.width)
+              .attr('dy',0)
+              .attr('dx',0);
+
+            g.append('text')
+              .attr('font-size',legendFontSize)
+              .attr('x',legendIcon.width + width / 20)
+              .attr('y',(legendIcon.height - legendFontSize) / 2)
+              .text(function(d) { return d.label })
+              .call(self.wrap, labelWidth * .8, legendFontSize, 0);
           break;
         }
 
@@ -529,23 +496,32 @@ console.log('svg setup');
           .attr('width',icon.width);
       }
 
+      var legend = drawLegend(svg, legendType, legendFormat, legendLabels);
+      var legendHeight = legend.node().getBBox().height;
+
+      if(legendType == 'bar') figureHeight = height - legendHeight;
+
+      var x = d3.scaleBand()
+        .domain(optionTypes)
+        .rangeRound([0, colWidth])
+        .padding(0.2);
+      var y = d3.scaleLinear()
+        .domain([0, max])
+        .range([figureHeight,0]);
+      var z = d3.scaleOrdinal()
+        .domain(labels)
+        .range(zRange);
+
       var male = setupBands(svg, '.male', 'male', male_stack);
       var female = setupBands(svg, '.female', 'female', female_stack);
-      console.log('bands setup');
       var maleRect = setupRect(male);
       var femaleRect = setupRect(female, colWidth + gutter);
-      console.log('rect setup');
       var maleCount = setupCount(male, colWidth + legendWidth - 2);
       var femaleCount = setupCount(female, legendWidth + colWidth * 2 + gutter);
-      console.log('counts setup');
       var maleLabels = setupLabels(male, years);
       var femaleLabels = setupLabels(female, years, colWidth + gutter);
-      console.log('labels setup');
-      var legend = drawLegend(svg, legendType, legendLabels);
-      console.log('legend setup');
       var maleIcon = drawIcon(svg, '/static/img/man-icon.png');
       var femaleIcon = drawIcon(svg, '/static/img/woman-icon.png', legendWidth + colWidth + gutter / 2);
-      console.log('icons setup');
 
       svg.append('line')
         .attr('x1',legendWidth + colWidth + gutter / 3)
@@ -556,9 +532,37 @@ console.log('svg setup');
         .attr('width',1)
         .attr('stroke',self.BLACK)
         .attr('stroke-dasharray','2,3');
-
-        console.log('line added');
     }
+  }
+
+  self.wrap = function(textNodes, width, fontSize, boxHeight) {
+    textNodes.each(function() {
+      var text = d3.select(this),
+          words = text.text().split(/\s+/).reverse(),
+          word,
+          line = [],
+          lineNumber = 0,
+          lineHeight = 1.1,
+          x = parseFloat(text.attr('x')) || 0,
+          y = parseFloat(text.attr('y')) || 0;
+      var textHeight = text.node().getBBox().height;
+
+      if(!!boxHeight) y += (boxHeight - textHeight) / 2;
+
+      var tspan = text.text(null).append('tspan').attr('x',x).attr('y',y).attr('font-size',fontSize);
+      text.attr('x',0).attr('y',0);
+      while (word = words.pop()) {
+        line.push(word);
+        tspan.text(line.join(' '));
+        if (tspan.node().getComputedTextLength() > width && line.length > 1) {
+          var offset = !!boxHeight ? fontSize / 2 : 0;
+          line.pop();
+          //tspan.text(line.join(' ')).attr('y',y - offset);
+          line = [word];
+          tspan = text.append('tspan').attr('x',x).attr('y', ++lineNumber * fontSize * lineHeight + y - offset).attr('font-size',fontSize).text(word);
+        }
+      }
+    });
   }
 
   self.draw = function() {
@@ -577,9 +581,15 @@ console.log('svg setup');
           options.legendType = response.attr('data-legend');
           options.responses = questions[key].options;
           options.optionTypes = options.responses[0] ? Object.keys(options.responses[0]) : [];
-          options.margin = margin;
+          options.margin = {
+            top: parseFloat(response.attr('data-margin-top')) || 10,
+            right: parseFloat(response.attr('data-margin-right')) || 10,
+            bottom: parseFloat(response.attr('data-margin-bottom')) || 10,
+            left: parseFloat(response.attr('data-margin-left')) || 10
+          };
           options.height = parseInt(response.attr('data-height'));
           options.width = parseInt(response.attr('data-width'));
+          options.legendFormat = response.attr('data-legend-format');
           options.figureHeight = options.height - margin.top - margin.bottom;
           options.key = key;
           self.drawChart(options);

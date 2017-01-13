@@ -3,7 +3,7 @@
 {% block survey %}
 <div class="row">
   <div class="col-xs-7">
-    <div class="row no-border">
+    <div class="row">
       <div class="survey-item no-border col-xs-12">
         {% with q=questions_dict|get:'visit_reason' %}
           <h4 class="question text-center">{{ q.label }}</h4>
@@ -16,9 +16,7 @@
         {% with q=questions_dict|get:'visit_frequency' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response" id="chart-">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
-        </div>
+        <div class="response" data-key="visit_frequency" data-tope="1" data-width="540" data-height="350"></div>
       </div>
     </div>
     <div class="row">
@@ -26,9 +24,7 @@
         {% with q=questions_dict|get:'yes_no_group/documents' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response" id="chart-">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
-        </div>
+        <div class="response" data-key="yes_no_group/documents" data-tope="1" data-width="540" data-height="350"></div>
       </div>
     </div>
     <div class="row">
@@ -36,9 +32,7 @@
         {% with q=questions_dict|get:'yes_no_group/nametag' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response" id="chart-">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
-        </div>
+        <div class="response" data-key="yes_no_group/nametag" data-tope="1" data-width="540" data-height="350"></div>
       </div>
     </div>
     <div class="row">
@@ -46,19 +40,15 @@
         {% with q=questions_dict|get:'yes_no_group/bribe' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response" id="chart-">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
-        </div>
+        <div class="response" data-key="yes_no_group/bribe" data-tope="1" data-width="540" data-height="350"></div>
       </div>
     </div>
-    <div class="row">
+    <div class="row border-bottom">
       <div class="survey-item no-border col-xs-12">
         {% with q=questions_dict|get:'yes_no_group/alt_id' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response" id="chart-">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
-        </div>
+        <div class="response" data-key="yes_no_group/alt_id" data-tope="1" data-width="540" data-height="350"></div>
       </div>
     </div>
   </div>
@@ -68,17 +58,13 @@
         {% with q=questions_dict|get:'transport_amount' %}
           <h4 class="question text-center black-banner">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response" id="chart-">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
-        </div>
+        <div class="response" data-key="transport_amount" data-type="1" data-width="225" data-height="350" data-margin-left="0"></div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'waiting_time' %}
           <h4 class="question text-center black-banner">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response" id="chart-">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
-        </div>
+        <div class="response" data-key="waiting_time" data-type="1" data-width="225" data-height="350" data-margin-left="0"></div>
       </div>
     </div>
     <div class="row">
@@ -86,17 +72,13 @@
         {% with q=questions_dict|get:'performance_group/clean' %}
           <h4 class="question text-center black-banner">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response" id="chart-">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
-        </div>
+        <div class="response" data-key="performance_group/clean" data-type="2" data-width="225" data-height="350" data-legend="attitude" data-legend-format="bar" data-margin-left="0"></div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'performance_group/queues' %}
           <h4 class="question text-center black-banner">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response" id="chart-">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
-        </div>
+        <div class="response" data-key="performance_group/queues" data-type="2" data-width="225" data-height="350" data-legend="attitude" data-legend-format="bar" data-margin-left="0"></div>
       </div>
     </div>
     <div class="row">
@@ -104,17 +86,13 @@
         {% with q=questions_dict|get:'performance_group/respect' %}
           <h4 class="question text-center black-banner">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response" id="chart-">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
-        </div>
+        <div class="response" data-key="performance_group/respect" data-type="2" data-width="225" data-height="350" data-legend="attitude" data-legend-format="bar" data-margin-left="0"></div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'clinic_feedback' %}
           <h4 class="question text-center black-banner">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response" id="chart-">
-          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
-        </div>
+        <div class="response" data-key="clinic_feedback" data-type="2" data-width="225" data-height="350" data-legend="attitude" data-legend-format="bar" data-margin-left="0"></div>
       </div>
     </div>
     <div class="row">
