@@ -1184,6 +1184,15 @@ div + h1 {
 }
 
 .poster {
+  #a1-page {
+    width: calc(100vw - 10px);
+    height: calc(141.4213562vw - 14.14213562px);
+    color: #fff;
+    border: 3px dashed #FF00D8;
+    position: absolute;
+    z-index: 1000;
+  }
+
   .container {
     width:1140px !important;
     max-width: none !important;
@@ -1196,6 +1205,9 @@ div + h1 {
 
   .question {
     margin-top:0;
+    font-size: 0.9em;
+    padding: 0 10px;
+    text-transform: uppercase;
   }
 
   &.sassa-service-office {

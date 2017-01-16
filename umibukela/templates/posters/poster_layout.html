@@ -15,7 +15,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="print poster container {{ layout_class }}">
+<div class="print poster a1-page {{ layout_class }}">
+  <div id="a1-page"></div>
   <header class="header">
     <img class="banner" alt="Citizen monitoring" src="{% static 'img/banner-large.png' %}" />
     <h1 class="partner text-uppercase">{{ result_set.partner.short_name }}</h1>

@@ -453,7 +453,7 @@ Umibukela.Poster = function() {
           break;
           case 'attitude':
             // Default to vertical alignment
-            var icons = ['/static/img/negative_face.png','/static/img/neutral_face.png','/static/img/positive_face.png'];
+            var icons = ['/static/img/negative_face.svg','/static/img/neutral_face.svg','/static/img/positive_face.svg'];
             var labelWidth = format == 'bar' ? figureWidth / 3 : 0;
             var data = [];
 
@@ -581,7 +581,7 @@ Umibukela.Poster = function() {
       var male_data = [];
       var female_data = [];
       var years = [2015,2014];
-      var icon = { width: 30, height: 130 };
+      var icon = { width: 15, height: 30 };
       var colorMale = self.colorMale;
       var colorFemale = self.colorFemale;
       var orange = self.ORANGE;
@@ -743,14 +743,14 @@ Umibukela.Poster = function() {
           .attr('x',0)
           .attr('y',colHeight + gutter)
           .attr('height',colHeight)
-          .attr('width',colHeight * 0.54);
+          .attr('width',colHeight * 0.5);
 
         svg.append('image')
           .attr('xlink:href','/static/img/woman-icon.png')
           .attr('x',0)
           .attr('y',0)
           .attr('height',colHeight)
-          .attr('width',colHeight * 0.54);
+          .attr('width',colHeight * 0.5);
 
       var legend = svg.append('g')
         .attr('class','legend');
