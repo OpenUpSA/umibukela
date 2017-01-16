@@ -1,11 +1,13 @@
-from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404
+from datetime import datetime, timedelta
 from django.conf import settings
-import pandas
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect
+from itertools import groupby
 import analysis
+import pandas
+import pandas
 import requests
 import settings
-from datetime import datetime, timedelta
 
 from .models import (
     CycleResultSet,
@@ -290,6 +292,33 @@ def survey_from_kobo(request):
             return render(request, 'survey_from_kobo.html', {
                 'forms': available_surveys,
             })
+
+
+def survey_kobo(request, survey_id):
+    if not is_kobo_authed(request):
+        return start_kobo_oauth(request)
+    else:
+        headers = {
+            'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
+        }
+        survey = get_object_or_404(Survey, id=survey_id)
+        form_id = survey.surveykoboproject.form_id
+        r = requests.get("https://kc.kobotoolbox.org/api/v1/data/%s" % form_id, headers=headers)
+        r.raise_for_status()
+        submissions = r.json()
+        facility_key = lambda r: r['facility']
+        facility_sorted = sorted(submissions, key=facility_key, reverse=True)
+        sites = []
+        for facility_name, facility_group in groupby(facility_sorted, facility_key):
+            sites.append({
+                'name': facility_name,
+                'count': len(list(facility_group)),
+            })
+        return render(request, 'survey_kobo.html', {
+            'survey': survey,
+            'sites': sites,
+        })
+
 
 
 def kobo_forms(request):

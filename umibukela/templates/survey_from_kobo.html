@@ -5,9 +5,9 @@
   <h1>Kobo Forms</h1>
   <div>Kobo session expires {{ kobo_access_token_expiry }}</div>
 
-  <h3>Other available sources</h3>
+  <h3>Forms available from Kobo Toolbox</h3>
   <table>
-    <tr><th>Form</th><th>No of responses</th><tr>
+    <tr><th>Form</th><th></th><tr>
     {% for form in forms %}
     <tr>
       <td>{{ form.title }}</td>
