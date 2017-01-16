@@ -1208,6 +1208,7 @@ div + h1 {
     font-size: 0.9em;
     padding: 0 10px;
     text-transform: uppercase;
+    padding:0 15px;
   }
 
   &.sassa-service-office {
@@ -1342,14 +1343,17 @@ div + h1 {
     }
 
     .survey-item {
-      position:relative;
       margin:10px 0;
+      display:flex;
+      flex-direction:column;
 
       &.no-border {
         border-right:none;
       }
 
       .response {
+        margin-top:auto;
+        
         rect {
           &.box {
             border:1px dashed $black;
