@@ -1195,6 +1195,7 @@ div + h1 {
 
   .question {
     margin-top:0;
+    padding:0 15px;
   }
 
   &.sassa-service-office {
@@ -1337,6 +1338,8 @@ div + h1 {
       }
 
       .response {
+        display:inline;
+        vertical-align: bottom;
         rect {
           &.box {
             border:1px dashed $black;
