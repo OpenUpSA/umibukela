@@ -225,34 +225,36 @@ Umibukela.Poster = function() {
     typeTwo: function(options) {
       var responses = options.responses;
       var response = options.el;
-      var male_data = [];
-      var female_data = [];
       var height = options.height;
       var width = options.width;
-      var legendWidth = 50;
-      var gutter = 70;
-      var colWidth = (width - legendWidth - gutter) / 2;
+      var margin = options.margin;
       var optionTypes = options.optionTypes;
-      var optionKeys = Object.keys(options.responses[0]);
-      var labels = [];
-      var legendLabels = [];
+      var legendType = options.legendType;
+      var legendFormat = options.legendFormat;
+
       var male_data = [];
       var female_data = [];
-      var years = [2014,2015];
-      var icon = { width: width / 10, height: height / 5 };
-      var colorMale = self.colorMale;
-      var colorFemale = self.colorFemale;
-      var margin = options.margin;
+      var labels = [];
+      var legendLabels = [];
+
       var figureHeight = height * .8;
       var figureWidth = width * .8;
-      var legendType = options.legendType;
+      var legendWidth = figureWidth / 4;
+      var gutter = figureWidth / 3;
+      var labelIcon = {
+        width: width / 10,
+        height: height / 5
+      };
       var legendIcon = {
         height: height / 10,
         width: width / 10
       };
+      var colWidth = (width - legendWidth - gutter - margin.right) / 2;
       var legendFontSize = legendIcon.width * .6;
       var labelFontSize = width / 20;
-      var legendFormat = options.legendFormat;
+
+      var optionKeys = Object.keys(options.responses[0]);
+      var years = [2014,2015];
 
       optionTypes.reverse();
 
@@ -321,12 +323,6 @@ Umibukela.Poster = function() {
       var male_stack = d3.stack().keys(labels)(male_data);
       var female_stack = d3.stack().keys(labels)(female_data);
 
-      var svg = response.append('svg')
-        .attr('height',height + margin.bottom)
-        .attr('width',width + margin.right + margin.left)
-      .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
       function setupBands(el, selector, className, data) {
         return el.append('g')
           .attr('transform',function() {
@@ -359,7 +355,7 @@ Umibukela.Poster = function() {
             .attr('height', function(d) {
               var normaliser = 1;
 
-              if(d.data.period == 'prev') normaliser = gender == 'male' ? maleNormaliser : femaleNormaliser;
+              //if(d.data.period == 'prev') normaliser = gender == 'male' ? maleNormaliser : femaleNormaliser;
               return (y(d[0]) - y(d[1])) * normaliser;
             })
             .attr('width', function(d) {
@@ -391,7 +387,7 @@ Umibukela.Poster = function() {
             .data(labels)
           .enter().append('text')
             .attr('class','year')
-            .attr('x',function(d,i) { return addedShift + (x.bandwidth() * 2) * i + icon.width + width / 10; })
+            .attr('x',function(d,i) { return addedShift + (x.bandwidth() * 2) * i + labelIcon.width + width / 10; })
             .attr('y',figureHeight + 20)
             .attr('fill',self.BLACK)
             .attr('stroke','none')
@@ -499,10 +495,17 @@ Umibukela.Poster = function() {
         return el.append('image')
           .attr('xlink:href',href)
           .attr('x',xShift)
-          .attr('y',figureHeight - icon.height / 2)
-          .attr('height',icon.height)
-          .attr('width',icon.width);
+          .attr('y',figureHeight - labelIcon.height / 2)
+          .attr('height',labelIcon.height)
+          .attr('width',labelIcon.width);
       }
+
+      // Draw chart
+      var svg = response.append('svg')
+        .attr('height',height + margin.bottom)
+        .attr('width',width + margin.right + margin.left)
+      .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
       var legend = drawLegend(svg, legendType, legendFormat, legendLabels);
       var legendHeight = legend.node().getBBox().height;
@@ -520,28 +523,27 @@ Umibukela.Poster = function() {
         .domain(labels)
         .range(zRange);
 
-      var maleCurrentHeight = 0
-      var femaleCurrentHeight = 0
-
-      var malePreviousHeight = 0
-      var femalePreviousHeight = 0
+      var maleCurrentHeight = 0;
+      var femaleCurrentHeight = 0;
+      var malePreviousHeight = 0;
+      var femalePreviousHeight = 0;
 
       male_stack.forEach(function(d){
         d.forEach(function(point){
-          if(point.data.period == 'current') maleCurrentHeight += y(point[1])
-          else if(point.data.period == 'prev') malePreviousHeight += y(point[1])
-        })
-      })
+          if(point.data.period == 'current') maleCurrentHeight += y(point[1]);
+          else if(point.data.period == 'prev') malePreviousHeight += y(point[1]);
+        });
+      });
 
       female_stack.forEach(function(d){
         d.forEach(function(point){
-          if(point.data.period == 'current') femaleCurrentHeight += y(point[1])
-          else if(point.data.period == 'prev') femalePreviousHeight += y(point[1])
-        })
-      })
+          if(point.data.period == 'current') femaleCurrentHeight += y(point[1]);
+          else if(point.data.period == 'prev') femalePreviousHeight += y(point[1]);
+        });
+      });
 
-      var maleNormaliser = maleCurrentHeight / malePreviousHeight
-      var femaleNormaliser = femaleCurrentHeight / femalePreviousHeight
+      var maleNormaliser = maleCurrentHeight > malePreviousHeight ? maleCurrentHeight / malePreviousHeight : malePreviousHeight / maleCurrentHeight;
+      var femaleNormaliser = femaleCurrentHeight > femalePreviousHeight ? femaleCurrentHeight / femalePreviousHeight : femalePreviousHeight / femaleCurrentHeight;
 
       var male = setupBands(svg, '.male', 'male', male_stack);
       var female = setupBands(svg, '.female', 'female', female_stack);
