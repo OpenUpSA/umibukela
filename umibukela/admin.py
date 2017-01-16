@@ -1,7 +1,5 @@
 from django.contrib import admin
 from django.contrib.admin import AdminSite
-from django.http import HttpResponse
-from umibukela import settings
 from umibukela import views
 
 from .models import (
@@ -21,7 +19,6 @@ from .models import (
 
 from .forms import (
     SiteForm,
-    SurveyForm,
 )
 
 
@@ -32,6 +29,7 @@ class AdminSite(AdminSite):
         urls = super(AdminSite, self).get_urls()
         urls = [
             url(r'^umibukela/survey_from_kobo$', self.admin_view(views.survey_from_kobo)),
+            url(r'^umibukela/survey/(?P<survey_id>\d+)/kobo$', self.admin_view(views.survey_kobo)),
             url(r'^umibukela/kobo_forms$', self.admin_view(views.kobo_forms)),
             url(r'^umibukela/kobo_survey/(?P<kobo_survey_id>\d+)/site/(?P<site_name>\w+)/preview$', self.admin_view(views.survey_site_preview)),
         ] + urls
@@ -57,15 +55,6 @@ class CycleResultSetAdmin(admin.ModelAdmin):
     ]
 
 
-class SurveyAdmin(admin.ModelAdmin):
-    form = SurveyForm
-
-    def change_view(self, request, object_id, form_url='', extra_context=None):
-        extra_context = extra_context or {}
-        extra_context['path'] = request.path
-        return super(SurveyAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
-
-
 admin_site = AdminSite()
 
 admin_site.site_header = 'Umibukela administration'
@@ -79,5 +68,5 @@ admin_site.register(Programme)
 admin_site.register(Province)
 admin_site.register(Sector)
 admin_site.register(Site, SiteAdmin)
-admin_site.register(Survey, SurveyAdmin)
+admin_site.register(Survey)
 admin_site.register(SurveyType)

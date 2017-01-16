@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+
+<body>
+  {% block object-tools %}
+  <h1>Survey Kobo Download</h1>
+  <div>Kobo session expires {{ kobo_access_token_expiry }}</div>
+
+  <h3>Sites in this Kobo Survey</h3>
+  <table>
+    <tr><th>Site</th><th>No of responses</th><th></th><tr>
+    {% for site in sites %}
+    <tr>
+      <td>{{ site.name }}</td>
+      <td>{{ site.count }}</td>
+      <td>
+        <form action="/admin/umibukela/survey/{{ survey.id }}/kobo" method="post">
+          <input type="submit" value="Stuff">
+          {% csrf_token %}
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock %}
+</body>

@@ -191,7 +191,7 @@ class Survey(models.Model):
 
 
 class SurveyKoboProject(models.Model):
-    survey = models.ForeignKey(Survey, null=False)
+    survey = models.OneToOneField(Survey, on_delete=models.CASCADE, primary_key=True)
     # Kobo is deprecating projects so from this point on,
     # when we refer to a kobo project (a form and its submissions),
     # the formid field is the unique reference for the URLs
