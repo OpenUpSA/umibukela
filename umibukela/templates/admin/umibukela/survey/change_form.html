@@ -1,7 +1,9 @@
 {% extends "admin/change_form.html" %}
 {% block content %}
 {{ block.super }}
+{% if original.surveykoboproject %}
 <div>
   <a href="/admin/umibukela/survey/{{ original.id }}/kobo">Stuff on Kobo Toolbox</a>
 </div>
+{% endif %}
 {% endblock %}
