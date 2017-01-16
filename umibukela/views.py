@@ -13,6 +13,7 @@ from .models import (
     Site,
     Sector,
     Survey,
+    SurveyKoboProject,
 )
 
 
@@ -278,6 +279,8 @@ def survey_from_kobo(request):
             form = r.json()
             survey = Survey(name=form['title'], form=r.text)
             survey.save()
+            survey_kobo_project = SurveyKoboProject(survey=survey, form_id=form_id)
+            survey_kobo_project.save()
             return redirect('/admin/umibukela/survey/%d' % survey.id)
         else:
             r = requests.get("https://kc.kobotoolbox.org/api/v1/forms",
