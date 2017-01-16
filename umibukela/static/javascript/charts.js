@@ -354,7 +354,7 @@ Umibukela.Poster = function() {
             .attr('y', function(d) { return y(d[1]); })
             .attr('height', function(d) {
               var normaliser = 1;
-
+              //console.log('data',d,d[0],d[1],y(d[0]) - y(d[1]));
               //if(d.data.period == 'prev') normaliser = gender == 'male' ? maleNormaliser : femaleNormaliser;
               return (y(d[0]) - y(d[1])) * normaliser;
             })
@@ -967,7 +967,7 @@ Umibukela.Poster = function() {
         if (tspan.node().getComputedTextLength() > width && line.length > 1) {
           var offset = !!boxHeight ? fontSize / 2 : 0;
           line.pop();
-          //tspan.text(line.join(' ')).attr('y',y - offset);
+          tspan.text(line.join(' '));
           line = [word];
           tspan = text.append('tspan').attr('x',x).attr('y', ++lineNumber * fontSize * lineHeight + y - offset).attr('font-size',fontSize).text(word);
         }
