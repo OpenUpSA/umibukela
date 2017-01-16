@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.contrib.admin import AdminSite
 from umibukela import views
 
 from .models import (
@@ -13,7 +12,6 @@ from .models import (
     Province,
     Sector,
     Site,
-    Survey,
     SurveyType,
 )
 
@@ -22,7 +20,7 @@ from .forms import (
 )
 
 
-class AdminSite(AdminSite):
+class AdminSite(admin.AdminSite):
 
     def get_urls(self):
         from django.conf.urls import url
@@ -68,5 +66,4 @@ admin_site.register(Programme)
 admin_site.register(Province)
 admin_site.register(Sector)
 admin_site.register(Site, SiteAdmin)
-admin_site.register(Survey)
 admin_site.register(SurveyType)
