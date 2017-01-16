@@ -192,7 +192,13 @@ class Survey(models.Model):
 
 class SurveyKoboProject(models.Model):
     survey = models.ForeignKey(Survey, null=False)
-    url = models.TextField(unique=True, null=False)
+    # Kobo is deprecating projects so from this point on,
+    # when we refer to a kobo project (a form and its submissions),
+    # the formid field is the unique reference for the URLs
+    # https://kc.kobotoolbox.org/api/v1/forms/69399?format=json (project)
+    # https://kc.kobotoolbox.org/api/v1/forms/69399/form.json (the xform as json)
+    # https://kc.kobotoolbox.org/api/v1/data/69399?format=json (the submissions)
+    form_id = models.IntegerField(unique=True, null=False)
 
 
 class CycleResultSet(models.Model):
