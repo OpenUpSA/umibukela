@@ -1331,16 +1331,17 @@ div + h1 {
     }
 
     .survey-item {
-      position:relative;
       margin:10px 0;
+      display:flex;
+      flex-direction:column;
 
       &.no-border {
         border-right:none;
       }
 
       .response {
-        display:inline;
-        vertical-align: bottom;
+        margin-top:auto;
+        
         rect {
           &.box {
             border:1px dashed $black;
