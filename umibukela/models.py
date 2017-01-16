@@ -1,14 +1,13 @@
-import os
-import uuid
 
-import pandas
-from django.db import models
 from django.contrib.gis.db import models as gis_models
-import jsonfield
-from django.utils import timezone
 from django.core.urlresolvers import reverse
-
+from django.db import models
+from django.utils import timezone
 import analysis
+import jsonfield
+import os
+import pandas
+import uuid
 
 # ------------------------------------------------------------------------------
 # General utilities
@@ -191,6 +190,11 @@ class Survey(models.Model):
         return self.name
 
 
+class SurveyKoboProject(models.Model):
+    survey = models.ForeignKey(Survey, null=False)
+    url = models.TextField(unique=True, null=False)
+
+
 class CycleResultSet(models.Model):
     """
     An entity representing the data collection cycle for a given site
@@ -277,9 +281,16 @@ class CycleResultSetAttachment(models.Model):
 
 class Submission(models.Model):
     answers = jsonfield.JSONField()
+    uuid = models.TextField(unique=True)
     cycle_result_set = models.ForeignKey(
         CycleResultSet,
         null=True,
         blank=True,
         related_name="submissions"
     )
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_at = models.DateTimeField(auto_now=True, editable=False)
+
+    def save(self, *args, **kwargs):
+        self.uuid = self.answers['_uuid']
+        super(Submission, self).save(*args, **kwargs)
