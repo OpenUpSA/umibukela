@@ -7,6 +7,8 @@ import pandas
 import requests
 import settings
 
+from forms import CRSFromKoboForm
+
 from .models import (
     CycleResultSet,
     Partner,
@@ -164,9 +166,11 @@ def survey_kobo(request, survey_id):
                 'name': facility_name,
                 'count': len(list(facility_group)),
             })
+        crs_form = CRSFromKoboForm()
         return render(request, 'survey_kobo.html', {
             'survey': survey,
             'sites': sites,
+            'crs_form': crs_form,
         })
 
 

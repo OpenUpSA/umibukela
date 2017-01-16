@@ -1,8 +1,12 @@
 from django import forms
 from django.contrib.gis.geos import Point
+from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
+from widgets import AddAnotherWidgetWrapper
 
 from .models import (
     Site,
+    Submission,
+    CycleResultSet,
 )
 
 
@@ -38,3 +42,11 @@ class SiteForm(forms.ModelForm):
             initial['latitude'] = coordinates[1]
             kwargs['initial'] = initial
         super(SiteForm, self).__init__(*args, **kwargs)
+
+
+class CRSFromKoboForm(forms.Form):
+    your_name = forms.ModelChoiceField(
+        queryset=CycleResultSet.objects.all(),
+        label='select or make some CRS shit'
+    )
+    your_name.widget = AddAnotherWidgetWrapper(your_name.widget, CycleResultSet)
