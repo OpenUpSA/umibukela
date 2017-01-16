@@ -341,7 +341,7 @@ Umibukela.Poster = function() {
             .attr('stroke',function(d) { return z(d.key) == self.WHITE ? self.BLACK : z(d.key); });
       }
 
-      function setupRect(el, addedShift) {
+      function setupRect(el, gender, addedShift) {
         if(!addedShift) addedShift = 0;
 
         return el.selectAll('rect')
@@ -356,11 +356,15 @@ Umibukela.Poster = function() {
               return legendWidth + x(d.data.period) - shift + addedShift;
             })
             .attr('y', function(d) { return y(d[1]); })
-            .attr('height', function(d) { return y(d[0]) - y(d[1]); })
+            .attr('height', function(d) {
+              var normaliser = 1;
+
+              if(d.data.period == 'prev') normaliser = gender == 'male' ? maleNormaliser : femaleNormaliser;
+              return (y(d[0]) - y(d[1])) * normaliser;
+            })
             .attr('width', function(d) {
               var period = d.data.period;
               var coefficient = period == 'current' ? 1.9 : .1;
-
               return x.bandwidth() * coefficient;
             });
       }
@@ -516,10 +520,33 @@ Umibukela.Poster = function() {
         .domain(labels)
         .range(zRange);
 
+      var maleCurrentHeight = 0
+      var femaleCurrentHeight = 0
+
+      var malePreviousHeight = 0
+      var femalePreviousHeight = 0
+
+      male_stack.forEach(function(d){
+        d.forEach(function(point){
+          if(point.data.period == 'current') maleCurrentHeight += y(point[1])
+          else if(point.data.period == 'prev') malePreviousHeight += y(point[1])
+        })
+      })
+
+      female_stack.forEach(function(d){
+        d.forEach(function(point){
+          if(point.data.period == 'current') femaleCurrentHeight += y(point[1])
+          else if(point.data.period == 'prev') femalePreviousHeight += y(point[1])
+        })
+      })
+
+      var maleNormaliser = maleCurrentHeight / malePreviousHeight
+      var femaleNormaliser = femaleCurrentHeight / femalePreviousHeight
+
       var male = setupBands(svg, '.male', 'male', male_stack);
       var female = setupBands(svg, '.female', 'female', female_stack);
-      var maleRect = setupRect(male);
-      var femaleRect = setupRect(female, colWidth + gutter);
+      var maleRect = setupRect(male, 'male');
+      var femaleRect = setupRect(female, 'female', colWidth + gutter);
       var maleCount = setupCount(male, colWidth + legendWidth - 2);
       var femaleCount = setupCount(female, legendWidth + colWidth * 2 + gutter);
       var maleLabels = setupLabels(male, years);
