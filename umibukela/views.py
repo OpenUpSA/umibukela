@@ -11,6 +11,7 @@ from forms import CRSFromKoboForm
 
 from .models import (
     CycleResultSet,
+    KoboRefreshToken,
     Partner,
     Site,
     Survey,
@@ -201,7 +202,6 @@ def survey_kobo(request, survey_id):
         })
 
 
-
 def kobo_forms(request):
     if not is_kobo_authed(request):
         return start_kobo_oauth(request)
@@ -326,8 +326,28 @@ def is_kobo_authed(request):
 
 
 def start_kobo_oauth(request):
-    state = request.path
-    return redirect("https://kc.kobotoolbox.org/o/authorize?client_id=%s&response_type=code&scope=read&state=%s" % (settings.KOBO_CLIENT_ID, state))
+    user_refresh_token = KoboRefreshToken.objects.filter(pk=request.user)
+    if user_refresh_token.count():
+        user_refresh_token = user_refresh_token.get()
+        payload = {
+            'grant_type': 'refresh_token',
+            'refresh_token': user_refresh_token.token,
+            'redirect_uri': 'http://localhost:8000/admin/kobo-oauth'
+        }
+        r = requests.post("https://kc.kobotoolbox.org/o/token/",
+                         params=payload,
+                         auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
+        r.raise_for_status()
+        request.session['kobo_access_token'] = r.json()['access_token']
+        expiry_datetime = datetime.utcnow() + timedelta(seconds=r.json()['expires_in'])
+        request.session['kobo_access_token_expiry'] = expiry_datetime.isoformat()
+        user_refresh_token.token = r.json()['refresh_token']
+        user_refresh_token.save()
+        state = request.path
+        return redirect(state)
+    else:
+        state = request.path
+        return redirect("https://kc.kobotoolbox.org/o/authorize?client_id=%s&response_type=code&scope=read&state=%s" % (settings.KOBO_CLIENT_ID, state))
 
 
 def kobo_oauth_return(request):
@@ -339,10 +359,14 @@ def kobo_oauth_return(request):
         'redirect_uri': 'http://localhost:8000/admin/kobo-oauth'
     }
     r = requests.post("https://kc.kobotoolbox.org/o/token/",
-                     params=payload,
-                     auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
+                      params=payload,
+                      auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
     r.raise_for_status()
     request.session['kobo_access_token'] = r.json()['access_token']
     expiry_datetime = datetime.utcnow() + timedelta(seconds=r.json()['expires_in'])
     request.session['kobo_access_token_expiry'] = expiry_datetime.isoformat()
+
+    user_refresh_token, created = KoboRefreshToken.objects.get_or_create(user=request.user)
+    user_refresh_token.token = r.json()['refresh_token']
+    user_refresh_token.save()
     return redirect(state)
