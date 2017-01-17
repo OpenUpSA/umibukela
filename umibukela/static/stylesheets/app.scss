@@ -1184,6 +1184,9 @@ div + h1 {
 }
 
 .poster {
+  width:1140px !important;
+  max-width: none !important;
+
   #a1-page {
     width: calc(100vw - 10px);
     height: calc(141.4213562vw - 14.14213562px);
@@ -1191,11 +1194,6 @@ div + h1 {
     border: 3px dashed #FF00D8;
     position: absolute;
     z-index: 1000;
-  }
-
-  .container {
-    width:1140px !important;
-    max-width: none !important;
   }
 
   .survey-item {
@@ -1353,7 +1351,7 @@ div + h1 {
 
       .response {
         margin-top:auto;
-        
+
         rect {
           &.box {
             border:1px dashed $black;

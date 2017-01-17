@@ -36,12 +36,16 @@ Umibukela.Poster = function() {
       var response = options.el;
       var height = options.height;
       var width = options.width;
+      var optionTypes = options.optionTypes;
+      var margin = options.margin;
+
       var figureHeight = height * .75;
       var labelWidth = Math.floor(width / 5) - 3;
       var sideWidth = (width - labelWidth) / 2;
       var rightOffset = width / 2 + labelWidth / 2;
       var leftOffset = width / 2 - labelWidth / 2;
       var fontSize = height / 32;
+      var legendWidth = width / 3;
       var icon = {
         height: height / 8,
         width: width / 13
@@ -49,10 +53,9 @@ Umibukela.Poster = function() {
       var male_data = [];
       var female_data = [];
       var labels = [];
-      var optionTypes = options.optionTypes;
+
       var colorMale = self.colorMale;
       var colorFemale = self.colorFemale;
-      var margin = options.margin;
 
       options.responses.forEach(function(response) {
         var key = response.current.key;
@@ -178,49 +181,52 @@ Umibukela.Poster = function() {
 
       var legend = svg.append('g')
           .attr('class','legend')
-          .attr('transform','translate(' + (width / 2 - 75) + ',' + (figureHeight + 10) + ')');
+          .attr('transform','translate(' + legendWidth + ',' + (figureHeight + 10) + ')');
 
       legend.append('image')
         .attr('xlink:href','/static/img/man-icon.png')
-        .attr('x',5)
+        .attr('x',0)
         .attr('y',0)
         .attr('height',icon.height)
         .attr('width',icon.width);
 
       legend.append('image')
         .attr('xlink:href','/static/img/woman-icon.png')
-        .attr('x',105)
+        .attr('x',legendWidth - icon.width)
         .attr('y',0)
         .attr('height',icon.height)
         .attr('width',icon.width);
 
       legend.append('rect')
         .attr('fill',self.ORANGE)
-        .attr('width',20)
-        .attr('height',15)
-        .attr('x',65)
-        .attr('y',20);
+        .attr('width',icon.width)
+        .attr('height',icon.height / 2)
+        .attr('x',legendWidth / 2 - icon.width / 2)
+        .attr('y',icon.height / 2);
 
-      legend.append('text')
-        .attr('class','male')
+      var maleLabel = legend.append('text')
+        .attr('class','male-label')
         .text(2015)
-        .attr('dx',13)
-        .attr('dy',55)
         .attr('font-size',fontSize);
 
-      legend.append('text')
-        .attr('class','female')
+      maleLabel.attr('x',maleLabel.node().getBBox().width / 3)
+        .attr('y',icon.height + maleLabel.node().getBBox().height);
+
+      var femaleLabel = legend.append('text')
+        .attr('class','female-label')
         .text(2015)
-        .attr('dx',112)
-        .attr('dy',55)
         .attr('font-size',fontSize);
 
-      legend.append('text')
-        .attr('class','previous')
+      femaleLabel.attr('x',legendWidth - femaleLabel.node().getBBox().width - femaleLabel.node().getBBox().width / 3)
+      .attr('y',icon.height + femaleLabel.node().getBBox().height);
+
+      var prevLabel = legend.append('text')
+        .attr('class','prev-label')
         .text(2014)
-        .attr('dx',62)
-        .attr('dy',47 )
         .attr('font-size',fontSize);
+
+      prevLabel.attr('x',legendWidth / 2 - prevLabel.node().getBBox().width / 2)
+        .attr('y',icon.height + prevLabel.node().getBBox().height)
     },
     typeTwo: function(options) {
       var responses = options.responses;
