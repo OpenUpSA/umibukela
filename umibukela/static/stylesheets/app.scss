@@ -1831,15 +1831,12 @@ div + h1 {
   }
 
   .black-banner {
-    background-color:rgb(0,0,0) !important;
-    color:rgb(255,255,255) !important;
+    background-color: black;
     padding:10px 0 10px 20px;
     margin-bottom:0;
     margin-top:0;
-
-    b, em {
-      color:rgb(255,255,255) !important;
-    }
+    font-weight: bold;
+    color: white;
   }
 
   .header {
