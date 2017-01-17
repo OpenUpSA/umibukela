@@ -332,6 +332,7 @@ def survey_kobo(request, survey_id):
                 facility_name = request.POST['facility_%d' % i]
                 crs_id = int(request.POST['crs_%d' % i])
                 facility_crs[facility_name] = CycleResultSet.objects.get(pk=crs_id)
+            submissions = field_per_SATA_option(survey.form, submissions)
             for answers in submissions:
                 facility_name = answers['facility']
                 submission = Submission(

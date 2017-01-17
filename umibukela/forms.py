@@ -50,7 +50,7 @@ class CRSFromKoboForm(forms.Form):
 
         for i, facility in enumerate(facilities):
             crs_field = forms.ModelChoiceField(
-                queryset=CycleResultSet.objects.all(),
+                queryset=CycleResultSet.objects.order_by('site__name').all(),
                 label=facility['label']
             )
             crs_field.widget = AddAnotherWidgetWrapper(crs_field.widget, CycleResultSet)
