@@ -1197,17 +1197,10 @@ div + h1 {
 }
 
 .poster {
-  .survey-item {
-    padding:0;
-    text-align: center;
-  }
 
-  .question {
-    margin-top:0;
-    font-size: 0.9em;
-    padding: 0 10px;
-    text-transform: uppercase;
-    padding:0 15px;
+  // override bootstrap's rows so that we're more accurate
+  .row {
+    margin: 0px;
   }
 
   &.sassa-service-office {
@@ -1357,16 +1350,20 @@ div + h1 {
     }
 
     .survey-item {
-      margin:10px 0;
       display:flex;
       flex-direction:column;
+      padding: 10px;
+
+      text-align: center;
 
       &.no-border {
         border-right:none;
       }
 
       .question {
+        margin-bottom: 10px;
         font-size:13px;
+        text-transform: uppercase;
       }
 
       .response {
@@ -1826,6 +1823,7 @@ div + h1 {
   h1, h2, h3, h4 {
     font-family: "Open Sans", Helvetica, Arial, sans-serif;
     font-weight: normal;
+    margin: 0px;
   }
 
   .code4sa-logo {
@@ -1849,7 +1847,6 @@ div + h1 {
 
     h1, h2, h3, h4 {
       position: absolute;
-      margin: 0px;
     }
   }
 
