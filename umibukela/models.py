@@ -232,8 +232,8 @@ class CycleResultSet(models.Model):
         unique_together = ('cycle', 'site', 'survey_type')
 
     def __str__(self):
-        return "%s -> %s (%s)" % (
-            self.partner.short_name, self.site.name, self.cycle
+        return "%s <- %s (%s)" % (
+            self.site.name, self.partner.short_name, self.cycle
         )
 
     def end_date_cmp(a, b):
