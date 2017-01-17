@@ -1183,19 +1183,20 @@ div + h1 {
   }
 }
 
-.poster {
-  width:1140px !important;
-  max-width: none !important;
+.a4-page {
+  // force size to be a4 page when printed with 0cm margins on all sides
+  box-sizing: content-box;
+  width: 21cm; // 21cm - 0.5cm margin
+  height: 21cm * 1.414;
 
-  #a1-page {
-    width: calc(100vw - 10px);
-    height: calc(141.4213562vw - 14.14213562px);
-    color: #fff;
-    border: 3px dashed #FF00D8;
-    position: absolute;
-    z-index: 1000;
+  overflow: hidden;
+
+  &.debug {
+    border: 5px dashed hotpink;
   }
+}
 
+.poster {
   .survey-item {
     padding:0;
     text-align: center;
@@ -1286,32 +1287,46 @@ div + h1 {
   }
 
   .header {
-    .site, .date {
-      color:rgb(0,0,0) !important;
+    overflow: hidden;
+    height: 180px;
+
+    .partner, .date, .site {
+      position: absolute;
+      white-space: nowrap;
     }
 
     .partner, .site, .location {
-      left:30px;
+      left: 22px;
+    }
+
+    .banner {
+      width:100%;
     }
 
     .partner {
-      top:75px;
-      color:rgb(255,255,255) !important;
-      font-size:35px;
+      top: 70px;
+      color: white !important;
+      font-size: 21px;
     }
 
     .date {
-      right:0;
-      top:-20px;
-      font-size:20px;
+      right: 5px;
+      top: 5px;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: black !important;
     }
 
     .site {
-      top:150px;
+      top: 110px;
+      font-size: 23px;
+      font-weight: bold;
+      font-style: italic;
+      color: black !important;
     }
 
     .location {
-      bottom:0px;
+      font-size: 18px;
     }
   }
 
@@ -1320,8 +1335,9 @@ div + h1 {
   }
 
   .survey {
-    margin-top:15px;
-    padding:0 15px;
+    h3 {
+      font-size: 24px;
+    }
 
     .border {
       margin:0 15px;
@@ -1347,6 +1363,10 @@ div + h1 {
 
       &.no-border {
         border-right:none;
+      }
+
+      .question {
+        font-size:13px;
       }
 
       .response {
@@ -1383,10 +1403,11 @@ div + h1 {
     }
 
     .totals-table {
-      border:1px solid rgb(0,0,0);
-      padding:5px 20px;
-      font-size:12px;
+      font-size:10px;
+      height:86px;
       width:100%;
+      border:1px solid rgb(0,0,0);
+      padding: 10px 20px;
 
       .heading {
         text-transform: uppercase;
@@ -1403,19 +1424,21 @@ div + h1 {
       }
 
       .text-large {
-        font-size:16px;
+        font-size:13px;
       }
 
       .text-medium {
-        font-size:13px;
+        font-size:11px;
       }
     }
   }
 
   .code4sa-footer {
     .code4sa-logo {
-      margin-top:10px;
       margin-right:5px;
+      margin-top:15px;
+      height:80px;
+      width:auto;
     }
   }
 }
@@ -1662,57 +1685,6 @@ div + h1 {
 }
 
 @media print {
-  .poster {
-    .container {
-      height:267mm !important;
-      width:180mm !important;
-      margin:15mm 15mm 15mm 15mm !important;
-    }
-
-    .header {
-      .partner {
-        font-size:32px;
-      }
-
-      .site {
-        font-size:32px;
-        bottom:-8px;
-      }
-
-      .date {
-        font-size:20px;
-      }
-    }
-
-    .survey {
-      .survey-item {
-        .question {
-          font-size:13px;
-        }
-      }
-      .totals-table {
-        font-size:10px;
-        height:86px;
-        padding-top:10px;
-        padding-bottom:10px;
-
-        .text-large {
-          font-size:13px;
-        }
-
-        .text-medium {
-          font-size:11px;
-        }
-      }
-    }
-
-    .code4sa-logo {
-      margin-top:15px;
-      height:80px;
-      width:auto;
-    }
-  }
-
   .brochure {
     font-size:24px;
     line-height:1.5;
@@ -1848,12 +1820,12 @@ div + h1 {
   }
 }
 
-.print {
+.print-materials {
   -webkit-print-color-adjust: exact;
 
   h1, h2, h3, h4 {
     font-family: "Open Sans", Helvetica, Arial, sans-serif;
-    font-weight:normal;
+    font-weight: normal;
   }
 
   .code4sa-logo {
@@ -1876,16 +1848,8 @@ div + h1 {
     position:relative;
 
     h1, h2, h3, h4 {
-      position:absolute;
-    }
-
-    img {
-      max-width:100%;
-    }
-
-    .partner, .date, .site {
-      position:absolute;
-      display:inline-block;
+      position: absolute;
+      margin: 0px;
     }
   }
 

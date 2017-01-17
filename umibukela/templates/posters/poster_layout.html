@@ -15,15 +15,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="print poster a1-page {{ layout_class }}">
-  <div id="a1-page"></div>
+<div class="print-materials poster a4-page {{ layout_class }} {% if DEBUG %}debug{% endif %}">
   <header class="header">
     <img class="banner" alt="Citizen monitoring" src="{% static 'img/banner-large.png' %}" />
-    <h1 class="partner text-uppercase">{{ result_set.partner.short_name }}</h1>
-    <h3 class="date text-right text-uppercase">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
-    <h2 class="site">
-      <em><b>{% if sector %}{{ sector }}: {% endif %}{{ site }}</b></em>
-    </h2>
+    <h1 class="partner">{{ result_set.partner.short_name }}</h1>
+    <h3 class="date">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
+    <h2 class="site">{% if sector %}{{ sector }}: {% endif %}{{ site }}</h2>
     {% if location %}
     <h3 class="location">{{ location }}</h3>
     {% endif %}
