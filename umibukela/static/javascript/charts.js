@@ -82,7 +82,8 @@ Umibukela.Poster = function() {
         .domain(male_data.map(function(d) { return d.label; }))
         .rangeRound([0, figureHeight])
         .paddingInner(0.2)
-        .paddingOuter(0);
+        .paddingOuter(0)
+        .align(0);
       var y1 = d3.scaleBand()
         .domain(optionTypes)
         .rangeRound([0, y0.bandwidth()])
@@ -155,7 +156,7 @@ Umibukela.Poster = function() {
         .attr('font-size',fontSize)
         .text(function(d) { return d.value > 0 && d.name == 'current' ? d.value : ''; });
 
-      var labelOffset = 0;
+      var labelOffset = y0.paddingInner();
 
       var centerBoxes = svg.selectAll('g.center')
           .data(labels)
@@ -163,21 +164,21 @@ Umibukela.Poster = function() {
           .attr('transform',function(d, i) {
             if(i == labels.length - 1) labelOffset = y0(d.key);
 
-            return 'translate(' + leftOffset + ',' + y0(d.key) + ')';
+            return 'translate(' + leftOffset + ',' + (y0(d.key) + 1) + ')';
           })
           .attr('class','center');
 
       centerBoxes.append('rect')
         .attr('class','box')
         .attr('width',labelWidth)
-        .attr('height',y0.bandwidth());
+        .attr('height',y0.bandwidth() - 2);
 
       centerBoxes.append('text')
           .attr('class','label')
           .attr('x',labelWidth / 2)
-          .attr('y',labelOffset)
+          .attr('y',labelOffset + 4)
           .text(function(d) { return d.label; })
-          .call(self.wrap, labelWidth - 6, fontSize, y0.bandwidth());
+          .call(self.wrap, labelWidth - 6, y0.bandwidth() - y0.paddingInner(), fontSize);
 
       var legend = svg.append('g')
           .attr('class','legend')
@@ -468,13 +469,13 @@ Umibukela.Poster = function() {
               .enter().append('g')
                 .attr('transform', function(d, i) {
                   var iconOffset = format == 'bar' ? i * labelWidth : i * (legendIcon.height + height / 20);
+
                   if(format == 'bar') {
                     return 'translate(' + iconOffset + ',' + 0 + ')';
                   } else {
                     return 'translate(' + 0 + ',' + iconOffset + ')';
                   }
                 });
-
 
             g.append('image')
               .attr('xlink:href',function(d) { return d.icon })
@@ -485,10 +486,10 @@ Umibukela.Poster = function() {
 
             g.append('text')
               .attr('font-size',legendFontSize)
-              .attr('x',legendIcon.width + width / 20)
-              .attr('y',(legendIcon.height - legendFontSize) / 2)
-              .text(function(d) { return d.label })
-              .call(self.wrap, labelWidth * .8, legendFontSize, 0);
+              .attr('x',legendIcon.width + width / 30)
+              .attr('y',legendIcon.height - legendFontSize / 2)
+              .text(function(d) { return d.label });
+              //.call(self.wrap, labelWidth, legendIcon.height, legendFontSize);
           break;
         }
 
@@ -951,26 +952,25 @@ Umibukela.Poster = function() {
     }
   }
 
-  self.wrap = function(textNodes, width, fontSize, boxHeight) {
+  self.wrap = function(textNodes, boxWidth, boxHeight, fontSize) {
     textNodes.each(function() {
-      var text = d3.select(this),
-          words = text.text().split(/\s+/).reverse(),
-          word,
-          line = [],
-          lineNumber = 0,
-          lineHeight = 1.1,
-          x = parseFloat(text.attr('x')) || 0,
-          y = parseFloat(text.attr('y')) || 0;
+      var text = d3.select(this);
+      var words = text.text().split(/\s+/).reverse();
+      var word;
+      var line = [];
+      var lineNumber = 0;
+      var lineHeight = 1.1;
+      var x = parseFloat(text.attr('x')) || 0;
+      var y = parseFloat(text.attr('y')) || 0;
       var textHeight = text.node().getBBox().height;
-
-      if(!!boxHeight) y += (boxHeight - textHeight) / 2;
-
       var tspan = text.text(null).append('tspan').attr('x',x).attr('y',y).attr('font-size',fontSize);
+
       text.attr('x',0).attr('y',0);
+
       while (word = words.pop()) {
         line.push(word);
         tspan.text(line.join(' '));
-        if (tspan.node().getComputedTextLength() > width && line.length > 1) {
+        if (tspan.node().getComputedTextLength() > boxWidth && line.length > 1) {
           var offset = !!boxHeight ? fontSize / 2 : 0;
           line.pop();
           tspan.text(line.join(' '));
@@ -978,6 +978,16 @@ Umibukela.Poster = function() {
           tspan = text.append('tspan').attr('x',x).attr('y', ++lineNumber * fontSize * lineHeight + y - offset).attr('font-size',fontSize).text(word);
         }
       }
+
+      var tspans = text.selectAll('tspan');
+      var lineCount = tspans.size();
+      var offset = y + (boxHeight - lineCount * fontSize) / 2;
+
+      tspans.each(function(d, i) {
+        var tspan = d3.select(this);
+
+        tspan.attr('y',offset + i * (boxHeight - 4) / lineCount)
+      });
     });
   }
 
