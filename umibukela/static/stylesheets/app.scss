@@ -1290,8 +1290,9 @@ div + h1 {
     overflow: hidden;
     height: 180px;
 
-    .site, .date {
-      color: black !important;
+    .partner, .date, .site {
+      position: absolute;
+      white-space: nowrap;
     }
 
     .partner, .site, .location {
@@ -1309,10 +1310,11 @@ div + h1 {
     }
 
     .date {
-      right:0;
+      right: 5px;
       top: 5px;
       font-size: 12px;
       text-transform: uppercase;
+      color: black !important;
     }
 
     .site {
@@ -1320,6 +1322,7 @@ div + h1 {
       font-size: 23px;
       font-weight: bold;
       font-style: italic;
+      color: black !important;
     }
 
     .location {
@@ -1332,6 +1335,10 @@ div + h1 {
   }
 
   .survey {
+    h3 {
+      font-size: 24px;
+    }
+
     .border {
       margin:0 15px;
     }
@@ -1843,11 +1850,6 @@ div + h1 {
     h1, h2, h3, h4 {
       position: absolute;
       margin: 0px;
-    }
-
-    .partner, .date, .site {
-      position:absolute;
-      display:inline-block;
     }
   }
 
