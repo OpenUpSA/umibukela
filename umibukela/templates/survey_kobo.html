@@ -16,17 +16,20 @@
   <div>Kobo session expires {{ kobo_access_token_expiry }}</div>
 
   <h3>Sites in this Kobo Survey</h3>
+  Select the Cycle Result Set to associate each site's submissions with. Create the Cycle Result Set if it doesn't exist yet.
+
   <table>
-    <tr><th>Site</th><th>No of responses</th><tr>
-    {% for site in sites %}
+    <tr><th>Site Label</th><th>Site Name</th><th>No of responses</th><tr>
+      {% for facility in facilities %}
     <tr>
-      <td>{{ site.name }}</td>
-      <td>{{ site.count }}</td>
+      <td>{{ facility.label }}</td>
+      <td>{{ facility.name }}</td>
+      <td>{{ facility.count }}</td>
     </tr>
     {% endfor %}
   </table>
   {{ form.media }}
-  <form action="/your-name/" method="post">
+  <form action="/admin/umibukela/survey/{{ survey.id }}/kobo" method="post">
     {% csrf_token %}
     {{ crs_form.as_p }}
     <input type="submit" value="Submit" />

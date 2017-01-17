@@ -1,11 +1,9 @@
 from django import forms
 from django.contrib.gis.geos import Point
-from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 from widgets import AddAnotherWidgetWrapper
 
 from .models import (
     Site,
-    Submission,
     CycleResultSet,
 )
 
@@ -45,8 +43,23 @@ class SiteForm(forms.ModelForm):
 
 
 class CRSFromKoboForm(forms.Form):
-    your_name = forms.ModelChoiceField(
-        queryset=CycleResultSet.objects.all(),
-        label='select or make some CRS shit'
-    )
-    your_name.widget = AddAnotherWidgetWrapper(your_name.widget, CycleResultSet)
+
+    def __init__(self, *args, **kwargs):
+        facilities = kwargs.pop('facilities')
+        super(CRSFromKoboForm, self).__init__(*args, **kwargs)
+
+        for i, facility in enumerate(facilities):
+            crs_field = forms.ModelChoiceField(
+                queryset=CycleResultSet.objects.all(),
+                label=facility['label']
+            )
+            crs_field.widget = AddAnotherWidgetWrapper(crs_field.widget, CycleResultSet)
+            self.fields['crs_%d' % i] = crs_field
+            self.fields['facility_%d' % i] = forms.CharField(
+                widget=forms.HiddenInput(),
+                initial=facility['name']
+            )
+        self.fields['num_facilities'] = forms.CharField(
+            widget=forms.HiddenInput(),
+            initial=len(facilities)
+        )

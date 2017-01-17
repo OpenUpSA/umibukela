@@ -1,6 +1,3 @@
-"""
-https://gist.github.com/ebrelsford/5263306
-"""
 import copy
 
 from django import forms
@@ -12,6 +9,7 @@ from django.utils.translation import ugettext as _
 
 class AddAnotherWidgetWrapper(forms.Widget):
     """
+    https://gist.github.com/ebrelsford/5263306
     This class is a wrapper to a given widget to add the add icon for the
     admin interface. Modeled after
     django.contrib.admin.widgets.RelatedFieldWidgetWrapper

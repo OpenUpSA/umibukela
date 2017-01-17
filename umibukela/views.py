@@ -158,18 +158,24 @@ def survey_kobo(request, survey_id):
         r = requests.get("https://kc.kobotoolbox.org/api/v1/data/%s" % form_id, headers=headers)
         r.raise_for_status()
         submissions = r.json()
+        facility_labels = {}
+        for q in survey.form['children']:
+            if q['name'] == 'facility':
+                for o in q['children']:
+                    facility_labels[o['name']] = o['label']
         facility_key = lambda r: r['facility']
         facility_sorted = sorted(submissions, key=facility_key, reverse=True)
-        sites = []
+        facilities = []
         for facility_name, facility_group in groupby(facility_sorted, facility_key):
-            sites.append({
+            facilities.append({
                 'name': facility_name,
+                'label': facility_labels[facility_name],
                 'count': len(list(facility_group)),
             })
-        crs_form = CRSFromKoboForm()
+        crs_form = CRSFromKoboForm(facilities=facilities)
         return render(request, 'survey_kobo.html', {
             'survey': survey,
-            'sites': sites,
+            'facilities': facilities,
             'crs_form': crs_form,
         })
 

@@ -12,6 +12,7 @@ from .models import (
     Province,
     Sector,
     Site,
+    Survey,
     SurveyType,
 )
 
@@ -66,4 +67,5 @@ admin_site.register(Programme)
 admin_site.register(Province)
 admin_site.register(Sector)
 admin_site.register(Site, SiteAdmin)
+admin_site.register(Survey)
 admin_site.register(SurveyType)
