@@ -180,6 +180,13 @@ PIPELINE_CSS = {
         ),
         'output_filename': 'app.css',
     },
+    'print-materials': {
+        'source_filenames': (
+            'stylesheets/print-materials.scss',
+            'bower_components/fontawesome/css/font-awesome.css',
+        ),
+        'output_filename': 'print-materials.css',
+    },
 }
 PIPELINE_JS = {
     'js': {
@@ -190,6 +197,15 @@ PIPELINE_JS = {
             'javascript/app.js',
         ),
         'output_filename': 'app.js',
+    },
+    'print-materials': {
+        'source_filenames': (
+            'bower_components/jquery/dist/jquery.min.js',
+            'javascript/d3.min.js',
+            'bower_components/underscore/underscore-min.js',
+            'javascript/charts.js',
+        ),
+        'output_filename': 'print-materials.js',
     },
     'site': {
         'source_filenames': (
