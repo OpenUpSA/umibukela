@@ -1287,34 +1287,43 @@ div + h1 {
   }
 
   .header {
+    overflow: hidden;
+    height: 180px;
+
     .site, .date {
-      color:rgb(0,0,0) !important;
+      color: black !important;
     }
 
     .partner, .site, .location {
-      left:30px;
+      left: 22px;
+    }
+
+    .banner {
+      width:100%;
     }
 
     .partner {
-      top:75px;
-      color:rgb(255,255,255) !important;
-      font-size:32px;
+      top: 70px;
+      color: white !important;
+      font-size: 21px;
     }
 
     .date {
       right:0;
       top:-20px;
       font-size:20px;
+      text-transform: uppercase;
     }
 
     .site {
-      top:150px;
-      bottom: -8px;
-      font-size: 32px;
+      top: 110px;
+      font-size: 23px;
+      font-weight: bold;
+      font-style: italic;
     }
 
     .location {
-      bottom:0px;
+      font-size: 18px;
     }
   }
 
@@ -1323,7 +1332,6 @@ div + h1 {
   }
 
   .survey {
-    margin-top:15px;
     padding:0 15px;
 
     .border {
@@ -1835,11 +1843,8 @@ div + h1 {
     position:relative;
 
     h1, h2, h3, h4 {
-      position:absolute;
-    }
-
-    img {
-      max-width:100%;
+      position: absolute;
+      margin: 0px;
     }
 
     .partner, .date, .site {
