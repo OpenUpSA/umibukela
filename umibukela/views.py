@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 import pandas
 import analysis
 
@@ -155,7 +156,8 @@ def poster(request, site_slug, result_id):
         'sector': sector_name,
         'location': location,
         'questions_dict': site_results,
-        'layout_class': layout_class
+        'layout_class': layout_class,
+        'DEBUG': settings.DEBUG,
     })
 
 def brochure(request, site_slug, result_id):
