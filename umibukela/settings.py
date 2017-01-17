@@ -137,6 +137,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 # file uploads
 if DEBUG:
+    DEFAULT_FILE_STORAGE = 'umibukela.dev_storage.DevFileSystemStorage'
+    FAKE_MISSING_FILE_SIZE = True
     MEDIA_URL = "/images/"
     MEDIA_ROOT = "/tmp/umibukela/images"
 else:
