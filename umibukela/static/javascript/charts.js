@@ -260,7 +260,7 @@ Umibukela.Poster = function() {
       var legendFontSize = legendIcon.width * .6;
       var labelFontSize = width / 20;
 
-      var optionKeys = Object.keys(options.responses[0]);
+      var optionKeys = _.keys(options.responses[0]);
       var years = [2014,2015];
 
       optionTypes.reverse();
@@ -277,13 +277,13 @@ Umibukela.Poster = function() {
 
       responses.forEach(function(response, i) {
         for(period in response) {
-          var male_datum = male_data.find(function(item) { return item.period == period });
-          var female_datum = female_data.find(function(item) { return item.period == period });
+          var male_datum = _.find(male_data, function(item) { return item.period == period });
+          var female_datum = _.find(female_data, function(item) { return item.period == period });
           var key = response[period].key;
           var label = response[period].label;
 
           if(key) labels.push(key);
-          if(!legendLabels.includes(label)) legendLabels.push(label);
+          if(!_.contains(legendLabels, label)) legendLabels.push(label);
 
           male_datum[labels[i]] = response[period].count.male;
           female_datum[labels[i]] = response[period].count.female;
@@ -585,7 +585,7 @@ Umibukela.Poster = function() {
       var gutter = 20;
       var colHeight = (height - gutter - margin.bottom) / 2;
       var optionTypes = options.optionTypes;
-      var optionKeys = Object.keys(options.responses[0]);
+      var optionKeys = _.keys(options.responses[0]);
       var labels = [];
       var male_data = [];
       var female_data = [];
@@ -609,8 +609,8 @@ Umibukela.Poster = function() {
 
       responses.forEach(function(response) {
         for(period in response) {
-          var male_datum = male_data.find(function(item) { return item.period == period });
-          var female_datum = female_data.find(function(item) { return item.period == period });
+          var male_datum = _.find(male_data, function(item) { return item.period == period; });
+          var female_datum = _.find(female_data, function(item) { return item.period == period; });
 
           if(response[period].key) labels.push(response[period].key);
 
@@ -1006,7 +1006,7 @@ Umibukela.Poster = function() {
           options.type = response.attr('data-type');
           options.legendType = response.attr('data-legend');
           options.responses = questions[key].options;
-          options.optionTypes = options.responses[0] ? Object.keys(options.responses[0]) : [];
+          options.optionTypes = options.responses[0] ? _.keys(options.responses[0]) : [];
           options.margin = {
             top: parseFloat(response.attr('data-margin-top')) || 10,
             right: parseFloat(response.attr('data-margin-right')) || 10,
