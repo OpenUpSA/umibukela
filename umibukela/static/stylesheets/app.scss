@@ -1188,6 +1188,7 @@ div + h1 {
   box-sizing: content-box;
   width: 21cm; // 21cm - 0.5cm margin
   height: 21cm * 1.414;
+  margin: 10px 10%;
 
   overflow: hidden;
 
@@ -1197,10 +1198,8 @@ div + h1 {
 }
 
 .poster {
-
-  // override bootstrap's rows so that we're more accurate
   .row {
-    margin: 0px;
+    margin: 0;
   }
 
   &.sassa-service-office {
@@ -1329,7 +1328,7 @@ div + h1 {
 
   .survey {
     h3 {
-      font-size: 24px;
+      font-size: 16px;
     }
 
     .border {
