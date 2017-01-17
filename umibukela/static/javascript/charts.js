@@ -1,4 +1,4 @@
-Umibukela.Poster = function() {
+var PrintMaterials = function() {
   var self = this;
 
   self.init = function() {
@@ -1026,7 +1026,5 @@ Umibukela.Poster = function() {
 }
 
 $(function() {
-  var Poster = new Umibukela.Poster();
-
-  Poster.init();
+  new PrintMaterials().init();
 });
