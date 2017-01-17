@@ -1,4 +1,5 @@
 
+from django.contrib.auth.models import User
 from django.contrib.gis.db import models as gis_models
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -204,6 +205,11 @@ class SurveyKoboProject(models.Model):
     # https://kc.kobotoolbox.org/api/v1/forms/69399/form.json (the xform as json)
     # https://kc.kobotoolbox.org/api/v1/data/69399?format=json (the submissions)
     form_id = models.IntegerField(unique=True, null=False)
+
+
+class KoboRefreshToken(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    token = models.TextField(null=False, blank=False)
 
 
 class CycleResultSet(models.Model):
