@@ -823,9 +823,9 @@ Umibukela.Poster = function() {
       })
 
 
-      var width = 600,
-        height = 300,
-        radius = 100;
+      var width = 370,
+        height = 185,
+        radius = 70;
 
       var color = d3.scaleOrdinal()
         .range([self.ORANGE, self.BLACK]);
@@ -844,7 +844,7 @@ Umibukela.Poster = function() {
         .attr("width", width)
         .attr("height", height)
         .append("g")
-        .attr("transform", "translate( 120, 100)");
+        .attr("transform", "translate(70, 70)");
 
         var g = svg.selectAll(".arc")
           .data(pie(data))
@@ -859,9 +859,9 @@ Umibukela.Poster = function() {
 
         g.append("text")
           .attr("transform", function (d) {
-            return "translate(-103,160)";
+            return "translate(-53,104)";
         })
-          .attr("dy", ".35em")
+          .attr('font-size','9px')
           .style("text-anchor", "middle")
           .text(function(d) {
             return d.data.type == 'Affiliated' ? d.data.total : '';
@@ -869,17 +869,17 @@ Umibukela.Poster = function() {
 
         g.append("text")
           .attr("transform", function (d) {
-            return "translate(19,160)";
+            return "translate(27,104)";
         })
-          .attr("dy", ".35em")
+          .attr('font-size','9px')
           .style("text-anchor", "middle")
           .text(function(d) {
             return d.data.type == 'Not affiliated' ? d.data.total : '';
         });
 
         svg.append('line')
-          .attr('x1', 60)
-          .attr('x2', 160)
+          .attr('x1', 40)
+          .attr('x2', 120)
           .attr('y1', 0)
           .attr('y2', 0)
           .attr('width',1)
@@ -890,44 +890,44 @@ Umibukela.Poster = function() {
 
         legend.append('rect')
           .attr('fill',self.ORANGE)
-          .attr('height',26)
-          .attr('width',26)
-          .attr('y',120)
-          .attr('x', -115);
+          .attr('height',15)
+          .attr('width',15)
+          .attr('y',80)
+          .attr('x', -60);
 
         legend.append('rect')
           .attr('fill',self.BLACK)
-          .attr('height',26)
-          .attr('width',26)
-          .attr('y',120)
-          .attr('x', 8);
+          .attr('height',15)
+          .attr('width',15)
+          .attr('y', 80)
+          .attr('x', 20);
 
         legend.append('text')
-          .attr('y',138)
-          .attr('x', -85)
-          .attr('font-size','11px')
+          .attr('y',91)
+          .attr('x', -40)
+          .attr('font-size','9px')
           .text('AFFILIATED');
 
         legend.append('text')
-          .attr('y',138)
-          .attr('x', 38)
-          .attr('font-size','11px')
+          .attr('y',91)
+          .attr('x', 40)
+          .attr('font-size','9px')
           .text('NOT AFFILIATED');
 
         var table = svg.append('g')
           .attr('class','table')
-          .attr('height', 280)
-          .attr('width', 275)
-          .attr('y', -100)
-          .attr('x', 160);
+          .attr('height', 160)
+          .attr('width', 160)
+          .attr('y', -60)
+          .attr('x', 130);
 
         table.append('rect')
           .attr('fill', 'none')
           .style("stroke", self.BLACK)
-          .attr('height', 280)
-          .attr('width', 275)
-          .attr('y', -100)
-          .attr('x', 160);
+          .attr('height', 155)
+          .attr('width', 179)
+          .attr('y', -60)
+          .attr('x', 120);
 
         var ulLabels = d3.select('.table').append('g');
         var ulCount = d3.select('.table').append('g');
@@ -937,18 +937,18 @@ Umibukela.Poster = function() {
           .enter()
           .append('text')
           .text(function(d){return d});
-          text.attr('x', 170)
-          text.attr('y', function(d,i) { return i * (text.node().getBBox().height + 2) - 75 })
-          text.attr('font-size','12px')
+          text.attr('x', 125)
+          text.attr('y', function(d,i) { return i * (text.node().getBBox().height - 9) - 45 })
+          text.attr('font-size','9px')
 
         var count = ulCount.selectAll('text')
           .data(count)
           .enter()
           .append('text')
           .text(function(d){return d});
-          count.attr('x', 400)
-          count.attr('y', function(d,i) { return i * (text.node().getBBox().height + 7) - 75 })
-          count.attr('font-size','12px')
+          count.attr('x', 284)
+          count.attr('y', function(d,i) { return i * (text.node().getBBox().height) - 45 })
+          count.attr('font-size','9px')
     }
   }
 

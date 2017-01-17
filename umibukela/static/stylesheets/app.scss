@@ -1188,6 +1188,7 @@ div + h1 {
   box-sizing: content-box;
   width: 21cm; // 21cm - 0.5cm margin
   height: 21cm * 1.414;
+  margin: 10px 10%;
 
   overflow: hidden;
 
@@ -1197,6 +1198,10 @@ div + h1 {
 }
 
 .poster {
+  .row {
+    margin: 0;
+  }
+
   .survey-item {
     padding:0;
     text-align: center;
@@ -1204,10 +1209,9 @@ div + h1 {
 
   .question {
     margin-top:0;
-    font-size: 0.9em;
+    font-size: 12px;
     padding: 0 10px;
     text-transform: uppercase;
-    padding:0 15px;
   }
 
   &.sassa-service-office {
@@ -1336,7 +1340,7 @@ div + h1 {
 
   .survey {
     h3 {
-      font-size: 24px;
+      font-size: 16px;
     }
 
     .border {
@@ -1366,7 +1370,7 @@ div + h1 {
       }
 
       .question {
-        font-size:13px;
+        font-size:65%;
       }
 
       .response {
@@ -1835,7 +1839,7 @@ div + h1 {
   .black-banner {
     background-color:rgb(0,0,0) !important;
     color:rgb(255,255,255) !important;
-    padding:10px 0 10px 20px;
+    padding:7px 0 7px 20px;
     margin-bottom:0;
     margin-top:0;
 
