@@ -230,7 +230,6 @@ def kobo_forms(request):
             surveys.append(survey)
 
         return render(request, 'kobo_forms.html', {
-            'kobo_access_token_expiry': request.session.get('kobo_access_token_expiry'),
             'forms': surveys,
         })
 
