@@ -193,7 +193,7 @@ def survey_kobo_submissions(request, survey_id):
                 )
                 submission.save()
             return HttpResponseRedirect('/admin/umibukela/cycleresultset', status=303)
-        return render(request, 'survey_kobo.html', {
+        return render(request, 'survey_kobo_submissions.html', {
             'survey': survey,
             'facilities': facilities,
             'crs_form': crs_form,
@@ -218,7 +218,7 @@ def kobo_forms(request):
                 'num_of_submissions': survey_json['num_of_submissions'],
             }
             if 'formid' in survey_json:
-                survey['kobo_survey_id'] = survey_json['formid']
+                survey['kobo_form_id'] = survey_json['formid']
                 r = requests.get("https://kc.kobotoolbox.org/api/v1/forms/%d/form.json" % survey_json['formid'],
                                  headers=headers)
                 r.raise_for_status()
@@ -229,14 +229,10 @@ def kobo_forms(request):
                     survey['facilities'] = facility_fields[0]['children']
             surveys.append(survey)
 
-        return render(request, 'survey_sources.html', {
+        return render(request, 'kobo_forms.html', {
             'kobo_access_token_expiry': request.session.get('kobo_access_token_expiry'),
             'forms': surveys,
         })
-
-
-def kobo_form(request, kobo_form_id):
-    pass
 
 
 def kobo_form_site_preview(request, kobo_form_id, site_name):
@@ -246,10 +242,10 @@ def kobo_form_site_preview(request, kobo_form_id, site_name):
         headers = {
             'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
         }
-        r = requests.get("https://kc.kobotoolbox.org/api/v1/forms/%s/form.json" % kobo_survey_id, headers=headers)
+        r = requests.get("https://kc.kobotoolbox.org/api/v1/forms/%s/form.json" % kobo_form_id, headers=headers)
         r.raise_for_status()
         form = r.json()
-        r = requests.get("https://kc.kobotoolbox.org/api/v1/data/%s" % kobo_survey_id, headers=headers)
+        r = requests.get("https://kc.kobotoolbox.org/api/v1/data/%s" % kobo_form_id, headers=headers)
         r.raise_for_status()
         submissions = r.json()
         site_responses = [s for s in submissions if s.get('facility', s.get('site', None)) == site_name]
