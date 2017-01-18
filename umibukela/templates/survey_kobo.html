@@ -29,7 +29,7 @@
     {% endfor %}
   </table>
   {{ form.media }}
-  <form action="/admin/umibukela/survey/{{ survey.id }}/kobo" method="post">
+  <form action="/admin/umibukela/survey/{{ survey.id }}/kobo_submissions" method="post">
     {% csrf_token %}
     {{ crs_form.as_p }}
     <input type="submit" value="Submit" />
