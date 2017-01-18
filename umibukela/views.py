@@ -191,47 +191,52 @@ def brochure(request, site_slug, result_id):
     return render(request, 'brochure_layout.html', context)
 
 
-def simplify_perf_group_form(form):
+def simplify_perf_group(form, responses):
     """Raise exception if the assumptions about the categories are wrong"""
-    expected_labels = {
-        '1': 'Very Poor',
-        '2': 'Poor',
-        '3': 'Not good, not bad',
-        '4': 'Good',
-        '5': 'Excellent'
+    label_to_simple = {
+        'Very Poor': 'negative',
+        'Very poorly': 'negative',
+        'Not at all': 'negative',
+        'Mostly not': 'negative',
+        'Poor': 'negative',
+        'Not good, not bad': 'neutral',
+        'Not sure': 'neutral',
+        'Yes, sometimes': 'positive',
+        'Yes, definitely': 'positive',
+        'Well': 'positive',
+        'Good': 'positive',
+        'Mostly well': 'positive',
+        'Excellent': 'positive',
+        'Very well': 'positive',
     }
+    orig_name_to_simple = {}
     for child in form['children']:
         if child.get('type', None) == 'group' and child.get('name', None) == 'performance_group':
             for q in child.get('children'):
                 if q.get('type') == 'select one':
                     for o in q.get('children'):
-                        if o.get('label') != expected_labels[o.get('name')]:
-                            raise Exception("%r" % [q['name'], o['name']])
+                        name = o['name']
+                        label = o['label']
+                        orig_name_to_simple[name] = label_to_simple[label]
                     q['children'] = [
                          {
-                             "name": "1",
+                             "name": "negative",
                              "label": "Negative",
                          },
                          {
-                             "name": "3",
+                             "name": "neutral",
                              "label": "Neutral",
                          },
                          {
-                             "name": "5",
+                             "name": "positive",
                              "label": "Positive",
                          },
                     ]
 
-
-def simplify_perf_group(form, responses):
-    simplify_perf_group_form(form)
     for response in responses:
         for key, val in response.iteritems():
             if key.startswith('performance_group/'):
-                if val == '2':
-                    response[key] = '1'
-                if val == '4':
-                    response[key] = '5'
+                response[key] = orig_name_to_simple[val]
 
 
 def partners(request):
