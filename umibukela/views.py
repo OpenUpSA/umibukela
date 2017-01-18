@@ -384,7 +384,11 @@ def kobo_forms(request):
         })
 
 
-def survey_site_preview(request, kobo_survey_id, site_name):
+def kobo_form(request, kobo_form_id):
+    pass
+
+
+def kobo_form_site_preview(request, kobo_form_id, site_name):
     if not is_kobo_authed(request):
         return start_kobo_oauth(request)
     else:
