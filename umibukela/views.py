@@ -94,6 +94,7 @@ def site_result(request, site_slug, result_id):
         }
     })
 
+
 def poster(request, site_slug, result_id):
     result_set = get_object_or_404(
         CycleResultSet,
@@ -111,8 +112,9 @@ def poster(request, site_slug, result_id):
     site_results = None
 
     if site_responses:
-        df = pandas.DataFrame(site_responses)
         form = result_set.survey.form
+        simplify_perf_group(form, site_responses)
+        df = pandas.DataFrame(site_responses)
         totals['current'] = analysis.count_submissions(df)
         site_results = analysis.count_options(df, form['children'])
         site_results = analysis.calc_q_percents(site_results)
@@ -160,6 +162,7 @@ def poster(request, site_slug, result_id):
         'DEBUG': settings.DEBUG,
     })
 
+
 def brochure(request, site_slug, result_id):
     result_set = get_object_or_404(
         CycleResultSet,
@@ -186,6 +189,49 @@ def brochure(request, site_slug, result_id):
         context['totals'] = analysis.count_submissions(pandas.DataFrame(site_responses))
 
     return render(request, 'brochure_layout.html', context)
+
+
+def simplify_perf_group_form(form):
+    """Raise exception if the assumptions about the categories are wrong"""
+    expected_labels = {
+        '1': 'Very Poor',
+        '2': 'Poor',
+        '3': 'Not good, not bad',
+        '4': 'Good',
+        '5': 'Excellent'
+    }
+    for child in form['children']:
+        if child.get('type', None) == 'group' and child.get('name', None) == 'performance_group':
+            for q in child.get('children'):
+                if q.get('type') == 'select one':
+                    for o in q.get('children'):
+                        if o.get('label') != expected_labels[o.get('name')]:
+                            raise Exception("%r" % [q['name'], o['name']])
+                    q['children'] = [
+                         {
+                             "name": "1",
+                             "label": "Negative",
+                         },
+                         {
+                             "name": "3",
+                             "label": "Neutral",
+                         },
+                         {
+                             "name": "5",
+                             "label": "Positive",
+                         },
+                    ]
+
+
+def simplify_perf_group(form, responses):
+    simplify_perf_group_form(form)
+    for response in responses:
+        for key, val in response.iteritems():
+            if key.startswith('performance_group/'):
+                if val == '2':
+                    response[key] = '1'
+                if val == '4':
+                    response[key] = '5'
 
 
 def partners(request):
