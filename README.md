@@ -40,7 +40,11 @@ heroku config:set DJANGO_DEBUG=false \
                   DISABLE_COLLECTSTATIC=1 \
                   DJANGO_SECRET_KEY=some-secret-key \
                   NEW_RELIC_APP_NAME=cool app name \
-                  NEW_RELIC_LICENSE_KEY=new relic license key
+                  NEW_RELIC_LICENSE_KEY=new relic license key \
+                  HEALTHE_KOBO_USERNAME=...\
+                  HEALTHE_KOBO_PASSWORD=...\
+                  KOBO_CLIENT_ID=...\
+                  KOBO_CLIENT_SECRET=...
 git push heroku master
 heroku run python manage.py migrate
 heroku run python manage.py createsuperuser
