@@ -129,6 +129,7 @@ $headings-color: $black;
   &.local-gov {
     .header {
       padding-bottom:50px;
+      height:175px;
     }
   }
 
@@ -164,7 +165,7 @@ $headings-color: $black;
     }
 
     .site {
-      top: 110px;
+      top: 118px;
       font-size: 23px;
       font-weight: bold;
       font-style: italic;
@@ -215,7 +216,7 @@ $headings-color: $black;
 
       .question {
         margin-bottom: 10px;
-        font-size:13px;
+        font-size:11px;
         text-transform: uppercase;
       }
 

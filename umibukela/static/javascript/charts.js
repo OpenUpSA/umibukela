@@ -247,7 +247,7 @@ var PrintMaterials = function() {
 
       var figureHeight = height * .75;
       var figureWidth = width * .8;
-      var legendWidth = width * .2;
+      var legendWidth = width * .22;
       var legendHeight = height * .2;
       var gutter = figureWidth * .2;
       var labelIcon = {
@@ -255,8 +255,8 @@ var PrintMaterials = function() {
         height: height / 5
       };
       var legendIcon = {
-        height: height / 10,
-        width: width / 10
+        height: (height + width) / 25,
+        width: (height + width) / 25
       };
       var legendFontSize = width / 30;
       var labelFontSize = width / 30;
@@ -405,7 +405,7 @@ var PrintMaterials = function() {
             .attr('font-size',labelFontSize)
             .text(function(d) { return d; });
 
-        return labels.attr('x',function(d,i) { return addedShift + (x.bandwidth() * 2) * i - labels.node().getBBox().width / 2 * i; });
+        return labels.attr('x',function(d, i) { return addedShift + (x.bandwidth() * 2) * i - labels.node().getBBox().width / 2 * i; });
       }
 
       function drawLegend(svg, type, format, labels) {
@@ -489,13 +489,13 @@ var PrintMaterials = function() {
 
             g.append('image')
               .attr('xlink:href',function(d) { return d.icon })
-              .attr('width',legendIcon.height)
-              .attr('height',legendIcon.width);
+              .attr('width',legendIcon.width)
+              .attr('height',legendIcon.height);
 
             g.append('text')
               .attr('font-size',legendFontSize)
-              .attr('x',legendIcon.width - 5)
-              .attr('y',legendIcon.height)
+              .attr('x',legendIcon.width + 3)
+              .attr('y',(legendIcon.height - legendFontSize * 1.1) / 2 + legendFontSize)
               .text(function(d) { return d.label.toUpperCase() });
               //.call(self.wrap, labelWidth, legendIcon.height, legendFontSize);
           break;
