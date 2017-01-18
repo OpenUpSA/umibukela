@@ -321,15 +321,12 @@ var PrintMaterials = function() {
         });
       }
 
+      var maleMax = d3.max(male_data.map(function(d) { return d.total; }));
+      var femaleMax = d3.max(female_data.map(function(d) { return d.total; }));
+      var max = maleMax > femaleMax ? maleMax : femaleMax;
 
-      var max = d3.max(male_data.concat(female_data).map(function(d) { return d.total; }));
-
-      // Normalize
-      for(var i = 0; i < male_data.length; i++) {
-        
-      }
-
-      console.log(male_data,'data');
+      male_data = self.normalize(male_data, maleMax, labels);
+      female_data = self.normalize(female_data, femaleMax, labels);
 
       var male_stack = d3.stack().keys(labels)(male_data);
       var female_stack = d3.stack().keys(labels)(female_data);
@@ -365,15 +362,11 @@ var PrintMaterials = function() {
               return isBar ? totalShift : totalShift + legendWidth;
             })
             .attr('y', function(d) { return y(d[1]); })
-            .attr('height', function(d) {
-              var normaliser = 1;
-              //console.log('data',d,d[0],d[1],y(d[0]) - y(d[1]));
-              //if(d.data.period == 'prev') normaliser = gender == 'male' ? maleNormaliser : femaleNormaliser;
-              return (y(d[0]) - y(d[1])) * normaliser;
-            })
+            .attr('height', function(d) { return (y(d[0]) - y(d[1])); })
             .attr('width', function(d) {
               var period = d.data.period;
               var coefficient = period == 'current' ? 1.9 : .1;
+
               return x.bandwidth() * coefficient;
             });
       }
@@ -386,11 +379,17 @@ var PrintMaterials = function() {
           .enter().append('text')
             .attr('class','count')
             .attr('y',function(d) { return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2; })
-            .attr('x',function(d,i) { return shift })
+            .attr('x',shift)
             .attr('fill',self.BLACK)
             .attr('stroke','none')
             .attr('font-size',labelFontSize)
-            .text(function(d) { return d.data.period == 'current' && d[1] - d[0] > 0 ? d[1] - d[0] : ''; });
+            .text(function(d) {
+              var denormalizer = 1;
+
+              if(d.data['normalization-factor']) denormalizer = 1 / d.data['normalization-factor'];
+
+              return d.data.period == 'current' && d[1] - d[0] > 0 ? Math.round((d[1] - d[0]) * denormalizer) : '';
+            });
       }
 
       function setupLabels(el, labels, addedShift) {
@@ -400,7 +399,7 @@ var PrintMaterials = function() {
             .data(labels)
           .enter().append('text')
             .attr('class','year')
-            .attr('y',figureHeight + 20)
+            .attr('y',figureHeight + legendIcon.height)
             .attr('fill',self.BLACK)
             .attr('stroke','none')
             .attr('font-size',labelFontSize)
@@ -556,17 +555,15 @@ var PrintMaterials = function() {
         });
       });
 
-      var maleNormaliser = maleCurrentHeight > malePreviousHeight ? maleCurrentHeight / malePreviousHeight : malePreviousHeight / maleCurrentHeight;
-      var femaleNormaliser = femaleCurrentHeight > femalePreviousHeight ? femaleCurrentHeight / femalePreviousHeight : femalePreviousHeight / femaleCurrentHeight;
-
       var maleBarShift = isBar ? labelIcon.width : 0;
       var femaleBarShift = isBar ? labelIcon.width + colWidth + gutter : colWidth + gutter;
       var femaleCountShift = isBar ? colWidth * 2 + gutter : legendWidth + colWidth * 2 + gutter;
       var maleCountShift = isBar ? labelIcon.width + colWidth - 2 : legendWidth + colWidth - 2;
       var maleIconShift = isBar ? 0 : legendWidth - labelIcon.width;
       var femaleIconShift = isBar ? labelIcon.width + colWidth + gutter / 2 : legendWidth + colWidth + gutter / 2;
-      var maleLabelShift = isBar ? labelIcon.width + 7 : labelIcon.width + width / 10;
+      var maleLabelShift = isBar ? labelIcon.width + 7 : legendWidth + 3;
       var femaleLabelShift = maleLabelShift + colWidth + gutter;
+      var lineShift = isBar ? colWidth + gutter / 2 + 15 : legendWidth + colWidth + gutter / 3;
 
       var male = setupBands(svg, '.male', 'male', male_stack);
       var female = setupBands(svg, '.female', 'female', female_stack);
@@ -578,8 +575,6 @@ var PrintMaterials = function() {
       var femaleLabels = setupLabels(female, years, femaleLabelShift);
       var maleIcon = drawIcon(svg, '/static/img/man-icon.png', maleIconShift);
       var femaleIcon = drawIcon(svg, '/static/img/woman-icon.png', femaleIconShift);
-
-      var lineShift = isBar ? colWidth + gutter / 2 + 15 : legendWidth + colWidth + gutter / 3;
 
       svg.append('line')
         .attr('x1',lineShift)
@@ -637,15 +632,17 @@ var PrintMaterials = function() {
         }
       });
 
-      male_data.forEach(function(d) {
-        d.total = d.yes + d.no;
-      });
+      for(var i = 0;i < male_data.length; i++) {
+        male_data[i].total = male_data[i].yes + male_data[i].no;
+        female_data[i].total = female_data[i].yes + female_data[i].no;
+      }
 
-      female_data.forEach(function(d) {
-        d.total = d.yes + d.no;
-      });
+      var maleMax = d3.max(male_data.map(function(d) { return d.total; }));
+      var femaleMax = d3.max(female_data.map(function(d) { return d.total; }));
+      var max = maleMax > femaleMax ? maleMax : femaleMax;
 
-      var max = d3.max(male_data.concat(female_data).map(function(d) { return d.total; }));
+      male_data = self.normalize(male_data, maleMax, labels);
+      female_data = self.normalize(female_data, femaleMax, labels);
 
       var y = d3.scaleBand()
         .domain(optionTypes)
@@ -1007,6 +1004,25 @@ var PrintMaterials = function() {
         tspan.attr('y',offset + i * (boxHeight - 4) / lineCount)
       });
     });
+  }
+
+  // Normalize the data
+  self.normalize = function(data, maxValue, labels) {
+    if(!!data) {
+      for(var i = 0; i < data.length; i++) {
+        var normalizedMax = maxValue / data[i].total;
+
+        if(normalizedMax > 1) {
+          labels.forEach(function(label) {
+            data[i][label] = Math.round(data[i][label] * normalizedMax);
+          });
+
+          data[i]['normalization-factor'] = normalizedMax;
+        }
+      }
+
+      return data;
+    }
   }
 
   self.draw = function() {
