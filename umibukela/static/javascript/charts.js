@@ -97,7 +97,7 @@ var PrintMaterials = function() {
 
       var svg = response.append('svg')
         .attr('height',height)
-        .attr('width',width + margin.left + margin.right)
+        .attr('width',width - margin.left - margin.right)
       .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
@@ -244,10 +244,13 @@ var PrintMaterials = function() {
       var labels = [];
       var legendLabels = [];
 
+      var isBar = legendFormat == 'top-bar' || legendFormat == 'bottom-bar';
+
       var figureHeight = height * .8;
       var figureWidth = width * .8;
       var legendWidth = figureWidth / 4;
-      var gutter = figureWidth / 3;
+      var legendHeight = height * .2;
+      var gutter = figureWidth / 4;
       var labelIcon = {
         width: width / 10,
         height: height / 5
@@ -256,9 +259,10 @@ var PrintMaterials = function() {
         height: height / 10,
         width: width / 10
       };
-      var colWidth = (width - legendWidth - gutter - margin.right) / 2;
       var legendFontSize = legendIcon.width * .6;
       var labelFontSize = width / 20;
+      var colWidth = (width - gutter - margin.right - margin.left) / 2;
+      var colWidth = isBar ? colWidth : colWidth - legendWidth / 2;
 
       var optionKeys = _.keys(options.responses[0]);
       var years = [2014,2015];
@@ -333,7 +337,7 @@ var PrintMaterials = function() {
       function setupBands(el, selector, className, data) {
         return el.append('g')
           .attr('transform',function() {
-            if(legendFormat == 'bar') return 'translate(0,' + legendHeight + ')';
+            if(legendFormat == 'top-bar') return 'translate(0,' + legendHeight + ')';
             else return 'translate(0,0)';
           })
           .selectAll(selector)
@@ -344,7 +348,7 @@ var PrintMaterials = function() {
             .attr('stroke',function(d) { return z(d.key) == self.WHITE ? self.BLACK : z(d.key); });
       }
 
-      function setupRect(el, gender, addedShift) {
+      function setupBars(el, gender, addedShift) {
         if(!addedShift) addedShift = 0;
 
         return el.selectAll('rect')
@@ -356,7 +360,9 @@ var PrintMaterials = function() {
 
               if(period == 'current') shift = .9 * x.bandwidth();
 
-              return legendWidth + x(d.data.period) - shift + addedShift;
+              var totalShift = x(d.data.period) - shift + addedShift;
+
+              return isBar ? totalShift : totalShift + legendWidth;
             })
             .attr('y', function(d) { return y(d[1]); })
             .attr('height', function(d) {
@@ -380,7 +386,7 @@ var PrintMaterials = function() {
           .enter().append('text')
             .attr('class','count')
             .attr('y',function(d) { return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2; })
-            .attr('x',shift)
+            .attr('x',function(d,i) { return shift })
             .attr('fill',self.BLACK)
             .attr('stroke','none')
             .attr('font-size','10px')
@@ -390,16 +396,17 @@ var PrintMaterials = function() {
       function setupLabels(el, labels, addedShift) {
         if(!addedShift) addedShift = 0;
 
-        return el.selectAll('text.year')
+        var labels = el.selectAll('text.year')
             .data(labels)
           .enter().append('text')
             .attr('class','year')
-            .attr('x',function(d,i) { return addedShift + (x.bandwidth() * 2) * i + labelIcon.width + width / 10; })
             .attr('y',figureHeight + 20)
             .attr('fill',self.BLACK)
             .attr('stroke','none')
             .attr('font-size',labelFontSize)
             .text(function(d) { return d; });
+
+        return labels.attr('x',function(d,i) { return addedShift + (x.bandwidth() * 2) * i - labels.node().getBBox().width / 2 * i; });
       }
 
       function drawLegend(svg, type, format, labels) {
@@ -409,7 +416,11 @@ var PrintMaterials = function() {
 
         switch(type) {
           case 'yes/no':
-            legend.append('rect')
+              var isBottomBar = format == 'bottom-bar';
+
+              if(isBottomBar) legend.attr('transform','translate(' + (figureWidth / 3) + ',' + (figureHeight + 30) + ')');
+
+              legend.append('rect')
               .attr('fill',self.BLACK)
               .attr('height',legendIcon.height)
               .attr('width',legendIcon.width)
@@ -420,18 +431,18 @@ var PrintMaterials = function() {
               .attr('fill',self.ORANGE)
               .attr('height',legendIcon.height)
               .attr('width',legendIcon.width)
-              .attr('y',legendIcon.height + height / 20)
-              .attr('x',0);
+              .attr('y',isBottomBar ? 0 : legendIcon.height + height / 20)
+              .attr('x',isBottomBar ? legendIcon.width + 40 : 0);
 
             legend.append('text')
-              .attr('x',40)
-              .attr('y',legendIcon.height / 1.5)
+              .attr('x',legendIcon.width + 5)
+              .attr('y',legendFontSize)
               .attr('font-size',legendFontSize)
               .text('YES');
 
             legend.append('text')
-              .attr('x',40)
-              .attr('y',legendIcon.height / 1.5 + legendIcon.height + height / 20)
+              .attr('x',isBottomBar ? legendIcon.width * 2 + 45 : legendIcon.width + 5)
+              .attr('y',isBottomBar ? legendFontSize : legendIcon.height / 1.5 + legendIcon.height + height / 20)
               .attr('font-size',legendFontSize)
               .text('NO');
           break;
@@ -457,7 +468,7 @@ var PrintMaterials = function() {
           case 'attitude':
             // Default to vertical alignment
             var icons = ['/static/img/negative_face.svg','/static/img/neutral_face.svg','/static/img/positive_face.svg'];
-            var labelWidth = format == 'bar' ? figureWidth / 3 : 0;
+            var labelWidth = format == 'top-bar' ? figureWidth / 3 : 0;
             var data = [];
 
             icons.forEach(function(icon, i) {
@@ -468,9 +479,9 @@ var PrintMaterials = function() {
                 .data(data)
               .enter().append('g')
                 .attr('transform', function(d, i) {
-                  var iconOffset = format == 'bar' ? i * labelWidth : i * (legendIcon.height + height / 20);
+                  var iconOffset = format == 'top-bar' ? i * labelWidth : i * (legendIcon.height + height / 20);
 
-                  if(format == 'bar') {
+                  if(format == 'top-bar') {
                     return 'translate(' + iconOffset + ',' + 0 + ')';
                   } else {
                     return 'translate(' + 0 + ',' + iconOffset + ')';
@@ -509,15 +520,15 @@ var PrintMaterials = function() {
 
       // Draw chart
       var svg = response.append('svg')
-        .attr('height',height + margin.bottom)
-        .attr('width',width + margin.right + margin.left)
+        .attr('height',height + margin.bottom + margin.top + 15)
+        .attr('width',width - margin.right - margin.left)
       .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
+        console.log(legendFormat,legendHeight,height);
       var legend = drawLegend(svg, legendType, legendFormat, legendLabels);
       var legendHeight = legend.node().getBBox().height;
 
-      if(legendType == 'bar') figureHeight = height - legendHeight;
+      if(legendType == 'top-bar' || legendType == 'bottom-bar') figureHeight = height - legendHeight;
 
       var x = d3.scaleBand()
         .domain(optionTypes)
@@ -552,20 +563,30 @@ var PrintMaterials = function() {
       var maleNormaliser = maleCurrentHeight > malePreviousHeight ? maleCurrentHeight / malePreviousHeight : malePreviousHeight / maleCurrentHeight;
       var femaleNormaliser = femaleCurrentHeight > femalePreviousHeight ? femaleCurrentHeight / femalePreviousHeight : femalePreviousHeight / femaleCurrentHeight;
 
+      var maleBarShift = isBar ? labelIcon.width : 0;
+      var femaleBarShift = isBar ? labelIcon.width + colWidth + gutter : colWidth + gutter;
+      var femaleCountShift = isBar ? colWidth * 2 + gutter : legendWidth + colWidth * 2 + gutter;
+      var maleCountShift = isBar ? labelIcon.width + colWidth - 2 : legendWidth + colWidth - 2;
+      var femaleIconShift = isBar ? labelIcon.width + colWidth + gutter / 2 : legendWidth + colWidth + gutter / 2;
+      var maleLabelShift = isBar ? legendIcon.width + 7 : labelIcon.width + width / 10;
+      var femaleLabelShift = maleLabelShift + colWidth + gutter;
+
       var male = setupBands(svg, '.male', 'male', male_stack);
       var female = setupBands(svg, '.female', 'female', female_stack);
-      var maleRect = setupRect(male, 'male');
-      var femaleRect = setupRect(female, 'female', colWidth + gutter);
-      var maleCount = setupCount(male, colWidth + legendWidth - 2);
-      var femaleCount = setupCount(female, legendWidth + colWidth * 2 + gutter);
-      var maleLabels = setupLabels(male, years);
-      var femaleLabels = setupLabels(female, years, colWidth + gutter);
+      var maleBars = setupBars(male, 'male',maleBarShift);
+      var femaleBars = setupBars(female, 'female', femaleBarShift);
+      var maleCount = setupCount(male, maleCountShift);
+      var femaleCount = setupCount(female, femaleCountShift);
+      var maleLabels = setupLabels(male, years, maleLabelShift);
+      var femaleLabels = setupLabels(female, years, femaleLabelShift);
       var maleIcon = drawIcon(svg, '/static/img/man-icon.png');
-      var femaleIcon = drawIcon(svg, '/static/img/woman-icon.png', legendWidth + colWidth + gutter / 2);
+      var femaleIcon = drawIcon(svg, '/static/img/woman-icon.png', femaleIconShift);
+
+      var lineShift = isBar ? colWidth + gutter / 2 + 15 : legendWidth + colWidth + gutter / 3;
 
       svg.append('line')
-        .attr('x1',legendWidth + colWidth + gutter / 3)
-        .attr('x2',legendWidth + colWidth + gutter / 3)
+        .attr('x1',lineShift)
+        .attr('x2',lineShift)
         .attr('y1',0)
         .attr('y2',figureHeight + labelFontSize)
         .attr('height',figureHeight)
