@@ -90,6 +90,11 @@ $headings-color: $black;
   &.health {
     .how-long {
       margin-top:10px;
+      margin-bottom:0;
+    }
+
+    .no-padding {
+      padding:0;
     }
 
     .pointer {
@@ -129,7 +134,7 @@ $headings-color: $black;
 
   .header {
     overflow: hidden;
-    height: 180px;
+    height: 155px;
 
     .partner, .date, .site {
       position: absolute;

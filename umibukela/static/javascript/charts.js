@@ -97,9 +97,8 @@ var PrintMaterials = function() {
 
       var svg = response.append('svg')
         .attr('height',height)
-        .attr('width',width - margin.left - margin.right)
-      .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+        .attr('width',width)
+      .append('g');
 
       var right = svg.selectAll('g.right')
         .data(female_data)
@@ -246,11 +245,11 @@ var PrintMaterials = function() {
 
       var isBar = legendFormat == 'top-bar' || legendFormat == 'bottom-bar';
 
-      var figureHeight = height * .8;
+      var figureHeight = height * .75;
       var figureWidth = width * .8;
-      var legendWidth = figureWidth / 4;
+      var legendWidth = width * .2;
       var legendHeight = height * .2;
-      var gutter = figureWidth / 4;
+      var gutter = figureWidth * .2;
       var labelIcon = {
         width: width / 10,
         height: height / 5
@@ -259,10 +258,9 @@ var PrintMaterials = function() {
         height: height / 10,
         width: width / 10
       };
-      var legendFontSize = legendIcon.width * .6;
-      var labelFontSize = width / 20;
-      var colWidth = (width - gutter - margin.right - margin.left) / 2;
-      var colWidth = isBar ? colWidth : colWidth - legendWidth / 2;
+      var legendFontSize = width / 30;
+      var labelFontSize = width / 30;
+      var colWidth = isBar ? (figureWidth - gutter) / 2 : (figureWidth - gutter - legendWidth) / 2;
 
       var optionKeys = _.keys(options.responses[0]);
       var years = [2014,2015];
@@ -313,23 +311,25 @@ var PrintMaterials = function() {
         }
       }
 
-      male_data.forEach(function(d) {
-        d.total = 0;
+      for(var i = 0; i < male_data.length; i++) {
+        male_data[i].total = 0;
+        female_data[i].total = 0;
 
         labels.forEach(function(label) {
-          d.total += d[label];
+          male_data[i].total += male_data[i][label];
+          female_data[i].total += female_data[i][label];
         });
-      });
+      }
 
-      female_data.forEach(function(d) {
-        d.total = 0;
-
-        labels.forEach(function(label) {
-          d.total += d[label];
-        });
-      });
 
       var max = d3.max(male_data.concat(female_data).map(function(d) { return d.total; }));
+
+      // Normalize
+      for(var i = 0; i < male_data.length; i++) {
+        
+      }
+
+      console.log(male_data,'data');
 
       var male_stack = d3.stack().keys(labels)(male_data);
       var female_stack = d3.stack().keys(labels)(female_data);
@@ -389,7 +389,7 @@ var PrintMaterials = function() {
             .attr('x',function(d,i) { return shift })
             .attr('fill',self.BLACK)
             .attr('stroke','none')
-            .attr('font-size','10px')
+            .attr('font-size',labelFontSize)
             .text(function(d) { return d.data.period == 'current' && d[1] - d[0] > 0 ? d[1] - d[0] : ''; });
       }
 
@@ -459,7 +459,7 @@ var PrintMaterials = function() {
 
           labels.forEach(function(label,i) {
             legend.append('text')
-              .attr('x',40)
+              .attr('x',legendIcon.width + 5)
               .attr('y',legendIcon.height / 1.5 + i * (legendIcon.height + height / 20))
               .attr('font-size',legendFontSize)
               .text(label.toUpperCase());
@@ -479,7 +479,7 @@ var PrintMaterials = function() {
                 .data(data)
               .enter().append('g')
                 .attr('transform', function(d, i) {
-                  var iconOffset = format == 'top-bar' ? i * labelWidth : i * (legendIcon.height + height / 20);
+                  var iconOffset = format == 'top-bar' ? i * labelWidth : i * (legendIcon.height + 3);
 
                   if(format == 'top-bar') {
                     return 'translate(' + iconOffset + ',' + 0 + ')';
@@ -491,15 +491,13 @@ var PrintMaterials = function() {
             g.append('image')
               .attr('xlink:href',function(d) { return d.icon })
               .attr('width',legendIcon.height)
-              .attr('height',legendIcon.width)
-              .attr('dy',0)
-              .attr('dx',0);
+              .attr('height',legendIcon.width);
 
             g.append('text')
               .attr('font-size',legendFontSize)
-              .attr('x',legendIcon.width + width / 30)
-              .attr('y',legendIcon.height - legendFontSize / 2)
-              .text(function(d) { return d.label });
+              .attr('x',legendIcon.width - 5)
+              .attr('y',legendIcon.height)
+              .text(function(d) { return d.label.toUpperCase() });
               //.call(self.wrap, labelWidth, legendIcon.height, legendFontSize);
           break;
         }
@@ -520,11 +518,9 @@ var PrintMaterials = function() {
 
       // Draw chart
       var svg = response.append('svg')
-        .attr('height',height + margin.bottom + margin.top + 15)
+        .attr('height',height - margin.top)
         .attr('width',width - margin.right - margin.left)
-      .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-        console.log(legendFormat,legendHeight,height);
+      .append('g');
       var legend = drawLegend(svg, legendType, legendFormat, legendLabels);
       var legendHeight = legend.node().getBBox().height;
 
@@ -567,8 +563,9 @@ var PrintMaterials = function() {
       var femaleBarShift = isBar ? labelIcon.width + colWidth + gutter : colWidth + gutter;
       var femaleCountShift = isBar ? colWidth * 2 + gutter : legendWidth + colWidth * 2 + gutter;
       var maleCountShift = isBar ? labelIcon.width + colWidth - 2 : legendWidth + colWidth - 2;
+      var maleIconShift = isBar ? 0 : legendWidth - labelIcon.width;
       var femaleIconShift = isBar ? labelIcon.width + colWidth + gutter / 2 : legendWidth + colWidth + gutter / 2;
-      var maleLabelShift = isBar ? legendIcon.width + 7 : labelIcon.width + width / 10;
+      var maleLabelShift = isBar ? labelIcon.width + 7 : labelIcon.width + width / 10;
       var femaleLabelShift = maleLabelShift + colWidth + gutter;
 
       var male = setupBands(svg, '.male', 'male', male_stack);
@@ -579,7 +576,7 @@ var PrintMaterials = function() {
       var femaleCount = setupCount(female, femaleCountShift);
       var maleLabels = setupLabels(male, years, maleLabelShift);
       var femaleLabels = setupLabels(female, years, femaleLabelShift);
-      var maleIcon = drawIcon(svg, '/static/img/man-icon.png');
+      var maleIcon = drawIcon(svg, '/static/img/man-icon.png', maleIconShift);
       var femaleIcon = drawIcon(svg, '/static/img/woman-icon.png', femaleIconShift);
 
       var lineShift = isBar ? colWidth + gutter / 2 + 15 : legendWidth + colWidth + gutter / 3;
@@ -667,7 +664,7 @@ var PrintMaterials = function() {
         .attr('height', height)
         .attr('width', width + margin.left + margin.right)
       .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+        .attr('transform', 'translate(' + margin.left + ',0)');
 
       var female = svg.selectAll('.female')
           .data(female_stack)
