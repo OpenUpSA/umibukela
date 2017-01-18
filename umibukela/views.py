@@ -1,15 +1,15 @@
 from datetime import datetime, timedelta
 from django.conf import settings
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
+from forms import CRSFromKoboForm
 from itertools import groupby
 import analysis
 import pandas
 import pandas
 import requests
 import settings
-
-from forms import CRSFromKoboForm
 
 from .models import (
     CycleResultSet,
@@ -298,7 +298,7 @@ def survey_from_kobo(request):
             })
 
 
-def survey_kobo(request, survey_id):
+def survey_kobo_submissions(request, survey_id):
     if not is_kobo_authed(request):
         return start_kobo_oauth(request)
     else:
@@ -341,10 +341,7 @@ def survey_kobo(request, survey_id):
                     cycle_result_set=facility_crs[facility_name]
                 )
                 submission.save()
-            return render(request, 'survey_kobo.html', {
-                'survey': survey,
-                'facilities': facilities,
-            })
+            return HttpResponseRedirect('/admin/umibukela/cycleresultset', status=303)
         return render(request, 'survey_kobo.html', {
             'survey': survey,
             'facilities': facilities,

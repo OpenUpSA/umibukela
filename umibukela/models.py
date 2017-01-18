@@ -301,8 +301,6 @@ class Submission(models.Model):
     uuid = models.TextField(unique=True)
     cycle_result_set = models.ForeignKey(
         CycleResultSet,
-        null=True,
-        blank=True,
         related_name="submissions"
     )
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
