@@ -122,10 +122,11 @@ def poster(request, site_slug, result_id):
         if prev_result_set:
             prev_responses = [s.answers for s in prev_result_set.submissions.all()]
             if prev_responses:
+                prev_form = prev_result_set.survey.form
+                simplify_perf_group(prev_form, prev_responses)
                 totals['previous'] = analysis.count_submissions(
                     pandas.DataFrame(prev_responses))
                 prev_df = pandas.DataFrame(prev_responses)
-                prev_form = prev_result_set.survey.form
                 prev_results = analysis.count_options(prev_df, prev_form['children'])
                 prev_results = analysis.calc_q_percents(prev_results)
             else:
@@ -209,11 +210,13 @@ def simplify_perf_group(form, responses):
         'Excellent': 'positive',
         'Very well': 'positive',
     }
-    orig_name_to_simple = {}
+    orig_name_to_simple = {'n/a': 'n/a'}
+    perf_questions = []
     for child in form['children']:
         if child.get('type', None) == 'group' and child.get('name', None) == 'performance_group':
             for q in child.get('children'):
                 if q.get('type') == 'select one':
+                    perf_questions.append('performance_group/%s' % q.get('name'))
                     for o in q.get('children'):
                         name = o['name']
                         label = o['label']
@@ -235,7 +238,7 @@ def simplify_perf_group(form, responses):
 
     for response in responses:
         for key, val in response.iteritems():
-            if key.startswith('performance_group/'):
+            if key in perf_questions:
                 response[key] = orig_name_to_simple[val]
 
 
