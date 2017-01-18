@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load pipeline static jsonify lookup markup_tags %}
+
+{% block title %}Results for {{ result_set.cycle.name }}{% endblock %}
+{% block description %}Results for {{ result_set.cycle.programme.name }} {{ result_set.cycle.name }} for {{result_set.site.name }}{% endblock %}
+
+{% block head-css %}
+{% stylesheet "print-materials" %}
+{% endblock %}
+
+{% block js %}
+<script type="application/javascript">
+  var questions = {{ questions_dict|jsonify }};
+</script>
+{% javascript "print-materials" %}
+{% endblock %}
+
+{% block content %}
+<div class="print-materials poster a4-page {{ layout_class }} {% if DEBUG %}debug{% endif %}">
+  <header class="header">
+    <img class="banner" alt="Citizen monitoring" src="{% static 'img/banner-large.png' %}" />
+    <h1 class="partner">{{ result_set.partner.short_name }}</h1>
+    <h3 class="date">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
+    <h2 class="site">{% if sector %}{{ sector }}: {% endif %}{{ site }}</h2>
+    {% if location %}
+    <h3 class="location">{{ location }}</h3>
+    {% endif %}
+  </header>
+  <section class="survey">
+  {% block survey %}
+  {% endblock %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,162 @@
+{% extends 'posters/poster_layout.html' %}
+{% load pipeline lookup static markup_tags %}
+{% block survey %}
+<div class="row">
+  <div class="survey-item col-xs-4">
+    {% with q0=questions_dict|get:'yes_no_group/all_medication' %}
+      <h4 class="question text-center">{{ q0.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="yes_no_group/all_medication" data-type="2" data-width="266.56" data-legend="yes/no" data-height="190"></div>
+  </div>
+  <div class="survey-item col-xs-4">
+    {% with q1=questions_dict|get:'performance_group/ambulance' %}
+      <h4 class="question text-center">{{ q1.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="performance_group/ambulance" data-type="2" data-width="266.56" data-legend="attitude" data-height="190"></div>
+  </div>
+  <div class="survey-item col-xs-4">
+    {% with q2=questions_dict|get:'performance_group/equipment' %}
+      <h4 class="question text-center">{{ q2.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="performance_group/equipment" data-type="2" data-width="266.56" data-legend="attitude" data-height="190"></div>
+  </div>
+</div>
+<div class="row">
+  <div class="survey-item col-xs-4">
+    {% with q3=questions_dict|get:'clinic_committee' %}
+      <h4 class="question text-center">{{ q3.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="clinic_committee" data-type="2" data-width="266.56" data-legend="yes/dk/no" data-height="190"></div>
+  </div>
+  <div class="survey-item col-xs-4">
+    {% with q4=questions_dict|get:'clinic_committee_function' %}
+      <h4 class="question text-center">{{ q4.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="clinic_committee_function" data-type="2" data-width="266.56" data-legend="yes/no" data-height="190"></div>
+  </div>
+  <div class="survey-item col-xs-4">
+    {% with q5=questions_dict|get:'clinic_feedback' %}
+      <h4 class="question text-center">{{ q5.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="clinic_feedback" data-type="2" data-width="266.56" data-legend="yes/dk/no" data-height="190"></div>
+  </div>
+</div>
+<div class="row">
+  <div class="survey-item col-xs-3">
+    {% with q6=questions_dict|get:'travel_distance' %}
+      <h4 class="question text-center">{{ q6.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="travel_distance" data-type="1" data-width="199.92" data-height="150"></div>
+  </div>
+  <div class="col-xs-9">
+    <div class="row no-border">
+      <div class="col-xs-12">
+        <h4 class="text-upper text-center how-long"><b>How long did it take to:</b></h4>
+        <div class="pointer">
+          <span class="left"></span>
+          <span class="middle"></span>
+          <span class="right"></span>
+        </div>
+      </div>
+    </div>
+    <div class="row no-border">
+      <div class="col-xs-4 survey-item">
+        {% with q7=questions_dict|get:'waiting_group/register_time' %}
+          <h4 class="question text-center">{{ q7.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="waiting_group/register_time" data-type="1" data-width="199.92" data-height="150"></div>
+      </div>
+      <div class="survey-item col-xs-4">
+        {% with q8=questions_dict|get:'waiting_group/professional_time' %}
+          <h4 class="question text-center">{{ q8.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="waiting_group/professional_time" data-type="1" data-width="199.92" data-height="150"></div>
+      </div>
+      <div class="survey-item col-xs-4">
+        <div class="survey-item">
+          {% with q9=questions_dict|get:'waiting_group/medicine_time' %}
+            <h4 class="question text-center">{{ q9.label }}</h4>
+          {% endwith %}
+          <div class="response text-center" data-key="waiting_group/medicine_time" data-type="1" data-width="199.92" data-height="150"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="survey-item col-xs-3">
+    {% with q10=questions_dict|get:'yes_no_group/safety' %}
+      <h4 class="question text-center">{{ q10.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="yes_no_group/safety" data-type="2" data-width="199.92" data-legend="yes/no" data-height="150"></div>
+  </div>
+  <div class="survey-item col-xs-3">
+    {% with q11=questions_dict|get:'yes_no_group/examined_private' %}
+      <h4 class="question text-center">{{ q11.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="yes_no_group/examined_private" data-type="2" data-width="199.92" data-legend="yes/no" data-height="150"></div>
+  </div>
+  <div class="survey-item col-xs-3">
+    {% with q12=questions_dict|get:'yes_no_group/consent' %}
+      <h4 class="question text-center">{{ q12.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="yes_no_group/consent" data-type="2" data-width="199.92" data-legend="yes/no" data-height="150"></div>
+  </div>
+  <div class="survey-item col-xs-3">
+    {% with q13=questions_dict|get:'yes_no_group/complaint' %}
+      <h4 class="question text-center">{{ q13.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="yes_no_group/complaint" data-type="2" data-width="199.92" data-legend="yes/no" data-height="150"></div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-9">
+    <div class="row no-border">
+      <div class="survey-item col-xs-4">
+        {% with q14=questions_dict|get:'yes_no_group/complaint_response' %}
+          <h4 class="question text-center">{{ q14.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="yes_no_group/complaint_response" data-type="2" data-width="199.92" data-legend="yes/no" data-height="150"></div>
+      </div>
+      <div class="survey-item col-xs-4">
+        {% with q15=questions_dict|get:'performance_group/clean' %}
+          <h4 class="question text-center">{{ q15.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="performance_group/clean" data-type="2" data-width="199.92" data-legend="attitude" data-height="150"></div>
+      </div>
+      <div class="survey-item col-xs-4">
+        {% with q16=questions_dict|get:'performance_group/queues' %}
+          <h4 class="question text-center">{{ q16.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="performance_group/queues" data-type="2" data-width="199.92" data-legend="attitude" data-height="150"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-6">
+        <img class="code4sa-logo" src="{% static 'img/logo-code4sa.png' %}" alt="code4sa" />
+      </div>
+      <div class="col-xs-6">
+        {% include 'posters/_survey_totals.html' %}
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-3 border-left">
+    <div class="row no-border">
+      <div class="survey-item col-xs-12">
+        {% with q17=questions_dict|get:'performance_group/respect_admin' %}
+          <h4 class="question text-center">{{ q17.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="performance_group/respect_admin" data-type="2" data-width="199.92" data-legend="attitude" data-height="130"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="survey-item col-xs-12">
+        {% with q18=questions_dict|get:'performance_group/respect_professionals' %}
+          <h4 class="question text-center">{{ q18.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="performance_group/respect_professionals" data-type="2" data-width="199.92" data-legend="attitude" data-height="130"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
