@@ -67,7 +67,10 @@ class Partner(models.Model):
         return "[ID: %s] %s" % (self.id, self.short_name)
 
     def completed_result_sets(self):
-        result_sets = list(self.cycle_result_sets.filter(cycle__end_date__lte=timezone.now()).all())
+        result_sets = list(self.cycle_result_sets.filter(
+            cycle__end_date__lte=timezone.now(),
+            published=True
+        ).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
         return result_sets
 
