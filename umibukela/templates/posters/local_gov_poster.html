@@ -1,0 +1,149 @@
+{% extends 'posters/poster_layout.html' %}
+{% load pipeline lookup static markup_tags %}
+{% block survey %}
+<h3 class="black-banner">COMMUNITY PERCEPTIONS</h3>
+<div class="row no-border">
+  <div class="survey-item col-xs-6">
+    {% with q=questions_dict|get:'performance_group/clear_communication' %}
+      <h4 class="question text-center">{{ q.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="performance_group/clear_communication" data-type="2" data-width="300" data-legend="attitude" data-height="175"></div>
+  </div>
+  <div class="survey-item col-xs-6">
+    {% with q=questions_dict|get:'performance_group/own_lang' %}
+      <h4 class="question text-center">{{ q.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="performance_group/own_lang" data-type="2" data-width="300" data-legend="attitude" data-height="175"></div>
+  </div>
+</div>
+<div class="row">
+  <div class="survey-item col-xs-4">
+    {% with q=questions_dict|get:'performance_group/citizen_input' %}
+      <h4 class="question text-center">{{ q.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="performance_group/citizen_input" data-type="2" data-width="180" data-legend="attitude" data-height="175"></div>
+  </div>
+  <div class="survey-item col-xs-4">
+    {% with q=questions_dict|get:'performance_group/citizen_decisions' %}
+      <h4 class="question text-center">{{ q.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="performance_group/citizen_decisions" data-type="2" data-width="180" data-legend="attitude" data-height="175"></div>
+  </div>
+  <div class="survey-item col-xs-4">
+    {% with q=questions_dict|get:'performance_group/citizen_feedback' %}
+      <h4 class="question text-center">{{ q.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="performance_group/citizen_feedback" data-type="2" data-width="180" data-legend="attitude" data-height="175"></div>
+  </div>
+</div>
+<div class="row">
+  <div class="survey-item col-xs-6">
+    {% with q=questions_dict|get:'performance_group/engagement' %}
+      <h4 class="question text-center">{{ q.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="performance_group/engagement" data-type="2" data-width="350" data-legend="attitude" data-height="175"></div>
+  </div>
+  <div class="survey-item col-xs-6">
+    {% with q=questions_dict|get:'affiliation' %}
+      <h4 class="question text-center">{{ q.label }}</h4>
+    {% endwith %}
+    <div class="response text-center" data-key="affiliation" data-type="4">
+    </div>
+  </div>
+</div>
+<h3 class="black-banner">QUALITY OF ENGAGEMENT</h3>
+<div class="row no-border">
+  <div class="col-xs-5">
+    <div class="row no-border">
+      <div class="survey-item col-xs-5 no-border">
+        {% with q=questions_dict|get:'previous_meeting' %}
+          <h4 class="question text-center">{{ q.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="previous_meeting" data-type="2" data-width="225" data-legend="yes/no" data-height="175"></div>
+      </div>
+      <div class="survey-item col-xs-7">
+        {% with q=questions_dict|get:'meeting_type' %}
+          <h4 class="question text-center">{{ q.label }}</h4>
+        {% endwith %}
+        <div class="response text-center">
+          <img alt="chart-1" src="{% static 'img/charts/chart 1.png' %}" />
+        </div>
+      </div>
+    </div>
+    <div class="row no-border">
+      <div class="col-xs-6">
+        {% include 'posters/_survey_totals.html' %}
+      </div>
+      <div class="col-xs-6">
+        <img class="code4sa-logo" src="{% static 'img/logo-code4sa.png' %}" alt="code4sa" />
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-7">
+    <div class="row no-border">
+      <div class="survey-item col-xs-6">
+        {% with q=questions_dict|get:'meeting_group/ease' %}
+          <h4 class="question text-center">{{ q.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="meeting_group/ease" data-type="3" data-width="300" data-height="125">
+        </div>
+      </div>
+      <div class="survey-item col-xs-6">
+        {% with q=questions_dict|get:'meeting_group/notification' %}
+          <h4 class="question text-center">{{ q.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="meeting_group/notification" data-type="3" data-width="300" data-height="125">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="survey-item col-xs-6">
+        {% with q=questions_dict|get:'meeting_group/documentation' %}
+          <h4 class="question text-center">{{ q.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="meeting_group/documentation" data-type="3" data-width="300" data-height="125">
+        </div>
+      </div>
+      <div class="survey-item col-xs-6">
+        {% with q=questions_dict|get:'meeting_group/doc_understood' %}
+          <h4 class="question text-center">{{ q.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="meeting_group/doc_understood" data-type="3" data-width="300" data-height="125">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="survey-item col-xs-6">
+        {% with q=questions_dict|get:'meeting_group/info_withheld' %}
+          <h4 class="question text-center">{{ q.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="meeting_group/info_withheld" data-type="3" data-width="300" data-height="125">
+        </div>
+      </div>
+      <div class="survey-item col-xs-6">
+        {% with q=questions_dict|get:'meeting_group/discussion_understood' %}
+          <h4 class="question text-center">{{ q.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="meeting_group/discussion_understood" data-type="3" data-width="300" data-height="125">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="survey-item col-xs-6">
+        {% with q=questions_dict|get:'meeting_group/questions' %}
+          <h4 class="question text-center">{{ q.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="meeting_group/questions" data-type="3" data-width="300" data-height="125">
+        </div>
+      </div>
+      <div class="survey-item col-xs-6">
+        {% with q=questions_dict|get:'meeting_group/vulnerable_groups' %}
+          <h4 class="question text-center">{{ q.label }}</h4>
+        {% endwith %}
+        <div class="response text-center" data-key="meeting_group/vulnerable_groups" data-type="3" data-width="300" data-height="125">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
