@@ -659,9 +659,8 @@ var PrintMaterials = function() {
 
       var svg = response.append('svg')
         .attr('height', height)
-        .attr('width', width + margin.left + margin.right)
-      .append('g')
-        .attr('transform', 'translate(' + margin.left + ',0)');
+        .attr('width', width)
+      .append('g');
 
       var female = svg.selectAll('.female')
           .data(female_stack)
