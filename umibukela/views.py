@@ -353,7 +353,7 @@ def kobo_oauth_return(request):
     payload = {
         'grant_type': 'authorization_code',
         'code': code,
-        'redirect_uri': 'http://localhost:8000/admin/kobo-oauth'
+        'redirect_uri': request.build_absolute_uri('/admin/kobo-oauth')
     }
     r = requests.post("https://kc.kobotoolbox.org/o/token/",
                       params=payload,
