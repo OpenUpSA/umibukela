@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='cycleresultset',
             name='published',
-            field=models.BooleanField(default=False, help_text=b"Whether the results may be listed publicly with the assumption that it's somewhat validated"),
+            field=models.BooleanField(default=True, help_text=b"Whether the results may be listed publicly with the assumption that it's somewhat validated"),
+            preserve_default=False
         ),
     ]
