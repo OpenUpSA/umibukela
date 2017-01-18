@@ -29,8 +29,6 @@ GOOGLE_ANALYTICS_ID = 'UA-48399585-33'
 
 HEALTHE_KOBO_USERNAME = os.environ.get('HEALTHE_KOBO_USERNAME')
 HEALTHE_KOBO_PASSWORD = os.environ.get('HEALTHE_KOBO_PASSWORD')
-BLACKSASH_KOBO_USERNAME = os.environ.get('BLACKSASH_KOBO_USERNAME')
-BLACKSASH_KOBO_PASSWORD = os.environ.get('BLACKSASH_KOBO_PASSWORD')
 
 KOBO_CLIENT_ID = os.environ.get('KOBO_CLIENT_ID')
 KOBO_CLIENT_SECRET = os.environ.get('KOBO_CLIENT_SECRET')
@@ -186,12 +184,6 @@ PIPELINE_CSS = {
             'bower_components/leaflet/dist/leaflet.css',
         ),
         'output_filename': 'app.css',
-    },
-    'survey-form': {
-        'source_filenames': (
-            'stylesheets/survey-form.scss',
-        ),
-        'output_filename': 'survey-form.css',
     },
 }
 PIPELINE_JS = {
