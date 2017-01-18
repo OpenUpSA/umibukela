@@ -22,15 +22,17 @@ from .forms import (
 
 
 class AdminSite(admin.AdminSite):
+    index_template = 'admin/site_admin_index.html'
 
     def get_urls(self):
         from django.conf.urls import url
         urls = super(AdminSite, self).get_urls()
         urls = [
-            url(r'^umibukela/survey_from_kobo$', self.admin_view(views.survey_from_kobo)),
-            url(r'^umibukela/survey/(?P<survey_id>\d+)/kobo_submissions$', self.admin_view(views.survey_kobo_submissions)),
             url(r'^umibukela/kobo_forms$', self.admin_view(views.kobo_forms)),
-            url(r'^umibukela/kobo_survey/(?P<kobo_survey_id>\d+)/site/(?P<site_name>\w+)/preview$', self.admin_view(views.survey_site_preview)),
+            url(r'^umibukela/kobo_forms/(?P<kobo_form_id>\d+)$', self.admin_view(views.kobo_form)),
+            url(r'^umibukela/kobo_forms/(?P<kobo_form_id>\d+)/site/(?P<site_name>\w+)/preview$', self.admin_view(views.kobo_form_site_preview)),
+            url(r'^umibukela/survey/(?P<survey_id>\d+)/kobo_submissions$', self.admin_view(views.survey_kobo_submissions)),
+            url(r'^umibukela/survey_from_kobo$', self.admin_view(views.survey_from_kobo)),
         ] + urls
         return urls
 
