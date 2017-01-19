@@ -1,14 +1,14 @@
-import os
-import uuid
 
-import pandas
-from django.db import models
+from django.contrib.auth.models import User
 from django.contrib.gis.db import models as gis_models
-import jsonfield
-from django.utils import timezone
 from django.core.urlresolvers import reverse
-
+from django.db import models
+from django.utils import timezone
 import analysis
+import jsonfield
+import os
+import pandas
+import uuid
 
 # ------------------------------------------------------------------------------
 # General utilities
@@ -72,7 +72,10 @@ class Partner(models.Model):
         return "[ID: %s] %s" % (self.id, self.short_name)
 
     def completed_result_sets(self):
-        result_sets = list(self.cycle_result_sets.filter(cycle__end_date__lte=timezone.now()).all())
+        result_sets = list(self.cycle_result_sets.filter(
+            cycle__end_date__lte=timezone.now(),
+            published=True
+        ).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
         return result_sets
 
@@ -113,7 +116,10 @@ class Site(models.Model):
         return result_sets[0] if result_sets else None
 
     def completed_result_sets(self):
-        result_sets = list(self.cycle_result_sets.filter(cycle__end_date__lte=timezone.now()).all())
+        result_sets = list(self.cycle_result_sets.filter(
+            cycle__end_date__lte=timezone.now(),
+            published=True
+        ).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
         return result_sets
 
@@ -193,6 +199,22 @@ class Survey(models.Model):
         return self.name
 
 
+class SurveyKoboProject(models.Model):
+    survey = models.OneToOneField(Survey, on_delete=models.CASCADE, primary_key=True)
+    # Kobo is deprecating projects so from this point on,
+    # when we refer to a kobo project (a form and its submissions),
+    # the formid field is the unique reference for the URLs
+    # https://kc.kobotoolbox.org/api/v1/forms/69399?format=json (project)
+    # https://kc.kobotoolbox.org/api/v1/forms/69399/form.json (the xform as json)
+    # https://kc.kobotoolbox.org/api/v1/data/69399?format=json (the submissions)
+    form_id = models.IntegerField(unique=True, null=False)
+
+
+class KoboRefreshToken(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    token = models.TextField(null=False, blank=False)
+
+
 class CycleResultSet(models.Model):
     """
     An entity representing the data collection cycle for a given site
@@ -218,13 +240,14 @@ class CycleResultSet(models.Model):
     action_items = models.TextField(null=True, blank=True, help_text="Key challenges identified for improvement. Markdown allowed.")
     follow_up_date = models.DateField(null=True, blank=True, help_text="Date when follow up check was performed")
     follow_up = models.TextField(null=True, blank=True, help_text="Follow ups to key challenges. Markdown allowed.")
+    published = models.BooleanField(null=False, blank=False, help_text="Whether the results may be listed publicly with the assumption that it's somewhat validated", default=False)
 
     class Meta:
         unique_together = ('cycle', 'site', 'survey_type')
 
     def __str__(self):
-        return "%s -> %s (%s)" % (
-            self.partner.short_name, self.site.name, self.cycle
+        return "%s <- %s (%s)" % (
+            self.site.name, self.partner.short_name, self.cycle
         )
 
     def end_date_cmp(a, b):
@@ -235,6 +258,7 @@ class CycleResultSet(models.Model):
             cycle__end_date__lte=self.cycle.start_date,
             site__exact=self.site,
             survey_type=self.survey_type,
+            published=True
         ).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp)
         result_sets.reverse()
@@ -283,9 +307,14 @@ class CycleResultSetAttachment(models.Model):
 
 class Submission(models.Model):
     answers = jsonfield.JSONField()
+    uuid = models.TextField(unique=True)
     cycle_result_set = models.ForeignKey(
         CycleResultSet,
-        null=True,
-        blank=True,
         related_name="submissions"
     )
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_at = models.DateTimeField(auto_now=True, editable=False)
+
+    def save(self, *args, **kwargs):
+        self.uuid = self.answers['_uuid']
+        super(Submission, self).save(*args, **kwargs)

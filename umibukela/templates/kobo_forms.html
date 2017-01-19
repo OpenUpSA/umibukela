@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+
+<body>
+  {% block object-tools %}
+  <h1>Kobo Forms</h1>
+
+  <h3>Other available sources</h3>
+  <table>
+    <tr><th>Form</th><th>No of responses</th><th>Facility name</th><tr>
+    {% for form in forms %}
+    {% for facility in form.facilities %}
+    <tr>
+      {% if forloop.first %}
+      <td rowspan="{{ form.facilities|length }}">{{ form.title }}</td>
+      <td rowspan="{{ form.facilities|length }}">{{ form.num_of_submissions }}</td>
+      {% endif %}
+      <td><a href="/admin/umibukela/kobo_forms/{{ form.kobo_form_id }}/site/{{ facility.name }}/preview">{{ facility.label }}</a></li>
+        </ul>
+      </td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
+  </table>
+{% endblock %}
+</body>

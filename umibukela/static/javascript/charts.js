@@ -90,10 +90,10 @@ var PrintMaterials = function() {
         .padding(0);
       var xRight = d3.scaleLinear()
         .domain([0,rightMax])
-        .range([0,sideWidth]);
+        .range([0,sideWidth - 20]);
       var xLeft = d3.scaleLinear()
         .domain([0,leftMax])
-        .range([0,sideWidth]);
+        .range([0,sideWidth - 20]);
 
       var svg = response.append('svg')
         .attr('height',height)

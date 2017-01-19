@@ -47,8 +47,23 @@ $headings-color: $black;
 }
 
 .poster {
+  // override bootstrap row and column padding, we do our own padding
   .row {
     margin: 0;
+  }
+  .col-xs-1,
+  .col-xs-2,
+  .col-xs-3,
+  .col-xs-4,
+  .col-xs-5,
+  .col-xs-6,
+  .col-xs-7,
+  .col-xs-8,
+  .col-xs-9,
+  .col-xs-10,
+  .col-xs-11,
+  .col-xs-12 {
+    padding: 0px;
   }
 
   &.sassa-service-office {
@@ -122,6 +137,31 @@ $headings-color: $black;
 
       .right {
         right:0;
+      }
+    }
+
+    .code4sa-logo, .totals-table {
+      margin-top:10px;
+      margin-right:10px;
+    }
+
+    .code4sa-logo {
+      height:72px;
+    }
+
+    .totals-table {
+      height:68px;
+      font-size:9px;
+      width:180px;
+      padding:6px 10px;
+      float:right;
+
+      .text-medium {
+        font-size:10px;
+      }
+
+      .text-large {
+        font-size:11px;
       }
     }
   }
@@ -216,7 +256,7 @@ $headings-color: $black;
 
       .question {
         margin-bottom: 10px;
-        font-size:11px;
+        font-size:10px;
         text-transform: uppercase;
       }
 
@@ -254,11 +294,7 @@ $headings-color: $black;
     }
 
     .totals-table {
-      font-size:10px;
-      height:86px;
-      width:100%;
       border:1px solid rgb(0,0,0);
-      padding: 10px 20px;
 
       .heading {
         text-transform: uppercase;
@@ -272,14 +308,6 @@ $headings-color: $black;
         &:nth-child(2) {
           border-right:1px solid rgb(0,0,0);
         }
-      }
-
-      .text-large {
-        font-size:13px;
-      }
-
-      .text-medium {
-        font-size:11px;
       }
     }
   }
@@ -686,7 +714,7 @@ $headings-color: $black;
 
   .black-banner {
     background-color: black;
-    padding:10px 0 10px 20px;
+    padding: 5px 10px;
     margin-bottom:0;
     margin-top:0;
     font-weight: bold;

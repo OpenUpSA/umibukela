@@ -27,8 +27,11 @@ else:
 
 GOOGLE_ANALYTICS_ID = 'UA-48399585-33'
 
-KOBO_USERNAME = os.environ.get('KOBO_USERNAME')
-KOBO_PASSWORD = os.environ.get('KOBO_PASSWORD')
+HEALTHE_KOBO_USERNAME = os.environ.get('HEALTHE_KOBO_USERNAME')
+HEALTHE_KOBO_PASSWORD = os.environ.get('HEALTHE_KOBO_PASSWORD')
+
+KOBO_CLIENT_ID = os.environ.get('KOBO_CLIENT_ID')
+KOBO_CLIENT_SECRET = os.environ.get('KOBO_CLIENT_SECRET')
 
 ALLOWED_HOSTS = ['*']
 
@@ -132,6 +135,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 # file uploads
 if DEBUG:
+    DEFAULT_FILE_STORAGE = 'umibukela.dev_storage.DevFileSystemStorage'
+    FAKE_MISSING_FILE_SIZE = True
     MEDIA_URL = "/images/"
     MEDIA_ROOT = "/tmp/umibukela/images"
 else:
@@ -216,6 +221,12 @@ PIPELINE_JS = {
         ),
         'output_filename': 'site.js',
     },
+    'survey-form': {
+        'source_filenames': (
+            'javascript/survey-form.js',
+        ),
+        'output_filename': 'survey-form.js',
+    }
 }
 PIPELINE_CSS_COMPRESSOR = None
 PIPELINE_JS_COMPRESSOR = None
