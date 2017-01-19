@@ -323,7 +323,7 @@ var PrintMaterials = function() {
       var prevMax = d3.max(male_data.concat(female_data).map(function(d) { if(d.period == 'prev') return d.total; }));
 
       if(!prevMax) {
-        years.pop();
+        years = years[0];
       }
 
       var maleMax = d3.max(male_data.map(function(d) { return d.total; }));
