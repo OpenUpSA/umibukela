@@ -1,3 +1,5 @@
+from collections import Counter
+from itertools import groupby
 from datetime import datetime, timedelta
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -102,6 +104,30 @@ def site_result(request, site_slug, result_id):
             'questions_dict': site_results,
             'totals': site_totals,
         }
+    })
+
+
+
+
+def comments(request, result_id):
+    result_set = get_object_or_404(
+        CycleResultSet,
+        id=result_id,
+    )
+    skip_questions = [
+        'surveyor',
+        'capturer',
+    ]
+    questions = []
+    for child in result_set.survey.form.get('children'):
+        if child.get('type', None) == 'text' and child.get('name') not in skip_questions:
+            questions.append({
+                'label': child.get('label'),
+                'comments': Counter([s.answers.get(child['name'], None) for s in result_set.submissions.all()]),
+            })
+    return render(request, 'comments.html', {
+        'result_set': result_set,
+        'questions': questions,
     })
 
 
