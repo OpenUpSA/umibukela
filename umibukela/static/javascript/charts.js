@@ -12,7 +12,7 @@ var PrintMaterials = function() {
   self.colorFemale = d3.scaleOrdinal()
     .range([self.BLACK,self.ORANGE]);
   self.colorMale = d3.scaleOrdinal()
-    .range(['#ffffff',self.ORANGE]);
+    .range([self.WHITE,self.ORANGE]);
 
   self.drawChart = function(options) {
     switch(options.type) {
@@ -36,8 +36,8 @@ var PrintMaterials = function() {
       var response = options.el;
       var height = options.height;
       var width = options.width;
-      var optionTypes = options.optionTypes;
       var margin = options.margin;
+      var optionKeys = options.optionKeys;
 
       var figureHeight = height * .75;
       var labelWidth = Math.floor(width / 5) - 3;
@@ -85,7 +85,7 @@ var PrintMaterials = function() {
         .paddingOuter(0)
         .align(0);
       var y1 = d3.scaleBand()
-        .domain(optionTypes)
+        .domain(optionKeys)
         .rangeRound([0, y0.bandwidth()])
         .padding(0);
       var xRight = d3.scaleLinear()
@@ -234,9 +234,9 @@ var PrintMaterials = function() {
       var height = options.height;
       var width = options.width;
       var margin = options.margin;
-      var optionTypes = options.optionTypes;
       var legendType = options.legendType;
       var legendFormat = options.legendFormat;
+      var optionKeys = options.optionKeys;
 
       var male_data = [];
       var female_data = [];
@@ -262,10 +262,9 @@ var PrintMaterials = function() {
       var labelFontSize = width / 30;
       var colWidth = isBar ? (figureWidth - gutter) / 2 : (figureWidth - gutter - legendWidth) / 2;
 
-      var optionKeys = _.keys(options.responses[0]);
       var years = cycleYears;
 
-      optionTypes.reverse();
+      optionKeys.reverse();
 
       for(var i=0;i < optionKeys.length;i++) {
         var period = optionKeys[i];
@@ -319,6 +318,12 @@ var PrintMaterials = function() {
           male_data[i].total += male_data[i][label];
           female_data[i].total += female_data[i][label];
         });
+      }
+
+      var prevMax = d3.max(male_data.concat(female_data).map(function(d) { if(d.period == 'prev') return d.total; }));
+
+      if(!prevMax) {
+        years.pop();
       }
 
       var maleMax = d3.max(male_data.map(function(d) { return d.total; }));
@@ -526,7 +531,7 @@ var PrintMaterials = function() {
       if(legendType == 'top-bar' || legendType == 'bottom-bar') figureHeight = height - legendHeight;
 
       var x = d3.scaleBand()
-        .domain(optionTypes)
+        .domain(optionKeys)
         .rangeRound([0, colWidth])
         .padding(0.2);
       var y = d3.scaleLinear()
@@ -592,7 +597,7 @@ var PrintMaterials = function() {
       var height = options.height;
       var width = options.width; // 370
       var margin = options.margin;
-      var optionTypes = options.optionTypes;
+      var optionKeys = options.optionKeys;
 
       var male_data = [];
       var female_data = [];
@@ -605,11 +610,11 @@ var PrintMaterials = function() {
       var widthCoefficient = 0.8;
       var legendWidth = width * 0.2;
       var figureWidth = width * 0.8;
+      var fontSize = Math.round(height / 7);
+      var legendSquare = colHeight * 0.45;
 
       var optionKeys = _.keys(options.responses[0]);
       var years = cycleYears;
-      var colorMale = self.colorMale;
-      var colorFemale = self.colorFemale;
 
       for(var i=0;i < optionKeys.length;i++) {
         var period = optionKeys[i];
@@ -632,7 +637,6 @@ var PrintMaterials = function() {
 
           male_datum[response[period].key.toLowerCase()] = response[period].count.male;
           female_datum[response[period].key.toLowerCase()] = response[period].count.female;
-          console.log(male_datum[response[period].key.toLowerCase()]);
         }
      });
 
@@ -646,6 +650,11 @@ var PrintMaterials = function() {
       var maleMax = d3.max(male_data.map(function(d) { return d.total; }));
       var femaleMax = d3.max(female_data.map(function(d) { return d.total; }));
       var max = maleMax > femaleMax ? maleMax : femaleMax;
+      var prevMax = d3.max(male_data.concat(female_data).map(function(d) { if(d.period == 'prev') return d.total; }));
+
+      if(!prevMax) {
+        years.pop();
+      }
 
       male_data = self.normalize(male_data, maleMax, labels);
       female_data = self.normalize(female_data, femaleMax, labels);
@@ -653,7 +662,7 @@ var PrintMaterials = function() {
       var zRange = labels.length > 2 ? [self.BLACK,self.WHITE,self.ORANGE] : [self.BLACK,self.ORANGE];
 
       var y = d3.scaleBand()
-        .domain(optionTypes)
+        .domain(optionKeys)
         .rangeRound([0, colHeight])
         .paddingInner(0.1);
       var x = d3.scaleLinear()
@@ -718,7 +727,7 @@ var PrintMaterials = function() {
           })
           .attr('y',-2)
           .attr('fill',self.BLACK)
-          .attr('font-size','10px')
+          .attr('font-size',fontSize)
           .attr('text-anchor','start')
           .text(function(d) { return d.data.period == 'current' && d[1] - d[0] && d[1] - d[0] > 0 ? d[1] - d[0] : ''; });
 
@@ -731,7 +740,7 @@ var PrintMaterials = function() {
           .attr('y', function(d,i) { return y.bandwidth() * (i + 1) + i * 2; })
           .attr('x', function(d) { return femaleBarWidth + icon.width + 8; })
           .attr('fill',self.BLACK)
-          .attr('font-size','10px')
+          .attr('font-size',fontSize)
           .text(function(d) { return d; });
 
       var male = svg.selectAll('.male')
@@ -780,7 +789,7 @@ var PrintMaterials = function() {
           })
           .attr('y', function(d) { return colHeight + gutter - 2; })
           .attr('fill',self.BLACK)
-          .attr('font-size','10px')
+          .attr('font-size',fontSize)
           .text(function(d) { return d.data.period == 'current' && d[1] - d[0] && d[1] - d[0] > 0 ? d[1] - d[0] : ''; });
 
       male.selectAll('text.year')
@@ -791,7 +800,7 @@ var PrintMaterials = function() {
           .attr('y', function(d,i) { return colHeight + gutter + y.bandwidth() * (i + 1) + i * 2; })
           .attr('x', function(d) { return maleBarWidth + icon.width + 8; })
           .attr('fill',self.BLACK)
-          .attr('font-size','10px')
+          .attr('font-size',fontSize)
           .text(function(d) { return d; });
 
         svg.append('image')
@@ -807,8 +816,6 @@ var PrintMaterials = function() {
           .attr('y',0)
           .attr('height',colHeight)
           .attr('width',colHeight * 0.5);
-
-      var legendSquare = colHeight * 0.45;
 
       var legend = svg.append('g')
         .attr('class','legend');
@@ -1043,7 +1050,7 @@ var PrintMaterials = function() {
 
   // Normalize the data
   self.normalize = function(data, maxValue, labels) {
-    if(!!data) {
+    if(!!data && !!maxValue) {
       for(var i = 0; i < data.length; i++) {
         var normalizedMax = maxValue / data[i].total;
 
@@ -1055,9 +1062,9 @@ var PrintMaterials = function() {
           data[i]['normalization-factor'] = normalizedMax;
         }
       }
-
-      return data;
     }
+
+    return data;
   }
 
   self.draw = function() {
@@ -1075,13 +1082,13 @@ var PrintMaterials = function() {
           options.type = response.attr('data-type');
           options.legendType = response.attr('data-legend');
           options.responses = questions[key].options;
-          options.optionTypes = options.responses[0] ? _.keys(options.responses[0]) : [];
           options.margin = {
             top: parseFloat(response.attr('data-margin-top')) || 10,
             right: parseFloat(response.attr('data-margin-right')) || 10,
             bottom: parseFloat(response.attr('data-margin-bottom')) || 10,
             left: parseFloat(response.attr('data-margin-left')) || 10
           };
+          options.optionKeys = _.keys(questions[key].options[0]);
           options.height = parseInt(response.attr('data-height'));
           options.width = parseInt(response.attr('data-width'));
           options.legendFormat = response.attr('data-legend-format');
