@@ -1,16 +1,19 @@
+from itertools import groupby
 from datetime import datetime, timedelta
+
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
-from forms import CRSFromKoboForm
-from itertools import groupby
-import analysis
-import pandas
+from django.core.urlresolvers import reverse
+
+from wkhtmltopdf.views import PDFResponse
+from wkhtmltopdf.utils import wkhtmltopdf
 import pandas
 import requests
-import settings
 
+import umibukela.analysis as analysis
+from .forms import CRSFromKoboForm
 from .models import (
     CycleResultSet,
     KoboRefreshToken,
@@ -115,12 +118,12 @@ def poster(request, site_slug, result_id):
     )
     sector_id = result_set.site.sector.id
     sector_name = Sector.objects.get(id=sector_id).name
-    site = result_set.site.name.split(' ',1)[0]
+    site = result_set.site.name.split(' ', 1)[0]
     layout_class = '-'.join(sector_name.lower().split(' '))
     location = None
     template = 'posters/'
     site_responses = [s.answers for s in result_set.submissions.all()]
-    totals = { 'current': { 'male': 0, 'female': 0, 'total': 0 }, 'previous': { 'male': 0, 'female': 0, 'total': 0 } }
+    totals = {'current': {'male': 0, 'female': 0, 'total': 0}, 'previous': {'male': 0, 'female': 0, 'total': 0}}
     site_results = None
 
     if site_responses:
@@ -176,15 +179,27 @@ def poster(request, site_slug, result_id):
     })
 
 
-def brochure(request, site_slug, result_id):
+def poster_pdf(request, site_slug, result_id):
+    # render poster as pdf
+    url = reverse('site-result-poster', kwargs={'site_slug': site_slug, 'result_id': result_id})
+    url = request.build_absolute_uri(url)
+    pdf = wkhtmltopdf(url, **{
+        'margin-top': '0.5cm',
+        'margin-right': '0.5cm',
+        'margin-bottom': '0.5cm',
+        'margin-left': '0.5cm',
+    })
+    filename = '%s-%s-poster.pdf' % (site_slug, result_id)
+    return PDFResponse(pdf, filename=filename)
+
+
+def handout(request, site_slug, result_id):
     result_set = get_object_or_404(
         CycleResultSet,
         id=result_id,
         site__slug__exact=site_slug
     )
     prev_result_set = result_set.get_previous()
-    site = Site.objects.get(id=result_set.site_id)
-    partner = Partner.objects.get(id=result_set.partner_id)
     site_responses = [s.answers for s in result_set.submissions.all()]
 
     context = {
@@ -192,7 +207,7 @@ def brochure(request, site_slug, result_id):
         'partner': result_set.partner,
         'site': result_set.site.name,
         'prev_date': None,
-        'totals': { 'male': 0, 'female': 0, 'total': 0 }
+        'totals': {'male': 0, 'female': 0, 'total': 0}
     }
 
     if prev_result_set:
@@ -201,7 +216,21 @@ def brochure(request, site_slug, result_id):
     if site_responses:
         context['totals'] = analysis.count_submissions(pandas.DataFrame(site_responses))
 
-    return render(request, 'brochure_layout.html', context)
+    return render(request, 'handout_layout.html', context)
+
+
+def handout_pdf(request, site_slug, result_id):
+    # render handout as pdf
+    url = reverse('site-result-handout', kwargs={'site_slug': site_slug, 'result_id': result_id})
+    url = request.build_absolute_uri(url)
+    pdf = wkhtmltopdf(url, **{
+        'margin-top': '0.5cm',
+        'margin-right': '0.5cm',
+        'margin-bottom': '0.5cm',
+        'margin-left': '0.5cm',
+    })
+    filename = '%s-%s-handout.pdf' % (site_slug, result_id)
+    return PDFResponse(pdf, filename=filename)
 
 
 def simplify_perf_group(form, responses):
@@ -234,18 +263,18 @@ def simplify_perf_group(form, responses):
                         label = o['label']
                         orig_name_to_simple[name] = label_to_simple[label]
                     q['children'] = [
-                         {
-                             "name": "negative",
-                             "label": "Negative",
-                         },
-                         {
-                             "name": "neutral",
-                             "label": "Neutral",
-                         },
-                         {
-                             "name": "positive",
-                             "label": "Positive",
-                         },
+                        {
+                            "name": "negative",
+                            "label": "Negative",
+                        },
+                        {
+                            "name": "neutral",
+                            "label": "Neutral",
+                        },
+                        {
+                            "name": "positive",
+                            "label": "Positive",
+                        },
                     ]
 
     for response in responses:
@@ -481,8 +510,8 @@ def start_kobo_oauth(request):
             'redirect_uri': 'http://localhost:8000/admin/kobo-oauth'
         }
         r = requests.post("https://kc.kobotoolbox.org/o/token/",
-                         params=payload,
-                         auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
+                          params=payload,
+                          auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
         r.raise_for_status()
         request.session['kobo_access_token'] = r.json()['access_token']
         expiry_datetime = datetime.utcnow() + timedelta(seconds=r.json()['expires_in'])
