@@ -52,16 +52,26 @@
   <div class="page-section cycle-outputs">
     <div class="container">
       <div class="row">
-        {% if result_set.attachments %}
         <div class="col-sm-4">
           <h5>Monitoring Outputs</h5>
           <ul class="list-unstyled">
+            {% if not result_set.has_poster_attachment %}
+              <li>
+                <a href="{% url 'site-result-poster-pdf' site_slug=result_set.site.slug result_id=result_set.id %}" target="_blank"><i class="fa fa-download"></i> Poster</a>
+              </li>
+            {% endif %}
+
+            {% if not result_set.has_handout_attachment %}
+              <li>
+                <a href="{% url 'site-result-handout-pdf' site_slug=result_set.site.slug result_id=result_set.id %}" target="_blank"><i class="fa fa-download"></i> Handout</a>
+              </li>
+            {% endif %}
+
             {% for attachment in result_set.attachments.all %}
               <li><a href="{{ attachment.file.url }}" target="_blank"><i class="fa fa-download"></i> {{ attachment.nature.name|capfirst }} <small></small></a></li>
             {% endfor %}
           </ul>
         </div>
-        {% endif %}
 
         {% if result_set.action_items %}
         <div class="col-sm-4">

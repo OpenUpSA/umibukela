@@ -256,6 +256,12 @@ class CycleResultSet(models.Model):
                 self._summary = {'male': 0, 'female': 0, 'total': 0}
         return self._summary
 
+    def has_poster_attachment(self):
+        return any(a.nature.name == 'poster' for a in self.attachments.all())
+
+    def has_handout_attachment(self):
+        return any(a.nature.name == 'handout' for a in self.attachments.all())
+
 
 class AttachmentNature(models.Model):
     name = models.CharField(max_length=200, unique=True)
