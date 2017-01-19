@@ -314,7 +314,7 @@ $headings-color: $black;
   }
 }
 
-.brochure {
+.handout {
   font-size: 11px;
   line-height: 1.5;
 
@@ -336,6 +336,14 @@ $headings-color: $black;
     h4, p {
       padding-left:20px;
     }
+  }
+
+  .left {
+    margin-right: 10px;
+  }
+
+  .right {
+    margin-left: 10px;
   }
 
   .mavc-footer {
