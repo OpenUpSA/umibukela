@@ -47,8 +47,23 @@ $headings-color: $black;
 }
 
 .poster {
+  // override bootstrap row and column padding, we do our own padding
   .row {
     margin: 0;
+  }
+  .col-xs-1,
+  .col-xs-2,
+  .col-xs-3,
+  .col-xs-4,
+  .col-xs-5,
+  .col-xs-6,
+  .col-xs-7,
+  .col-xs-8,
+  .col-xs-9,
+  .col-xs-10,
+  .col-xs-11,
+  .col-xs-12 {
+    padding: 0px;
   }
 
   &.sassa-service-office {
@@ -216,7 +231,7 @@ $headings-color: $black;
 
       .question {
         margin-bottom: 10px;
-        font-size:11px;
+        font-size:10px;
         text-transform: uppercase;
       }
 
@@ -686,7 +701,7 @@ $headings-color: $black;
 
   .black-banner {
     background-color: black;
-    padding:10px 0 10px 20px;
+    padding: 5px 10px;
     margin-bottom:0;
     margin-top:0;
     font-weight: bold;
