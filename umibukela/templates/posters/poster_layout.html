@@ -16,7 +16,7 @@
 <div class="print-materials poster a4-page a4-portrait {{ layout_class }} {% if DEBUG %}debug{% endif %}">
   <header class="header">
     <img class="banner" alt="Citizen monitoring" src="{% static 'img/banner-large.png' %}" />
-    <h1 class="partner">{{ result_set.partner.short_name }}</h1>
+    <h1 class="partner">{{ result_set.partner.full_name }}</h1>
     <h3 class="date">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
     <h2 class="site">{% if sector %}{{ sector }}: {% endif %}{{ site }}</h2>
     {% if location %}
