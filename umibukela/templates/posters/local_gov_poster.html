@@ -7,13 +7,13 @@
     {% with q=questions_dict|get:'performance_group/clear_communication' %}
       <h4 class="question text-center">{{ q.label }}</h4>
     {% endwith %}
-    <div class="response text-center" data-key="performance_group/clear_communication" data-type="2" data-width="399.85" data-legend="attitude" data-height="142"></div>
+    <div class="response text-center" data-key="performance_group/clear_communication" data-type="2" data-width="399.85" data-legend="attitude" data-height="122"></div>
   </div>
   <div class="survey-item col-xs-6">
     {% with q=questions_dict|get:'performance_group/own_lang' %}
       <h4 class="question text-center">{{ q.label }}</h4>
     {% endwith %}
-    <div class="response text-center" data-key="performance_group/own_lang" data-type="2" data-width="399.85" data-legend="attitude" data-height="142"></div>
+    <div class="response text-center" data-key="performance_group/own_lang" data-type="2" data-width="399.85" data-legend="attitude" data-height="122"></div>
   </div>
 </div>
 <div class="row">
@@ -21,19 +21,19 @@
     {% with q=questions_dict|get:'performance_group/citizen_input' %}
       <h4 class="question text-center">{{ q.label }}</h4>
     {% endwith %}
-    <div class="response text-center" data-key="performance_group/citizen_input" data-type="2" data-width=266.56 data-legend="attitude" data-height="142"></div>
+    <div class="response text-center" data-key="performance_group/citizen_input" data-type="2" data-width=266.56 data-legend="attitude" data-height="100"></div>
   </div>
   <div class="survey-item col-xs-4">
     {% with q=questions_dict|get:'performance_group/citizen_decisions' %}
       <h4 class="question text-center">{{ q.label }}</h4>
     {% endwith %}
-    <div class="response text-center" data-key="performance_group/citizen_decisions" data-type="2" data-width=266.56 data-legend="attitude" data-height="142"></div>
+    <div class="response text-center" data-key="performance_group/citizen_decisions" data-type="2" data-width=266.56 data-legend="attitude" data-height="100"></div>
   </div>
   <div class="survey-item col-xs-4">
     {% with q=questions_dict|get:'performance_group/citizen_feedback' %}
       <h4 class="question text-center">{{ q.label }}</h4>
     {% endwith %}
-    <div class="response text-center" data-key="performance_group/citizen_feedback" data-type="2" data-width=266.56 data-legend="attitude" data-height="142"></div>
+    <div class="response text-center" data-key="performance_group/citizen_feedback" data-type="2" data-width=266.56 data-legend="attitude" data-height="100"></div>
   </div>
 </div>
 <div class="row">
@@ -41,13 +41,13 @@
     {% with q=questions_dict|get:'performance_group/engagement' %}
       <h4 class="question text-center">{{ q.label }}</h4>
     {% endwith %}
-    <div class="response text-center" data-key="performance_group/engagement" data-type="2" data-width="399.85" data-legend="attitude" data-height="142"></div>
+    <div class="response text-center" data-key="performance_group/engagement" data-type="2" data-width="399.85" data-legend="attitude" data-height="127.5"></div>
   </div>
   <div class="survey-item col-xs-6">
     {% with q=questions_dict|get:'affiliation' %}
       <h4 class="question text-center">{{ q.label }}</h4>
     {% endwith %}
-    <div class="response text-center" data-key="affiliation" data-type="4">
+    <div class="response text-center" data-key="affiliation" data-type="4" data-height="127.5" data-width="399.85">
     </div>
   </div>
 </div>
@@ -55,13 +55,13 @@
 <div class="row no-border">
   <div class="col-xs-5">
     <div class="row no-border">
-      <div class="survey-item col-xs-5 no-border">
+      <div class="survey-item col-xs-6 no-border">
         {% with q=questions_dict|get:'previous_meeting' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="previous_meeting" data-type="2" data-width="175" data-legend="yes/no" data-legend-format="bottom-bar" data-height="142"></div>
+        <div class="response text-center" data-key="previous_meeting" data-type="2" data-width="125" data-legend="yes/no" data-legend-format="bottom-bar" data-height="200"></div>
       </div>
-      <div class="survey-item col-xs-7">
+      <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'meeting_type' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
@@ -69,29 +69,29 @@
         </div>
       </div>
     </div>
-    <div class="row no-border">
-      <div class="col-xs-6">
+    <div class="row no-border summary">
+      <div class="col-xs-6 totals">
         {% include 'posters/_survey_totals.html' %}
       </div>
-      <div class="col-xs-6">
+      <div class="col-xs-6 logo">
         <img class="code4sa-logo" src="{% static 'img/logo-code4sa.png' %}" alt="code4sa" />
       </div>
     </div>
   </div>
-  <div class="col-xs-7">
+  <div class="col-xs-7 meeting-group">
     <div class="row no-border">
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'meeting_group/ease' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="meeting_group/ease" data-type="3" data-width="199.92" data-height="100">
+        <div class="response text-center" data-key="meeting_group/ease" data-type="3" data-width="199.92" data-height="54">
         </div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'meeting_group/notification' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="meeting_group/notification" data-type="3" data-width="199.92" data-height="100">
+        <div class="response text-center" data-key="meeting_group/notification" data-type="3" data-width="199.92" data-height="54">
         </div>
       </div>
     </div>
@@ -100,14 +100,14 @@
         {% with q=questions_dict|get:'meeting_group/documentation' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="meeting_group/documentation" data-type="3" data-width="199.92" data-height="100">
+        <div class="response text-center" data-key="meeting_group/documentation" data-type="3" data-width="199.92" data-height="54">
         </div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'meeting_group/doc_understood' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="meeting_group/doc_understood" data-type="3" data-width="199.92" data-height="100">
+        <div class="response text-center" data-key="meeting_group/doc_understood" data-type="3" data-width="199.92" data-height="54">
         </div>
       </div>
     </div>
@@ -116,14 +116,14 @@
         {% with q=questions_dict|get:'meeting_group/info_withheld' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="meeting_group/info_withheld" data-type="3" data-width="199.92" data-height="100">
+        <div class="response text-center" data-key="meeting_group/info_withheld" data-type="3" data-width="199.92" data-height="54">
         </div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'meeting_group/discussion_understood' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="meeting_group/discussion_understood" data-type="3" data-width="199.92" data-height="100">
+        <div class="response text-center" data-key="meeting_group/discussion_understood" data-type="3" data-width="199.92" data-height="54">
         </div>
       </div>
     </div>
@@ -132,14 +132,14 @@
         {% with q=questions_dict|get:'meeting_group/questions' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="meeting_group/questions" data-type="3" data-width="199.92" data-height="100">
+        <div class="response text-center" data-key="meeting_group/questions" data-type="3" data-width="199.92" data-height="54">
         </div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'meeting_group/vulnerable_groups' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="meeting_group/vulnerable_groups" data-type="3" data-width="199.92" data-height="100">
+        <div class="response text-center" data-key="meeting_group/vulnerable_groups" data-type="3" data-width="199.92" data-height="54">
         </div>
       </div>
     </div>

@@ -169,7 +169,68 @@ $headings-color: $black;
   &.local-gov {
     .header {
       padding-bottom:50px;
-      height:175px;
+      height:165px;
+
+      .site {
+        top: 112px;
+      }
+
+      .location {
+        bottom:5px;
+      }
+    }
+
+    .summary {
+      .totals, .logo {
+        position:absolute;
+        bottom:2px;
+      }
+
+      .totals {
+        left:0;
+      }
+
+      .logo {
+        right: -20px;
+      }
+
+      .code4sa-logo {
+        height:70px;
+      }
+
+      .totals-table {
+        height:70px;
+        width:180px;
+        padding:6px 0;
+        font-size:9px;
+
+        .text-large {
+          font-size:11px;
+        }
+
+        .text-medium {
+          font-size:10px;
+        }
+      }
+    }
+    .survey {
+      .survey-item {
+        padding:5px;
+
+        .question {
+          margin-bottom:5px;
+        }
+      }
+
+      .meeting-group {
+        .survey-item {
+          padding-bottom:0;
+
+          .question {
+            font-size:9px;
+          }
+        }
+      }
     }
   }
 
@@ -183,7 +244,7 @@ $headings-color: $black;
     }
 
     .partner, .site, .location {
-      left: 22px;
+      left: 10px;
     }
 
     .banner {
@@ -194,6 +255,7 @@ $headings-color: $black;
       top: 70px;
       color: white !important;
       font-size: 21px;
+      left:22px;
     }
 
     .date {

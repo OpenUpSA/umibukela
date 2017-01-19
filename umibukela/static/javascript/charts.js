@@ -263,7 +263,7 @@ var PrintMaterials = function() {
       var colWidth = isBar ? (figureWidth - gutter) / 2 : (figureWidth - gutter - legendWidth) / 2;
 
       var optionKeys = _.keys(options.responses[0]);
-      var years = [2014,2015];
+      var years = cycleYears;
 
       optionTypes.reverse();
 
@@ -589,26 +589,25 @@ var PrintMaterials = function() {
     typeThree: function(options) {
       var responses = options.responses;
       var response = options.el;
-      var male_data = [];
-      var female_data = [];
-      var labels = [];
       var height = options.height;
       var width = options.width; // 370
       var margin = options.margin;
-      var gutter = 20;
-      var colHeight = (height - gutter - margin.bottom) / 2;
       var optionTypes = options.optionTypes;
-      var optionKeys = _.keys(options.responses[0]);
-      var labels = [];
+
       var male_data = [];
       var female_data = [];
-      var years = [2015,2014];
+      var labels = [];
+
+      var gutter = height / 10 + 6;
+      var colHeight = (height - gutter) / 2;
       var icon = { width: 15, height: 30 };
-      var colorMale = self.colorMale;
-      var colorFemale = self.colorFemale;
-      var orange = self.ORANGE;
       var figureHeight = height * 0.8;
       var widthCoefficient = 0.8;
+
+      var optionKeys = _.keys(options.responses[0]);
+      var years = cycleYears;
+      var colorMale = self.colorMale;
+      var colorFemale = self.colorFemale;
 
       for(var i=0;i < optionKeys.length;i++) {
         var period = optionKeys[i];
@@ -653,20 +652,23 @@ var PrintMaterials = function() {
         .range([0, width]);
       var z = d3.scaleOrdinal()
         .domain(labels)
-        .range(['#00000',orange]);
+        .range(['#00000',self.ORANGE]);
       var female_stack = d3.stack().keys(labels)(female_data);
       var male_stack = d3.stack().keys(labels)(male_data);
 
       var svg = response.append('svg')
-        .attr('height', height)
-        .attr('width', width)
-      .append('g');
+        .attr('height', height + 16)
+        .attr('width', width + 10)
+      .append('g')
+        .attr('transform','translate(0,12)');
 
       var female = svg.selectAll('.female')
           .data(female_stack)
         .enter().append('g')
           .attr('class','female')
           .attr('fill',function(d) { return z(d.key); });
+
+      var femaleBarWidth = 0;
 
       female.selectAll('rect')
           .data(function(d) { return d; })
@@ -679,8 +681,14 @@ var PrintMaterials = function() {
 
             return y(d.data.period) + shift;
           })
-          .attr('x', function(d) { return x(d[0]) * widthCoefficient + 35; })
-          .attr('width', function(d) { return Math.abs(x(d[1]) - x(d[0])) * widthCoefficient })
+          .attr('x', function(d) { return x(d[0]) * widthCoefficient + icon.width + 5; })
+          .attr('width', function(d) {
+            var barWidth = Math.abs(x(d[1]) - x(d[0])) * widthCoefficient;
+
+            if(d.data.period == 'current' && barWidth) femaleBarWidth += barWidth;
+
+            return barWidth;
+          })
           .attr('height', function(d) {
             var period = d.data.period;
             var coefficient = period == 'current' ? 1.5 : .5;
@@ -692,18 +700,20 @@ var PrintMaterials = function() {
           .data(function(d) { return d; })
         .enter().append('text')
           .attr('class','count')
-          .attr('x', function(d) { return x(d[0]) * widthCoefficient + Math.abs(x(d[1]) - x(d[0])) * widthCoefficient / 2 + 35 })
-          .attr('y', 0 )
+          .attr('x', function(d) { return x(d[0]) * widthCoefficient + Math.abs(x(d[1]) - x(d[0])) * widthCoefficient / 2 + icon.width })
+          .attr('y',-2)
           .attr('fill',self.BLACK)
           .attr('font-size','10px')
+          .attr('text-anchor','start')
           .text(function(d) { return d.data.period == 'current' ? d[1] - d[0] : ''; });
 
       female.selectAll('text.year')
           .data(years)
         .enter().append('text')
           .attr('class','year')
-          .attr('y', function(d,i) { return (y.bandwidth() * 0.6) * i + 24; })
-          .attr('x', width - 17)
+          .attr('text-anchor','start')
+          .attr('y', function(d,i) { return y.bandwidth() * (i + 1) + i * 2; })
+          .attr('x', function(d) { return femaleBarWidth + icon.width + 8; })
           .attr('fill',self.BLACK)
           .attr('font-size','10px')
           .text(function(d) { return d; });
@@ -713,6 +723,8 @@ var PrintMaterials = function() {
         .enter().append('g')
           .attr('class','male')
           .attr('fill',function(d) { return z(d.key); });
+
+      var maleBarWidth = 0;
 
       male.selectAll('rect')
           .data(function(d) { return d; })
@@ -724,8 +736,14 @@ var PrintMaterials = function() {
             if(period != 'current') shift = .5 * y.bandwidth();
             return y(d.data.period) + shift + colHeight + gutter;
           })
-          .attr('x', function(d) { return x(d[0]) * widthCoefficient + 35; })
-          .attr('width', function(d) { return Math.abs(x(d[1]) - x(d[0])) * widthCoefficient })
+          .attr('x', function(d) { return x(d[0]) * widthCoefficient + icon.width + 5; })
+          .attr('width', function(d) {
+            var barWidth = Math.abs(x(d[1]) - x(d[0])) * widthCoefficient;
+
+            if(d.data.period == 'current' && barWidth) maleBarWidth += barWidth;
+
+            return barWidth;
+          })
           .attr('height', function(d) {
             var period = d.data.period;
             var coefficient = period == 'current' ? 1.5 : .5;
@@ -737,26 +755,18 @@ var PrintMaterials = function() {
           .data(function(d) { return d; })
         .enter().append('text')
           .attr('class','count')
-          .attr('x', function(d) { return x(d[0]) * widthCoefficient + Math.abs(x(d[1]) - x(d[0])) * widthCoefficient/ 2 + 35 })
-          .attr('y', function(d) {
-            var period = d.data.period;
-            var shift = -68;
-
-            if(period == 'current') shift = -33;
-
-            return gutter - shift;
-          })
-
+          .attr('x', function(d) { return x(d[0]) * widthCoefficient + Math.abs(x(d[1]) - x(d[0])) * widthCoefficient / 2 + icon.width })
+          .attr('y', function(d) { return colHeight + gutter - 2; })
           .attr('fill',self.BLACK)
           .attr('font-size','10px')
-          .text(function(d) { return d.data.period == 'current' ? d[1] - d[0] : ''; });
+          .text(function(d) { return d.data.period == 'current' && d[1] - d[0] > 0 ? d[1] - d[0] : ''; });
 
       male.selectAll('text.year')
           .data(years)
         .enter().append('text')
           .attr('class','year')
-          .attr('y', function(d,i) { return (y.bandwidth() * 0.6) * i + 93; })
-          .attr('x', width - 67)
+          .attr('y', function(d,i) { return colHeight + gutter + y.bandwidth() * (i + 1) + i * 2; })
+          .attr('x', function(d) { return maleBarWidth + icon.width + 8; })
           .attr('fill',self.BLACK)
           .attr('font-size','10px')
           .text(function(d) { return d; });
@@ -786,7 +796,7 @@ var PrintMaterials = function() {
         .attr('x', width - margin.right - (width / 12.5));
 
       legend.append('rect')
-        .attr('fill',orange)
+        .attr('fill',self.ORANGE)
         .attr('height', colHeight * 0.45)
         .attr('width', colHeight * 0.45)
         .attr('y', colHeight * 1.55 + gutter)
@@ -832,14 +842,20 @@ var PrintMaterials = function() {
           }
         }
 
-        labels.push(response.current.label);
-        count.push(response.current.count.male + response.current.count.female);
-      })
+        var label = response.current.label;
 
+        if(label !== 'none') {
+          labels.push(label);
+          count.push(response.current.count.male + response.current.count.female);
+        }
+      });
 
-      var width = 370,
-        height = 185,
-        radius = 70;
+      var affiliatedTotal = data[0].total;
+      var unaffiliatedTotal = data[1].total;
+
+      var width = options.width,
+        height = options.height,
+        radius = height / 2.5;
 
       var color = d3.scaleOrdinal()
         .range([self.ORANGE, self.BLACK]);
@@ -858,12 +874,13 @@ var PrintMaterials = function() {
         .attr("width", width)
         .attr("height", height)
         .append("g")
-        .attr("transform", "translate(70, 70)");
+        .attr("transform", "translate(0, 0)");
 
         var g = svg.selectAll(".arc")
-          .data(pie(data))
+            .data(pie(data))
           .enter().append("g")
-          .attr("class", "arc");
+            .attr('transform','translate(' + radius + ',' + radius + ')')
+            .attr("class", "arc");
 
         g.append("path")
           .attr("d", arc)
@@ -871,98 +888,89 @@ var PrintMaterials = function() {
             return color(d.data.type);
         });
 
-        g.append("text")
-          .attr("transform", function (d) {
-            return "translate(-53,104)";
-        })
-          .attr('font-size','9px')
-          .style("text-anchor", "middle")
-          .text(function(d) {
-            return d.data.type == 'Affiliated' ? d.data.total : '';
-        });
-
-        g.append("text")
-          .attr("transform", function (d) {
-            return "translate(27,104)";
-        })
-          .attr('font-size','9px')
-          .style("text-anchor", "middle")
-          .text(function(d) {
-            return d.data.type == 'Not affiliated' ? d.data.total : '';
-        });
-
         svg.append('line')
-          .attr('x1', 40)
-          .attr('x2', 120)
-          .attr('y1', 0)
-          .attr('y2', 0)
+          .attr('x1', radius * 2)
+          .attr('x2', 180)
+          .attr('y1', radius)
+          .attr('y2', radius)
           .attr('width',1)
-          .attr('stroke',self.BLACK)
+          .attr('stroke',self.BLACK);
 
+        // Legend
         var legend = svg.append('g')
-          .attr('class','legend');
+          .attr('class','legend')
+          .attr('transform','translate(0,100)')
 
         legend.append('rect')
           .attr('fill',self.ORANGE)
           .attr('height',15)
-          .attr('width',15)
-          .attr('y',80)
-          .attr('x', -60);
+          .attr('width',15);
 
         legend.append('rect')
           .attr('fill',self.BLACK)
           .attr('height',15)
           .attr('width',15)
-          .attr('y', 80)
-          .attr('x', 20);
+          .attr('x', 80);
 
         legend.append('text')
-          .attr('y',91)
-          .attr('x', -40)
+          .attr('y',11)
+          .attr('x', 20)
           .attr('font-size','9px')
           .text('AFFILIATED');
 
         legend.append('text')
-          .attr('y',91)
-          .attr('x', 40)
+          .attr('y',11)
+          .attr('x', 100)
           .attr('font-size','9px')
           .text('NOT AFFILIATED');
 
+        var affText = legend.append("text")
+          .attr('class','aff-count')
+          .attr('y',25)
+          .attr('font-size','9px')
+          .text(affiliatedTotal);
+
+        affText.attr('x',(15 - affText.node().getBBox().width) / 2);
+
+        var unaffText = legend.append("text")
+          .attr('class','unaff-count')
+          .attr('y',25)
+          .attr('font-size','9px')
+          .text(unaffiliatedTotal);
+
+        unaffText.attr('x',80 + (15 - unaffText.node().getBBox().width) / 2);
+
+        // Table
         var table = svg.append('g')
           .attr('class','table')
-          .attr('height', 160)
-          .attr('width', 160)
-          .attr('y', -60)
-          .attr('x', 130);
+          .attr('transform','translate(' + 180 + ',' + 0  + ')');
 
         table.append('rect')
           .attr('fill', 'none')
           .style("stroke", self.BLACK)
-          .attr('height', 155)
-          .attr('width', 179)
-          .attr('y', -60)
-          .attr('x', 120);
+          .attr('height', 126)
+          .attr('width', 200);
 
-        var ulLabels = d3.select('.table').append('g');
-        var ulCount = d3.select('.table').append('g');
-
-        var text = ulLabels.selectAll('text')
-          .data(labels)
+        var text = d3.select('.table').append('g')
+          .selectAll('text')
+            .data(labels)
           .enter()
-          .append('text')
-          .text(function(d){return d});
-          text.attr('x', 125)
-          text.attr('y', function(d,i) { return i * (text.node().getBBox().height - 9) - 45 })
+            .append('text')
+            .text(function(d) { return d; });
+
+          text.attr('x', 10)
+          text.attr('y', function(d,i) { return (i + 1) * 11 + 5 })
           text.attr('font-size','9px')
 
-        var count = ulCount.selectAll('text')
-          .data(count)
+        var count = d3.select('.table').append('g')
+          .selectAll('text')
+            .data(count)
           .enter()
-          .append('text')
-          .text(function(d){return d});
-          count.attr('x', 284)
-          count.attr('y', function(d,i) { return i * (text.node().getBBox().height) - 45 })
-          count.attr('font-size','9px')
+            .append('text')
+            .text(function(d){return d});
+            count.attr('x', 180)
+            count.attr('y', function(d,i) { return (i + 1) * 11 + 5 })
+            count.attr('font-size','9px');
     }
   }
 
