@@ -31,13 +31,12 @@
 
   {% for q in questions %}
   <h2>{{ q.label }}</h2>
+  <p>Number of responses: {{ q.comments|length }}</p>
   <ul>
     {% for comment in q.comments %}
-    {% if comment and comment != 'n/a'%}
     {% with count=q.comments|get:comment %}
     <li>{{ comment }}{% if count != 1 %} <em>({{ count }})</em>{% endif %}</li>
     {% endwith %}
-    {% endif %}
     {% endfor %}
   </ul>
   {% endfor %}

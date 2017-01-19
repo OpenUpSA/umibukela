@@ -121,9 +121,14 @@ def comments(request, result_id):
     questions = []
     for child in result_set.survey.form.get('children'):
         if child.get('type', None) == 'text' and child.get('name') not in skip_questions:
+            comments = Counter([s.answers.get(child['name'], None)
+                                for s in result_set.submissions.all()])
+            comments.pop(None, None)
+            comments.pop('n/a', None)
+
             questions.append({
                 'label': child.get('label'),
-                'comments': Counter([s.answers.get(child['name'], None) for s in result_set.submissions.all()]),
+                'comments': comments,
             })
     return render(request, 'comments.html', {
         'result_set': result_set,
