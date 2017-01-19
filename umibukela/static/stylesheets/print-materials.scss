@@ -35,9 +35,9 @@ $headings-color: $black;
 .a4-page {
   // force size to be a4 page when printed with 0cm margins on all sides
   box-sizing: content-box;
-  width: 21cm; // 21cm - 0.5cm margin
-  height: 21cm * 1.414;
-  margin: 0.5cm;
+  width: 20cm; // 21cm - 0.5cm margin
+  height: 20cm * 1.414;
+  margin: 0cm; // 0.5cm margin applied during print
 
   overflow: hidden;
 
