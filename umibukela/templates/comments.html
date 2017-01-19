@@ -29,19 +29,32 @@
   </div>
   <!-- /section-header -->
 
-  {% for q in questions %}
-  <h2>{{ q.label }}</h2>
-  <p>Number of responses: {{ q.comments|length }}</p>
-  <ul>
-    {% for comment in q.comments %}
-    {% with count=q.comments|get:comment %}
-    <li>{{ comment }}{% if count != 1 %} <em>({{ count }})</em>{% endif %}</li>
-    {% endwith %}
-    {% endfor %}
-  </ul>
-  {% endfor %}
-</li>
+  <div class="stat-table stat-overview page-section">
+    <div class="container">
+      <section class="row">
+        <div class="col-sm-4">
+          <div class="stat stat-number">
+            <div class="name">Participants: {{ result_set.submissions.all|length }}</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
 
+  <div class="container">
+
+    {% for q in questions %}
+    <h2>{{ q.label }}</h2>
+    <p>Number of responses: {{ q.comments|length }}</p>
+    <ul>
+      {% for comment in q.comments %}
+      {% with count=q.comments|get:comment %}
+      <li>{{ comment }}{% if count != 1 %} <em>({{ count }})</em>{% endif %}</li>
+      {% endwith %}
+      {% endfor %}
+    </ul>
+    {% endfor %}
+  </div>
 
 </div>
 
