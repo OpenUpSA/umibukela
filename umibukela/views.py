@@ -1,16 +1,14 @@
 from collections import Counter
-from itertools import groupby
 from datetime import datetime, timedelta
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
+from forms import CRSFromKoboForm
 from itertools import groupby
 import analysis
 import pandas
 import requests
 import settings
-
-from forms import CRSFromKoboForm
 
 from .models import (
     CycleResultSet,
@@ -105,8 +103,6 @@ def site_result(request, site_slug, result_id):
             'totals': site_totals,
         }
     })
-
-
 
 
 def comments(request, result_id):
