@@ -603,6 +603,8 @@ var PrintMaterials = function() {
       var icon = { width: 15, height: 30 };
       var figureHeight = height * 0.8;
       var widthCoefficient = 0.8;
+      var legendWidth = width * 0.2;
+      var figureWidth = width * 0.8;
 
       var optionKeys = _.keys(options.responses[0]);
       var years = cycleYears;
@@ -612,28 +614,33 @@ var PrintMaterials = function() {
       for(var i=0;i < optionKeys.length;i++) {
         var period = optionKeys[i];
 
-        male_data.push({ period: period, year: period == 'current' ? years[1] : years[0] });
-        female_data.push({ period: period, year: period == 'current' ? years[1] : years[0] });
+        male_data.push({ period: period, year: period == 'current' ? years[1] : years[0], total: 0 });
+        female_data.push({ period: period, year: period == 'current' ? years[1] : years[0], total: 0 });
       }
 
       male_data.reverse();
       female_data.reverse();
 
       responses.forEach(function(response) {
+        response.prev.key = response.current.key;
+
         for(period in response) {
           var male_datum = _.find(male_data, function(item) { return item.period == period; });
           var female_datum = _.find(female_data, function(item) { return item.period == period; });
 
-          if(response[period].key) labels.push(response[period].key);
+          if(response[period].key && period == 'current') labels.push(response[period].key.toLowerCase());
 
-          male_datum[response[period].label.toLowerCase()] = response[period].count.male;
-          female_datum[response[period].label.toLowerCase()] = response[period].count.female;
+          male_datum[response[period].key.toLowerCase()] = response[period].count.male;
+          female_datum[response[period].key.toLowerCase()] = response[period].count.female;
+          console.log(male_datum[response[period].key.toLowerCase()]);
         }
-      });
+     });
 
       for(var i = 0;i < male_data.length; i++) {
-        male_data[i].total = male_data[i].yes + male_data[i].no;
-        female_data[i].total = female_data[i].yes + female_data[i].no;
+        labels.forEach(function(label) {
+          male_data[i].total += male_data[i][label];
+          female_data[i].total += female_data[i][label];
+        });
       }
 
       var maleMax = d3.max(male_data.map(function(d) { return d.total; }));
@@ -643,16 +650,18 @@ var PrintMaterials = function() {
       male_data = self.normalize(male_data, maleMax, labels);
       female_data = self.normalize(female_data, femaleMax, labels);
 
+      var zRange = labels.length > 2 ? [self.BLACK,self.WHITE,self.ORANGE] : [self.BLACK,self.ORANGE];
+
       var y = d3.scaleBand()
         .domain(optionTypes)
         .rangeRound([0, colHeight])
         .paddingInner(0.1);
       var x = d3.scaleLinear()
         .domain([0, max])
-        .range([0, width]);
+        .range([0, figureWidth]);
       var z = d3.scaleOrdinal()
         .domain(labels)
-        .range(['#00000',self.ORANGE]);
+        .range(zRange);
       var female_stack = d3.stack().keys(labels)(female_data);
       var male_stack = d3.stack().keys(labels)(male_data);
 
@@ -666,6 +675,7 @@ var PrintMaterials = function() {
           .data(female_stack)
         .enter().append('g')
           .attr('class','female')
+          .attr('stroke',function(d) { return z(d.key) == self.WHITE ? self.BLACK : z(d.key); })
           .attr('fill',function(d) { return z(d.key); });
 
       var femaleBarWidth = 0;
@@ -687,30 +697,36 @@ var PrintMaterials = function() {
 
             if(d.data.period == 'current' && barWidth) femaleBarWidth += barWidth;
 
-            return barWidth;
+            return barWidth - 1;
           })
           .attr('height', function(d) {
             var period = d.data.period;
             var coefficient = period == 'current' ? 1.5 : .5;
 
-            return y.bandwidth() * coefficient;
+            return y.bandwidth() * coefficient - 2;
           });
 
       female.selectAll('text.count')
           .data(function(d) { return d; })
         .enter().append('text')
           .attr('class','count')
-          .attr('x', function(d) { return x(d[0]) * widthCoefficient + Math.abs(x(d[1]) - x(d[0])) * widthCoefficient / 2 + icon.width })
+          .attr('stroke','none')
+          .attr('x', function(d) {
+            var barWidth = Math.abs(x(d[1]) - x(d[0])) ? Math.abs(x(d[1]) - x(d[0])) : 0;
+
+            return x(d[0]) * widthCoefficient + barWidth * widthCoefficient / 2 + icon.width;
+          })
           .attr('y',-2)
           .attr('fill',self.BLACK)
           .attr('font-size','10px')
           .attr('text-anchor','start')
-          .text(function(d) { return d.data.period == 'current' ? d[1] - d[0] : ''; });
+          .text(function(d) { return d.data.period == 'current' && d[1] - d[0] && d[1] - d[0] > 0 ? d[1] - d[0] : ''; });
 
       female.selectAll('text.year')
           .data(years)
         .enter().append('text')
           .attr('class','year')
+          .attr('stroke','none')
           .attr('text-anchor','start')
           .attr('y', function(d,i) { return y.bandwidth() * (i + 1) + i * 2; })
           .attr('x', function(d) { return femaleBarWidth + icon.width + 8; })
@@ -718,11 +734,12 @@ var PrintMaterials = function() {
           .attr('font-size','10px')
           .text(function(d) { return d; });
 
-            var male = svg.selectAll('.male')
-          .data(male_stack)
-        .enter().append('g')
-          .attr('class','male')
-          .attr('fill',function(d) { return z(d.key); });
+      var male = svg.selectAll('.male')
+        .data(male_stack)
+      .enter().append('g')
+        .attr('class','male')
+        .attr('stroke', function(d) { return z(d.key) == self.WHITE ? self.BLACK : z(d.key); })
+        .attr('fill',function(d) { return z(d.key); });
 
       var maleBarWidth = 0;
 
@@ -742,29 +759,35 @@ var PrintMaterials = function() {
 
             if(d.data.period == 'current' && barWidth) maleBarWidth += barWidth;
 
-            return barWidth;
+            return barWidth - 1;
           })
           .attr('height', function(d) {
             var period = d.data.period;
             var coefficient = period == 'current' ? 1.5 : .5;
 
-            return y.bandwidth() * coefficient;
+            return y.bandwidth() * coefficient - 2;
           });
 
       male.selectAll('text.count')
           .data(function(d) { return d; })
         .enter().append('text')
           .attr('class','count')
-          .attr('x', function(d) { return x(d[0]) * widthCoefficient + Math.abs(x(d[1]) - x(d[0])) * widthCoefficient / 2 + icon.width })
+          .attr('stroke','none')
+          .attr('x', function(d) {
+            var barWidth = Math.abs(x(d[1]) - x(d[0])) ? Math.abs(x(d[1]) - x(d[0])) : 0;
+
+            return x(d[0]) * widthCoefficient + barWidth * widthCoefficient / 2 + icon.width;
+          })
           .attr('y', function(d) { return colHeight + gutter - 2; })
           .attr('fill',self.BLACK)
           .attr('font-size','10px')
-          .text(function(d) { return d.data.period == 'current' && d[1] - d[0] > 0 ? d[1] - d[0] : ''; });
+          .text(function(d) { return d.data.period == 'current' && d[1] - d[0] && d[1] - d[0] > 0 ? d[1] - d[0] : ''; });
 
       male.selectAll('text.year')
           .data(years)
         .enter().append('text')
           .attr('class','year')
+          .attr('stroke','none')
           .attr('y', function(d,i) { return colHeight + gutter + y.bandwidth() * (i + 1) + i * 2; })
           .attr('x', function(d) { return maleBarWidth + icon.width + 8; })
           .attr('fill',self.BLACK)
@@ -785,34 +808,39 @@ var PrintMaterials = function() {
           .attr('height',colHeight)
           .attr('width',colHeight * 0.5);
 
+      var legendSquare = colHeight * 0.45;
+
       var legend = svg.append('g')
         .attr('class','legend');
 
-      legend.append('rect')
-        .attr('fill',self.BLACK)
-        .attr('height', colHeight * 0.45)
-        .attr('width', colHeight * 0.45)
-        .attr('y', colHeight + gutter)
-        .attr('x', width - margin.right - (width / 12.5));
+      var legendLabels = labels.length > 2 ? ['<tspan dy="0">1</tspan><tspan font-size="5" dy="-5">st</tspan> <tspan dy="5">Visit</tspan>', '<tspan>2</tspan><tspan font-size="5" dy="-5">nd</tspan> <tspan dy="5">Visit</tspan>', '<tspan>3</tspan><tspan font-size="5" dy="-5">rd</tspan>  <tspan dy="5">Visit</tspan>'] : ['Yes','No'];
 
-      legend.append('rect')
-        .attr('fill',self.ORANGE)
-        .attr('height', colHeight * 0.45)
-        .attr('width', colHeight * 0.45)
-        .attr('y', colHeight * 1.55 + gutter)
-        .attr('x', width - margin.right - (width / 12.5));
+      legend.selectAll('rect')
+          .data(zRange)
+        .enter().append('rect')
+          .attr('fill',function(d) { return d; })
+          .attr('height', legendSquare)
+          .attr('width', legendSquare)
+          .attr('stroke', function(d) { return d == self.WHITE ? self.BLACK : ''; })
+          .attr('y',function(d,i) { return (legendSquare + 5) * i; });
 
-      legend.append('text')
-        .attr('y', colHeight * 1.3375 + gutter)
-        .attr('x', width - margin.right)
-        .attr('font-size','10px')
-        .text('YES');
+      var text = legend.selectAll('text')
+          .data(legendLabels)
+        .enter().append('text')
+          .attr('x',legendSquare + 5)
+          .attr('y',function(d,i) { return Math.round(height / 7) + (legendSquare + 5) * i; })
+          .attr('font-size',Math.round(height / 7))
+          .html(function(d) { return d.toUpperCase(); });
 
-      legend.append('text')
-        .attr('y', colHeight * 1.8875 + gutter)
-        .attr('x', width - margin.right)
-        .attr('font-size','10px')
-        .text('NO');
+      var maxTextWidth = 0;
+
+      text.each(function(d) {
+        if(text.node().getBBox().width > maxTextWidth) maxTextWidth = text.node().getBBox().width;
+      });
+
+      var renderedLegendWidth = legendSquare + 5 + maxTextWidth;
+
+      legend.attr('transform','translate(' + (width - renderedLegendWidth) + ',' + (height - labels.length * (legendSquare + 2)) + ')');
     },
     typeFour: function(options) {
       var responses = options.responses;
