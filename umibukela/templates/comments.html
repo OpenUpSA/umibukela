@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load pipeline static jsonify lookup markup_tags shuffle %}
+
+{% block title %}Comments for {{ result_set.survey.name }} - {{ result_set.partner.short_name }} - {{ result_set.site.name }}{% endblock %}
+{% block head-css %}
+{{ block.super }}
+    <link href="{% static 'stylesheets/print-bootstrap.css' %}" rel="stylesheet" type="text/css" {% if not request.GET.print %}media="print"{% endif %} />
+{% endblock %}
+{% block js %}
+{{ block.super }}
+{% javascript "site" %}
+{% endblock %}
+{% block content %}
+
+{% block page-content %}
+    <div class="page-content">
+      <div class="wrapper">
+
+<div class="section cycle-results">
+  <!-- section-header -->
+  <div class="section-heading cycle-results-heading">
+    <div class="container">
+      <h3><i class="fa fa-bar-chart-o"></i> Comments</h3>
+
+      <h1>{{ result_set.site.name }}</h1>
+      <h2>{{ result_set.survey.name }}</h2>
+
+    </div>
+  </div>
+  <!-- /section-header -->
+
+  {% for q in questions %}
+  <h2>{{ q.label }}</h2>
+  <p>Number of responses: {{ q.comments|length }}</p>
+  <ul>
+    {% for comment in q.comments %}
+    {% with count=q.comments|get:comment %}
+    <li>{{ comment }}{% if count != 1 %} <em>({{ count }})</em>{% endif %}</li>
+    {% endwith %}
+    {% endfor %}
+  </ul>
+  {% endfor %}
+</li>
+
+
+</div>
+
+
+{% endblock %}
+{% endblock %}
