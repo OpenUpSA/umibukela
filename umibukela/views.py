@@ -117,8 +117,8 @@ def poster(request, site_slug, result_id):
         site__slug__exact=site_slug
     )
     sector_id = result_set.site.sector.id
-    sector_name = Sector.objects.get(id=sector_id).name
-    site = result_set.site.name.split(' ', 1)[0]
+    sector_name = result_set.site.sector.name
+    site = result_set.site.name
     layout_class = '-'.join(sector_name.lower().split(' '))
     location = None
     template = 'posters/'
@@ -144,31 +144,35 @@ def poster(request, site_slug, result_id):
                 prev_df = pandas.DataFrame(prev_responses)
                 prev_results = analysis.count_options(prev_df, prev_form['children'])
                 prev_results = analysis.calc_q_percents(prev_results)
+                prev_date = prev_result_set.cycle.start_date
             else:
                 prev_results = None
+                prev_date = None
         else:
             prev_results = None
+            prev_date = None
         analysis.combine_curr_hist(site_results, prev_results)
 
-    if sector_id == Sector.SASSA_PAYPOINT:
+    if 'pay point' in result_set.site.name.lower():
         template += 'paypoint_poster.html'
-    elif sector_id == Sector.LOCAL_GOV:
+        sector_name = None
+    elif 'local gov' in result_set.site.sector.name.lower():
         template += 'local_gov_poster.html'
         sector_name = 'Participatory Governance'
         location = result_set.site.name
         site = 'Western Cape'
-    elif sector_id == Sector.HEALTH_CLINIC:
+    elif 'health' in result_set.site.sector.name.lower():
         template += 'health_clinic_poster.html'
-        sector_name += ' Clinic'
-    elif sector_id == Sector.SASSA_SERVICE_OFFICE:
+        sector_name = None
+    elif 'service office' in result_set.site.name.lower():
         template += 'service_office_poster.html'
-        sector_name = 'SASSA Service Office'
+        sector_name = None
     else:
         template += 'poster_layout.html'
 
     return render(request, template, {
         'result_set': result_set,
-        'prev_date': prev_result_set.cycle.start_date,
+        'prev_date': prev_date,
         'totals': totals,
         'site': site,
         'sector': sector_name,
