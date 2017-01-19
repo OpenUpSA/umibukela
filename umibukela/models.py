@@ -34,12 +34,18 @@ def attachment_filename(instance, filename):
 class Sector(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
+    class Meta:
+        ordering = ('name',)
+
     def __str__(self):
         return self.name
 
 
 class Province(models.Model):
     name = models.CharField(max_length=200, unique=True)
+
+    class Meta:
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
@@ -64,7 +70,7 @@ class Partner(models.Model):
         ordering = ('short_name',)
 
     def __str__(self):
-        return "[ID: %s] %s" % (self.id, self.short_name)
+        return self.short_name
 
     def completed_result_sets(self):
         result_sets = list(self.cycle_result_sets.filter(
@@ -103,7 +109,7 @@ class Site(models.Model):
         ordering = ('name',)
 
     def __str__(self):
-        return "[ID: %s] %s" % (self.id, self.name)
+        return self.name
 
     def latest_complete_result(self):
         """Return the latest ended CycleResultSet, otherwise None"""
@@ -163,6 +169,7 @@ class Cycle(models.Model):
 
     class Meta:
         unique_together = ('name', 'programme')
+        ordering = ('name', )
 
     def __str__(self):
         return "%s - %s [%s to %s]" % (
@@ -189,6 +196,9 @@ class SurveyType(models.Model):
 class Survey(models.Model):
     name = models.CharField(max_length=200, unique=True)
     form = jsonfield.JSONField()
+
+    class Meta:
+        ordering = ('name', )
 
     def __str__(self):
         return self.name
@@ -239,6 +249,7 @@ class CycleResultSet(models.Model):
 
     class Meta:
         unique_together = ('cycle', 'site', 'survey_type')
+        ordering = ('site__name', 'partner__short_name')
 
     def __str__(self):
         return "%s <- %s (%s)" % (
@@ -307,3 +318,6 @@ class Submission(models.Model):
     def save(self, *args, **kwargs):
         self.uuid = self.answers['_uuid']
         super(Submission, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "uuid=%s" % self.uuid
