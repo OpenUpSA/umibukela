@@ -10,6 +10,7 @@ django-jsonfield==0.9.15
 django-markup==1.1
 django-pipeline==1.5.1
 django-storages==1.1.8
+django-wkhtmltopdf==3.0.0
 enum34==1.0.4
 futures==3.0.2
 gevent==1.0.1

@@ -33,39 +33,31 @@ $headings-color: $black;
 //============================================================================================
 
 .a4-page {
-  // force size to be a4 page when printed with 0cm margins on all sides
-  box-sizing: content-box;
-  width: 21cm; // 21cm - 0.5cm margin
-  height: 21cm * 1.414;
-  margin: 0.5cm;
-
   overflow: hidden;
+  page-break-after: always;
 
   &.debug {
     border: 5px dashed hotpink;
   }
 }
 
-.poster {
-  // override bootstrap row and column padding, we do our own padding
-  .row {
-    margin: 0;
-  }
-  .col-xs-1,
-  .col-xs-2,
-  .col-xs-3,
-  .col-xs-4,
-  .col-xs-5,
-  .col-xs-6,
-  .col-xs-7,
-  .col-xs-8,
-  .col-xs-9,
-  .col-xs-10,
-  .col-xs-11,
-  .col-xs-12 {
-    padding: 0px;
-  }
+.a4-portrait {
+  // force size to be a4 page when printed with 0.5cm margins on all sides
+  box-sizing: content-box;
+  width: 20cm; // 21cm - 0.5cm margin
+  height: 20cm * 1.414;
+  margin: 0cm; // 0.5cm margin applied during print
+}
 
+.a4-landscape {
+  // force size to be a4 page when printed with 0.5cm margins on all sides
+  box-sizing: content-box;
+  height: 20cm - 0.5cm;
+  width: 20cm * 1.414;
+  margin: 0cm; // 0.5cm margin applied during print
+}
+
+.poster {
   &.sassa-service-office {
     [class*=col] {
       .black-banner {
@@ -384,10 +376,9 @@ $headings-color: $black;
   }
 }
 
-.brochure {
-  &.container {
-    width:1440px !important;
-  }
+.handout {
+  font-size: 11px;
+  line-height: 1.5;
 
   .margin-bottom {
     margin-bottom:60px;
@@ -407,6 +398,14 @@ $headings-color: $black;
     h4, p {
       padding-left:20px;
     }
+  }
+
+  .left {
+    margin-right: 10px;
+  }
+
+  .right {
+    margin-left: 10px;
   }
 
   .mavc-footer {
@@ -441,9 +440,13 @@ $headings-color: $black;
     padding:20px 0;
   }
 
-  .page-1 {
-    page-break-after: always;
+  .header {
+    .banner {
+      width: 100%;
+    }
+  }
 
+  .page-1 {
     .partner {
       color:rgb(255,255,255) !important;
 
@@ -507,6 +510,13 @@ $headings-color: $black;
         position:relative;
 
         .how-data-box {
+          position:absolute;
+          top:0;
+          right:0;
+          bottom:0;
+          left:0;
+
+          margin:auto;
           padding:15px;
           border:1px solid rgb(0,0,0);
 
@@ -519,6 +529,12 @@ $headings-color: $black;
       footer {
         margin-top:15px;
         page-break-after:always;
+      }
+
+      .code4sa-logo {
+        margin-top:30px;
+        width:220px;
+        height:120px;
       }
     }
   }
@@ -562,6 +578,9 @@ $headings-color: $black;
       }
       ul {
         padding-left:60px;
+      }
+      li {
+        margin-bottom:15px;
       }
     }
 
@@ -625,144 +644,27 @@ $headings-color: $black;
   }
 }
 
-@media print {
-  .brochure {
-    font-size:24px;
-    line-height:1.5;
-
-    &.container {
-      width: 791mm !important;
-      height: 544mm !important;
-    }
-
-    .page-1 {
-      .header {
-        img {
-          width:100%;
-        }
-      }
-
-      .left {
-        .header {
-          .partner {
-            font-size:40px;
-            left:26px;
-            top:68px;
-          }
-        }
-      }
-
-      .right {
-        font-size:16px;
-
-        .header {
-          .partner {
-            left:34px;
-            top:110px;
-            font-size:40px;
-          }
-
-          .date {
-            font-size:24px;
-          }
-
-          .site {
-            left:34px;
-            bottom:-15px;
-            font-size:42px;
-          }
-        }
-
-        .dashed-box {
-          padding:20px 40px;
-        }
-      }
-
-      .code4sa-logo {
-        margin-top:30px;
-        width:220px;
-        height:120px;
-      }
-    }
-
-    .page-2 {
-      .tips {
-        li {
-          margin-bottom:15px;
-        }
-      }
-
-      .i-plan {
-        .i-plan-table {
-          .i-plan-table-row {
-            .col-xs-2 {
-              height:140px;
-
-              &:first-child {
-                &:before {
-                  height:40px;
-                  width:40px;
-                  line-height:40px;
-                  font-size:25px;
-                  left:-20px;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    .mavc-footer {
-      margin-top:300px;
-      padding-left:90px;
-    }
-
-    .how-data-box {
-      position:absolute;
-      margin:auto;
-      top:0;
-      right:0;
-      bottom:0;
-      left:0;
-      width:100%;
-      height:74%;
-      padding:30px;
-    }
-
-    .what-is {
-      .col-xs-8 {
-        margin-right:20px;
-      }
-
-      .col-xs-4 {
-        margin-left:20px;
-      }
-    }
-
-    .top-box {
-      padding-left:30px;
-      padding-right:30px;
-    }
-
-    .page-1, .page-2 {
-      padding:25mm 25mm 25mm 25mm !important;
-
-      &> .col-xs-6 {
-        &:first-child {
-          padding-right:75px;
-        }
-
-        &:last-child {
-          padding-left:75px;
-        }
-      }
-    }
-  }
-}
-
 .print-materials {
   -webkit-print-color-adjust: exact;
+
+  // override bootstrap row and column padding, we do our own padding
+  .row {
+    margin: 0;
+  }
+  .col-xs-1,
+  .col-xs-2,
+  .col-xs-3,
+  .col-xs-4,
+  .col-xs-5,
+  .col-xs-6,
+  .col-xs-7,
+  .col-xs-8,
+  .col-xs-9,
+  .col-xs-10,
+  .col-xs-11,
+  .col-xs-12 {
+    padding: 0px;
+  }
 
   h1, h2, h3, h4 {
     font-family: "Open Sans", Helvetica, Arial, sans-serif;

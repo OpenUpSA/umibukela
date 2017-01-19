@@ -1,0 +1,8 @@
+{% extends "admin/change_form.html" %}
+{% block content %}
+<div>
+  Preview
+  <a href="/sites/{{ original.site.slug }}/results/{{ original.id }}/poster">Poster</a>
+</div>
+{{ block.super }}
+{% endblock %}

@@ -241,7 +241,7 @@ def get_submissions(start_date, end_date, fmt=None, date='_submission_time'):
     resp = requests.get('https://kc.kobotoolbox.org/api/v1/data/25889', params={
         'format': fmt,
         'query': filters,
-    }, auth=(settings.KOBO_USERNAME, settings.KOBO_PASSWORD))
+    }, auth=(settings.HEALTHE_KOBO_USERNAME, settings.HEALTHE_KOBO_PASSWORD))
     resp.raise_for_status()
 
     if fmt == 'json':

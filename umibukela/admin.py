@@ -1,4 +1,5 @@
 from django.contrib import admin
+from umibukela import views
 
 from .models import (
     AttachmentNature,
@@ -20,6 +21,21 @@ from .forms import (
 )
 
 
+class AdminSite(admin.AdminSite):
+    index_template = 'admin/site_admin_index.html'
+
+    def get_urls(self):
+        from django.conf.urls import url
+        urls = super(AdminSite, self).get_urls()
+        urls = [
+            url(r'^umibukela/kobo_forms$', self.admin_view(views.kobo_forms)),
+            url(r'^umibukela/kobo_forms/(?P<kobo_form_id>\d+)/site/(?P<site_name>\w+)/preview$', self.admin_view(views.kobo_form_site_preview)),
+            url(r'^umibukela/survey/(?P<survey_id>\d+)/kobo_submissions$', self.admin_view(views.survey_kobo_submissions)),
+            url(r'^umibukela/survey_from_kobo$', self.admin_view(views.survey_from_kobo)),
+        ] + urls
+        return urls
+
+
 class PartnerAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("short_name",)}
 
@@ -39,16 +55,18 @@ class CycleResultSetAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.site_header = 'Umibukela administration'
+admin_site = AdminSite()
 
-admin.site.register(AttachmentNature)
-admin.site.register(Cycle)
-admin.site.register(CycleFrequency)
-admin.site.register(CycleResultSet, CycleResultSetAdmin)
-admin.site.register(Partner, PartnerAdmin)
-admin.site.register(Programme)
-admin.site.register(Province)
-admin.site.register(Sector)
-admin.site.register(Site, SiteAdmin)
-admin.site.register(Survey)
-admin.site.register(SurveyType)
+admin_site.site_header = 'Umibukela administration'
+
+admin_site.register(AttachmentNature)
+admin_site.register(Cycle)
+admin_site.register(CycleFrequency)
+admin_site.register(CycleResultSet, CycleResultSetAdmin)
+admin_site.register(Partner, PartnerAdmin)
+admin_site.register(Programme)
+admin_site.register(Province)
+admin_site.register(Sector)
+admin_site.register(Site, SiteAdmin)
+admin_site.register(Survey)
+admin_site.register(SurveyType)

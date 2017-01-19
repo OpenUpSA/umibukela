@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+from umibukela.admin import admin_site
 
 
 urlpatterns = patterns(
@@ -14,10 +14,10 @@ urlpatterns = patterns(
     url(r'^sites$', 'umibukela.views.sites', name='sites'),
     url(r'^sites/(?P<site_slug>[\w-]+)$', 'umibukela.views.site', name='site'),
     url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)$', 'umibukela.views.site_result', name='site-result'),
-
-    url(r'^poster/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)$', 'umibukela.views.poster', name='poster'),
-    url(r'^brochure/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)$', 'umibukela.views.brochure', name='brochure'),
-
+    url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)/poster$', 'umibukela.views.poster', name='site-result-poster'),
+    url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)/poster.pdf$', 'umibukela.views.poster_pdf', name='site-result-poster-pdf'),
+    url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)/handout$', 'umibukela.views.handout', name='site-result-handout'),
+    url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)/handout.pdf$', 'umibukela.views.handout_pdf', name='site-result-handout-pdf'),
 
     url(r'^partners$', 'umibukela.views.partners', name='partners'),
     url(r'^partners/(?P<partner_slug>[\w-]+)$', 'umibukela.views.partner', name='partner'),
@@ -29,7 +29,8 @@ urlpatterns = patterns(
     url(r'^stockouts/year/report$', 'umibukela.healthe.views.year_report', name='healthe-year-report'),
 
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'admin/login.html'}),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/kobo-oauth', 'umibukela.views.kobo_oauth_return', name='kobo-oauth'),
+    url(r'^admin/', include(admin_site.urls)),
 
     # For when images are hosted locally
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
