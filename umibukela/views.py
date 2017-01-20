@@ -1,20 +1,19 @@
-from itertools import groupby
+from collections import Counter
 from datetime import datetime, timedelta
-
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
-
 from forms import CRSFromKoboForm
 from itertools import groupby
-from xform import XForm
-from wkhtmltopdf.views import PDFResponse
 from wkhtmltopdf.utils import wkhtmltopdf
-
+from wkhtmltopdf.views import PDFResponse
+from xform import XForm
+import analysis
 import pandas
 import requests
+import settings
 
 import umibukela.analysis as analysis
 from .forms import CRSFromKoboForm
@@ -293,6 +292,33 @@ def simplify_perf_group(form, responses):
         for key, val in response.iteritems():
             if key in perf_questions:
                 response[key] = orig_name_to_simple[val]
+
+
+def comments(request, result_id):
+    result_set = get_object_or_404(
+        CycleResultSet,
+        id=result_id,
+    )
+    skip_questions = [
+        'surveyor',
+        'capturer',
+    ]
+    questions = []
+    for child in result_set.survey.form.get('children'):
+        if child.get('type', None) == 'text' and child.get('name') not in skip_questions:
+            comments = Counter([s.answers.get(child['name'], None)
+                                for s in result_set.submissions.all()])
+            comments.pop(None, None)
+            comments.pop('n/a', None)
+
+            questions.append({
+                'label': child.get('label'),
+                'comments': comments,
+            })
+    return render(request, 'comments.html', {
+        'result_set': result_set,
+        'questions': questions,
+    })
 
 
 def partners(request):
