@@ -290,25 +290,29 @@ $headings-color: $black;
   .header {
     overflow: hidden;
     height: 155px;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
 
-    .partner, .date, .site {
+    .partner, .date, .site, .banner {
       position: absolute;
       white-space: nowrap;
     }
 
-    .partner, .site, .location {
+    .partner, .site, .location, .banner {
       left: 10px;
     }
 
     .banner {
-      width:100%;
+      font-size: 50px;
+      text-transform: uppercase;
+      color: white;
+      top: 10px;
     }
 
     .partner {
       top: 70px;
       color: white !important;
       font-size: 21px;
-      left:22px;
     }
 
     .date {
@@ -501,12 +505,6 @@ $headings-color: $black;
     padding:20px 0;
   }
 
-  .header {
-    .banner {
-      width: 100%;
-    }
-  }
-
   &.page-1 {
     .partner {
       color:rgb(255,255,255) !important;
@@ -519,11 +517,23 @@ $headings-color: $black;
     .left {
       position:relative;
 
-      .header {
+      header {
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        height: 100px;
+
+        .banner {
+          font-size: 14px;
+          color: white;
+          top: 10px;
+          left: 10px;
+        }
+
         .partner {
-          font-size:22px;
-          left: 13px;
-          top:33px;
+          font-size: 22px;
+          left: 11px;
+          top: 33px;
+          text-transform: uppercase;
         }
       }
 
@@ -547,15 +557,29 @@ $headings-color: $black;
     .right {
       font-size:10px;
 
+      header {
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        height: 100px;
+
+        .banner {
+          font-size: 34px;
+          text-transform: uppercase;
+          color: white;
+          top: 5px;
+          left:10px;
+        }
+      }
+
       .dashed-box {
         padding:10px 20px;
         border:1px dashed rgb(0,0,0);
       }
 
       .partner {
-        left:20px;
-        top:60px;
-        font-size:22px;
+        left: 10px;
+        top: 43px;
+        font-size: 18px;
       }
 
       .date {
@@ -566,7 +590,7 @@ $headings-color: $black;
       }
 
       .site {
-        left:20px;
+        left:10px;
         bottom:-5px;
         font-size:22px;
       }
