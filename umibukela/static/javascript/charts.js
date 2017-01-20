@@ -39,13 +39,13 @@ var PrintMaterials = function() {
       var margin = options.margin;
       var optionKeys = options.optionKeys;
 
-      var figureHeight = height * .75;
       var labelWidth = Math.floor(width / 5) - 3;
       var sideWidth = (width - labelWidth) / 2;
-      var rightOffset = width / 2 + labelWidth / 2;
+      var rightOffset = width / 2 + labelWidth / 2 + 1;
       var leftOffset = width / 2 - labelWidth / 2;
       var fontSize = height / 32;
-      var legendWidth = width / 3;
+      var legendWidth = width / 2.5;
+      var gutter = height / 13;
       var icon = {
         height: height / 8,
         width: width / 13
@@ -78,110 +78,14 @@ var PrintMaterials = function() {
       var rightMax = d3.max(female_data.map(function(d) { return d.value }));
       var leftMax = d3.max(male_data.map(function(d) { return d.value }));
 
-      var y0 = d3.scaleBand()
-        .domain(male_data.map(function(d) { return d.label; }))
-        .rangeRound([0, figureHeight])
-        .paddingInner(0.2)
-        .paddingOuter(0)
-        .align(0);
-      var y1 = d3.scaleBand()
-        .domain(optionKeys)
-        .rangeRound([0, y0.bandwidth()])
-        .padding(0);
-      var xRight = d3.scaleLinear()
-        .domain([0,rightMax])
-        .range([0,sideWidth - 20]);
-      var xLeft = d3.scaleLinear()
-        .domain([0,leftMax])
-        .range([0,sideWidth - 20]);
-
       var svg = response.append('svg')
         .attr('height',height)
         .attr('width',width)
       .append('g');
 
-      var right = svg.selectAll('g.right')
-        .data(female_data)
-      .enter().append('g')
-        .attr('transform', function(d) { return 'translate(' + rightOffset + ',' + (y0(d.label) + 1) + ')'; })
-        .attr('class','right');
-
-      right.append('rect')
-        .attr('height', function(d) {
-          var rectHeight = y1.bandwidth();
-
-          if(d.name == 'prev') {
-            rectHeight = rectHeight / 3;
-          }
-
-          return rectHeight - 2;
-        })
-        .attr('y', function(d) { return y1(d.name); })
-        .attr('width', function(d) { return xRight(d.value) - 2; })
-        .attr('fill', function(d) { ;return colorFemale(d.name); })
-        .attr('stroke',function(d) { return d.name == 'current' ? self.BLACK : self.ORANGE; });
-
-      right.append('text')
-        .attr('dx',function(d) { return xRight(d.value) + 5; })
-        .attr('dy',function(d) { return y1.bandwidth() / 2 + parseFloat(fontSize) / 2; })
-        .attr('font-size',fontSize)
-        .text(function(d) { return d.value > 0 && d.name == 'current' ? d.value : ''; });
-
-      var left = svg.selectAll('g.left')
-        .data(male_data)
-      .enter().append('g')
-        .attr('transform', function(d) { return 'translate(0,' + (y0(d.label) + 1) + ')'; })
-        .attr('class','left');
-
-      left.append('rect')
-        .attr('height', function(d) {
-          var rectHeight = y1.bandwidth();
-
-          if(d.name == 'prev') {
-            rectHeight = rectHeight / 3;
-          }
-
-          return rectHeight - 2;
-        })
-        .attr('x',function(d) { return sideWidth - xLeft(d.value); })
-        .attr('y', function(d) { return y1(d.name); })
-        .attr('width', function(d) { return xLeft(d.value); })
-        .attr('fill', function(d) { return colorMale(d.name); })
-        .attr('stroke',function(d) { return d.name == 'current' ? self.BLACK : self.ORANGE; });
-
-      left.append('text')
-        .attr('dx',function(d) { return sideWidth - xLeft(d.value) - 20; })
-        .attr('dy',function(d) { return y1.bandwidth() / 2 + 4; })
-        .attr('font-size',fontSize)
-        .text(function(d) { return d.value > 0 && d.name == 'current' ? d.value : ''; });
-
-      var labelOffset = y0.paddingInner();
-
-      var centerBoxes = svg.selectAll('g.center')
-          .data(labels)
-        .enter().append('g')
-          .attr('transform',function(d, i) {
-            if(i == labels.length - 1) labelOffset = y0(d.key);
-
-            return 'translate(' + leftOffset + ',' + (y0(d.key) + 1) + ')';
-          })
-          .attr('class','center');
-
-      centerBoxes.append('rect')
-        .attr('class','box')
-        .attr('width',labelWidth)
-        .attr('height',y0.bandwidth() - 2);
-
-      centerBoxes.append('text')
-          .attr('class','label')
-          .attr('x',labelWidth / 2)
-          .attr('y',labelOffset + 4)
-          .text(function(d) { return d.label; })
-          .call(self.wrap, labelWidth - 6, y0.bandwidth() - y0.paddingInner(), fontSize);
-
+      // Create legend first so that its height can be subtracted from figureHeight
       var legend = svg.append('g')
-          .attr('class','legend')
-          .attr('transform','translate(' + legendWidth + ',' + (figureHeight + 10) + ')');
+          .attr('class','legend');
 
       legend.append('image')
         .attr('xlink:href','/static/img/man-icon.png')
@@ -203,6 +107,146 @@ var PrintMaterials = function() {
         .attr('height',icon.height / 2)
         .attr('x',legendWidth / 2 - icon.width / 2)
         .attr('y',icon.height / 2);
+
+      var figureHeight = height - legend.node().getBBox().height - gutter;
+
+      legend.attr('transform','translate(' + ((width - legendWidth) / 2) + ',' + figureHeight + ')');
+
+      var y0 = d3.scaleBand()
+        .domain(male_data.map(function(d) { return d.label; }))
+        .rangeRound([0, figureHeight])
+        .paddingInner(0.2)
+        .paddingOuter(0)
+        .align(0);
+      var y1 = d3.scaleBand()
+        .domain(optionKeys)
+        .rangeRound([0, y0.bandwidth()])
+        .padding(0);
+      var xRight = d3.scaleLinear()
+        .domain([0,rightMax])
+        .range([0,sideWidth - 20]);
+      var xLeft = d3.scaleLinear()
+        .domain([0,leftMax])
+        .range([0,sideWidth - 20]);
+
+      var right = svg.selectAll('g.right')
+        .data(female_data)
+      .enter().append('g')
+        .attr('transform', function(d) { return 'translate(' + rightOffset + ',' + (y0(d.label) + 1) + ')'; })
+        .attr('class','right');
+
+      var scalingFactor = 1;
+      var isTwoPeriods = _.contains(optionKeys,'prev');
+
+      right.append('rect')
+        .attr('height', function(d) {
+          var barHeight = y1.bandwidth();
+
+          if(d.name == 'prev') {
+            scalingFactor = 1 / 3;
+          } else if(isTwoPeriods) {
+            scalingFactor = 5 / 3;
+          }
+
+          return barHeight * scalingFactor;
+        })
+        .attr('y', function(d) {
+          if(d.name == 'prev') return y1(d.name) * scalingFactor;
+          else if(isTwoPeriods) return y1(d.name) - 1;
+          else return y1(d.name);
+        })
+        .attr('width', function(d) { return xRight(d.value); })
+        .attr('fill', function(d) { ;return colorFemale(d.name); })
+        .attr('stroke',function(d) { return d.name == 'current' ? self.BLACK : self.ORANGE; });
+
+      right.append('text')
+        .attr('x',function(d) { return xRight(d.value) + 5; })
+        .attr('y',function(d) {
+          var barWidth = y1.bandwidth();
+
+          if(isTwoPeriods) barWidth *= (5/3);
+
+          return (barWidth - fontSize) / 2 + fontSize - 1;
+        })
+        .attr('font-size',fontSize)
+        .text(function(d) { return d.value > 0 && d.name == 'current' ? d.value : ''; });
+
+      var left = svg.selectAll('g.left')
+        .data(male_data)
+      .enter().append('g')
+        .attr('transform', function(d) { return 'translate(0,' + (y0(d.label) + 1) + ')'; })
+        .attr('class','left');
+
+      scalingFactor = 1;
+
+      left.append('rect')
+        .attr('height', function(d) {
+          var barHeight = y1.bandwidth();
+
+          if(d.name == 'prev') {
+            scalingFactor = 1 / 3;
+          } else if(_.contains(optionKeys,'prev')) {
+            scalingFactor = 5 / 3;
+          }
+
+          return barHeight * scalingFactor;
+        })
+        .attr('x',function(d) { return sideWidth - xLeft(d.value) - 1; })
+        .attr('y', function(d) {
+          if(d.name == 'prev') return y1(d.name) * scalingFactor;
+          else if(isTwoPeriods) return y1(d.name) - 1;
+          else return y1(d.name);
+        })
+        .attr('width', function(d) { return xLeft(d.value); })
+        .attr('fill', function(d) { return colorMale(d.name); })
+        .attr('stroke',function(d) { return d.name == 'current' ? self.BLACK : self.ORANGE; })
+        .attr('stroke-width', '1');
+        /*.attr('stroke-dasharray', function(d) {
+          if(d.name == 'current') {
+            var barHeight = y1.bandwidth() * scalingFactor;
+            var barWidth = xLeft(d.value);
+
+            return barWidth + ',' + barHeight + ',' +  (barWidth * 2);
+          } else {
+            return '';
+          }
+        });*/
+
+      left.append('text')
+        .attr('x',function(d) { return sideWidth - xLeft(d.value) - 10; })
+        .attr('y',function(d) {
+          var barWidth = y1.bandwidth();
+
+          if(isTwoPeriods) barWidth *= (5/3);
+
+          return (barWidth - fontSize) / 2 + fontSize - 1;
+        })
+        .attr('font-size',fontSize)
+        .text(function(d) { return d.value > 0 && d.name == 'current' ? d.value : ''; });
+
+      var labelOffset = y0.paddingInner();
+
+      var centerBoxes = svg.selectAll('g.center')
+          .data(labels)
+        .enter().append('g')
+          .attr('transform',function(d, i) {
+            if(i == labels.length - 1) labelOffset = y0(d.key);
+
+            return 'translate(' + leftOffset + ',' + (y0(d.key) + 1) + ')';
+          })
+          .attr('class','center');
+
+      centerBoxes.append('rect')
+        .attr('class','box')
+        .attr('width',labelWidth)
+        .attr('height',y0.bandwidth());
+
+      centerBoxes.append('text')
+          .attr('class','label')
+          .attr('x',labelWidth / 2)
+          .attr('y',labelOffset + 4)
+          .text(function(d) { return d.label; })
+          .call(self.wrap, labelWidth - 6, y0.bandwidth() - y0.paddingInner(), fontSize);
 
       var maleLabel = legend.append('text')
         .attr('class','male-label')
@@ -1018,33 +1062,28 @@ var PrintMaterials = function() {
       var line = [];
       var lineNumber = 0;
       var lineHeight = 1.1;
-      var x = parseFloat(text.attr('x')) || 0;
-      var y = parseFloat(text.attr('y')) || 0;
       var textHeight = text.node().getBBox().height;
-      var tspan = text.text(null).append('tspan').attr('x',x).attr('y',y).attr('font-size',fontSize);
-
-      text.attr('x',0).attr('y',0);
+      var x = text.attr('x') || 0;
+      var tspan = text.text(null).append('tspan').attr('x',x).attr('y',0).attr('font-size',fontSize);
 
       while (word = words.pop()) {
         line.push(word);
         tspan.text(line.join(' '));
         if (tspan.node().getComputedTextLength() > boxWidth && line.length > 1) {
-          var offset = !!boxHeight ? fontSize / 2 : 0;
           line.pop();
           tspan.text(line.join(' '));
           line = [word];
-          tspan = text.append('tspan').attr('x',x).attr('y', ++lineNumber * fontSize * lineHeight + y - offset).attr('font-size',fontSize).text(word);
+          tspan = text.append('tspan').attr('x',x).attr('font-size',fontSize).text(word);
         }
       }
 
       var tspans = text.selectAll('tspan');
       var lineCount = tspans.size();
-      var offset = y + (boxHeight - lineCount * fontSize) / 2;
 
       tspans.each(function(d, i) {
         var tspan = d3.select(this);
 
-        tspan.attr('y',offset + i * (boxHeight - 4) / lineCount)
+        tspan.attr('y',(boxHeight - fontSize * lineCount * lineHeight) / 2 + (fontSize * lineHeight) * i + fontSize / 2)
       });
     });
   }
