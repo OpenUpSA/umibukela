@@ -536,7 +536,7 @@ var PrintMaterials = function() {
         .padding(0.2);
       var y = d3.scaleLinear()
         .domain([0, max])
-        .range([figureHeight,0]);
+        .range([figureHeight,5]);
       var z = d3.scaleOrdinal()
         .domain(labels)
         .range(zRange);
@@ -653,7 +653,7 @@ var PrintMaterials = function() {
       var prevMax = d3.max(male_data.concat(female_data).map(function(d) { if(d.period == 'prev') return d.total; }));
 
       if(!prevMax) {
-        years.pop();
+        years = years[0];
       }
 
       male_data = self.normalize(male_data, maleMax, labels);
@@ -846,8 +846,9 @@ var PrintMaterials = function() {
       });
 
       var renderedLegendWidth = legendSquare + 5 + maxTextWidth;
+      console.log(width,renderedLegendWidth);
 
-      legend.attr('transform','translate(' + (width - renderedLegendWidth) + ',' + (height - labels.length * (legendSquare + 2)) + ')');
+      legend.attr('transform','translate(' + (width + 10 - renderedLegendWidth) + ',' + (height - labels.length * (legendSquare + 2)) + ')');
     },
     typeFour: function(options) {
       var responses = options.responses;
@@ -888,7 +889,7 @@ var PrintMaterials = function() {
       var affiliatedTotal = data[0].total;
       var unaffiliatedTotal = data[1].total;
 
-      var width = options.width,
+      var width = options.width - 10,
         height = options.height,
         radius = height / 2.5;
 
@@ -909,7 +910,7 @@ var PrintMaterials = function() {
         .attr("width", width)
         .attr("height", height)
         .append("g")
-        .attr("transform", "translate(0, 0)");
+        .attr("transform", "translate(10, 0)");
 
         var g = svg.selectAll(".arc")
             .data(pie(data))
@@ -933,8 +934,7 @@ var PrintMaterials = function() {
 
         // Legend
         var legend = svg.append('g')
-          .attr('class','legend')
-          .attr('transform','translate(0,100)')
+          .attr('class','legend');
 
         legend.append('rect')
           .attr('fill',self.ORANGE)
@@ -959,6 +959,8 @@ var PrintMaterials = function() {
           .attr('font-size','9px')
           .text('NOT AFFILIATED');
 
+        legend.attr('transform','translate(' + 0 + ',' + (height - legend.node().getBBox().height - 10) + ')')
+
         var affText = legend.append("text")
           .attr('class','aff-count')
           .attr('y',25)
@@ -978,24 +980,23 @@ var PrintMaterials = function() {
         // Table
         var table = svg.append('g')
           .attr('class','table')
-          .attr('transform','translate(' + 180 + ',' + 0  + ')');
+          .attr('transform','translate(' + (width - 210) + ',' + 0 + ')');
 
         table.append('rect')
           .attr('fill', 'none')
           .style("stroke", self.BLACK)
-          .attr('height', 126)
-          .attr('width', 200);
+          .attr('height', 120)
+          .attr('width', 180);
 
         var text = d3.select('.table').append('g')
           .selectAll('text')
             .data(labels)
           .enter()
             .append('text')
-            .text(function(d) { return d; });
-
-          text.attr('x', 10)
-          text.attr('y', function(d,i) { return (i + 1) * 11 + 5 })
-          text.attr('font-size','9px')
+            .attr('font-size','8px')
+            .text(function(d) { return d; })
+            .attr('x', 10)
+            .attr('y', function(d,i) { return (i + 1) * 10.5 + 5 });
 
         var count = d3.select('.table').append('g')
           .selectAll('text')
@@ -1003,9 +1004,9 @@ var PrintMaterials = function() {
           .enter()
             .append('text')
             .text(function(d){return d});
-            count.attr('x', 180)
-            count.attr('y', function(d,i) { return (i + 1) * 11 + 5 })
-            count.attr('font-size','9px');
+            count.attr('x', 162)
+            count.attr('y', function(d,i) { return (i + 1) * 10.5 + 5 })
+            count.attr('font-size','8px');
     }
   }
 

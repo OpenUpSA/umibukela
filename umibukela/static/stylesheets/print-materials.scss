@@ -92,6 +92,43 @@ $headings-color: $black;
         }
       }
     }
+
+    .code4sa-logo {
+      width:75%;
+      margin:0 auto;
+      display:block;
+      margin-top:15px;
+    }
+
+    .totals-table {
+      width:85%;
+      font-size:9px;
+      padding:5px;
+      margin:15px auto 0;
+
+      .text-large {
+        font-size:11px;
+      }
+
+      .text-medium {
+        font-size:10px;
+      }
+    }
+  }
+
+  &.sassa-pay-point {
+    .totals-table {
+      width:95%;
+      font-size:11px;
+
+      .text-large {
+        font-size:13px;
+      }
+
+      .text-medium {
+        font-size:12px;
+      }
+    }
   }
 
   &.health {
@@ -129,6 +166,28 @@ $headings-color: $black;
 
       .right {
         right:0;
+      }
+    }
+
+    .survey {
+      .clinic {
+        .survey-item {
+          padding-bottom:0;
+
+          .question {
+            margin-bottom:5px;
+          }
+        }
+
+        .border-left {
+          .survey-item {
+            padding-top:5px;
+
+            .question {
+              font-size:9px;
+            }
+          }
+        }
       }
     }
 
@@ -220,6 +279,7 @@ $headings-color: $black;
 
           .question {
             font-size:9px;
+            margin-bottom:0;
           }
         }
       }
