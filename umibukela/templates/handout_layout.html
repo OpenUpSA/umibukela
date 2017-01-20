@@ -71,7 +71,7 @@
         <img class="banner" alt="Citizen monitoring" src="{% static 'img/banner-large.png' %}" />
         <h1 class="partner"><b>{{ partner.short_name }}</b></h1>
         <h3 class="date text-xs-right">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
-        <h2 class="site"><b><em>{{ site }}</em></b></h2>
+        <h class="site"><b><em>{{ site }}</em></b></h2>
       </header>
       <section class="content border-top-dashed what-is">
         <div class="row margin-bottom">
@@ -112,8 +112,7 @@
               <b>Positives</b> are people who give a satisfaction score of 4 or 5 on a 1-5 scale. These people think that the facility performs its work well or very well.
             </p>
             <p class="tab">
-              <b>Neutrals</b> are those who gave a score of 3 – who felt that performance was not good, but also not bad. They do not have major complaints, but believe there is
-some room for improvement.
+              <b>Neutrals</b> are those who gave a score of 3 – who felt that performance was not good, but also not bad. They do not have major complaints, but believe there is some room for improvement.
             </p>
             <p class="tab">
               <b>Negatives</b> are those who scored 1 or 2. They feel that the facility does not perform its work as well as it could. They have moderate to serious criticism of the facility.
@@ -153,27 +152,23 @@ some room for improvement.
 
 <div class="a4-page a4-landscape print-materials handout page-2 {% if DEBUG %}debug{% endif %}">
   <div class="row">
-    <div class="col-xs-6 survey">
+    <div class="col-xs-6 survey left">
       <header class="survey-header">
         <div class="row">
           <div class="col-xs-8">
-            <h2><b><em>{{ site }}</em></b></h2>
-            <div class="statistics text-center">
+            <h4><b><em>{{ site }}</em></b></h4>
+            <div class="statistics">
               <p>
-                <b>TOTAL: {{ totals.total }}</b>
-              </p>
-              <p>
-                Male: {{ totals.male }}
-              </p>
-              <p>
+                <b>TOTAL: {{ totals.total }}</b><br>
+                Male: {{ totals.male }}<br>
                 Female: {{ totals.female }}
               </p>
             </div>
           </div>
-          <div class="col-xs-2">
+          <div class="col-xs-2 col-logo">
             <img src="{% static 'img/logo-code4sa.png' %}" alt="Code4SA" />
           </div>
-          <div class="col-xs-2">
+          <div class="col-xs-2 col-logo">
             <img src="{% static 'img/mavc-logo.png' %}" alt="MAVC" />
           </div>
         </div>
@@ -201,8 +196,8 @@ some room for improvement.
         </div>
       </section>
     </div>
-    <div class="col-xs-6 tips">
-      <h1 class="text-uppercase"><b>SOME TIPS FOR DEVELOPING THE IMPROVEMENT PLAN</b></h1>
+    <div class="col-xs-6 tips right">
+      <h4 class="text-uppercase"><b>SOME TIPS FOR DEVELOPING THE IMPROVEMENT PLAN</b></h4>
       <ul>
         <li>Performance results of the monitoring exercise are presented by the Community Partner leading the monitoring exercise.</li>
         <li>Facilitated discussions are held to understand the results and validate the findings.</li>
