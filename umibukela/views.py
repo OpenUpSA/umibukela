@@ -2,13 +2,17 @@ from itertools import groupby
 from datetime import datetime, timedelta
 
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
-from django.core.urlresolvers import reverse
 
+from forms import CRSFromKoboForm
+from itertools import groupby
+from xform import XForm
 from wkhtmltopdf.views import PDFResponse
 from wkhtmltopdf.utils import wkhtmltopdf
+
 import pandas
 import requests
 
@@ -128,6 +132,7 @@ def poster(request, site_slug, result_id):
 
     if site_responses:
         form = result_set.survey.form
+        map_questions(form, site_responses)
         simplify_perf_group(form, site_responses)
         df = pandas.DataFrame(site_responses)
         totals['current'] = analysis.count_submissions(df)
@@ -138,6 +143,7 @@ def poster(request, site_slug, result_id):
             prev_responses = [s.answers for s in prev_result_set.submissions.all()]
             if prev_responses:
                 prev_form = prev_result_set.survey.form
+                map_questions(prev_form, prev_responses)
                 simplify_perf_group(prev_form, prev_responses)
                 totals['previous'] = analysis.count_submissions(
                     pandas.DataFrame(prev_responses))
@@ -242,20 +248,20 @@ def handout_pdf(request, site_slug, result_id):
 def simplify_perf_group(form, responses):
     """Raise exception if the assumptions about the categories are wrong"""
     label_to_simple = {
-        'Very Poor': 'negative',
-        'Very poorly': 'negative',
-        'Not at all': 'negative',
-        'Mostly not': 'negative',
-        'Poor': 'negative',
-        'Not good, not bad': 'neutral',
-        'Not sure': 'neutral',
-        'Yes, sometimes': 'positive',
-        'Yes, definitely': 'positive',
-        'Well': 'positive',
-        'Good': 'positive',
-        'Mostly well': 'positive',
-        'Excellent': 'positive',
-        'Very well': 'positive',
+        'very poor': 'negative',
+        'very poorly': 'negative',
+        'not at all': 'negative',
+        'mostly not': 'negative',
+        'poor': 'negative',
+        'not good, not bad': 'neutral',
+        'not sure': 'neutral',
+        'yes, sometimes': 'positive',
+        'yes, definitely': 'positive',
+        'well': 'positive',
+        'good': 'positive',
+        'mostly well': 'positive',
+        'excellent': 'positive',
+        'very well': 'positive',
     }
     orig_name_to_simple = {'n/a': 'n/a'}
     perf_questions = []
@@ -267,7 +273,7 @@ def simplify_perf_group(form, responses):
                     for o in q.get('children'):
                         name = o['name']
                         label = o['label']
-                        orig_name_to_simple[name] = label_to_simple[label]
+                        orig_name_to_simple[name] = label_to_simple[label.lower()]
                     q['children'] = [
                         {
                             "name": "negative",
@@ -461,22 +467,121 @@ def kobo_form_site_preview(request, kobo_form_id, site_name):
 
 
 def map_questions(form, submissions):
-    wrong_name = 'Select_your_gender'
-    for i, q in enumerate(form.get('children', [])):
-        if q.get('name', None) == wrong_name:
-            q['name'] = 'gender'
-            form['children'].append({
-                "label": "Some questions about you",
-                "type": "group",
-                "children": [q],
-                "name": "demographics_group"
-            })
-            del form['children'][i]
+    form = XForm(form)
+    mappings = [
+        {
+            'wrong_path': 'Select_your_gender',
+            'right_path': 'demographics_group/gender',
+        },
+        {
+            'wrong_path': 'Did_you_get_all_the_medication',
+            'right_path': 'yes_no_group/all_medication',
+        },
+        {
+            'wrong_path': 'How_would_you_rate_the_perform/how_good_are_the_ambulance_services_',
+            'right_path': 'performance_group/ambulance',
+        },
+        {
+            'wrong_path': 'How_would_you_rate_the_perform/does_the_clinic_have_the_necessary_equipment_in_good_working_condition_to_provide_the_services_you_need_',
+            'right_path': 'performance_group/equipment',
+        },
+        {
+            'wrong_path': 'Does_this_clinic_have_a_Clinic',
+            'right_path': 'clinic_committee',
+        },
+        {
+            'wrong_path': 'Do_you_know_what_the_Clinic_Co',
+            'right_path': 'clinic_committee_function',
+        },
+        {
+            'wrong_path': 'Do_you_think_that_this_clinic_',
+            'right_path': 'clinic_feedback',
+        },
+        {
+            'wrong_path': 'How_far_did_you_travel_to_get_',
+            'right_path': 'travel_distance',
+        },
+        {
+            'wrong_path': 'Waiting_Times/get_registered_at_reception',
+            'right_path': 'waiting_group/register_time',
+        },
+        {
+            'wrong_path': 'Waiting_Times/see_a_professional_nurse_or_doctor_',
+            'right_path': 'waiting_group/professional_time',
+        },
+        {
+            'wrong_path': 'Waiting_Times/collect_your_medication',
+            'right_path': 'waiting_group/medicine_time',
+        },
+        {
+            'wrong_path': 'Did_you_feel_safe_in_and_aroun',
+            'right_path': 'yes_no_group/safety',
+        },
+        {
+            'wrong_path': 'Did_the_staff_respect_your_rig',
+            'right_path': 'yes_no_group/examined_private',
+        },
+        {
+            'wrong_path': 'Did_the_nurse_or_doctor_explai',
+            'right_path': 'yes_no_group/consent',
+        },
+        {
+            'wrong_path': 'Do_you_know_how_to_make_a_comp',
+            'right_path': 'yes_no_group/complaint',
+        },
+        {
+            'wrong_path': 'Do_you_think_that_the_clinic_w',
+            'right_path': 'yes_no_group/complaint_response',
+        },
+        {
+            'wrong_path': 'How_would_you_rate_the_perform/was_the_clinic_clean_',
+            'right_path': 'performance_group/clean',
+        },
+        {
+            'wrong_path': 'How_would_you_rate_the_perform/did_the_clinic_manage_queues_well_',
+            'right_path': 'performance_group/queues',
+        },
+        {
+            'wrong_path': 'How_would_you_rate_the_perform/did_the_administrative_staff_treat_you_respectfully_',
+            'right_path': 'performance_group/respect_admin',
+        },
+        {
+            'wrong_path': 'How_would_you_rate_the_perform/did_the_health_professionals_doctors_and_nurses_treat_you_respectfully_',
+            'right_path': 'performance_group/respect_professionals',
+        },
+    ]
+    groups = {
+        'demographics_group': {
+            'label': 'Some questions about you',
+        },
+        'yes_no_group': {
+            'label': 'Please answer yes or no to the following questions',
+        },
+        'performance_group': {
+            'label': 'How would you rate the performance of the clinic staff in the following areas?',
+        },
+    }
+    for mapping in mappings:
+        q = form.get_by_path(mapping['wrong_path'])
+        if q:
+            print "found", mapping['wrong_path']
+            path = mapping['right_path'].split('/')
+            right_name = path[-1]
+            group_path = path[:-1]
+            if group_path:
+                group = form.get_by_path('/'.join(group_path))
+                if not group:
+                    group = {
+                        "label": 'fake label',
+                        "type": "group",
+                        "children": [],
+                    }
+                    form.set_by_path('/'.join(group_path), group)
+            form.del_by_path(mapping['wrong_path'])
+            form.set_by_path(mapping['right_path'], q)
             for s in submissions:
-                s['demographics_group/gender'] = s[wrong_name]
-                del s[wrong_name]
-                print s['demographics_group/gender']
-            break
+                s[mapping['right_path']] = s[mapping['wrong_path']]
+                del s[mapping['wrong_path']]
 
 
 def field_per_SATA_option(form, submissions):
