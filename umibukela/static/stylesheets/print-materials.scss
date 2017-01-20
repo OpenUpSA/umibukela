@@ -49,11 +49,11 @@ $headings-color: $black;
   margin: 0cm; // 0.5cm margin applied during print
 }
 
-.a4-landscape {
+.a3-landscape {
   // force size to be a4 page when printed with 0.5cm margins on all sides
   box-sizing: content-box;
-  height: 20cm - 0.5cm;
-  width: 20cm * 1.414;
+  height: 29.7cm - 0.5cm;
+  width: 29.7cm * 1.414;
   margin: 0cm; // 0.5cm margin applied during print
 }
 
@@ -454,8 +454,8 @@ $headings-color: $black;
     padding-top:25px;
 
     h4 {
-      margin-top:15px;
-      font-size:18px;
+      margin-top:5px;
+      font-size:16px;
     }
   }
 
@@ -466,11 +466,11 @@ $headings-color: $black;
   }
 
   .left {
-    margin-right: 10px;
+    margin: 0 15px;
   }
 
   .right {
-    margin-left: 10px;
+    margin: 0 15px;
   }
 
   .mavc-footer {
@@ -542,10 +542,19 @@ $headings-color: $black;
       }
 
       .contact-details {
-        padding: 0 25px 10px;
+        padding: 0 25px 15px;
 
         h4, p {
           margin-bottom: 2px;
+        }
+
+        h4 {
+          padding-top: 10px;
+          font-size: 15px;
+        }
+
+        span {
+          margin-right: 20px;
         }
       }
 
@@ -597,6 +606,7 @@ $headings-color: $black;
 
       .how-data {
         position:relative;
+        margin: 25px 5px 100px 5px;
 
         .how-data-box {
           position:absolute;
@@ -611,6 +621,7 @@ $headings-color: $black;
 
           h4 {
             margin-top:0;
+            font-size: 15px;
           }
         }
       }
@@ -642,12 +653,8 @@ $headings-color: $black;
             max-width:100%;
           }
         }
-        .totals-table {
-          display:inline-block;
-
-          p {
-            margin-bottom:0;
-          }
+        .statistics {
+          margin-top: 10px;
         }
       }
       .survey-body {
@@ -665,16 +672,17 @@ $headings-color: $black;
     }
 
     .tips {
-      h1 {
+      h4 {
         color:rgb(0,0,0);
         font-size:22px;
-        margin-bottom:25px;
+        margin-bottom:10px;
+        margin-top: 20px;
       }
       ul {
         padding-left:20px;
       }
       li {
-        margin-bottom:3px;
+        margin-bottom:10px;
       }
     }
 
@@ -788,7 +796,7 @@ $headings-color: $black;
   }
 
   .border-top-dashed {
-    border-top:2px dashed rgb(0,0,0);
+    border-top:1px dashed rgb(0,0,0);
   }
 
   .border-dashed {
