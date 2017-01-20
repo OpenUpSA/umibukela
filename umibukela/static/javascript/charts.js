@@ -245,7 +245,7 @@ var PrintMaterials = function() {
 
       var isBar = legendFormat == 'top-bar' || legendFormat == 'bottom-bar';
 
-      var figureHeight = height * .75;
+      var figureHeight = options.figureHeight || height * .75;
       var figureWidth = width * .8;
       var legendWidth = width * .22;
       var legendHeight = height * .2;
@@ -536,7 +536,7 @@ var PrintMaterials = function() {
         .padding(0.2);
       var y = d3.scaleLinear()
         .domain([0, max])
-        .range([figureHeight,5]);
+        .range([figureHeight,labelFontSize]);
       var z = d3.scaleOrdinal()
         .domain(labels)
         .range(zRange);
@@ -1093,7 +1093,7 @@ var PrintMaterials = function() {
           options.height = parseInt(response.attr('data-height'));
           options.width = parseInt(response.attr('data-width'));
           options.legendFormat = response.attr('data-legend-format');
-          options.figureHeight = options.height - margin.top - margin.bottom;
+          options.figureHeight = parseInt(response.attr('data-figure-height'));
           options.key = key;
           self.drawChart(options);
         }
