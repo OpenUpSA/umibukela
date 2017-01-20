@@ -501,17 +501,11 @@ $headings-color: $black;
     }
   }
 
-  .page-1, .page-2 {
+  &.page-1, .page-2 {
     padding:20px 0;
   }
 
-  .header {
-    .banner {
-      width: 100%;
-    }
-  }
-
-  .page-1 {
+  &.page-1 {
     .partner {
       color:rgb(255,255,255) !important;
 
@@ -523,11 +517,22 @@ $headings-color: $black;
     .left {
       position:relative;
 
-      .header {
+      header {
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        height: 100px;
+
+        .banner {
+          font-size: 14px;
+          color: white;
+          top: 10px;
+          left: 10px;
+        }
+
         .partner {
-          font-size:22px;
-          left: 13px;
-          top:33px;
+          font-size: 22px;
+          left: 11px;
+          top: 33px;
         }
       }
 
@@ -547,15 +552,29 @@ $headings-color: $black;
     .right {
       font-size:13px;
 
+      header {
+        background-repeat: no-repeat;
+        background-size: 100% auto;
+        height: 100px;
+
+        .banner {
+          font-size: 34px;
+          text-transform: uppercase;
+          color: white;
+          top: 5px;
+          left:10px;
+        }
+      }
+
       .dashed-box {
         padding:10px 20px;
         border:1px dashed rgb(0,0,0);
       }
 
       .partner {
-        left:20px;
-        top:60px;
-        font-size:22px;
+        left: 10px;
+        top: 43px;
+        font-size: 18px;
       }
 
       .date {
@@ -566,7 +585,7 @@ $headings-color: $black;
       }
 
       .site {
-        left:20px;
+        left:10px;
         bottom:-5px;
         font-size:22px;
       }
@@ -604,7 +623,7 @@ $headings-color: $black;
     }
   }
 
-  .page-2 {
+  &.page-2 {
     .survey {
       .survey-header {
         h2 {
