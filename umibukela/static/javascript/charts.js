@@ -305,7 +305,6 @@ var PrintMaterials = function() {
       var legendFontSize = width / 30;
       var labelFontSize = width / 30;
       var colWidth = isBar ? (figureWidth - gutter) / 2 : (figureWidth - gutter - legendWidth) / 2;
-
       var years = cycleYears;
 
       optionKeys.reverse();
@@ -367,7 +366,7 @@ var PrintMaterials = function() {
       var prevMax = d3.max(male_data.concat(female_data).map(function(d) { if(d.period == 'prev') return d.total; }));
 
       if(!prevMax) {
-        years = years[0];
+        years = [years[1]];
       }
 
       var maleMax = d3.max(male_data.map(function(d) { return d.total; }));
@@ -391,7 +390,8 @@ var PrintMaterials = function() {
           .enter().append('g')
             .attr('class',className)
             .attr('fill',function(d) { return z(d.key); })
-            .attr('stroke',function(d) { return z(d.key) == self.WHITE ? self.BLACK : z(d.key); });
+            .attr('stroke',function(d) { return z(d.key) == self.WHITE ? self.BLACK : z(d.key); })
+            .attr('transform','translate(0,0)');
       }
 
       function setupBars(el, gender, addedShift) {
@@ -414,7 +414,7 @@ var PrintMaterials = function() {
             .attr('height', function(d) { return (y(d[0]) - y(d[1])); })
             .attr('width', function(d) {
               var period = d.data.period;
-              var coefficient = period == 'current' ? 1.9 : .1;
+              var coefficient = period == 'current' && _.contains(optionKeys,'prev') ? 1.9 : .1;
 
               return x.bandwidth() * coefficient;
             });
@@ -427,7 +427,11 @@ var PrintMaterials = function() {
             .data(function(d) { return d; })
           .enter().append('text')
             .attr('class','count')
-            .attr('y',function(d) { return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2; })
+            .attr('y',function(d, i) {
+              var topShift = labels.length == 3 && d[0] ? labelFontSize : 0;
+
+              return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2 ;
+            })
             .attr('x',shift)
             .attr('fill',self.BLACK)
             .attr('stroke','none')
@@ -625,6 +629,17 @@ var PrintMaterials = function() {
       var maleIcon = drawIcon(svg, '/static/img/man-icon.png', maleIconShift);
       var femaleIcon = drawIcon(svg, '/static/img/woman-icon.png', femaleIconShift);
 
+      var lastLabel = null;
+
+      maleCount.each(function(d, i) {
+          var label = d3.select(this);
+          var labelY = label.attr('y');
+
+        if(lastLabel && lastLabel.attr('y') - labelY < labelFontSize) {
+          lastLabel.attr('y',labelY + labelFontSize / 2);
+        }
+      });
+
       svg.append('line')
         .attr('x1',lineShift)
         .attr('x2',lineShift)
@@ -659,6 +674,8 @@ var PrintMaterials = function() {
 
       var optionKeys = _.keys(options.responses[0]);
       var years = cycleYears;
+      var yearsReversed = [years[1],years[0]];
+      var isOneYear = years.length == 1;
 
       for(var i=0;i < optionKeys.length;i++) {
         var period = optionKeys[i];
@@ -697,7 +714,8 @@ var PrintMaterials = function() {
       var prevMax = d3.max(male_data.concat(female_data).map(function(d) { if(d.period == 'prev') return d.total; }));
 
       if(!prevMax) {
-        years = years[0];
+        yearsReversed = [yearsReversed[0]];
+        isOneYear = true;
       }
 
       male_data = self.normalize(male_data, maleMax, labels);
@@ -754,9 +772,12 @@ var PrintMaterials = function() {
           })
           .attr('height', function(d) {
             var period = d.data.period;
-            var coefficient = period == 'current' ? 1.5 : .5;
+            var coefficient = .5;
+            var barPadding = isOneYear ? 0 : -2;
 
-            return y.bandwidth() * coefficient - 2;
+            if(period == 'current') coefficient = isOneYear ? 2 : 1.5;
+
+            return y.bandwidth() * coefficient + barPadding;
           });
 
       female.selectAll('text.count')
@@ -776,12 +797,16 @@ var PrintMaterials = function() {
           .text(function(d) { return d.data.period == 'current' && d[1] - d[0] && d[1] - d[0] > 0 ? d[1] - d[0] : ''; });
 
       female.selectAll('text.year')
-          .data(years)
+          .data(yearsReversed)
         .enter().append('text')
           .attr('class','year')
           .attr('stroke','none')
           .attr('text-anchor','start')
-          .attr('y', function(d,i) { return y.bandwidth() * (i + 1) + i * 2; })
+          .attr('y', function(d,i) {
+            var shift = isOneYear ? 2 : 0;
+
+            return y.bandwidth() * (i + 1) + i * 2 + shift;
+          })
           .attr('x', function(d) { return femaleBarWidth + icon.width + 8; })
           .attr('fill',self.BLACK)
           .attr('font-size',fontSize)
@@ -816,9 +841,12 @@ var PrintMaterials = function() {
           })
           .attr('height', function(d) {
             var period = d.data.period;
-            var coefficient = period == 'current' ? 1.5 : .5;
+            var coefficient = .5;
+            var barPadding = isOneYear ? 0 : -2;
 
-            return y.bandwidth() * coefficient - 2;
+            if(period == 'current') coefficient = isOneYear ? 2 : 1.5;
+
+            return y.bandwidth() * coefficient + barPadding;
           });
 
       male.selectAll('text.count')
@@ -837,11 +865,15 @@ var PrintMaterials = function() {
           .text(function(d) { return d.data.period == 'current' && d[1] - d[0] && d[1] - d[0] > 0 ? d[1] - d[0] : ''; });
 
       male.selectAll('text.year')
-          .data(years)
+          .data(yearsReversed)
         .enter().append('text')
           .attr('class','year')
           .attr('stroke','none')
-          .attr('y', function(d,i) { return colHeight + gutter + y.bandwidth() * (i + 1) + i * 2; })
+          .attr('y', function(d,i) {
+            var shift = isOneYear ? 2 : 0;
+
+            return colHeight + gutter + y.bandwidth() * (i + 1) + i * 2 + shift;
+           })
           .attr('x', function(d) { return maleBarWidth + icon.width + 8; })
           .attr('fill',self.BLACK)
           .attr('font-size',fontSize)
@@ -864,7 +896,7 @@ var PrintMaterials = function() {
       var legend = svg.append('g')
         .attr('class','legend');
 
-      var legendLabels = labels.length > 2 ? ['<tspan dy="0">1</tspan><tspan font-size="5" dy="-5">st</tspan> <tspan dy="5">Visit</tspan>', '<tspan>2</tspan><tspan font-size="5" dy="-5">nd</tspan> <tspan dy="5">Visit</tspan>', '<tspan>3</tspan><tspan font-size="5" dy="-5">rd</tspan>  <tspan dy="5">Visit</tspan>'] : ['Yes','No'];
+      var legendLabels = labels.length > 2 ? ['<tspan dy="0">1</tspan><tspan font-size="' + (fontSize / 2) + '" dy="-' + (fontSize / 2) + '">st</tspan> <tspan dy="' + (fontSize / 2) + '">Visit</tspan>', '<tspan>2</tspan><tspan font-size="' + (fontSize / 2) + '" dy="-' + (fontSize / 2) + '">nd</tspan> <tspan dy="' + (fontSize / 2) + '">Visit</tspan>', '<tspan>3</tspan><tspan font-size="' + (fontSize / 2) + '" dy="-' + (fontSize / 2) + '">rd</tspan>  <tspan dy="' + (fontSize / 2) + '">Visit</tspan>'] : ['Yes','No'];
 
       legend.selectAll('rect')
           .data(zRange)
@@ -890,7 +922,6 @@ var PrintMaterials = function() {
       });
 
       var renderedLegendWidth = legendSquare + 5 + maxTextWidth;
-      console.log(width,renderedLegendWidth);
 
       legend.attr('transform','translate(' + (width + 10 - renderedLegendWidth) + ',' + (height - labels.length * (legendSquare + 2)) + ')');
     },

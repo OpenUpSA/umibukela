@@ -10,7 +10,7 @@
   var questions = {{ questions_dict|jsonify }};
 </script>
 <script type="application/javascript">
-  var cycleYears = [{{ result_set.cycle.end_date|date:'Y' }}, {{ result_set.get_previous.cycle.end_date|date:'Y' }}];
+  var cycleYears = [{{ result_set.get_previous.cycle.end_date|date:'Y' }}, {{ result_set.cycle.end_date|date:'Y' }}];
 </script>
 {% javascript "print-materials" %}
 {% endblock %}
