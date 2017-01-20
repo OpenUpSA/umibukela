@@ -2,13 +2,17 @@ from itertools import groupby
 from datetime import datetime, timedelta
 
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
-from django.core.urlresolvers import reverse
 
+from forms import CRSFromKoboForm
+from itertools import groupby
+from xform import XForm
 from wkhtmltopdf.views import PDFResponse
 from wkhtmltopdf.utils import wkhtmltopdf
+
 import pandas
 import requests
 
@@ -129,6 +133,7 @@ def poster(request, site_slug, result_id):
     if site_responses:
         form = result_set.survey.form
         simplify_perf_group(form, site_responses)
+        map_questions(form, site_responses)
         df = pandas.DataFrame(site_responses)
         totals['current'] = analysis.count_submissions(df)
         site_results = analysis.count_options(df, form['children'])
@@ -138,6 +143,7 @@ def poster(request, site_slug, result_id):
             prev_responses = [s.answers for s in prev_result_set.submissions.all()]
             if prev_responses:
                 prev_form = prev_result_set.survey.form
+                map_questions(prev_form, prev_responses)
                 simplify_perf_group(prev_form, prev_responses)
                 totals['previous'] = analysis.count_submissions(
                     pandas.DataFrame(prev_responses))
@@ -461,22 +467,53 @@ def kobo_form_site_preview(request, kobo_form_id, site_name):
 
 
 def map_questions(form, submissions):
-    wrong_name = 'Select_your_gender'
-    for i, q in enumerate(form.get('children', [])):
-        if q.get('name', None) == wrong_name:
-            q['name'] = 'gender'
-            form['children'].append({
-                "label": "Some questions about you",
-                "type": "group",
-                "children": [q],
-                "name": "demographics_group"
-            })
-            del form['children'][i]
+    form = XForm(form)
+    mappings = [
+        {
+            'wrong_name': 'Select_your_gender',
+            'right_path': 'demographics_group/gender',
+        },
+        {
+            'wrong_name': 'Did_you_get_all_the_medication',
+            'right_path': 'yes_no_group/all_medication',
+        },
+        {
+            'wrong_name': 'How_would_you_rate_the_perform/how_good_are_the_ambulance_services_',
+            'right_path': 'performance_group/ambulance',
+        },
+    ]
+    groups = {
+        'demographics_group': {
+            'label': 'Some questions about you',
+        },
+        'yes_no_group': {
+            'label': 'Please answer yes or no to the following questions',
+        },
+        'performance_group': {
+            'label': 'How would you rate the performance of the clinic staff in the following areas?',
+        },
+    }
+    for mapping in mappings:
+        q = form.get_by_path(mapping['wrong_name'])
+        if q:
+            print "found", mapping['wrong_name']
+            path = mapping['right_path'].split('/')
+            right_name = path[-1]
+            group_path = path[:-1]
+            if group_path:
+                group = form.get_by_path('/'.join(group_path))
+                if not group:
+                    group = {
+                        "label": 'fake label',
+                        "type": "group",
+                        "children": [],
+                    }
+                    form.set_by_path('/'.join(group_path), group)
+            form.del_by_path(mapping['wrong_name'])
+            form.set_by_path(mapping['right_path'], q)
             for s in submissions:
-                s['demographics_group/gender'] = s[wrong_name]
-                del s[wrong_name]
-                print s['demographics_group/gender']
-            break
+                s[mapping['right_path']] = s[mapping['wrong_name']]
+                del s[mapping['wrong_name']]
 
 
 def field_per_SATA_option(form, submissions):
