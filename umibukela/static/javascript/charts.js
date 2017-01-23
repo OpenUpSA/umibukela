@@ -778,7 +778,7 @@ var PrintMaterials = function() {
           .attr('fill',self.BLACK)
           .attr('font-size',fontSize)
           .attr('text-anchor','start')
-          .text(function(d) { return d.data.period == 'current' && d[1] - d[0] && d[1] - d[0] > 0 ? d[1] - d[0] : ''; });
+          .text(function(d) { return d.data.period == 'current' && d[1] - d[0] && d[1] - d[0] > 0 ? Math.round(d[1] - d[0]) : ''; });
 
       female.selectAll('text.year')
           .data(yearsReversed)
@@ -846,7 +846,7 @@ var PrintMaterials = function() {
           .attr('y', function(d) { return colHeight + gutter - 2; })
           .attr('fill',self.BLACK)
           .attr('font-size',fontSize)
-          .text(function(d) { return d.data.period == 'current' && d[1] - d[0] && d[1] - d[0] > 0 ? d[1] - d[0] : ''; });
+          .text(function(d) { return d.data.period == 'current' && d[1] - d[0] && d[1] - d[0] > 0 ? Math.round(d[1] - d[0]) : ''; });
 
       male.selectAll('text.year')
           .data(yearsReversed)
