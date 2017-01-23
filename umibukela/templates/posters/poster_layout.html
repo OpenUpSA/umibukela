@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="print-materials poster a4-page a4-portrait {{ layout_class }} {% if DEBUG %}debug{% endif %}">
+<div class="print-materials poster print-page a4-portrait {{ layout_class }} {% if DEBUG %}debug{% endif %}">
   <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
     <h1 class="banner">Citizen Monitoring</h1>
     <h1 class="partner">{{ result_set.partner.full_name }}</h1>
