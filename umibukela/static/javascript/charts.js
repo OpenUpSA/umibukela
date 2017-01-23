@@ -428,18 +428,16 @@ var PrintMaterials = function() {
           .enter().append('text')
             .attr('class','count')
             .attr('y',function(d, i) {
-              var topShift = labels.length == 3 && d[0] ? labelFontSize : 0;
+              var shift = d[1] != d.data['normalized-total'] ? 5 : 0;
 
-              return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2 ;
+              return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2 + shift;
             })
             .attr('x',shift)
             .attr('fill',self.BLACK)
             .attr('stroke','none')
             .attr('font-size',labelFontSize)
             .text(function(d) {
-              var denormalizer = 1;
-
-              if(d.data['normalization-factor']) denormalizer = 1 / d.data['normalization-factor'];
+              var denormalizer = d.data['normalization-factor'] ? 1 / d.data['normalization-factor'] : 1;
 
               return d.data.period == 'current' && d[1] - d[0] > 0 ? Math.round((d[1] - d[0]) * denormalizer) : '';
             });
@@ -1119,15 +1117,20 @@ var PrintMaterials = function() {
     });
   }
 
-  // Normalize the data
+  // Normalize bar data to generate even bar pairings
   self.normalize = function(data, maxValue, labels) {
     if(!!data && !!maxValue) {
       for(var i = 0; i < data.length; i++) {
         var normalizedMax = maxValue / data[i].total;
 
+        data[i]['normalized-total'] = data[i].total;
+
         if(normalizedMax > 1) {
+          data[i]['normalized-total'] = 0;
+
           labels.forEach(function(label) {
-            data[i][label] = Math.round(data[i][label] * normalizedMax);
+            data[i][label] = data[i][label] * normalizedMax;
+            data[i]['normalized-total'] += data[i][label];
           });
 
           data[i]['normalization-factor'] = normalizedMax;
