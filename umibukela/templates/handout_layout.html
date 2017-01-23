@@ -6,35 +6,33 @@
 {% endblock %}
 
 {% block js %}
+<script type="text/javascript">
+var questions;
+</script>
 {% javascript "print-materials" %}
 {% endblock %}
 
 {% block content %}
-<div class="a4-page a4-landscape print-materials handout page-1 {% if DEBUG %}debug{% endif %}">
+<div class="print-page a3-landscape print-materials handout page-1 {% if DEBUG %}debug{% endif %}">
   <div class="row">
     <div class="col-xs-6 left">
       <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
         <h1 class="banner">Community Partner</h1>
         <h1 class="partner">{{ partner.short_name }}</h1>
       </header>
-      <section class="content border-top-dashed">
-        <div class="top-box">
-          <p class="tab margin-bottom">
-            {{ partner.intro_statement }}
-          </p>
-          <p class="tab">
-            The monitors for this project are
-          </p>
-          <ul class="tab margin-bottom">
-            <li>
-              Peter Makwel
-            </li>
-          </ul>
-        </div>
+      <section class="content">
+        <p class="margin-bottom">
+          {{ partner.intro_statement }}
+        </p>
+        <p>The monitors for this project are</p>
+        <ul class="margin-bottom">
+          <li>
+            XXX
+          </li>
+        </ul>
+
         <div class="border-solid contact-details">
-          <h4>
-            Contact Details
-          </h4>
+          <h4>Contact Details</h4>
           <p>
             {{ partner.physical_address }}
           </p>
@@ -71,11 +69,11 @@
         <h1 class="banner">Citizen Monitoring</h1>
         <h1 class="partner"><b>{{ partner.short_name }}</b></h1>
         <h3 class="date text-xs-right">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
-        <h2 class="site"><b><em>{{ site }}</em></b></h2>
+        <h class="site"><b><em>{{ site }}</em></b></h2>
       </header>
-      <section class="content border-top-dashed what-is">
+      <section class="content">
         <div class="row margin-bottom">
-          <div class="col-xs-8 tab-p">
+          <div class="col-xs-8">
             <h4 class="text-uppercase"><b>What is citizen-based monitoring (cbm)?</b></h4>
             <p>Citizen-based monitoring seeks to give citizens a voice in how public services are managed.</p>
             <p>The Black Sash and Community Partners have been promoting citizens’ monitoring for a number of years. In this project we are working with the Department of Planning, Monitoring and Evaluation (DPME) to learn and demonstrate how government can make citizen voices an integral part of the way public services are managed.</p>
@@ -84,64 +82,56 @@
             <p>We hope that it will help facility staff become more responsive to citizen needs, and encourage citizens to become more confident to use and get actively involved in how services are delivered in their communities.</p>
             <p>We hope that these citizen-based performance reports together with frontline staff feedback reports as well as the Improvement Plans developed and adopted at the Dialogues, will help District Provincial and National managers to act quickly to fix problems that citizens and staff identify. We invite comments and suggestions from everyone on how this can be improved so that together we can contribute to better services and better relationships between government departments and the people they serve.</p>
           </div>
-          <div class="col-xs-4 how-data">
+          <div class="col-xs-4">
             <div class="how-data-box">
-              <h4 class="text-uppercase"><b>How data was collected</b></h4>
+              <h5>How data was collected</h5>
               <p>In each community, members of a community partner were recruited and trained how to conduct a micro-survey of citizens’ and frontline staff’s perceptions and experiences.</p>
               <p>Survey respondents were not identified, so they could express their opinions freely. The questionnaire was developed by the Black Sash based on its own work and the DPME’s tools. The surveys try to highlight the VOICES of poor people and in particular that of women and girls.</p>
               <p>The first survey was conducted in 2014. The second survey was done in June / July 2015.</p>
             </div>
           </div>
         </div>
-        <div class="row margin-bottom">
-          <div class="col-xs-12 dashed-box">
-            <h4 class="text-uppercase"><b>How to read this report</b></h4>
-            <p>
-              There are three types of questions:
-            </p>
-            <p>
-              <b>Demographic questions.</b> Information about the participants, for example their sex and age.
-            </p>
-            <p>
-              <b>Questions about specific aspects of their experience at the facility.</b> The answers to these questions are shown in simple bar graphs that show the number of people who gave a particular answer.
-            </p>
-            <p>
-              <b>Questions on how positively or negatively they rated aspects of their experience at the facility.</b> In these graphs, respondents are classified into three groups:
-            </p>
-            <p class="tab">
-              <b>Positives</b> are people who give a satisfaction score of 4 or 5 on a 1-5 scale. These people think that the facility performs its work well or very well.
-            </p>
-            <p class="tab">
-              <b>Neutrals</b> are those who gave a score of 3 – who felt that performance was not good, but also not bad. They do not have major complaints, but believe there is
-some room for improvement.
-            </p>
-            <p class="tab">
-              <b>Negatives</b> are those who scored 1 or 2. They feel that the facility does not perform its work as well as it could. They have moderate to serious criticism of the facility.
-            </p>
-            <p>
-              Clustering the scores in this way lets us easily understand the range of citizen views.
-            </p>
-          </div>
+        <div class="how-to-read-box">
+          <h4>How to read this report</h4>
+          <p>
+            There are three types of questions:
+          </p>
+          <p>
+            <b>Demographic questions.</b> Information about the participants, for example their sex and age.
+          </p>
+          <p>
+            <b>Questions about specific aspects of their experience at the facility.</b> The answers to these questions are shown in simple bar graphs that show the number of people who gave a particular answer.
+          </p>
+          <p>
+            <b>Questions on how positively or negatively they rated aspects of their experience at the facility.</b> In these graphs, respondents are classified into three groups:
+          </p>
+          <ul>
+            <li><b>Positives</b> are people who give a satisfaction score of 4 or 5 on a 1-5 scale. These people think that the facility performs its work well or very well.</li>
+            <li><b>Neutrals</b> are those who gave a score of 3 – who felt that performance was not good, but also not bad. They do not have major complaints, but believe there is some room for improvement.</li>
+            <li><b>Negatives</b> are those who scored 1 or 2. They feel that the facility does not perform its work as well as it could. They have moderate to serious criticism of the facility.</li>
+          </ul>
+          <p>
+            Clustering the scores in this way lets us easily understand the range of citizen views.
+          </p>
         </div>
-        <div class="row">
-          <div class="col-xs-12 dashed-box">
-            <h4><b>Cycle 1 and Cycle 2 comparisons:</b></h4>
-            <p>
-              It is important to be able to track the changes coming from the CBM surveys, over time. In order to do so, we need to compare the results of Cycle 1, to Cycle 2.
-            </p>
-            <p>
-              It is important to remember that the number of people surveyed differs for each cycle.
-            </p>
-            <p>
-              What this means is that when we analyse these two results, we always make sure that it is relative to the number of respondents from the previous cycle.
-            </p>
-            <p>
-              Based on feedback we received, percentages have been removed and instead, the number of participants is shown.
-            </p>
-            <p>
-              Cycle 1 (the narrower slice on the bar graphs) will not show the numbers as these have been adjusted to be relative to Cycle 2. It is important to understand that the bar will always show this relative comparison.
-            </p>
-          </div>
+
+        <div class="comparison-box">
+          <h4>Cycle 1 and Cycle 2 comparisons</h4>
+          <p>
+            It is important to be able to track the changes coming from the CBM surveys, over time. In order to do so, we need to compare the results of Cycle 1, to Cycle 2.
+          </p>
+          <p>
+            It is important to remember that the number of people surveyed differs for each cycle.
+          </p>
+          <p>
+            What this means is that when we analyse these two results, we always make sure that it is relative to the number of respondents from the previous cycle.
+          </p>
+          <p>
+            Based on feedback we received, percentages have been removed and instead, the number of participants is shown.
+          </p>
+          <p>
+            Cycle 1 (the narrower slice on the bar graphs) will not show the numbers as these have been adjusted to be relative to Cycle 2. It is important to understand that the bar will always show this relative comparison.
+          </p>
         </div>
       </section>
       <footer class="text-right code4sa-footer">
@@ -151,29 +141,25 @@ some room for improvement.
   </div>
 </div>
 
-<div class="a4-page a4-landscape print-materials handout page-2 {% if DEBUG %}debug{% endif %}">
+<div class="print-page a3-landscape print-materials handout page-2 {% if DEBUG %}debug{% endif %}">
   <div class="row">
-    <div class="col-xs-6 survey">
+    <div class="col-xs-6 survey left">
       <header class="survey-header">
         <div class="row">
           <div class="col-xs-8">
             <h2><b><em>{{ site }}</em></b></h2>
-            <div class="statistics text-center">
+            <div class="statistics">
               <p>
-                <b>TOTAL: {{ totals.total }}</b>
-              </p>
-              <p>
-                Male: {{ totals.male }}
-              </p>
-              <p>
+                <b>TOTAL: {{ totals.total }}</b><br>
+                Male: {{ totals.male }}<br>
                 Female: {{ totals.female }}
               </p>
             </div>
           </div>
-          <div class="col-xs-2">
+          <div class="col-xs-2 col-logo">
             <img src="{% static 'img/logo-code4sa.png' %}" alt="Code4SA" />
           </div>
-          <div class="col-xs-2">
+          <div class="col-xs-2 col-logo">
             <img src="{% static 'img/mavc-logo.png' %}" alt="MAVC" />
           </div>
         </div>
@@ -201,8 +187,8 @@ some room for improvement.
         </div>
       </section>
     </div>
-    <div class="col-xs-6 tips">
-      <h1 class="text-uppercase"><b>SOME TIPS FOR DEVELOPING THE IMPROVEMENT PLAN</b></h1>
+    <div class="col-xs-6 tips right">
+      <h4 class="text-uppercase"><b>SOME TIPS FOR DEVELOPING THE IMPROVEMENT PLAN</b></h4>
       <ul>
         <li>Performance results of the monitoring exercise are presented by the Community Partner leading the monitoring exercise.</li>
         <li>Facilitated discussions are held to understand the results and validate the findings.</li>
