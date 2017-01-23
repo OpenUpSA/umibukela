@@ -387,8 +387,8 @@ $headings-color: $black;
             border:1px dashed $black;
             fill:transparent;
             stroke: #111;
-            stroke-width: 1;
-            stroke-dasharray:2,3;
+            stroke-width: 0.5;
+            stroke-dasharray:0.75,0.75,0.75;
           }
         }
 

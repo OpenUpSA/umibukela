@@ -10,9 +10,9 @@ var PrintMaterials = function() {
   self.WHITE = '#ffffff';
 
   self.colorFemale = d3.scaleOrdinal()
-    .range([self.BLACK,self.ORANGE]);
+    .range([self.ORANGE,self.BLACK]);
   self.colorMale = d3.scaleOrdinal()
-    .range([self.WHITE,self.ORANGE]);
+    .range([self.ORANGE,self.WHITE]);
 
   self.drawChart = function(options) {
     switch(options.type) {
@@ -120,7 +120,7 @@ var PrintMaterials = function() {
         .align(0);
       var y1 = d3.scaleBand()
         .domain(optionKeys)
-        .rangeRound([0, y0.bandwidth()])
+        .rangeRound([0.25, y0.bandwidth()])
         .padding(0);
       var xRight = d3.scaleLinear()
         .domain([0,rightMax])
@@ -132,7 +132,7 @@ var PrintMaterials = function() {
       var right = svg.selectAll('g.right')
         .data(female_data)
       .enter().append('g')
-        .attr('transform', function(d) { return 'translate(' + rightOffset + ',' + (y0(d.label) + 1) + ')'; })
+        .attr('transform', function(d) { return 'translate(' + rightOffset + ',' + y0(d.label) + ')'; })
         .attr('class','right');
 
       var scalingFactor = 1;
@@ -140,20 +140,19 @@ var PrintMaterials = function() {
 
       right.append('rect')
         .attr('height', function(d) {
-          var barHeight = y1.bandwidth();
+          var barHeight = d.name == 'current' ? y1.bandwidth() - 0.5 : y1.bandwidth();
 
           if(d.name == 'prev') {
             scalingFactor = 1 / 3;
-          } else if(isTwoPeriods) {
+          } else if(isTwoPeriods && d.name == 'current') {
             scalingFactor = 5 / 3;
           }
 
           return barHeight * scalingFactor;
         })
         .attr('y', function(d) {
-          if(d.name == 'prev') return y1(d.name) * scalingFactor;
-          else if(isTwoPeriods) return y1(d.name) - 1;
-          else return y1(d.name);
+          if(d.name == 'prev') return y1(d.name) * scalingFactor - 0.4;
+          else return y1(d.name) - 0.4;
         })
         .attr('width', function(d) { return xRight(d.value); })
         .attr('fill', function(d) { ;return colorFemale(d.name); })
@@ -174,14 +173,14 @@ var PrintMaterials = function() {
       var left = svg.selectAll('g.left')
         .data(male_data)
       .enter().append('g')
-        .attr('transform', function(d) { return 'translate(0,' + (y0(d.label) + 1) + ')'; })
+        .attr('transform', function(d) { return 'translate(0,' + y0(d.label) + ')'; })
         .attr('class','left');
 
       scalingFactor = 1;
 
       left.append('rect')
         .attr('height', function(d) {
-          var barHeight = y1.bandwidth();
+          var barHeight = d.name == 'current' ? y1.bandwidth() - 0.5 : y1.bandwidth();
 
           if(d.name == 'prev') {
             scalingFactor = 1 / 3;
@@ -193,14 +192,13 @@ var PrintMaterials = function() {
         })
         .attr('x',function(d) { return sideWidth - xLeft(d.value) - 1; })
         .attr('y', function(d) {
-          if(d.name == 'prev') return y1(d.name) * scalingFactor;
-          else if(isTwoPeriods) return y1(d.name) - 1;
-          else return y1(d.name);
+          if(d.name == 'prev') return y1(d.name) * scalingFactor - 0.4;
+          else return y1(d.name) - 0.4;
         })
         .attr('width', function(d) { return xLeft(d.value); })
         .attr('fill', function(d) { return colorMale(d.name); })
         .attr('stroke',function(d) { return d.name == 'current' ? self.BLACK : self.ORANGE; })
-        .attr('stroke-width', '1');
+        .attr('stroke-width', function(d) { return d.name == 'current' ? '0.5' : '1'; });
         /*.attr('stroke-dasharray', function(d) {
           if(d.name == 'current') {
             var barHeight = y1.bandwidth() * scalingFactor;
@@ -230,9 +228,7 @@ var PrintMaterials = function() {
           .data(labels)
         .enter().append('g')
           .attr('transform',function(d, i) {
-            if(i == labels.length - 1) labelOffset = y0(d.key);
-
-            return 'translate(' + leftOffset + ',' + (y0(d.key) + 1) + ')';
+            return 'translate(' + leftOffset + ',' + (y0(d.key) + 0.25) + ')';
           })
           .attr('class','center');
 
