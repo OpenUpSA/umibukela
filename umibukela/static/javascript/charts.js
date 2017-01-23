@@ -10,9 +10,9 @@ var PrintMaterials = function() {
   self.WHITE = '#ffffff';
 
   self.colorFemale = d3.scaleOrdinal()
-    .range([self.ORANGE,self.BLACK]);
+    .range([self.BLACK,self.ORANGE]);
   self.colorMale = d3.scaleOrdinal()
-    .range([self.ORANGE,self.WHITE]);
+    .range([self.WHITE,self.ORANGE]);
 
   self.drawChart = function(options) {
     switch(options.type) {
@@ -72,8 +72,7 @@ var PrintMaterials = function() {
         labels.push({ key: key, label: label });
       });
 
-      male_data.reverse();
-      female_data.reverse();
+      labels.reverse();
 
       var rightMax = d3.max(female_data.map(function(d) { return d.value }));
       var leftMax = d3.max(male_data.map(function(d) { return d.value }));
@@ -140,7 +139,7 @@ var PrintMaterials = function() {
 
       right.append('rect')
         .attr('height', function(d) {
-          var barHeight = d.name == 'current' ? y1.bandwidth() - 0.2 : y1.bandwidth();
+          var barHeight = y1.bandwidth();
 
           if(d.name == 'prev') {
             scalingFactor = 1 / 3;
@@ -151,21 +150,21 @@ var PrintMaterials = function() {
           return barHeight * scalingFactor;
         })
         .attr('y', function(d) {
-          if(d.name == 'prev') return y1(d.name) * scalingFactor - 0.4;
-          else return y1(d.name) - 0.4;
+          if(d.name == 'prev') return y1(d.name) * 5 / 3;
+          else return y1(d.name) - 0.5;
         })
         .attr('width', function(d) { return xRight(d.value); })
         .attr('fill', function(d) { ;return colorFemale(d.name); })
         .attr('stroke',function(d) { return d.name == 'current' ? self.BLACK : self.ORANGE; });
 
       right.append('text')
-        .attr('x',function(d) { return xRight(d.value) + 5; })
+        .attr('x',function(d) { return xRight(d.value) + 2.5; })
         .attr('y',function(d) {
           var barWidth = y1.bandwidth();
 
-          if(isTwoPeriods) barWidth *= (5/3);
+          if(isTwoPeriods) barWidth *= 5 / 3;
 
-          return (barWidth - fontSize) / 2 + fontSize - 1;
+          return (barWidth - fontSize) / 2 + fontSize;
         })
         .attr('font-size',fontSize)
         .text(function(d) { return d.value > 0 && d.name == 'current' ? d.value : ''; });
@@ -180,7 +179,7 @@ var PrintMaterials = function() {
 
       left.append('rect')
         .attr('height', function(d) {
-          var barHeight = d.name == 'current' ? y1.bandwidth() - 0.1 : y1.bandwidth();
+          var barHeight = y1.bandwidth();
 
           if(d.name == 'prev') {
             scalingFactor = 1 / 3;
@@ -192,32 +191,22 @@ var PrintMaterials = function() {
         })
         .attr('x',function(d) { return sideWidth - xLeft(d.value) - 0.5; })
         .attr('y', function(d) {
-          if(d.name == 'prev') return y1(d.name) * scalingFactor - 0.4;
-          else return y1(d.name) - 0.4;
+          if(d.name == 'prev') return y1(d.name) * 5 / 3;
+          else return y1(d.name) - 0.5;
         })
         .attr('width', function(d) { return xLeft(d.value); })
         .attr('fill', function(d) { return colorMale(d.name); })
         .attr('stroke',function(d) { return d.name == 'current' ? self.BLACK : self.ORANGE; })
         .attr('stroke-width', function(d) { return d.name == 'current' ? '0.5' : '1'; });
-        /*.attr('stroke-dasharray', function(d) {
-          if(d.name == 'current') {
-            var barHeight = y1.bandwidth() * scalingFactor;
-            var barWidth = xLeft(d.value);
-
-            return barWidth + ',' + barHeight + ',' +  (barWidth * 2);
-          } else {
-            return '';
-          }
-        });*/
 
       left.append('text')
-        .attr('x',function(d) { return sideWidth - xLeft(d.value) - 10; })
+        .attr('x',function(d) { return sideWidth - xLeft(d.value) - 5.5; })
         .attr('y',function(d) {
           var barWidth = y1.bandwidth();
 
-          if(isTwoPeriods) barWidth *= (5/3);
+          if(isTwoPeriods) barWidth *= 5 / 3;
 
-          return (barWidth - fontSize) / 2 + fontSize - 1;
+          return (barWidth - fontSize) / 2 + fontSize;
         })
         .attr('font-size',fontSize)
         .text(function(d) { return d.value > 0 && d.name == 'current' ? d.value : ''; });
