@@ -52,7 +52,7 @@ $headings-color: $black;
 .a3-landscape {
   // force size to be a4 page when printed with 0.5cm margins on all sides
   box-sizing: content-box;
-  height: 29.7cm - 0.5cm;
+  height: 29.7cm - 0.75cm; // adjust for print weirdness
   width: 29.7cm * 1.414;
   margin: 0cm; // 0.5cm margin applied during print
 }
