@@ -47,8 +47,8 @@ var PrintMaterials = function() {
       var legendWidth = width / 2.5;
       var gutter = height / 13;
       var icon = {
-        height: height / 8,
-        width: width / 13
+        height: height / 7,
+        width: width / 12
       };
       var male_data = [];
       var female_data = [];
@@ -238,7 +238,7 @@ var PrintMaterials = function() {
         .text(2015)
         .attr('font-size',fontSize);
 
-      maleLabel.attr('x',maleLabel.node().getBBox().width / 3)
+      maleLabel.attr('x',maleLabel.node().getBBox().width / 2)
         .attr('y',icon.height + maleLabel.node().getBBox().height);
 
       var femaleLabel = legend.append('text')
@@ -246,7 +246,7 @@ var PrintMaterials = function() {
         .text(2015)
         .attr('font-size',fontSize);
 
-      femaleLabel.attr('x',legendWidth - femaleLabel.node().getBBox().width - femaleLabel.node().getBBox().width / 3)
+      femaleLabel.attr('x',legendWidth - femaleLabel.node().getBBox().width - femaleLabel.node().getBBox().width / 2.5)
       .attr('y',icon.height + femaleLabel.node().getBBox().height);
 
       var prevLabel = legend.append('text')
