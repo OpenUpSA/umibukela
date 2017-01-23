@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from itertools import groupby
 from wkhtmltopdf.utils import wkhtmltopdf
 from wkhtmltopdf.views import PDFResponse
-from xform import map_questions
+from xform import map_questions, field_per_SATA_option
 
 import pandas
 import requests
@@ -429,28 +429,6 @@ def kobo_form_site_preview(request, kobo_form_id, site_name):
                 'totals': site_totals,
             }
         })
-
-
-def field_per_SATA_option(form, submissions):
-    SATAs = [q for q in form['children'] if q['type'] == 'select all that apply']
-    for SATA in SATAs:
-        vals = [o['name'] for o in SATA['children']]
-        submissions = map(
-            lambda x: set_select_all_that_apply_fields(x, SATA['name'], vals),
-            submissions
-        )
-    return submissions
-
-
-def set_select_all_that_apply_fields(dict, q_key, possible_vals):
-    if q_key not in dict:
-        dict[q_key] = 'False'
-    for val in possible_vals:
-        dict['/'.join([q_key, val])] = 'False'
-    for val in dict[q_key].split(' '):
-        dict['/'.join([q_key, val])] = 'True'
-    del dict[q_key]
-    return dict
 
 
 def is_kobo_authed(request):
