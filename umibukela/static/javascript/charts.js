@@ -76,6 +76,7 @@ var PrintMaterials = function() {
 
       var rightMax = d3.max(female_data.map(function(d) { return d.value }));
       var leftMax = d3.max(male_data.map(function(d) { return d.value }));
+      var max = rightMax > leftMax ? rightMax : leftMax;
 
       var svg = response.append('svg')
         .attr('height',height)
@@ -122,10 +123,10 @@ var PrintMaterials = function() {
         .rangeRound([0.25, y0.bandwidth()])
         .padding(0);
       var xRight = d3.scaleLinear()
-        .domain([0,rightMax])
+        .domain([0,max])
         .range([0,sideWidth - 20]);
       var xLeft = d3.scaleLinear()
-        .domain([0,leftMax])
+        .domain([0,max])
         .range([0,sideWidth - 20]);
 
       var right = svg.selectAll('g.right')
