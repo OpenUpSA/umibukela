@@ -32,7 +32,7 @@ $headings-color: $black;
 
 //============================================================================================
 
-.a4-page {
+.print-page {
   overflow: hidden;
   page-break-after: always;
 
@@ -49,11 +49,11 @@ $headings-color: $black;
   margin: 0cm; // 0.5cm margin applied during print
 }
 
-.a4-landscape {
+.a3-landscape {
   // force size to be a4 page when printed with 0.5cm margins on all sides
   box-sizing: content-box;
-  height: 20cm - 0.5cm;
-  width: 20cm * 1.414;
+  height: 29.7cm - 0.75cm; // adjust for print weirdness
+  width: 29.7cm * 1.414;
   margin: 0cm; // 0.5cm margin applied during print
 }
 
@@ -443,34 +443,27 @@ $headings-color: $black;
 
 .handout {
   font-size: 11px;
-  line-height: 1.5;
+  line-height: 1.3;
 
   .margin-bottom {
     margin-bottom:60px;
   }
 
-  .content {
-    margin-top:35px;
-    padding-top:25px;
+  header + section {
+    padding: 20px;
 
     h4 {
-      margin-top:15px;
-      font-size:18px;
-    }
-  }
-
-  .tab-p {
-    h4, p {
-      padding-left:20px;
+      margin-top:5px;
+      font-size:16px;
     }
   }
 
   .left {
-    margin-right: 10px;
+    margin: 0px 15px 0px 0px;
   }
 
   .right {
-    margin-left: 10px;
+    margin: 0px 0px 0px 15px;
   }
 
   .mavc-footer {
@@ -501,10 +494,6 @@ $headings-color: $black;
     }
   }
 
-  &.page-1, .page-2 {
-    padding:20px 0;
-  }
-
   &.page-1 {
     .partner {
       color:rgb(255,255,255) !important;
@@ -514,13 +503,18 @@ $headings-color: $black;
       }
     }
 
+    header {
+      border-bottom: 1px dashed black;
+    }
+
     .left {
       position:relative;
+      line-height: 1.5;
 
       header {
         background-repeat: no-repeat;
         background-size: 100% auto;
-        height: 100px;
+        height: 160px;
 
         .banner {
           font-size: 14px;
@@ -537,26 +531,42 @@ $headings-color: $black;
         }
       }
 
+      header + section {
+        font-size: 12px;
+      }
+
       ul {
         padding-left:60px;
       }
 
       .contact-details {
-        padding:0 25px 10px;
+        padding: 20px;
+        margin: 0px -20px;
 
-        h4, p {
-          margin-bottom: 2px;
+        h4 {
+          margin-top: 0px;
+          margin-bottom: 11px;
+          font-size: 15px;
+          text-transform: uppercase;
         }
+
+        span {
+          margin-right: 20px;
+        }
+      }
+
+      p {
+        font-size: 12px;
       }
     }
 
     .right {
-      font-size:13px;
+      font-size:10px;
 
       header {
         background-repeat: no-repeat;
         background-size: 100% auto;
-        height: 100px;
+        height: 160px;
 
         .banner {
           font-size: 34px;
@@ -591,22 +601,39 @@ $headings-color: $black;
         font-size:22px;
       }
 
-      .how-data {
-        position:relative;
+      .how-data-box {
+        margin: 25px -20px 0px 15px;
+        padding:15px;
+        border:1px solid rgb(0,0,0);
 
-        .how-data-box {
-          position:absolute;
-          top:0;
-          right:0;
-          bottom:0;
-          left:0;
+        h5 {
+          margin-top: 0;
+          font-size: 14px;
+          text-transform: uppercase;
+        }
+      }
 
-          margin:auto;
-          padding:15px;
-          border:1px solid rgb(0,0,0);
+      .how-to-read-box,
+      .comparison-box {
+        border: 1px dashed black;
+        padding: 20px;
+        margin: 0px -20px 20px -20px;
 
-          h4 {
-            margin-top:0;
+        h4 {
+          text-transform: uppercase;
+          margin-top: 0px;
+          font-weight: bold;
+        }
+
+        p {
+          margin-bottom: 5px;
+        }
+
+        ul {
+          list-style: none;
+
+          li {
+            margin-bottom: 5px;
           }
         }
       }
@@ -638,12 +665,8 @@ $headings-color: $black;
             max-width:100%;
           }
         }
-        .totals-table {
-          display:inline-block;
-
-          p {
-            margin-bottom:0;
-          }
+        .statistics {
+          margin-top: 10px;
         }
       }
       .survey-body {
@@ -653,19 +676,25 @@ $headings-color: $black;
           font-size:15px;
         }
       }
+      .col-logo {
+        img {
+          width: 100%;
+        }
+      }
     }
 
     .tips {
-      h1 {
+      h4 {
         color:rgb(0,0,0);
         font-size:22px;
-        margin-bottom:25px;
+        margin-bottom:10px;
+        margin-top: 20px;
       }
       ul {
-        padding-left:60px;
+        padding-left:20px;
       }
       li {
-        margin-bottom:15px;
+        margin-bottom:10px;
       }
     }
 
@@ -779,7 +808,7 @@ $headings-color: $black;
   }
 
   .border-top-dashed {
-    border-top:2px dashed rgb(0,0,0);
+    border-top:1px dashed rgb(0,0,0);
   }
 
   .border-dashed {
