@@ -69,7 +69,7 @@ var PrintMaterials = function() {
             female_data.push({ name: 'prev', value: response.prev.count.female, label: key });
         }
 
-        labels.push({ key: key, label: label });
+        labels.push({ key: key, label: label.toUpperCase() });
       });
 
       labels.reverse();
