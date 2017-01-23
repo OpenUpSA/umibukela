@@ -140,7 +140,7 @@ var PrintMaterials = function() {
 
       right.append('rect')
         .attr('height', function(d) {
-          var barHeight = d.name == 'current' ? y1.bandwidth() - 0.5 : y1.bandwidth();
+          var barHeight = d.name == 'current' ? y1.bandwidth() - 0.2 : y1.bandwidth();
 
           if(d.name == 'prev') {
             scalingFactor = 1 / 3;
@@ -180,7 +180,7 @@ var PrintMaterials = function() {
 
       left.append('rect')
         .attr('height', function(d) {
-          var barHeight = d.name == 'current' ? y1.bandwidth() - 0.5 : y1.bandwidth();
+          var barHeight = d.name == 'current' ? y1.bandwidth() - 0.1 : y1.bandwidth();
 
           if(d.name == 'prev') {
             scalingFactor = 1 / 3;
@@ -190,7 +190,7 @@ var PrintMaterials = function() {
 
           return barHeight * scalingFactor;
         })
-        .attr('x',function(d) { return sideWidth - xLeft(d.value) - 1; })
+        .attr('x',function(d) { return sideWidth - xLeft(d.value) - 0.5; })
         .attr('y', function(d) {
           if(d.name == 'prev') return y1(d.name) * scalingFactor - 0.4;
           else return y1(d.name) - 0.4;
