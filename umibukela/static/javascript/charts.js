@@ -28,6 +28,9 @@ var PrintMaterials = function() {
       case '4':
         self.charts.typeFour(options);
       break;
+      case '5':
+        self.charts.typeFive(options);
+      break;
     }
   }
 
@@ -1066,6 +1069,79 @@ var PrintMaterials = function() {
             count.attr('x', 162)
             count.attr('y', function(d,i) { return (i + 1) * 10.5 + 5 })
             count.attr('font-size','8px');
+    },
+
+    typeFive: function(options) {
+      var responses = options.responses;
+      var chart = options.el;
+      var height = options.height;
+      var width = options.width;
+
+      var max = 0;
+      var optionKeys = _.keys(responses[0]);
+
+      var data = responses.map(function(response, i) {
+        var count = i;
+        var datum = {
+          label: response.current.label
+        };
+
+        for(var period in response) {
+          var total = response[period].count.male + response[period].count.female;
+
+          max = max < total ? total : max;
+
+          datum[period + '-total'] = total;
+        }
+
+        return datum;
+      });
+
+      var x = d3.scaleLinear()
+        .domain([0,max])
+        .range([0,width - 15]);
+      var y = d3.scaleBand()
+        .domain(data.map(function(d,i) { return i; }))
+        .range([0,height])
+        .paddingInner(0.5);
+
+      var svg = chart.append('svg')
+          .attr('height', height)
+          .attr('width', width)
+        .append('g');
+
+      // Bars
+      var bars = svg.selectAll('g')
+          .data(data)
+        .enter().append('g')
+          .attr('class','bar')
+          .attr('transform',function(d,i) { return 'translate(' + 0 + ',' + y(i) + ')'; })
+
+      bars.append('rect')
+        .attr('class','current')
+        .attr('width',function(d) { return x(d['current-total']); })
+        .attr('height',function(d) { return y.bandwidth() * (5 / 7); })
+        .attr('fill',self.BLACK);
+
+      bars.append('rect')
+        .attr('class','prev')
+        .attr('width', function(d) { return x(d['prev-total']); })
+        .attr('height', function(d) { return y.bandwidth() * (1 / 7); })
+        .attr('y', function(d) { return y.bandwidth() * (5 / 7) + 1; })
+        .attr('fill',self.ORANGE);
+
+      bars.append('text')
+        .attr('class','type')
+        .attr('y',y.bandwidth() + 9)
+        .attr('font-size','8')
+        .text(function(d) { return d.label.toUpperCase(); });
+
+      bars.append('text')
+        .attr('class','count')
+        .attr('y',y.bandwidth() - 7.5)
+        .attr('x',function(d) { return x(d['current-total']) + 5; })
+        .attr('font-size','8')
+        .text(function(d) { return d['current-total']; });
     }
   }
 
