@@ -1,0 +1,12 @@
+<li>
+  [{{ node.type }}] {{ node.label }} <em>[{{ node.name }}]</em>
+  {% if node.children %}
+  <ul>
+    {% for child in node.children %}
+    {% with node=child template_name="xform_items.html" %}
+    {% include template_name %}
+    {% endwith %}
+    {% endfor %}
+  </ul>
+  {% endif %}
+</li>

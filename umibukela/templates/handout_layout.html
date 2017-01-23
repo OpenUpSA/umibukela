@@ -13,8 +13,8 @@
 <div class="a4-page a4-landscape print-materials handout page-1 {% if DEBUG %}debug{% endif %}">
   <div class="row">
     <div class="col-xs-6 left">
-      <header class="header">
-        <img class="banner" alt="Citizen monitoring" src="{% static 'img/banner-small.png' %}" />
+      <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
+        <h1 class="banner">Community Partner</h1>
         <h1 class="partner">{{ partner.short_name }}</h1>
       </header>
       <section class="content border-top-dashed">
@@ -67,8 +67,8 @@
       </footer>
     </div>
     <div class="col-xs-6 right">
-      <header class="header">
-        <img class="banner" alt="Citizen monitoring" src="{% static 'img/banner-large.png' %}" />
+      <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
+        <h1 class="banner">Citizen Monitoring</h1>
         <h1 class="partner"><b>{{ partner.short_name }}</b></h1>
         <h3 class="date text-xs-right">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
         <h2 class="site"><b><em>{{ site }}</em></b></h2>

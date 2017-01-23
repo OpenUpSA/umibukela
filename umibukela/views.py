@@ -1,25 +1,25 @@
-from itertools import groupby
+from collections import Counter
 from datetime import datetime, timedelta
-
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
-from django.core.urlresolvers import reverse
-
-from wkhtmltopdf.views import PDFResponse
+from itertools import groupby
 from wkhtmltopdf.utils import wkhtmltopdf
+from wkhtmltopdf.views import PDFResponse
+from xform import map_questions, field_per_SATA_option
+
 import pandas
 import requests
 
-import umibukela.analysis as analysis
+from umibukela import analysis
 from .forms import CRSFromKoboForm
 from .models import (
     CycleResultSet,
     KoboRefreshToken,
     Partner,
     Site,
-    Sector,
     Survey,
     SurveyKoboProject,
     Submission,
@@ -74,21 +74,19 @@ def site_result(request, site_slug, result_id):
         site__slug__exact=site_slug,
         published=True
     )
-    site_responses = [s.answers for s in result_set.submissions.all()]
-    if site_responses:
-        df = pandas.DataFrame(site_responses)
-        form = result_set.survey.form
+    form, responses = result_set.get_survey()
+    if responses:
+        df = pandas.DataFrame(responses)
         site_totals = analysis.count_submissions(df)
         site_results = analysis.count_options(df, form['children'])
         site_results = analysis.calc_q_percents(site_results)
         prev_result_set = result_set.get_previous()
         if prev_result_set:
-            prev_responses = [s.answers for s in prev_result_set.submissions.all()]
+            prev_form, prev_responses = prev_result_set.get_survey()
             if prev_responses:
                 site_totals = analysis.count_submissions(
-                    pandas.DataFrame(site_responses + prev_responses))
+                    pandas.DataFrame(responses + prev_responses))
                 prev_df = pandas.DataFrame(prev_responses)
-                prev_form = prev_result_set.survey.form
                 prev_results = analysis.count_options(prev_df, prev_form['children'])
                 prev_results = analysis.calc_q_percents(prev_results)
             else:
@@ -122,23 +120,19 @@ def poster(request, site_slug, result_id):
     layout_class = '-'.join(sector_name.lower().split(' '))
     location = None
     template = 'posters/'
-    site_responses = [s.answers for s in result_set.submissions.all()]
+    form, responses = result_set.get_survey()
     totals = {'current': {'male': 0, 'female': 0, 'total': 0}, 'previous': {'male': 0, 'female': 0, 'total': 0}}
     site_results = None
 
-    if site_responses:
-        form = result_set.survey.form
-        simplify_perf_group(form, site_responses)
-        df = pandas.DataFrame(site_responses)
+    if responses:
+        df = pandas.DataFrame(responses)
         totals['current'] = analysis.count_submissions(df)
         site_results = analysis.count_options(df, form['children'])
         site_results = analysis.calc_q_percents(site_results)
         prev_result_set = result_set.get_previous()
         if prev_result_set:
-            prev_responses = [s.answers for s in prev_result_set.submissions.all()]
+            prev_form, prev_responses = prev_result_set.get_survey()
             if prev_responses:
-                prev_form = prev_result_set.survey.form
-                simplify_perf_group(prev_form, prev_responses)
                 totals['previous'] = analysis.count_submissions(
                     pandas.DataFrame(prev_responses))
                 prev_df = pandas.DataFrame(prev_responses)
@@ -239,54 +233,31 @@ def handout_pdf(request, site_slug, result_id):
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
-def simplify_perf_group(form, responses):
-    """Raise exception if the assumptions about the categories are wrong"""
-    label_to_simple = {
-        'Very Poor': 'negative',
-        'Very poorly': 'negative',
-        'Not at all': 'negative',
-        'Mostly not': 'negative',
-        'Poor': 'negative',
-        'Not good, not bad': 'neutral',
-        'Not sure': 'neutral',
-        'Yes, sometimes': 'positive',
-        'Yes, definitely': 'positive',
-        'Well': 'positive',
-        'Good': 'positive',
-        'Mostly well': 'positive',
-        'Excellent': 'positive',
-        'Very well': 'positive',
-    }
-    orig_name_to_simple = {'n/a': 'n/a'}
-    perf_questions = []
-    for child in form['children']:
-        if child.get('type', None) == 'group' and child.get('name', None) == 'performance_group':
-            for q in child.get('children'):
-                if q.get('type') == 'select one':
-                    perf_questions.append('performance_group/%s' % q.get('name'))
-                    for o in q.get('children'):
-                        name = o['name']
-                        label = o['label']
-                        orig_name_to_simple[name] = label_to_simple[label]
-                    q['children'] = [
-                        {
-                            "name": "negative",
-                            "label": "Negative",
-                        },
-                        {
-                            "name": "neutral",
-                            "label": "Neutral",
-                        },
-                        {
-                            "name": "positive",
-                            "label": "Positive",
-                        },
-                    ]
+def comments(request, result_id):
+    result_set = get_object_or_404(
+        CycleResultSet,
+        id=result_id,
+    )
+    skip_questions = [
+        'surveyor',
+        'capturer',
+    ]
+    questions = []
+    for child in result_set.survey.form.get('children'):
+        if child.get('type', None) == 'text' and child.get('name') not in skip_questions:
+            comments = Counter([s.answers.get(child['name'], None)
+                                for s in result_set.submissions.all()])
+            comments.pop(None, None)
+            comments.pop('n/a', None)
 
-    for response in responses:
-        for key, val in response.iteritems():
-            if key in perf_questions:
-                response[key] = orig_name_to_simple[val]
+            questions.append({
+                'label': child.get('label'),
+                'comments': comments,
+            })
+    return render(request, 'comments.html', {
+        'result_set': result_set,
+        'questions': questions,
+    })
 
 
 def partners(request):
@@ -431,12 +402,12 @@ def kobo_form_site_preview(request, kobo_form_id, site_name):
         r = requests.get("https://kc.kobotoolbox.org/api/v1/data/%s" % kobo_form_id, headers=headers)
         r.raise_for_status()
         submissions = r.json()
-        site_responses = [s for s in submissions if s.get('facility', s.get('site', None)) == site_name]
-        site_responses = field_per_SATA_option(form, site_responses)
-        map_questions(form, site_responses)
+        responses = [s for s in submissions if s.get('facility', s.get('site', None)) == site_name]
+        responses = field_per_SATA_option(form, responses)
+        map_questions(form, responses)
 
-        if site_responses:
-            df = pandas.DataFrame(site_responses)
+        if responses:
+            df = pandas.DataFrame(responses)
             site_totals = analysis.count_submissions(df)
             site_results = analysis.count_options(df, form['children'])
             site_results = analysis.calc_q_percents(site_results)
@@ -458,47 +429,6 @@ def kobo_form_site_preview(request, kobo_form_id, site_name):
                 'totals': site_totals,
             }
         })
-
-
-def map_questions(form, submissions):
-    wrong_name = 'Select_your_gender'
-    for i, q in enumerate(form.get('children', [])):
-        if q.get('name', None) == wrong_name:
-            q['name'] = 'gender'
-            form['children'].append({
-                "label": "Some questions about you",
-                "type": "group",
-                "children": [q],
-                "name": "demographics_group"
-            })
-            del form['children'][i]
-            for s in submissions:
-                s['demographics_group/gender'] = s[wrong_name]
-                del s[wrong_name]
-                print s['demographics_group/gender']
-            break
-
-
-def field_per_SATA_option(form, submissions):
-    SATAs = [q for q in form['children'] if q['type'] == 'select all that apply']
-    for SATA in SATAs:
-        vals = [o['name'] for o in SATA['children']]
-        submissions = map(
-            lambda x: set_select_all_that_apply_fields(x, SATA['name'], vals),
-            submissions
-        )
-    return submissions
-
-
-def set_select_all_that_apply_fields(dict, q_key, possible_vals):
-    if q_key not in dict:
-        dict[q_key] = 'False'
-    for val in possible_vals:
-        dict['/'.join([q_key, val])] = 'False'
-    for val in dict[q_key].split(' '):
-        dict['/'.join([q_key, val])] = 'True'
-    del dict[q_key]
-    return dict
 
 
 def is_kobo_authed(request):
