@@ -5,24 +5,21 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
-from forms import CRSFromKoboForm
 from itertools import groupby
 from wkhtmltopdf.utils import wkhtmltopdf
 from wkhtmltopdf.views import PDFResponse
-from xform import XForm
-import analysis
+from xform import map_questions
+
 import pandas
 import requests
-import settings
 
-import umibukela.analysis as analysis
+from umibukela import analysis
 from .forms import CRSFromKoboForm
 from .models import (
     CycleResultSet,
     KoboRefreshToken,
     Partner,
     Site,
-    Sector,
     Survey,
     SurveyKoboProject,
     Submission,
@@ -77,21 +74,19 @@ def site_result(request, site_slug, result_id):
         site__slug__exact=site_slug,
         published=True
     )
-    site_responses = [s.answers for s in result_set.submissions.all()]
-    if site_responses:
-        df = pandas.DataFrame(site_responses)
-        form = result_set.survey.form
+    form, responses = result_set.get_survey()
+    if responses:
+        df = pandas.DataFrame(responses)
         site_totals = analysis.count_submissions(df)
         site_results = analysis.count_options(df, form['children'])
         site_results = analysis.calc_q_percents(site_results)
         prev_result_set = result_set.get_previous()
         if prev_result_set:
-            prev_responses = [s.answers for s in prev_result_set.submissions.all()]
+            prev_form, prev_responses = prev_result_set.get_survey()
             if prev_responses:
                 site_totals = analysis.count_submissions(
-                    pandas.DataFrame(site_responses + prev_responses))
+                    pandas.DataFrame(responses + prev_responses))
                 prev_df = pandas.DataFrame(prev_responses)
-                prev_form = prev_result_set.survey.form
                 prev_results = analysis.count_options(prev_df, prev_form['children'])
                 prev_results = analysis.calc_q_percents(prev_results)
             else:
@@ -125,25 +120,19 @@ def poster(request, site_slug, result_id):
     layout_class = '-'.join(sector_name.lower().split(' '))
     location = None
     template = 'posters/'
-    site_responses = [s.answers for s in result_set.submissions.all()]
+    form, responses = result_set.get_survey()
     totals = {'current': {'male': 0, 'female': 0, 'total': 0}, 'previous': {'male': 0, 'female': 0, 'total': 0}}
     site_results = None
 
-    if site_responses:
-        form = result_set.survey.form
-        map_questions(form, site_responses)
-        simplify_perf_group(form, site_responses)
-        df = pandas.DataFrame(site_responses)
+    if responses:
+        df = pandas.DataFrame(responses)
         totals['current'] = analysis.count_submissions(df)
         site_results = analysis.count_options(df, form['children'])
         site_results = analysis.calc_q_percents(site_results)
         prev_result_set = result_set.get_previous()
         if prev_result_set:
-            prev_responses = [s.answers for s in prev_result_set.submissions.all()]
+            prev_form, prev_responses = prev_result_set.get_survey()
             if prev_responses:
-                prev_form = prev_result_set.survey.form
-                map_questions(prev_form, prev_responses)
-                simplify_perf_group(prev_form, prev_responses)
                 totals['previous'] = analysis.count_submissions(
                     pandas.DataFrame(prev_responses))
                 prev_df = pandas.DataFrame(prev_responses)
@@ -242,56 +231,6 @@ def handout_pdf(request, site_slug, result_id):
     })
     filename = '%s-%s-handout.pdf' % (site_slug, result_id)
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
-
-
-def simplify_perf_group(form, responses):
-    """Raise exception if the assumptions about the categories are wrong"""
-    label_to_simple = {
-        'very poor': 'negative',
-        'very poorly': 'negative',
-        'not at all': 'negative',
-        'mostly not': 'negative',
-        'poor': 'negative',
-        'not good, not bad': 'neutral',
-        'not sure': 'neutral',
-        'yes, sometimes': 'positive',
-        'yes, definitely': 'positive',
-        'well': 'positive',
-        'good': 'positive',
-        'mostly well': 'positive',
-        'excellent': 'positive',
-        'very well': 'positive',
-    }
-    orig_name_to_simple = {'n/a': 'n/a'}
-    perf_questions = []
-    for child in form['children']:
-        if child.get('type', None) == 'group' and child.get('name', None) == 'performance_group':
-            for q in child.get('children'):
-                if q.get('type') == 'select one':
-                    perf_questions.append('performance_group/%s' % q.get('name'))
-                    for o in q.get('children'):
-                        name = o['name']
-                        label = o['label']
-                        orig_name_to_simple[name] = label_to_simple[label.lower()]
-                    q['children'] = [
-                        {
-                            "name": "negative",
-                            "label": "Negative",
-                        },
-                        {
-                            "name": "neutral",
-                            "label": "Neutral",
-                        },
-                        {
-                            "name": "positive",
-                            "label": "Positive",
-                        },
-                    ]
-
-    for response in responses:
-        for key, val in response.iteritems():
-            if key in perf_questions:
-                response[key] = orig_name_to_simple[val]
 
 
 def comments(request, result_id):
@@ -463,12 +402,12 @@ def kobo_form_site_preview(request, kobo_form_id, site_name):
         r = requests.get("https://kc.kobotoolbox.org/api/v1/data/%s" % kobo_form_id, headers=headers)
         r.raise_for_status()
         submissions = r.json()
-        site_responses = [s for s in submissions if s.get('facility', s.get('site', None)) == site_name]
-        site_responses = field_per_SATA_option(form, site_responses)
-        map_questions(form, site_responses)
+        responses = [s for s in submissions if s.get('facility', s.get('site', None)) == site_name]
+        responses = field_per_SATA_option(form, responses)
+        map_questions(form, responses)
 
-        if site_responses:
-            df = pandas.DataFrame(site_responses)
+        if responses:
+            df = pandas.DataFrame(responses)
             site_totals = analysis.count_submissions(df)
             site_results = analysis.count_options(df, form['children'])
             site_results = analysis.calc_q_percents(site_results)
@@ -490,124 +429,6 @@ def kobo_form_site_preview(request, kobo_form_id, site_name):
                 'totals': site_totals,
             }
         })
-
-
-def map_questions(form, submissions):
-    form = XForm(form)
-    mappings = [
-        {
-            'wrong_path': 'Select_your_gender',
-            'right_path': 'demographics_group/gender',
-        },
-        {
-            'wrong_path': 'Did_you_get_all_the_medication',
-            'right_path': 'yes_no_group/all_medication',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/how_good_are_the_ambulance_services_',
-            'right_path': 'performance_group/ambulance',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/does_the_clinic_have_the_necessary_equipment_in_good_working_condition_to_provide_the_services_you_need_',
-            'right_path': 'performance_group/equipment',
-        },
-        {
-            'wrong_path': 'Does_this_clinic_have_a_Clinic',
-            'right_path': 'clinic_committee',
-        },
-        {
-            'wrong_path': 'Do_you_know_what_the_Clinic_Co',
-            'right_path': 'clinic_committee_function',
-        },
-        {
-            'wrong_path': 'Do_you_think_that_this_clinic_',
-            'right_path': 'clinic_feedback',
-        },
-        {
-            'wrong_path': 'How_far_did_you_travel_to_get_',
-            'right_path': 'travel_distance',
-        },
-        {
-            'wrong_path': 'Waiting_Times/get_registered_at_reception',
-            'right_path': 'waiting_group/register_time',
-        },
-        {
-            'wrong_path': 'Waiting_Times/see_a_professional_nurse_or_doctor_',
-            'right_path': 'waiting_group/professional_time',
-        },
-        {
-            'wrong_path': 'Waiting_Times/collect_your_medication',
-            'right_path': 'waiting_group/medicine_time',
-        },
-        {
-            'wrong_path': 'Did_you_feel_safe_in_and_aroun',
-            'right_path': 'yes_no_group/safety',
-        },
-        {
-            'wrong_path': 'Did_the_staff_respect_your_rig',
-            'right_path': 'yes_no_group/examined_private',
-        },
-        {
-            'wrong_path': 'Did_the_nurse_or_doctor_explai',
-            'right_path': 'yes_no_group/consent',
-        },
-        {
-            'wrong_path': 'Do_you_know_how_to_make_a_comp',
-            'right_path': 'yes_no_group/complaint',
-        },
-        {
-            'wrong_path': 'Do_you_think_that_the_clinic_w',
-            'right_path': 'yes_no_group/complaint_response',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/was_the_clinic_clean_',
-            'right_path': 'performance_group/clean',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/did_the_clinic_manage_queues_well_',
-            'right_path': 'performance_group/queues',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/did_the_administrative_staff_treat_you_respectfully_',
-            'right_path': 'performance_group/respect_admin',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/did_the_health_professionals_doctors_and_nurses_treat_you_respectfully_',
-            'right_path': 'performance_group/respect_professionals',
-        },
-    ]
-    groups = {
-        'demographics_group': {
-            'label': 'Some questions about you',
-        },
-        'yes_no_group': {
-            'label': 'Please answer yes or no to the following questions',
-        },
-        'performance_group': {
-            'label': 'How would you rate the performance of the clinic staff in the following areas?',
-        },
-    }
-    for mapping in mappings:
-        q = form.get_by_path(mapping['wrong_path'])
-        if q:
-            print "found", mapping['wrong_path']
-            path = mapping['right_path'].split('/')
-            right_name = path[-1]
-            group_path = path[:-1]
-            if group_path:
-                group = form.get_by_path('/'.join(group_path))
-                if not group:
-                    group = {
-                        "label": 'fake label',
-                        "type": "group",
-                        "children": [],
-                    }
-                    form.set_by_path('/'.join(group_path), group)
-            form.del_by_path(mapping['wrong_path'])
-            form.set_by_path(mapping['right_path'], q)
-            for s in submissions:
-                s[mapping['right_path']] = s[mapping['wrong_path']]
-                del s[mapping['wrong_path']]
 
 
 def field_per_SATA_option(form, submissions):

@@ -4,6 +4,7 @@ from django.contrib.gis.db import models as gis_models
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
+from xform import map_questions, simplify_perf_group
 import analysis
 import jsonfield
 import os
@@ -291,6 +292,20 @@ class CycleResultSet(models.Model):
 
     def has_handout_attachment(self):
         return any(a.nature.name == 'handout' for a in self.attachments.all())
+
+    def get_survey(self, map=True):
+        """
+        Returns the python structure representing the JSON of the survey form
+        and the survey responses
+        Maps group and question names to those expected by various things by
+        default. Pass map=False to disable this.
+        """
+        form = self.survey.form
+        responses = [s.answers for s in self.submissions.all()]
+        if map:
+            map_questions(form, responses)
+            simplify_perf_group(form, responses)
+        return form, responses
 
 
 class AttachmentNature(models.Model):
