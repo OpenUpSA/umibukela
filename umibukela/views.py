@@ -116,8 +116,9 @@ def poster(request, site_slug, result_id):
     )
     sector_id = result_set.site.sector.id
     sector_name = result_set.site.sector.name
+    survey_type = result_set.survey_type.name
     site = result_set.site.name
-    layout_class = '-'.join(sector_name.lower().split(' '))
+    layout_class = '-'.join(' '.join([x.strip() for x in survey_type.split('-')]).lower().split(' '))
     location = None
     template = 'posters/'
     form, responses = result_set.get_survey()

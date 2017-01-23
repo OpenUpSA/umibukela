@@ -58,7 +58,7 @@ $headings-color: $black;
 }
 
 .poster {
-  &.sassa-service-office {
+  &.sassa-service-office-citizen {
     [class*=col] {
       .black-banner {
         padding:7px;
@@ -116,7 +116,7 @@ $headings-color: $black;
     }
   }
 
-  &.sassa-pay-point {
+  &.sassa-paypoint-citizen {
     .totals-table {
       width:90%;
       font-size:9px;
@@ -132,7 +132,7 @@ $headings-color: $black;
     }
   }
 
-  &.health {
+  &.health-citizen {
     .how-long {
       margin-top:10px;
       margin-bottom:0;
@@ -218,7 +218,7 @@ $headings-color: $black;
     }
   }
 
-  &.local-gov {
+  &.local-government-citizen {
     .header {
       padding-bottom:50px;
       height:165px;
