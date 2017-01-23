@@ -154,7 +154,7 @@ var PrintMaterials = function() {
           if(d.name == 'prev') return y1(d.name) * 5 / 3;
           else return y1(d.name) - 0.5;
         })
-        .attr('width', function(d) { return xRight(d.value); })
+        .attr('width', function(d) { return xRight(d.value) - 0.5; })
         .attr('fill', function(d) { ;return colorFemale(d.name); })
         .attr('stroke',function(d) { return d.name == 'current' ? self.BLACK : self.ORANGE; });
 
@@ -190,12 +190,12 @@ var PrintMaterials = function() {
 
           return barHeight * scalingFactor;
         })
-        .attr('x',function(d) { return sideWidth - xLeft(d.value) - 0.5; })
+        .attr('x',function(d) { return sideWidth - xLeft(d.value); })
         .attr('y', function(d) {
           if(d.name == 'prev') return y1(d.name) * 5 / 3;
           else return y1(d.name) - 0.5;
         })
-        .attr('width', function(d) { return xLeft(d.value); })
+        .attr('width', function(d) { return xLeft(d.value) - 0.5; })
         .attr('fill', function(d) { return colorMale(d.name); })
         .attr('stroke',function(d) { return d.name == 'current' ? self.BLACK : self.ORANGE; })
         .attr('stroke-width', function(d) { return d.name == 'current' ? '0.5' : '1'; });
