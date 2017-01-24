@@ -297,6 +297,7 @@ var PrintMaterials = function() {
       var labelFontSize = width / 30;
       var colWidth = isBar ? (figureWidth - gutter) / 2 : (figureWidth - gutter - legendWidth) / 2;
       var years = cycleYears;
+      var hasTwoPeriods = _.contains(optionKeys,'current') && _.contains(optionKeys,'prev');
 
       optionKeys.reverse();
 
@@ -390,15 +391,15 @@ var PrintMaterials = function() {
         if(!addedShift) addedShift = 0;
 
         return el.selectAll('rect')
-            .data(function(d) { return d; })
+            .data(function(d) { console.log(d);return d; })
           .enter().append('rect')
             .attr('x', function(d) {
               var period = d.data.period;
-              var shift = 0;
+              var periodShift = 5;
 
-              if(period == 'current') shift = .9 * x.bandwidth();
+              if(hasTwoPeriods) periodShift = period == 'current' ? .9 * x.bandwidth() : 0;
 
-              var totalShift = x(d.data.period) - shift + addedShift;
+              var totalShift = x(d.data.period) - periodShift + addedShift;
 
               return isBar ? totalShift : totalShift + legendWidth;
             })
@@ -406,9 +407,14 @@ var PrintMaterials = function() {
             .attr('height', function(d) { return (y(d[0]) - y(d[1])); })
             .attr('width', function(d) {
               var period = d.data.period;
-              var coefficient = period == 'current' && _.contains(optionKeys,'prev') ? 1.9 : .1;
+              var scalingFactor = 1.25;
 
-              return x.bandwidth() * coefficient;
+              if(hasTwoPeriods) {
+                if(period == 'current') scalingFactor = 1.9;
+                else scalingFactor = .1;
+              }
+
+              return x.bandwidth() * scalingFactor;
             });
       }
 
@@ -420,9 +426,9 @@ var PrintMaterials = function() {
           .enter().append('text')
             .attr('class','count')
             .attr('y',function(d, i) {
-              var shift = d[1] != d.data['normalized-total'] ? 5 : 0;
+              var countShift = d[1] != d.data['normalized-total'] ? 5 : 0;
 
-              return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2 + shift;
+              return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2 + countShift;
             })
             .attr('x',shift)
             .attr('fill',self.BLACK)
@@ -448,7 +454,11 @@ var PrintMaterials = function() {
             .attr('font-size',labelFontSize)
             .text(function(d) { return d; });
 
-        return labels.attr('x',function(d, i) { return addedShift + (x.bandwidth() * 2) * i - labels.node().getBBox().width / 2 * i; });
+        return labels.attr('x',function(d, i) {
+          var periodShift = hasTwoPeriods ? -(labels.node().getBBox().width / 2 * i) : labels.node().getBBox().width / 2;
+
+          return addedShift + (x.bandwidth() * 2) * i + periodShift;
+        });
       }
 
       function drawLegend(svg, type, format, labels) {
@@ -604,7 +614,7 @@ var PrintMaterials = function() {
       var femaleCountShift = isBar ? colWidth * 2 + gutter : legendWidth + colWidth * 2 + gutter;
       var maleCountShift = isBar ? labelIcon.width + colWidth : legendWidth + colWidth;
       var maleIconShift = isBar ? 0 : legendWidth - labelIcon.width;
-      var femaleIconShift = isBar ? labelIcon.width + colWidth + gutter / 2 : legendWidth + colWidth + gutter / 2;
+      var femaleIconShift = isBar ? labelIcon.width + colWidth + gutter / 2 - 2 : legendWidth + colWidth + gutter / 2 - 2;
       var maleLabelShift = isBar ? labelIcon.width + 7 : legendWidth + 3;
       var femaleLabelShift = maleLabelShift + colWidth + gutter;
       var lineShift = isBar ? colWidth + gutter / 2 + 15 : legendWidth + colWidth + gutter / 3;
