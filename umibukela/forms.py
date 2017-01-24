@@ -5,6 +5,7 @@ from widgets import AddAnotherWidgetWrapper
 from .models import (
     Site,
     CycleResultSet,
+    Monitor,
 )
 
 
@@ -40,6 +41,16 @@ class SiteForm(forms.ModelForm):
             initial['latitude'] = coordinates[1]
             kwargs['initial'] = initial
         super(SiteForm, self).__init__(*args, **kwargs)
+
+
+class CycleResultSetForm(forms.ModelForm):
+    class Meta(object):
+        model = CycleResultSet
+        exclude = []
+
+    def __init__(self, *args, **kwargs):
+        super(CycleResultSetForm, self).__init__(*args, **kwargs)
+        self.fields['monitors'].queryset = Monitor.objects.filter(partner=kwargs['instance'].partner)
 
 
 class CRSFromKoboForm(forms.Form):

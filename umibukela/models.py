@@ -94,6 +94,14 @@ class Partner(models.Model):
         return sites
 
 
+class Monitor(models.Model):
+    name = models.TextField()
+    partner = models.ForeignKey(Partner)
+
+    def __str__(self):
+        return "%s (%s)" % (self.name, self.partner.short_name)
+
+
 class Site(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.CharField(max_length=200, unique=True)
@@ -241,6 +249,7 @@ class CycleResultSet(models.Model):
     # which don't necessarily have exactly the same survey
     survey_type = models.ForeignKey(SurveyType, null=True, blank=True)
     survey = models.ForeignKey(Survey, null=True, blank=True)
+    monitors = models.ManyToManyField("Monitor", blank=True, help_text="Only monitors for the current partner are shown. If you update the Partner you'll have to save and edit this Cycle Result Set again to see the available monitors.")
 
     action_items = models.TextField(null=True, blank=True, help_text="Key challenges identified for improvement. Markdown allowed.")
     follow_up_date = models.DateField(null=True, blank=True, help_text="Date when follow up check was performed")
@@ -310,6 +319,8 @@ class Submission(models.Model):
     uuid = models.TextField(unique=True)
     cycle_result_set = models.ForeignKey(
         CycleResultSet,
+        null=True,
+        blank=True,
         related_name="submissions"
     )
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
