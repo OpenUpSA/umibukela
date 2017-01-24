@@ -308,9 +308,6 @@ var PrintMaterials = function() {
         female_data.push({ period: period, year: period == 'current' ? years[1] : years[0] });
       }
 
-      male_data.reverse();
-      female_data.reverse();
-
       responses.forEach(function(response, i) {
         for(period in response) {
           var male_datum = _.find(male_data, function(item) { return item.period == period });
@@ -330,17 +327,20 @@ var PrintMaterials = function() {
       var zRange;
 
       if(legendType == 'yes/no') {
-        zRange = [self.BLACK,self.ORANGE];
+        zRange = [self.ORANGE,self.BLACK];
+        labels.reverse();
+
       } else {
-        zRange = [self.BLACK,self.WHITE,self.ORANGE];
+        zRange = [self.ORANGE,self.WHITE,self.BLACK];
 
         switch(legendType) {
-          case 'attitude':
-            labels.reverse();
-          break;
           case 'yes/dk/no':
             labels = [labels[1],labels[2],labels[0]];
-            legendLabels = labels;
+            legendLabels = labels.slice(0);
+          break;
+          case 'attitude':
+            zRange = [self.BLACK,self.WHITE,self.ORANGE];
+            labels.reverse();
           break;
         }
       }
@@ -499,7 +499,7 @@ var PrintMaterials = function() {
               .text('NO');
           break;
           case 'yes/dk/no':
-          zRange.reverse().forEach(function(color,i) {
+          zRange.slice(0).reverse().forEach(function(color,i) {
             legend.append('rect')
               .attr('fill',color)
               .attr('height',legendIcon.height)
@@ -510,7 +510,7 @@ var PrintMaterials = function() {
               .attr('y',i * (legendIcon.height + height / 20));
           });
 
-          labels.forEach(function(label,i) {
+          legendLabels.reverse().forEach(function(label,i) {
             legend.append('text')
               .attr('x',legendIcon.width + 5)
               .attr('y',legendIcon.height / 1.5 + i * (legendIcon.height + height / 20))
@@ -670,13 +670,13 @@ var PrintMaterials = function() {
       var widthCoefficient = 0.8;
       var legendWidth = width * 0.2;
       var figureWidth = width * 0.8;
-      var fontSize = Math.round(height / 7);
+      var fontSize = Math.round(height / 8);
       var legendSquare = colHeight * 0.45;
 
       var optionKeys = _.keys(options.responses[0]);
       var years = cycleYears;
       var yearsReversed = [years[1],years[0]];
-      var isOneYear = years.length == 1;
+      var hasTwoPeriods = _.contains(optionKeys,'current') && _.contains(optionKeys,'prev');
 
       for(var i=0;i < optionKeys.length;i++) {
         var period = optionKeys[i];
@@ -689,7 +689,7 @@ var PrintMaterials = function() {
       female_data.reverse();
 
       responses.forEach(function(response) {
-        response.prev.key = response.current.key;
+        if (response.prev) response.prev.key = response.current.key;
 
         for(period in response) {
           var male_datum = _.find(male_data, function(item) { return item.period == period; });
@@ -716,7 +716,6 @@ var PrintMaterials = function() {
 
       if(!prevMax) {
         yearsReversed = [yearsReversed[0]];
-        isOneYear = true;
       }
 
       male_data = self.normalize(male_data, maleMax, labels);
@@ -757,11 +756,11 @@ var PrintMaterials = function() {
         .enter().append('rect')
           .attr('y', function(d) {
             var period = d.data.period;
-            var shift = 0;
+            var periodShift = 0;
 
-            if(period != 'current') shift = .5 * y.bandwidth();
+            if(period != 'current') periodShift = .5 * y.bandwidth();
 
-            return y(d.data.period) + shift;
+            return y(d.data.period) + periodShift;
           })
           .attr('x', function(d) { return x(d[0]) * widthCoefficient + icon.width + 5; })
           .attr('width', function(d) {
@@ -773,12 +772,12 @@ var PrintMaterials = function() {
           })
           .attr('height', function(d) {
             var period = d.data.period;
-            var coefficient = .5;
-            var barPadding = isOneYear ? 0 : -2;
+            var scalingFactor = 1;
+            var barPadding = !hasTwoPeriods ? 0 : -2;
 
-            if(period == 'current') coefficient = isOneYear ? 2 : 1.5;
+            if(hasTwoPeriods) scalingFactor = period == 'current' ? 1.5 : .5;
 
-            return y.bandwidth() * coefficient + barPadding;
+            return y.bandwidth() * scalingFactor + barPadding;
           });
 
       female.selectAll('text.count')
@@ -804,9 +803,10 @@ var PrintMaterials = function() {
           .attr('stroke','none')
           .attr('text-anchor','start')
           .attr('y', function(d,i) {
-            var shift = isOneYear ? 2 : 0;
-
-            return y.bandwidth() * (i + 1) + i * 2 + shift;
+            if(hasTwoPeriods) {
+              if(i == 0) return y.bandwidth();
+              else return y.bandwidth() * 2;
+            } else return fontSize * 2;
           })
           .attr('x', function(d) { return femaleBarWidth + icon.width + 8; })
           .attr('fill',self.BLACK)
@@ -827,10 +827,10 @@ var PrintMaterials = function() {
         .enter().append('rect')
           .attr('y', function(d) {
             var period = d.data.period;
-            var shift = 0;
+            var periodShift = 0;
 
-            if(period != 'current') shift = .5 * y.bandwidth();
-            return y(d.data.period) + shift + colHeight + gutter;
+            if(period != 'current') periodShift = .5 * y.bandwidth();
+            return y(d.data.period) + periodShift + colHeight + gutter;
           })
           .attr('x', function(d) { return x(d[0]) * widthCoefficient + icon.width + 5; })
           .attr('width', function(d) {
@@ -842,12 +842,12 @@ var PrintMaterials = function() {
           })
           .attr('height', function(d) {
             var period = d.data.period;
-            var coefficient = .5;
-            var barPadding = isOneYear ? 0 : -2;
+            var scalingFactor = 1;
+            var barPadding = !hasTwoPeriods ? 0 : -2;
 
-            if(period == 'current') coefficient = isOneYear ? 2 : 1.5;
+            if(hasTwoPeriods) scalingFactor = period == 'current' ? 1.5 : .5;
 
-            return y.bandwidth() * coefficient + barPadding;
+            return y.bandwidth() * scalingFactor + barPadding;
           });
 
       male.selectAll('text.count')
@@ -871,9 +871,12 @@ var PrintMaterials = function() {
           .attr('class','year')
           .attr('stroke','none')
           .attr('y', function(d,i) {
-            var shift = isOneYear ? 2 : 0;
+            var shift = colHeight + gutter;
 
-            return colHeight + gutter + y.bandwidth() * (i + 1) + i * 2 + shift;
+            if(hasTwoPeriods) {
+              if(i == 0) return shift + y.bandwidth();
+              else return shift + y.bandwidth() * 2;
+            } else return shift + fontSize * 2;
            })
           .attr('x', function(d) { return maleBarWidth + icon.width + 8; })
           .attr('fill',self.BLACK)
