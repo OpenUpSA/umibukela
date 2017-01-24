@@ -70,7 +70,7 @@ $headings-color: $black;
       .survey-item {
         padding:0;
       }
-      
+
       .left-col {
         padding-right:10px;
         margin-right:10px;
@@ -126,6 +126,15 @@ $headings-color: $black;
   }
 
   &.sassa-paypoint-citizen {
+    .survey {
+      .survey-item {
+        padding-bottom:0;
+
+        .question {
+          font-size:9px;
+        }
+      }
+    }
     .totals-table {
       width:90%;
       font-size:9px;
@@ -138,6 +147,17 @@ $headings-color: $black;
       .text-medium {
         font-size:10px;
       }
+    }
+
+    .logo {
+      position:relative;
+    }
+
+    .code4sa-logo {
+      width:125px;
+      position:absolute;
+      right:0;
+      top:-40px;
     }
   }
 
@@ -814,10 +834,6 @@ $headings-color: $black;
     h1, h2, h3, h4 {
       position: absolute;
     }
-  }
-
-  .border-top-dashed {
-    border-top:1px dashed rgb(0,0,0);
   }
 
   .border-dashed {
