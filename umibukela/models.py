@@ -98,6 +98,9 @@ class Monitor(models.Model):
     name = models.TextField()
     partner = models.ForeignKey(Partner)
 
+    class Meta:
+        ordering = ('name',)
+
     def __str__(self):
         return "%s (%s)" % (self.name, self.partner.short_name)
 
