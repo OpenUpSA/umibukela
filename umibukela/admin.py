@@ -7,6 +7,7 @@ from .models import (
     CycleFrequency,
     CycleResultSet,
     CycleResultSetAttachment,
+    Monitor,
     Partner,
     Programme,
     Province,
@@ -17,6 +18,7 @@ from .models import (
 )
 
 from .forms import (
+    CycleResultSetForm,
     SiteForm,
 )
 
@@ -54,6 +56,7 @@ class CycleResultSetAdmin(admin.ModelAdmin):
     inlines = [
         CycleResultSetAttachmentInline,
     ]
+    form = CycleResultSetForm
 
 
 admin_site = AdminSite()
@@ -64,6 +67,7 @@ admin_site.register(AttachmentNature)
 admin_site.register(Cycle)
 admin_site.register(CycleFrequency)
 admin_site.register(CycleResultSet, CycleResultSetAdmin)
+admin_site.register(Monitor)
 admin_site.register(Partner, PartnerAdmin)
 admin_site.register(Programme)
 admin_site.register(Province)
