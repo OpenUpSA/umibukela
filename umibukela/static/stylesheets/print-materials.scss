@@ -164,7 +164,9 @@ $headings-color: $black;
   &.health-citizen {
     .how-long {
       margin-top:10px;
-      margin-bottom:0;
+      margin-bottom:3px;
+      font-size:11px;
+      text-transform:uppercase;
     }
 
     .no-padding {
@@ -200,15 +202,16 @@ $headings-color: $black;
     }
 
     .survey {
-      .clinic {
-        .survey-item {
-          padding-bottom:0;
+      .survey-item {
+        padding:8px 0 0;
 
-          .question {
-            margin-bottom:5px;
-          }
+        .question {
+          margin:0 10px 5px;
+          font-size:9px;
         }
+      }
 
+      .clinic {
         .border-left {
           .survey-item {
             padding-top:5px;
