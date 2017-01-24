@@ -203,8 +203,7 @@ var PrintMaterials = function() {
         .attr('stroke',function(d) { return d.name == 'current' ? self.BLACK : self.ORANGE; })
         .attr('stroke-width', function(d) { return d.name == 'current' ? '0.5' : '1'; });
 
-      left.append('text')
-        .attr('x',function(d) { return sideWidth - xLeft(d.value) - 5.5; })
+      var count = left.append('text')
         .attr('y',function(d) {
           var barWidth = y1.bandwidth();
 
@@ -214,6 +213,8 @@ var PrintMaterials = function() {
         })
         .attr('font-size',fontSize)
         .text(function(d) { return d.value > 0 && d.name == 'current' ? d.value : ''; });
+
+      count.attr('x',function(d) { return sideWidth - xLeft(d.value) - d3.select(this).node().getBBox().width - 5; });
 
       var labelOffset = y0.paddingInner();
 
@@ -598,7 +599,7 @@ var PrintMaterials = function() {
       var maleBarShift = isBar ? labelIcon.width : 0;
       var femaleBarShift = isBar ? labelIcon.width + colWidth + gutter : colWidth + gutter;
       var femaleCountShift = isBar ? colWidth * 2 + gutter : legendWidth + colWidth * 2 + gutter;
-      var maleCountShift = isBar ? labelIcon.width + colWidth - 2 : legendWidth + colWidth - 2;
+      var maleCountShift = isBar ? labelIcon.width + colWidth : legendWidth + colWidth;
       var maleIconShift = isBar ? 0 : legendWidth - labelIcon.width;
       var femaleIconShift = isBar ? labelIcon.width + colWidth + gutter / 2 : legendWidth + colWidth + gutter / 2;
       var maleLabelShift = isBar ? labelIcon.width + 7 : legendWidth + 3;

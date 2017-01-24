@@ -62,16 +62,25 @@ $headings-color: $black;
     [class*=col] {
       .black-banner {
         padding:7px;
-      }
-
-      &:first-child {
-        .black-banner {
-          margin-right:15px;
-        }
+        margin:10px 10px 0;
       }
     }
 
     .survey {
+      .survey-item {
+        padding:0;
+      }
+      
+      .left-col {
+        padding-right:10px;
+        margin-right:10px;
+        border-right:1px solid $black;
+
+        .survey-item {
+          padding-top:10px;
+        }
+      }
+
       &> .row {
         border-top:none;
 

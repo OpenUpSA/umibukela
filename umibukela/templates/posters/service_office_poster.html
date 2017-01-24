@@ -2,13 +2,13 @@
 {% load pipeline lookup static markup_tags %}
 {% block survey %}
 <div class="row">
-  <div class="col-xs-6">
+  <div class="col-xs-6 left-col">
     <div class="row">
       <div class="survey-item no-border col-xs-12">
         {% with q=questions_dict|get:'visit_reason' %}
           <h4 class="question text-center">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="visit_reason" data-type="1" data-width="250" data-height="125"></div>
+        <div class="response text-center" data-key="visit_reason" data-type="1" data-width="350" data-height="200"></div>
       </div>
     </div>
     <div class="row">
@@ -52,19 +52,19 @@
       </div>
     </div>
   </div>
-  <div class="col-xs-6 border-left">
+  <div class="col-xs-6">
     <div class="row no-border">
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'transport_amount' %}
           <h4 class="question text-center black-banner">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="transport_amount" data-type="1" data-width="162.92" data-height="190" data-margin-left="0" data-figure-height="160"></div>
+        <div class="response text-center" data-key="transport_amount" data-type="1" data-width="182" data-height="200" data-margin-left="0" data-figure-height="170"></div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'waiting_time' %}
           <h4 class="question text-center black-banner">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="waiting_time" data-type="1" data-width="162.92" data-height="190" data-margin-left="0" data-figure-height="160"></div>
+        <div class="response text-center" data-key="waiting_time" data-type="1" data-width="182" data-height="200" data-margin-left="0" data-figure-height="170"></div>
       </div>
     </div>
     <div class="row">
@@ -72,13 +72,13 @@
         {% with q=questions_dict|get:'performance_group/clean' %}
           <h4 class="question text-center black-banner">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="performance_group/clean" data-type="2" data-width="162.92" data-height="190" data-legend="attitude" data-figure-height="160" data-legend-format="bar" data-margin-left="0"></div>
+        <div class="response text-center" data-key="performance_group/clean" data-type="2" data-width="182" data-height="200" data-legend="attitude" data-figure-height="170" data-legend-format="bar" data-margin-left="0"></div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'performance_group/queues' %}
           <h4 class="question text-center black-banner">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="performance_group/queues" data-type="2" data-width="162.92" data-height="190" data-legend="attitude" data-figure-height="160" data-legend-format="bar" data-margin-left="0"></div>
+        <div class="response text-center" data-key="performance_group/queues" data-type="2" data-width="182" data-height="200" data-legend="attitude" data-figure-height="170" data-legend-format="bar" data-margin-left="0"></div>
       </div>
     </div>
     <div class="row">
@@ -86,13 +86,13 @@
         {% with q=questions_dict|get:'performance_group/respect' %}
           <h4 class="question text-center black-banner">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="performance_group/respect" data-type="2" data-width="162.92" data-height="190" data-legend="attitude" data-figure-height="160" data-legend-format="bar" data-margin-left="0"></div>
+        <div class="response text-center" data-key="performance_group/respect" data-type="2" data-width="182" data-height="200" data-legend="attitude" data-figure-height="170" data-legend-format="bar" data-margin-left="0"></div>
       </div>
       <div class="survey-item col-xs-6">
         {% with q=questions_dict|get:'clinic_feedback' %}
           <h4 class="question text-center black-banner">{{ q.label }}</h4>
         {% endwith %}
-        <div class="response text-center" data-key="clinic_feedback" data-type="2" data-width="162.92" data-height="190" data-legend="attitude" data-figure-height="160" data-legend-format="bar" data-margin-left="0"></div>
+        <div class="response text-center" data-key="clinic_feedback" data-type="2" data-width="182" data-height="200" data-legend="attitude" data-figure-height="170" data-legend-format="bar" data-margin-left="0"></div>
       </div>
     </div>
     <div class="row">
