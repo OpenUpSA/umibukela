@@ -159,7 +159,8 @@ var PrintMaterials = function() {
         })
         .attr('width', function(d) { return xRight(d.value) - 0.5; })
         .attr('fill', function(d) { ;return colorFemale(d.name); })
-        .attr('stroke',function(d) { return d.name == 'current' ? self.BLACK : self.ORANGE; });
+        .attr('stroke',function(d) { return d.name == 'current' ? self.BLACK : self.ORANGE; })
+        .attr('stroke-width','0.25');
 
       right.append('text')
         .attr('x',function(d) { return xRight(d.value) + 2.5; })
@@ -196,12 +197,12 @@ var PrintMaterials = function() {
         .attr('x',function(d) { return sideWidth - xLeft(d.value); })
         .attr('y', function(d) {
           if(d.name == 'prev') return y1(d.name) * 5 / 3;
-          else return y1(d.name) - 0.5;
+          else return y1(d.name) - 0.4;
         })
         .attr('width', function(d) { return xLeft(d.value) - 0.5; })
         .attr('fill', function(d) { return colorMale(d.name); })
         .attr('stroke',function(d) { return d.name == 'current' ? self.BLACK : self.ORANGE; })
-        .attr('stroke-width', function(d) { return d.name == 'current' ? '0.5' : '1'; });
+        .attr('stroke-width', '0.4');
 
       var count = left.append('text')
         .attr('y',function(d) {
@@ -381,6 +382,7 @@ var PrintMaterials = function() {
             .attr('class',className)
             .attr('fill',function(d) { return z(d.key); })
             .attr('stroke',function(d) { return z(d.key) == self.WHITE ? self.BLACK : z(d.key); })
+            .attr('stroke-width','0.25')
             .attr('transform','translate(0,0)');
       }
 
@@ -493,6 +495,7 @@ var PrintMaterials = function() {
               .attr('height',legendIcon.height)
               .attr('width',legendIcon.width)
               .attr('stroke',function() { return color == self.WHITE ? self.BLACK : color })
+              .attr('stroke-width','0.25')
               .attr('x',0)
               .attr('y',i * (legendIcon.height + height / 20));
           });
