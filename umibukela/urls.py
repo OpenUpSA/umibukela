@@ -14,6 +14,10 @@ urlpatterns = patterns(
     url(r'^sites$', 'umibukela.views.sites', name='sites'),
     url(r'^sites/(?P<site_slug>[\w-]+)$', 'umibukela.views.site', name='site'),
     url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)$', 'umibukela.views.site_result', name='site-result'),
+    url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)/poster$', 'umibukela.views.poster', name='site-result-poster'),
+    url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)/poster.pdf$', 'umibukela.views.poster_pdf', name='site-result-poster-pdf'),
+    url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)/handout$', 'umibukela.views.handout', name='site-result-handout'),
+    url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)/handout.pdf$', 'umibukela.views.handout_pdf', name='site-result-handout-pdf'),
 
     url(r'^partners$', 'umibukela.views.partners', name='partners'),
     url(r'^partners/(?P<partner_slug>[\w-]+)$', 'umibukela.views.partner', name='partner'),

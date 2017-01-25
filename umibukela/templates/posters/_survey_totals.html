@@ -1,0 +1,32 @@
+{% with prev_exists=result_set.get_previous %}
+<div class="totals-table">
+  <div class="row no-border text-medium">
+    <div class="col-xs-8"></div>
+    <div class="{% if prev_exists %}col-xs-2{% else %}col-xs-4 text-center{% endif %}"><b>{{ result_set.cycle.end_date|date:'Y' }}</b></div>
+    {% if prev_exists %}
+        <div class="col-xs-2"><b>{{ prev_date|date:'Y' }}</b></div>
+    {% endif %}
+  </div>
+  <div class="row no-border text-large">
+    <div class="col-xs-8 heading text-uppercase">Participants:</div>
+    <div class="{% if prev_exists %}col-xs-2{% else %}col-xs-4 text-center{% endif %}">{{ totals.current.total }}</div>
+    {% if prev_exists %}
+      <div class="col-xs-2">{{ totals.previous.total }}</div>
+    {% endif %}
+  </div>
+  <div class="row no-border">
+    <div class="col-xs-8 heading text-uppercase">Female:</div>
+    <div class="{% if prev_exists %}col-xs-2{% else %}col-xs-4 text-center{% endif %}">{{ totals.current.female }}</div>
+    {% if prev_exists %}
+      <div class="col-xs-2">{{ totals.previous.female }}</div>
+    {% endif %}
+  </div>
+  <div class="row no-border">
+    <div class="col-xs-8 heading text-uppercase">Male:</div>
+    <div class="{% if prev_exists %}col-xs-2{% else %}col-xs-4 text-center{% endif %}">{{ totals.current.male }}</div>
+    {% if prev_exists %}
+      <div class="col-xs-2">{{ totals.previous.male }}</div>
+    {% endif %}
+  </div>
+</div>
+{% endwith %}

@@ -179,9 +179,7 @@ def map_questions(form, submissions):
     for mapping in mappings:
         q = form.get_by_path(mapping['wrong_path'])
         if q:
-            print "found", mapping['wrong_path']
             path = mapping['right_path'].split('/')
-            right_name = path[-1]
             group_path = path[:-1]
             if group_path:
                 group = form.get_by_path('/'.join(group_path))

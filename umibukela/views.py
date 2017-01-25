@@ -1,17 +1,20 @@
 from collections import Counter
 from datetime import datetime, timedelta
+from django.conf import settings
+from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
-from forms import CRSFromKoboForm
 from itertools import groupby
-from xform import XForm
-
+from wkhtmltopdf.utils import wkhtmltopdf
+from wkhtmltopdf.views import PDFResponse
+from xform import XForm, map_questions, field_per_SATA_option
 import analysis
 import pandas
 import requests
-import settings
 
+from .forms import CRSFromKoboForm
 from .models import (
     CycleResultSet,
     KoboRefreshToken,
@@ -68,24 +71,23 @@ def site_result(request, site_slug, result_id):
     result_set = get_object_or_404(
         CycleResultSet,
         id=result_id,
-        site__slug__exact=site_slug,
-        published=True
+        site__slug__exact=site_slug
     )
-    site_responses = [s.answers for s in result_set.submissions.all()]
-    if site_responses:
-        df = pandas.DataFrame(site_responses)
-        form = result_set.survey.form
+    if not (result_set.published or request.user.is_superuser):
+        raise Http404("No such CycleResultSet found")
+    form, responses = result_set.get_survey()
+    if responses:
+        df = pandas.DataFrame(responses)
         site_totals = analysis.count_submissions(df)
         site_results = analysis.count_options(df, form['children'])
         site_results = analysis.calc_q_percents(site_results)
         prev_result_set = result_set.get_previous()
         if prev_result_set:
-            prev_responses = [s.answers for s in prev_result_set.submissions.all()]
+            prev_form, prev_responses = prev_result_set.get_survey()
             if prev_responses:
                 site_totals = analysis.count_submissions(
-                    pandas.DataFrame(site_responses + prev_responses))
+                    pandas.DataFrame(responses + prev_responses))
                 prev_df = pandas.DataFrame(prev_responses)
-                prev_form = prev_result_set.survey.form
                 prev_results = analysis.count_options(prev_df, prev_form['children'])
                 prev_results = analysis.calc_q_percents(prev_results)
             else:
@@ -105,6 +107,132 @@ def site_result(request, site_slug, result_id):
             'totals': site_totals,
         }
     })
+
+
+def poster(request, site_slug, result_id):
+    result_set = get_object_or_404(
+        CycleResultSet,
+        id=result_id,
+        site__slug__exact=site_slug
+    )
+    sector_id = result_set.site.sector.id
+    sector_name = result_set.site.sector.name
+    survey_type = result_set.survey_type.name
+    site = result_set.site.name
+    layout_class = '-'.join(' '.join([x.strip() for x in survey_type.split('-')]).lower().split(' '))
+    location = None
+    template = 'posters/'
+    form, responses = result_set.get_survey()
+    totals = {'current': {'male': 0, 'female': 0, 'total': 0}, 'previous': {'male': 0, 'female': 0, 'total': 0}}
+    site_results = None
+
+    if responses:
+        df = pandas.DataFrame(responses)
+        totals['current'] = analysis.count_submissions(df)
+        site_results = analysis.count_options(df, form['children'])
+        site_results = analysis.calc_q_percents(site_results)
+        prev_result_set = result_set.get_previous()
+        if prev_result_set:
+            prev_form, prev_responses = prev_result_set.get_survey()
+            if prev_responses:
+                totals['previous'] = analysis.count_submissions(
+                    pandas.DataFrame(prev_responses))
+                prev_df = pandas.DataFrame(prev_responses)
+                prev_results = analysis.count_options(prev_df, prev_form['children'])
+                prev_results = analysis.calc_q_percents(prev_results)
+                prev_date = prev_result_set.cycle.start_date
+            else:
+                prev_results = None
+                prev_date = None
+        else:
+            prev_results = None
+            prev_date = None
+        analysis.combine_curr_hist(site_results, prev_results)
+
+    if 'pay point' in result_set.site.name.lower():
+        template += 'paypoint_poster.html'
+        sector_name = None
+    elif 'local gov' in result_set.site.sector.name.lower():
+        template += 'local_gov_poster.html'
+        sector_name = 'Participatory Governance'
+        location = result_set.site.name
+        site = 'Western Cape'
+    elif 'health' in result_set.site.sector.name.lower():
+        template += 'health_clinic_poster.html'
+        sector_name = None
+    elif 'service office' in result_set.site.name.lower():
+        template += 'service_office_poster.html'
+        sector_name = None
+    else:
+        template += 'poster_layout.html'
+
+    return render(request, template, {
+        'result_set': result_set,
+        'prev_date': prev_date,
+        'totals': totals,
+        'site': site,
+        'sector': sector_name,
+        'location': location,
+        'questions_dict': site_results,
+        'layout_class': layout_class,
+        'DEBUG': settings.DEBUG,
+    })
+
+
+def poster_pdf(request, site_slug, result_id):
+    # render poster as pdf
+    url = reverse('site-result-poster', kwargs={'site_slug': site_slug, 'result_id': result_id})
+    url = request.build_absolute_uri(url)
+    pdf = wkhtmltopdf(url, **{
+        'margin-top': '0.5cm',
+        'margin-right': '0.5cm',
+        'margin-bottom': '0.5cm',
+        'margin-left': '0.5cm',
+    })
+    filename = '%s-%s-poster.pdf' % (site_slug, result_id)
+    return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
+
+
+def handout(request, site_slug, result_id):
+    result_set = get_object_or_404(
+        CycleResultSet,
+        id=result_id,
+        site__slug__exact=site_slug
+    )
+    prev_result_set = result_set.get_previous()
+    site_responses = [s.answers for s in result_set.submissions.all()]
+
+    context = {
+        'result_set': result_set,
+        'partner': result_set.partner,
+        'site': result_set.site.name,
+        'prev_date': None,
+        'totals': {'male': 0, 'female': 0, 'total': 0},
+        'DEBUG': settings.DEBUG,
+    }
+
+    if prev_result_set:
+        context['prev_date'] = prev_result_set.cycle.start_date
+
+    if site_responses:
+        context['totals'] = analysis.count_submissions(pandas.DataFrame(site_responses))
+
+    return render(request, 'handout_layout.html', context)
+
+
+def handout_pdf(request, site_slug, result_id):
+    # render handout as pdf
+    url = reverse('site-result-handout', kwargs={'site_slug': site_slug, 'result_id': result_id})
+    url = request.build_absolute_uri(url)
+    pdf = wkhtmltopdf(url, **{
+        'margin-top': '0.5cm',
+        'margin-right': '0.5cm',
+        'margin-bottom': '0.5cm',
+        'margin-left': '0.5cm',
+        'orientation': 'landscape',
+    })
+    filename = '%s-%s-handout.pdf' % (site_slug, result_id)
+    return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
 def comments(request, result_id):
@@ -284,12 +412,12 @@ def kobo_form_site_preview(request, kobo_form_id, site_name):
         r = requests.get("https://kc.kobotoolbox.org/api/v1/data/%s" % kobo_form_id, headers=headers)
         r.raise_for_status()
         submissions = r.json()
-        site_responses = [s for s in submissions if s.get('facility', s.get('site', None)) == site_name]
-        site_responses = field_per_SATA_option(form, site_responses)
-        map_questions(form, site_responses)
+        responses = [s for s in submissions if s.get('facility', s.get('site', None)) == site_name]
+        responses = field_per_SATA_option(form, responses)
+        map_questions(form, responses)
 
-        if site_responses:
-            df = pandas.DataFrame(site_responses)
+        if responses:
+            df = pandas.DataFrame(responses)
             site_totals = analysis.count_submissions(df)
             site_results = analysis.count_options(df, form['children'])
             site_results = analysis.calc_q_percents(site_results)
@@ -313,47 +441,6 @@ def kobo_form_site_preview(request, kobo_form_id, site_name):
         })
 
 
-def map_questions(form, submissions):
-    wrong_name = 'Select_your_gender'
-    for i, q in enumerate(form.get('children', [])):
-        if q.get('name', None) == wrong_name:
-            q['name'] = 'gender'
-            form['children'].append({
-                "label": "Some questions about you",
-                "type": "group",
-                "children": [q],
-                "name": "demographics_group"
-            })
-            del form['children'][i]
-            for s in submissions:
-                s['demographics_group/gender'] = s[wrong_name]
-                del s[wrong_name]
-                print s['demographics_group/gender']
-            break
-
-
-def field_per_SATA_option(form, submissions):
-    SATAs = [q for q in form['children'] if q['type'] == 'select all that apply']
-    for SATA in SATAs:
-        vals = [o['name'] for o in SATA['children']]
-        submissions = map(
-            lambda x: set_select_all_that_apply_fields(x, SATA['name'], vals),
-            submissions
-        )
-    return submissions
-
-
-def set_select_all_that_apply_fields(dict, q_key, possible_vals):
-    if q_key not in dict:
-        dict[q_key] = 'False'
-    for val in possible_vals:
-        dict['/'.join([q_key, val])] = 'False'
-    for val in dict[q_key].split(' '):
-        dict['/'.join([q_key, val])] = 'True'
-    del dict[q_key]
-    return dict
-
-
 def is_kobo_authed(request):
     kobo_expiry = request.session.get('kobo_access_token_expiry', None)
     return kobo_expiry and kobo_expiry > datetime.utcnow().isoformat()
@@ -369,8 +456,8 @@ def start_kobo_oauth(request):
             'redirect_uri': 'http://localhost:8000/admin/kobo-oauth'
         }
         r = requests.post("https://kc.kobotoolbox.org/o/token/",
-                         params=payload,
-                         auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
+                          params=payload,
+                          auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
         r.raise_for_status()
         request.session['kobo_access_token'] = r.json()['access_token']
         expiry_datetime = datetime.utcnow() + timedelta(seconds=r.json()['expires_in'])
