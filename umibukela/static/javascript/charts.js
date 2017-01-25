@@ -335,26 +335,9 @@ var PrintMaterials = function() {
       });
 
       // Range depends on number of response types
-      var zRange;
+      var zRange = legendType == 'yes/no' ? [self.ORANGE,self.BLACK] : [self.ORANGE,self.WHITE,self.BLACK];
 
-      if(legendType == 'yes/no') {
-        zRange = [self.ORANGE,self.BLACK];
-        labels.reverse();
-
-      } else {
-        zRange = [self.ORANGE,self.WHITE,self.BLACK];
-
-        switch(legendType) {
-          case 'yes/dk/no':
-            labels = [labels[1],labels[2],labels[0]];
-            legendLabels = labels.slice(0);
-          break;
-          case 'attitude':
-            zRange = [self.BLACK,self.WHITE,self.ORANGE];
-            labels.reverse();
-          break;
-        }
-      }
+      labels = legendType == 'yes/dk/no' ? [labels[1],labels[2],labels[0]] : labels;
 
       for(var i = 0; i < maleData.length; i++) {
         maleData[i].total = 0;
@@ -521,7 +504,7 @@ var PrintMaterials = function() {
               .attr('y',i * (legendIcon.height + height / 20));
           });
 
-          legendLabels.reverse().forEach(function(label,i) {
+          labels.slice(0).forEach(function(label,i) {
             legend.append('text')
               .attr('x',legendIcon.width + 5)
               .attr('y',legendIcon.height / 1.5 + i * (legendIcon.height + height / 20))
@@ -531,12 +514,13 @@ var PrintMaterials = function() {
           break;
           case 'attitude':
             // Default to vertical alignment
-            var icons = ['/static/img/negative_face.svg','/static/img/neutral_face.svg','/static/img/positive_face.svg'];
+            var icons = ['/static/img/positive_face.svg','/static/img/neutral_face.svg','/static/img/negative_face.svg'];
             var labelWidth = format == 'top-bar' ? figureWidth / 3 : 0;
             var data = [];
+            var legendLabels = labels.slice(0).reverse();
 
             icons.forEach(function(icon, i) {
-              data.push({ icon: icon, label: labels[i] });
+              data.push({ icon: icon, label: legendLabels[i] });
             });
 
             var g = legend.selectAll('g')
