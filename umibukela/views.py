@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from forms import CRSFromKoboForm
 from itertools import groupby
+from xform import XForm
+
 import analysis
 import pandas
 import requests
@@ -190,11 +192,18 @@ def survey_kobo_submissions(request, survey_id):
         submissions = r.json()
         facilities = []
         facility_labels = {}
+        form = XForm(survey.form)
+        if form.get_by_path('facility'):
+            facility_q_name = 'facility'
+        elif form.get_by_path('site'):
+            facility_q_name = 'site'
+        else:
+            raise Exception('No facility/site/location question')
         for q in survey.form['children']:
-            if q['name'] == 'facility':
+            if q['name'] == facility_q_name:
                 for o in q['children']:
                     facility_labels[o['name']] = o['label']
-        facility_key = lambda r: r['facility']
+        facility_key = lambda r: r[facility_q_name]
         facility_sorted = sorted(submissions, key=facility_key, reverse=True)
         facilities = []
         for facility_name, facility_group in groupby(facility_sorted, facility_key):
@@ -213,7 +222,7 @@ def survey_kobo_submissions(request, survey_id):
                 facility_crs[facility_name] = CycleResultSet.objects.get(pk=crs_id)
             submissions = field_per_SATA_option(survey.form, submissions)
             for answers in submissions:
-                facility_name = answers['facility']
+                facility_name = answers[facility_q_name]
                 submission = Submission(
                     answers=answers,
                     cycle_result_set=facility_crs[facility_name]
@@ -221,6 +230,7 @@ def survey_kobo_submissions(request, survey_id):
                 submission.save()
             return HttpResponseRedirect('/admin/umibukela/cycleresultset', status=303)
         return render(request, 'survey_kobo_submissions.html', {
+            'submissions': submissions,
             'survey': survey,
             'facilities': facilities,
             'crs_form': crs_form,

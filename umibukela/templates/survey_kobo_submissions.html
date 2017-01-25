@@ -15,8 +15,8 @@
   <h1>Import submissions from Kobo for {{ survey.name }}</h1>
 
   <h3>Sites in this Kobo Survey</h3>
-  Select the Cycle Result Set to associate each site's submissions with. Create the Cycle Result Set if it doesn't exist yet.
-
+  <p>Select the Cycle Result Set to associate each site's submissions with. Create the Cycle Result Set if it doesn't exist yet.</p>
+  <p>Total submissions: {{ submissions|length }}</p>
   <table>
     <tr><th>Site Label</th><th>Site Name</th><th>No of responses</th><tr>
       {% for facility in facilities %}
