@@ -2,6 +2,7 @@ from collections import Counter
 from datetime import datetime, timedelta
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
@@ -13,7 +14,6 @@ import analysis
 import pandas
 import requests
 
-from umibukela import analysis
 from .forms import CRSFromKoboForm
 from .models import (
     CycleResultSet,
@@ -71,9 +71,10 @@ def site_result(request, site_slug, result_id):
     result_set = get_object_or_404(
         CycleResultSet,
         id=result_id,
-        site__slug__exact=site_slug,
-        published=True
+        site__slug__exact=site_slug
     )
+    if not (result_set.published or request.user.is_superuser):
+        raise Http404("No such CycleResultSet found")
     form, responses = result_set.get_survey()
     if responses:
         df = pandas.DataFrame(responses)

@@ -30,7 +30,7 @@
   <!-- section-header -->
   <div class="section-heading cycle-results-heading">
     <div class="container">
-      <h3><i class="fa fa-bar-chart-o"></i> Results</h3>
+      <h3><i class="fa fa-bar-chart-o"></i> Results{% if not result_set.published %} Preview{% endif %}</h3>
 
       <h1>{{ result_set.site.name }}</h1>
 
