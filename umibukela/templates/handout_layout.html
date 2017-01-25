@@ -18,7 +18,7 @@ var questions;
     <div class="col-xs-6 left">
       <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
         <h1 class="banner">Community Partner</h1>
-        <h1 class="partner">{{ partner.short_name }}</h1>
+        <h1 class="partner">{{ partner.full_name }}</h1>
       </header>
       <section class="content">
         <p class="margin-bottom">
@@ -26,9 +26,11 @@ var questions;
         </p>
         <p>The monitors for this project are</p>
         <ul class="margin-bottom">
+          {% for monitor in result_set.monitors.all %}
           <li>
-            XXX
+            {{ monitor.name }}
           </li>
+          {% endfor %}
         </ul>
 
         <div class="border-solid contact-details">
@@ -67,7 +69,7 @@ var questions;
     <div class="col-xs-6 right">
       <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
         <h1 class="banner">Citizen Monitoring</h1>
-        <h1 class="partner"><b>{{ partner.short_name }}</b></h1>
+        <h1 class="partner"><b>{{ partner.full_name }}</b></h1>
         <h3 class="date text-xs-right">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
         <h class="site"><b><em>{{ site }}</em></b></h2>
       </header>
