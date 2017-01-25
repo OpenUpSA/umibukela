@@ -1298,6 +1298,7 @@ var PrintMaterials = function() {
           return "translate(" + arc.centroid(d) + ")rotate(0)";
         })
         .attr('fill',function(d, i) { return i == 2 ? self.BLACK : self.WHITE ; })
+        .attr('text-anchor','middle')
         .text(function(d) { return d.value; });
 
       var legend = svg.append('g')
