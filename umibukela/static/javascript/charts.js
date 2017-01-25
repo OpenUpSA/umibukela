@@ -8,6 +8,8 @@ var PrintMaterials = function() {
   self.ORANGE = '#f6921d';
   self.BLACK = '#000000';
   self.WHITE = '#ffffff';
+  self.RED = '#c9423f';
+  self.BLUE = '#1561db';
 
   self.colorFemale = d3.scaleOrdinal()
     .range([self.BLACK,self.ORANGE]);
@@ -31,6 +33,15 @@ var PrintMaterials = function() {
       case '5':
         self.charts.typeFive(options);
       break;
+      case '6':
+        self.charts.typeSix(options);
+      break;
+      case '7':
+        self.charts.typeSeven(options);
+      break;
+      case '8':
+        self.charts.typeEight(options);
+      break;
     }
   }
 
@@ -53,8 +64,8 @@ var PrintMaterials = function() {
         height: height / 7,
         width: width / 12
       };
-      var male_data = [];
-      var female_data = [];
+      var maleData = [];
+      var femaleData = [];
       var labels = [];
 
       var colorMale = self.colorMale;
@@ -64,12 +75,12 @@ var PrintMaterials = function() {
         var key = response.current.key;
         var label = response.current.label;
 
-        male_data.push({ name: 'current', value: response.current.count.male, label: key });
-        female_data.push({ name: 'current', value: response.current.count.female, label: key });
+        maleData.push({ name: 'current', value: response.current.count.male, label: key });
+        femaleData.push({ name: 'current', value: response.current.count.female, label: key });
 
         if(response.prev) {
-            male_data.push({ name: 'prev', value: response.prev.count.male, label: key });
-            female_data.push({ name: 'prev', value: response.prev.count.female, label: key });
+            maleData.push({ name: 'prev', value: response.prev.count.male, label: key });
+            femaleData.push({ name: 'prev', value: response.prev.count.female, label: key });
         }
 
         labels.push({ key: key, label: label.toUpperCase() });
@@ -77,8 +88,8 @@ var PrintMaterials = function() {
 
       labels.reverse();
 
-      var rightMax = d3.max(female_data.map(function(d) { return d.value }));
-      var leftMax = d3.max(male_data.map(function(d) { return d.value }));
+      var rightMax = d3.max(femaleData.map(function(d) { return d.value }));
+      var leftMax = d3.max(maleData.map(function(d) { return d.value }));
       var max = rightMax > leftMax ? rightMax : leftMax;
 
       var svg = response.append('svg')
@@ -116,7 +127,7 @@ var PrintMaterials = function() {
       legend.attr('transform','translate(' + ((width - legendWidth) / 2) + ',' + figureHeight + ')');
 
       var y0 = d3.scaleBand()
-        .domain(male_data.map(function(d) { return d.label; }))
+        .domain(maleData.map(function(d) { return d.label; }))
         .rangeRound([0, figureHeight])
         .paddingInner(0.2)
         .paddingOuter(0)
@@ -133,7 +144,7 @@ var PrintMaterials = function() {
         .range([0,sideWidth - 20]);
 
       var right = svg.selectAll('g.right')
-        .data(female_data)
+        .data(femaleData)
       .enter().append('g')
         .attr('transform', function(d) { return 'translate(' + rightOffset + ',' + y0(d.label) + ')'; })
         .attr('class','right');
@@ -175,7 +186,7 @@ var PrintMaterials = function() {
         .text(function(d) { return d.value > 0 && d.name == 'current' ? d.value : ''; });
 
       var left = svg.selectAll('g.left')
-        .data(male_data)
+        .data(maleData)
       .enter().append('g')
         .attr('transform', function(d) { return 'translate(0,' + y0(d.label) + ')'; })
         .attr('class','left');
@@ -273,8 +284,8 @@ var PrintMaterials = function() {
       var legendFormat = options.legendFormat;
       var optionKeys = options.optionKeys;
 
-      var male_data = [];
-      var female_data = [];
+      var maleData = [];
+      var femaleData = [];
       var labels = [];
       var legendLabels = [];
 
@@ -304,14 +315,14 @@ var PrintMaterials = function() {
       for(var i=0;i < optionKeys.length;i++) {
         var period = optionKeys[i];
 
-        male_data.push({ period: period, year: period == 'current' ? years[1] : years[0] });
-        female_data.push({ period: period, year: period == 'current' ? years[1] : years[0] });
+        maleData.push({ period: period, year: period == 'current' ? years[1] : years[0] });
+        femaleData.push({ period: period, year: period == 'current' ? years[1] : years[0] });
       }
 
       responses.forEach(function(response, i) {
         for(period in response) {
-          var male_datum = _.find(male_data, function(item) { return item.period == period });
-          var female_datum = _.find(female_data, function(item) { return item.period == period });
+          var male_datum = _.find(maleData, function(item) { return item.period == period });
+          var female_datum = _.find(femaleData, function(item) { return item.period == period });
           var key = response[period].key;
           var label = response[period].label;
 
@@ -345,31 +356,31 @@ var PrintMaterials = function() {
         }
       }
 
-      for(var i = 0; i < male_data.length; i++) {
-        male_data[i].total = 0;
-        female_data[i].total = 0;
+      for(var i = 0; i < maleData.length; i++) {
+        maleData[i].total = 0;
+        femaleData[i].total = 0;
 
         labels.forEach(function(label) {
-          male_data[i].total += male_data[i][label];
-          female_data[i].total += female_data[i][label];
+          maleData[i].total += maleData[i][label];
+          femaleData[i].total += femaleData[i][label];
         });
       }
 
-      var prevMax = d3.max(male_data.concat(female_data).map(function(d) { if(d.period == 'prev') return d.total; }));
+      var prevMax = d3.max(maleData.concat(femaleData).map(function(d) { if(d.period == 'prev') return d.total; }));
 
       if(!prevMax) {
         years = [years[1]];
       }
 
-      var maleMax = d3.max(male_data.map(function(d) { return d.total; }));
-      var femaleMax = d3.max(female_data.map(function(d) { return d.total; }));
+      var maleMax = d3.max(maleData.map(function(d) { return d.total; }));
+      var femaleMax = d3.max(femaleData.map(function(d) { return d.total; }));
       var max = maleMax > femaleMax ? maleMax : femaleMax;
 
-      male_data = self.normalize(male_data, maleMax, labels);
-      female_data = self.normalize(female_data, femaleMax, labels);
+      maleData = self.normalize(maleData, maleMax, labels);
+      femaleData = self.normalize(femaleData, femaleMax, labels);
 
-      var male_stack = d3.stack().keys(labels)(male_data);
-      var female_stack = d3.stack().keys(labels)(female_data);
+      var maleStack = d3.stack().keys(labels)(maleData);
+      var femaleStack = d3.stack().keys(labels)(femaleData);
 
       function setupBands(el, selector, className, data) {
         return el.append('g')
@@ -391,7 +402,7 @@ var PrintMaterials = function() {
         if(!addedShift) addedShift = 0;
 
         return el.selectAll('rect')
-            .data(function(d) { console.log(d);return d; })
+            .data(function(d) { return d; })
           .enter().append('rect')
             .attr('x', function(d) {
               var period = d.data.period;
@@ -551,7 +562,6 @@ var PrintMaterials = function() {
               .attr('x',legendIcon.width + 3)
               .attr('y',(legendIcon.height - legendFontSize * 1.1) / 2 + legendFontSize)
               .text(function(d) { return d.label.toUpperCase() });
-              //.call(self.wrap, labelWidth, legendIcon.height, legendFontSize);
           break;
         }
 
@@ -595,14 +605,14 @@ var PrintMaterials = function() {
       var malePreviousHeight = 0;
       var femalePreviousHeight = 0;
 
-      male_stack.forEach(function(d){
+      maleStack.forEach(function(d){
         d.forEach(function(point){
           if(point.data.period == 'current') maleCurrentHeight += y(point[1]);
           else if(point.data.period == 'prev') malePreviousHeight += y(point[1]);
         });
       });
 
-      female_stack.forEach(function(d){
+      femaleStack.forEach(function(d){
         d.forEach(function(point){
           if(point.data.period == 'current') femaleCurrentHeight += y(point[1]);
           else if(point.data.period == 'prev') femalePreviousHeight += y(point[1]);
@@ -619,8 +629,8 @@ var PrintMaterials = function() {
       var femaleLabelShift = maleLabelShift + colWidth + gutter;
       var lineShift = isBar ? colWidth + gutter / 2 + 15 : legendWidth + colWidth + gutter / 3;
 
-      var male = setupBands(svg, '.male', 'male', male_stack);
-      var female = setupBands(svg, '.female', 'female', female_stack);
+      var male = setupBands(svg, '.male', 'male', maleStack);
+      var female = setupBands(svg, '.female', 'female', femaleStack);
       var maleBars = setupBars(male, 'male',maleBarShift);
       var femaleBars = setupBars(female, 'female', femaleBarShift);
       var maleCount = setupCount(male, maleCountShift);
@@ -659,8 +669,8 @@ var PrintMaterials = function() {
       var margin = options.margin;
       var optionKeys = options.optionKeys;
 
-      var male_data = [];
-      var female_data = [];
+      var maleData = [];
+      var femaleData = [];
       var labels = [];
 
       var gutter = height / 10 + 6;
@@ -681,19 +691,19 @@ var PrintMaterials = function() {
       for(var i=0;i < optionKeys.length;i++) {
         var period = optionKeys[i];
 
-        male_data.push({ period: period, year: period == 'current' ? years[1] : years[0], total: 0 });
-        female_data.push({ period: period, year: period == 'current' ? years[1] : years[0], total: 0 });
+        maleData.push({ period: period, year: period == 'current' ? years[1] : years[0], total: 0 });
+        femaleData.push({ period: period, year: period == 'current' ? years[1] : years[0], total: 0 });
       }
 
-      male_data.reverse();
-      female_data.reverse();
+      maleData.reverse();
+      femaleData.reverse();
 
       responses.forEach(function(response) {
         if (response.prev) response.prev.key = response.current.key;
 
         for(period in response) {
-          var male_datum = _.find(male_data, function(item) { return item.period == period; });
-          var female_datum = _.find(female_data, function(item) { return item.period == period; });
+          var male_datum = _.find(maleData, function(item) { return item.period == period; });
+          var female_datum = _.find(femaleData, function(item) { return item.period == period; });
 
           if(response[period].key && period == 'current') labels.push(response[period].key.toLowerCase());
 
@@ -702,24 +712,24 @@ var PrintMaterials = function() {
         }
      });
 
-      for(var i = 0;i < male_data.length; i++) {
+      for(var i = 0;i < maleData.length; i++) {
         labels.forEach(function(label) {
-          male_data[i].total += male_data[i][label];
-          female_data[i].total += female_data[i][label];
+          maleData[i].total += maleData[i][label];
+          femaleData[i].total += femaleData[i][label];
         });
       }
 
-      var maleMax = d3.max(male_data.map(function(d) { return d.total; }));
-      var femaleMax = d3.max(female_data.map(function(d) { return d.total; }));
+      var maleMax = d3.max(maleData.map(function(d) { return d.total; }));
+      var femaleMax = d3.max(femaleData.map(function(d) { return d.total; }));
       var max = maleMax > femaleMax ? maleMax : femaleMax;
-      var prevMax = d3.max(male_data.concat(female_data).map(function(d) { if(d.period == 'prev') return d.total; }));
+      var prevMax = d3.max(maleData.concat(femaleData).map(function(d) { if(d.period == 'prev') return d.total; }));
 
       if(!prevMax) {
         yearsReversed = [yearsReversed[0]];
       }
 
-      male_data = self.normalize(male_data, maleMax, labels);
-      female_data = self.normalize(female_data, femaleMax, labels);
+      maleData = self.normalize(maleData, maleMax, labels);
+      femaleData = self.normalize(femaleData, femaleMax, labels);
 
       var zRange = labels.length > 2 ? [self.BLACK,self.WHITE,self.ORANGE] : [self.BLACK,self.ORANGE];
 
@@ -733,8 +743,8 @@ var PrintMaterials = function() {
       var z = d3.scaleOrdinal()
         .domain(labels)
         .range(zRange);
-      var female_stack = d3.stack().keys(labels)(female_data);
-      var male_stack = d3.stack().keys(labels)(male_data);
+      var femaleStack = d3.stack().keys(labels)(femaleData);
+      var maleStack = d3.stack().keys(labels)(maleData);
 
       var svg = response.append('svg')
         .attr('height', height + 16)
@@ -743,7 +753,7 @@ var PrintMaterials = function() {
         .attr('transform','translate(0,12)');
 
       var female = svg.selectAll('.female')
-          .data(female_stack)
+          .data(femaleStack)
         .enter().append('g')
           .attr('class','female')
           .attr('stroke',function(d) { return z(d.key) == self.WHITE ? self.BLACK : z(d.key); })
@@ -814,7 +824,7 @@ var PrintMaterials = function() {
           .text(function(d) { return d; });
 
       var male = svg.selectAll('.male')
-        .data(male_stack)
+        .data(maleStack)
       .enter().append('g')
         .attr('class','male')
         .attr('stroke', function(d) { return z(d.key) == self.WHITE ? self.BLACK : z(d.key); })
@@ -1159,6 +1169,322 @@ var PrintMaterials = function() {
         .attr('x',function(d) { return x(d['current-total']) + 5; })
         .attr('font-size','8')
         .text(function(d) { return d['current-total']; });
+    },
+
+    typeSix: function(options) {
+      var height = options.height;
+      var width = options.width;
+      var chart = options.el;
+      var data = _.values(options.responses);
+      var maxCategory = _.max(data, function(d) { return d.count.male + d.count.female; });
+
+      var chartLabels = ['60+','41 - 60','26-40','<25'];
+
+      var x = d3.scaleLinear()
+        .domain([0,maxCategory.count.male + maxCategory.count.female])
+        .range([0,width - 60]);
+      var y = d3.scaleBand()
+        .domain(data.map(function(d) { return d.label; }))
+        .range([0,height - 50])
+        .paddingInner(0.3);
+
+      var svg = chart.append('svg')
+          .attr('height',height)
+          .attr('width',width)
+        .append('g')
+          .attr('transform','translate(0,40)');
+
+      var bars = svg.selectAll('g')
+          .data(data)
+        .enter().append('g')
+          .attr('transform',function(d) { return 'translate(' + 0 + ',' + y(d.label) + ')'; });
+
+      bars.append('rect')
+          .attr('height',y.bandwidth())
+          .attr('width',function(d) { return x(d.count.male + d.count.female); })
+          .attr('x',45)
+          .attr('fill',self.BLACK);
+
+      bars.append('text')
+        .attr('x',35)
+        .attr('y',y.bandwidth() / 2 + 5)
+        .attr('font-size','10px')
+        .attr('text-anchor','end')
+        .text(function(d,i) { return chartLabels[i]; });
+
+      var count = bars.append('text')
+        .attr('y',y.bandwidth() / 2 + 5)
+        .attr('font-size','15px')
+        .text(function(d) { return d.count.male + d.count.female; });
+
+      var outsideCount = [];
+
+      count.attr('x',function(d, i) {
+        var textWidth = d3.select(this).node().getBBox().width;
+        var barWidth = x(d.count.male + d.count.female);
+
+        if(textWidth < barWidth) return 45 + (barWidth - textWidth) / 2;
+        else {
+          outsideCount.push(i);
+
+          return 45 + barWidth + 5;
+        }
+      })
+      .attr('fill',function(d, i) {
+        if(_.indexOf(outsideCount, i) >= 0) {
+          outsideCount = false;
+
+          return self.BLACK;
+        }
+        else return self.WHITE;
+      })
+    },
+
+    typeSeven: function(options) {
+      var height = options.height;
+      var width = options.width;
+      var chart = options.el;
+      var data = _.filter(_.values(options.responses), function(d) { return d.count.male + d.count.female > 0; });
+
+      var legendLabels = [
+        'Apply for a new grant',
+        '\'Proof of Life\' certificate',
+        'Existing grant problem',
+        'Other',
+        'Test label'
+      ];
+
+      var radius = width / 2.5;
+
+      var svg = chart.append('svg')
+          .attr('height',height)
+          .attr('width',width)
+        .append('g')
+          .attr('transform','translate(25,5)');
+
+      var color = d3.scaleOrdinal()
+        .range([self.ORANGE, self.RED, self.WHITE, self.BLUE, self.BLACK]);
+
+      var arc = d3.arc()
+        .outerRadius(radius - 10)
+        .innerRadius(0);
+
+      var pie = d3.pie()
+        .sort(null)
+        .value(function (d) {
+          return d.count.male + d.count.female;
+      });
+
+      var g = svg.selectAll(".arc")
+          .data(pie(data))
+        .enter().append('g')
+          .attr('transform','translate(' + radius + ',' + radius + ')')
+          .attr('class', 'arc');
+
+      g.append('path')
+        .attr('d', arc)
+        .style('stroke', function(d) {
+          var arcColor = color(d.data.label);
+
+          return arcColor == self.WHITE ? self.BLACK : color(d.data.label);
+        })
+        .style('fill', function (d) { return color(d.data.label); });
+
+      g.append('text')
+        .attr('transform', function(d) {
+          //we have to make sure to set these before calling arc.centroid
+          d.outerRadius = radius; // Set Outer Coordinate
+          d.innerRadius = radius / 2; // Set Inner Coordinate
+          return "translate(" + arc.centroid(d) + ")rotate(0)";
+        })
+        .attr('fill',function(d, i) { return i == 2 ? self.BLACK : self.WHITE ; })
+        .text(function(d) { return d.value; });
+
+      var legend = svg.append('g')
+        .attr('class','legend')
+        .attr('transform','translate(10,' + (radius * 2 + 5) + ')');
+
+      legend.selectAll('rect')
+          .data(data)
+        .enter().append('rect')
+          .attr('height',15)
+          .attr('width',25)
+          .attr('y', function(d, i) { return 20 * i })
+          .attr('fill', function(d) { return color(d.label); })
+          .attr('stroke', function(d) {
+            var iconColor = color(d.label);
+
+            return iconColor == self.WHITE ? self.BLACK : color(d.label);
+          });
+
+      legend.selectAll('text')
+          .data(legendLabels)
+        .enter().append('text')
+          .attr('x',30)
+          .attr('y', function(d, i) { return (20 * i) + 11; })
+          .attr('font-size','10px')
+          .text(function(d) { return d; });
+
+      function angle(d) {
+        var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+        return a > 90 ? a - 180 : a;
+      }
+    },
+
+    typeEight: function(options) {
+      var height = options.height;
+      var width = options.width;
+      var chart = options.el;
+      var data = _.values(options.responses);
+      var axisLabels = ['male','female'];
+      var responseLabels = ['positive','neutral','negative'];
+      var max = _.reduce(_.values(_.max(data, function(d) { return d.count.male + d.count.female; }).count), function(memo, num) { return memo + num });
+      var colors = [self.BLACK,self.WHITE,self.ORANGE];
+      var barWidth = width / 4;
+      var icon = {
+        width: 30,
+        height: 40
+      };
+      var marginTop = 10;
+      var legendIcon = {
+        width: 25,
+        height: 25
+      };
+      var legendFontSize = 10;
+
+      var legendIcons = ['/static/img/negative_face.svg','/static/img/neutral_face.svg','/static/img/positive_face.svg'];
+
+      var maleData = [{
+        'positive': data[0].count.male,
+        'neutral': data[1].count.male,
+        'negative': data[2].count.male
+      }];
+
+      var femaleData = [{
+        'positive': data[0].count.female,
+        'neutral': data[1].count.female,
+        'negative': data[2].count.female
+      }];
+
+      var svg = chart.append('svg')
+          .attr('height',height)
+          .attr('width',width)
+        .append('g')
+          .attr('transform','translate(10,' + marginTop + ')');
+
+      var x = d3.scaleOrdinal()
+        .domain(axisLabels)
+        .range([0,2 * width / 3]);
+      var y = d3.scaleLinear()
+        .domain([0,max])
+        .range([height - icon.height * 1.5,0]);
+      var z = d3.scaleOrdinal()
+        .domain(responseLabels)
+        .range(colors);
+
+      var maleStack = d3.stack().keys(responseLabels)(maleData);
+      var femaleStack = d3.stack().keys(responseLabels)(femaleData);
+
+      var maleMax = _.max(data, function(d) { return d.count.male; }).count.male;
+      var femaleMax = _.max(data, function(d) { return d.count.female; }).count.female;
+
+      var male = svg.selectAll('g.male')
+          .data(maleStack)
+        .enter().append('g')
+          .attr('class','male')
+          .attr('fill',function(d, i) { return z(d.key) })
+          .attr('stroke',function(d, i) {
+            return z(d.key) == self.WHITE ? self.BLACK : z(d.key);
+          });
+
+      male.selectAll('rect')
+        .data(function(d) { return d; })
+      .enter().append('rect')
+        .attr('y',function(d) { return y(d[1]); })
+        .attr('height',function(d) { return y(d[0]) - y(d[1]); })
+        .attr('width',barWidth);
+
+      male.selectAll('text')
+          .data(function(d) { return d; })
+        .enter().append('text')
+          .filter(function(d) { return d[1] == maleMax; })
+          .attr('fill',self.WHITE)
+          .attr('stroke',self.WHITE)
+          .attr('font-size','15px')
+          .attr('x',barWidth / 2)
+          .attr('text-anchor','middle')
+          .attr('stroke-width','0.5')
+          .attr('y',function(d) { return (y(d[0]) + y(d[1])) / 2; })
+          .text(function(d) { return d.data.positive; });
+
+      var female = svg.selectAll('g.female')
+          .data(femaleStack)
+        .enter().append('g')
+          .attr('class','female')
+          .attr('fill',function(d, i) { return z(d.key) })
+          .attr('stroke',function(d, i) {
+            return z(d.key) == self.WHITE ? self.BLACK : z(d.key);
+          });
+
+      female.selectAll('rect')
+        .data(function(d) { return d; })
+      .enter().append('rect')
+        .attr('x',barWidth + 15)
+        .attr('y',function(d) { return y(d[1]); })
+        .attr('height',function(d) { return y(d[0]) - y(d[1]); })
+        .attr('width',barWidth);
+
+      female.selectAll('text')
+          .data(function(d) { return d; })
+        .enter().append('text')
+          .filter(function(d) { return d[1] == femaleMax; })
+          .attr('fill',self.WHITE)
+          .attr('stroke',self.WHITE)
+          .attr('font-size','15px')
+          .attr('x',3 * barWidth / 2 + 15)
+          .attr('text-anchor','middle')
+          .attr('stroke-width','0.5')
+          .attr('y',function(d) { return (y(d[0]) + y(d[1])) / 2; })
+          .text(function(d) { return d.data.positive; });
+
+      var labels = svg.append('g')
+          .attr('class','labels')
+          .attr('transform','translate(0,' + (height - icon.height * 1.5 + 5) + ')');
+
+        labels.append('image')
+          .attr('xlink:href','/static/img/man-icon.png')
+          .attr('x',barWidth / 3 - 5)
+          .attr('height',icon.height)
+          .attr('width',icon.width);
+
+        labels.append('image')
+          .attr('xlink:href','/static/img/woman-icon.png')
+          .attr('x',3 * barWidth / 2)
+          .attr('height',icon.height)
+          .attr('width',icon.width);
+
+      var legend = svg.append('g')
+        .attr('class','legend')
+        .attr('transform','translate(' + (2 * barWidth + 27) + ',0)');
+
+      var legendLabels = ['Positive','Neutral','Negative'];
+
+      legend.selectAll('image')
+          .data(legendIcons)
+        .enter().append('image')
+          .attr('xlink:href',function(d) { return d; })
+          .attr('y',function(d, i) { return (legendIcon.height + 5) * i; })
+          .attr('width',legendIcon.width)
+          .attr('height',legendIcon.height);
+
+      legend.selectAll('text')
+          .data(legendLabels)
+        .enter().append('text')
+          .attr('font-size',legendFontSize)
+          .attr('x',legendIcon.width + 3)
+          .attr('y',function(d, i) { return (legendIcon.height + 5) * i + (legendIcon.height - legendFontSize * 1.1) / 2 + legendFontSize; })
+          .text(function(d) { return d.toUpperCase() });
+
     }
   }
 
@@ -1196,7 +1522,7 @@ var PrintMaterials = function() {
     });
   }
 
-  // Normalize bar data to generate even bar pairings
+  // Normalize bar data to generate even-height bar pairings
   self.normalize = function(data, maxValue, labels) {
     if(!!data && !!maxValue) {
       for(var i = 0; i < data.length; i++) {

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load pipeline static lookup markup_tags %}
+{% load pipeline static lookup jsonify markup_tags %}
 
 {% block head-css %}
 {% stylesheet "print-materials" %}
@@ -7,7 +7,7 @@
 
 {% block js %}
 <script type="text/javascript">
-var questions;
+var questions = {{ questions_dict | jsonify }};
 </script>
 {% javascript "print-materials" %}
 {% endblock %}
@@ -150,7 +150,7 @@ var questions;
         <div class="row">
           <div class="col-xs-8">
             <h2><b><em>{{ site }}</em></b></h2>
-            <div class="statistics">
+            <div class="statistics text-center col-xs-2">
               <p>
                 <b>TOTAL: {{ totals.total }}</b><br>
                 Male: {{ totals.male }}<br>
@@ -169,22 +169,22 @@ var questions;
       <section class="survey-body">
         <div class="row">
           <div class="survey-item col-xs-4">
+            {% with q=questions_dict|get:'demographics_group/age' %}
             <h4 class="question text-center">Age</h4>
-            <div class="response">
-              <img alt="chart-15" src="{% static 'img/charts/brochure-chart-1.png' %}" />
-            </div>
+            {% endwith %}
+            <div class="response" data-key="demographics_group/age" data-type="6" data-width="226" data-height="288"></div>
           </div>
           <div class="survey-item col-xs-4">
-            <h4 class="question text-center">What kind of service did you come here for?</h4>
-            <div class="response">
-              <img alt="chart-15" src="{% static 'img/charts/brochure-chart-2.png' %}" />
-            </div>
+            {% with q=questions_dict|get:'service' %}
+            <h4 class="question text-center">{{ q.label }}</h4>
+            {% endwith %}
+            <div class="response" data-key="service" data-type="7" data-width="226" data-height="288"></div>
           </div>
           <div class="survey-item col-xs-4">
-            <h4 class="question text-center">Were you satisfied with the service you received?</h4>
-            <div class="response">
-              <img alt="chart-15" src="{% static 'img/charts/brochure-chart-3.png' %}" />
-            </div>
+            {% with q=questions_dict|get:'performance_group/service_satisfaction' %}
+            <h4 class="question text-center">{{ q.label }}</h4>
+            {% endwith %}
+            <div class="response" data-key="performance_group/service_satisfaction" data-type="8" data-width="226" data-height="288"></div>
           </div>
         </div>
       </section>
