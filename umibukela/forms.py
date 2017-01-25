@@ -50,7 +50,12 @@ class CycleResultSetForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CycleResultSetForm, self).__init__(*args, **kwargs)
-        self.fields['monitors'].queryset = Monitor.objects.filter(partner=kwargs['instance'].partner)
+        crs = kwargs.get('instance', None)
+        if crs:
+            partner = crs.partner
+        else:
+            partner = None
+        self.fields['monitors'].queryset = Monitor.objects.filter(partner=partner)
 
 
 class CRSFromKoboForm(forms.Form):

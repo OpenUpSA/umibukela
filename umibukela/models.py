@@ -264,8 +264,8 @@ class CycleResultSet(models.Model):
         ordering = ('site__name', 'partner__short_name')
 
     def __str__(self):
-        return "%s <- %s (%s)" % (
-            self.site.name, self.partner.short_name, self.cycle
+        return "%s <- %s (%s: %s)" % (
+            self.site.name, self.partner.short_name, self.survey_type, self.cycle
         )
 
     def end_date_cmp(a, b):
