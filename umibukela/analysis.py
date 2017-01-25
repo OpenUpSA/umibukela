@@ -46,6 +46,7 @@ Assumptions:
 """
 
 from logging import getLogger
+from xform import SelectOne, SelectAllThatApply
 
 
 # These are used for grouping. Trying to count them and group by them
@@ -55,37 +56,6 @@ SKIP_GROUP_NAMES = ['meta', 'formhub']
 GENDER_COLUMN = 'demographics_group/gender'
 
 log = getLogger(__name__)
-
-
-class Element(object):
-    def __init__(self, element, path):
-        self.label = element['label']
-        self.name = element['name']
-        self.path = path + [element['name']]
-        self.pathstr = pathstr(self.path)
-
-    def __str__(self):
-        return "%s %s" % (self.__class__, self.pathstr)
-
-
-class MultipleChoice(Element):
-    def __init__(self, question, path, group_labels):
-        super(MultipleChoice, self).__init__(question, path)
-        self.options = [Option(o, self.path) for o in question['children']]
-        self.group_labels = group_labels
-
-
-class Option(Element):
-    pass
-
-
-class SelectOne(MultipleChoice):
-    pass
-
-
-class SelectAllThatApply(MultipleChoice):
-    pass
-
 
 def count_submissions(submissions):
     results = {}
@@ -247,11 +217,6 @@ def set_response_counts(q, results, counts_table):
         results = deep_set(results, [q.pathstr, 'response_count', gender], val)
     results = deep_set(results, [q.pathstr, 'response_count', 'total'], total)
     return results
-
-
-def pathstr(path):
-    """ / separated path from array of strings"""
-    return '/'.join(path)
 
 
 def deep_set(deep_dict, path, value):
