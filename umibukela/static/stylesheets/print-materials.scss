@@ -365,6 +365,12 @@ $headings-color: $black;
       font-weight: bold;
       font-style: italic;
       color: black !important;
+      width: 530px;
+
+      &.long {
+        font-size: 18px;
+        white-space: normal;
+      }
     }
 
     .location {
