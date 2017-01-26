@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load pipeline static jsonify lookup markup_tags %}
+
+{% block title %}Summary for {{ result_set.survey.name }} - {{ result_set.partner.short_name }} - {{ result_set.site.name }}{% endblock %}
+{% block head-css %}
+{{ block.super }}
+{% stylesheet "print-materials" %}
+    <link href="{% static 'stylesheets/print-bootstrap.css' %}" rel="stylesheet" type="text/css"   />
+{% endblock %}
+{% block js %}
+{{ block.super }}
+<script type="application/javascript">
+  questions = {{ results.questions_dict|jsonify }};
+</script>
+{% javascript "site" %}
+{% endblock %}
+{% block content %}
+
+{% block page-content %}
+    <div class="page-content">
+      <div class="wrapper">
+
+<div class="section cycle-results">
+  <!-- section-header -->
+  <div class="section-heading cycle-results-heading">
+    <div class="container">
+      <h3><i class="fa fa-bar-chart-o"></i> Results Preview</h3>
+
+      <h1>{{ result_set.site.name }}</h1>
+      <h2>{{ result_set.survey.name }}</h2>
+
+    </div>
+  </div>
+  <!-- /section-header -->
+
+  {% include "site_results_charts.html" %}
+
+</div>
+
+
+{% endblock %}
+{% endblock %}

@@ -40,6 +40,12 @@ urlpatterns = patterns(
     url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)/handout.pdf$',
         'umibukela.views.handout_pdf',
         name='site-result-handout-pdf'),
+    url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)/summary$',
+        'umibukela.views.summary',
+        name='site-result-summary'),
+    url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)/summary.pdf$',
+        'umibukela.views.summary_pdf',
+        name='site-result-summary-pdf'),
 
     url(r'^partners$',
         'umibukela.views.partners',
