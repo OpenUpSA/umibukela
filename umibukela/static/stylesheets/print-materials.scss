@@ -52,8 +52,8 @@ $headings-color: $black;
 .a3-landscape {
   // force size to be a4 page when printed with 0.5cm margins on all sides
   box-sizing: content-box;
-  height: 29.7cm - 0.75cm; // adjust for print weirdness
-  width: 29.7cm * 1.414;
+  height: 27.5cm; // 29.7 - 0.5cm margin
+  width: 28cm * 1.414;
   margin: 0cm; // 0.5cm margin applied during print
 }
 
@@ -491,11 +491,11 @@ $headings-color: $black;
   }
 
   .left {
-    margin: 0px 15px 0px 0px;
+    padding: 0px 15px 0px 0px !important;
   }
 
   .right {
-    margin: 0px 0px 0px 15px;
+    padding: 0px 0px 0px 15px !important;
   }
 
   .mavc-footer {
