@@ -345,6 +345,10 @@ $headings-color: $black;
       top: 70px;
       color: white !important;
       font-size: 21px;
+
+      &.long {
+        font-size: 18px;
+      }
     }
 
     .date {
@@ -361,6 +365,12 @@ $headings-color: $black;
       font-weight: bold;
       font-style: italic;
       color: black !important;
+      width: 530px;
+
+      &.long {
+        font-size: 18px;
+        white-space: normal;
+      }
     }
 
     .location {
@@ -560,6 +570,7 @@ $headings-color: $black;
           left: 11px;
           top: 33px;
           text-transform: uppercase;
+          width: 500px;
         }
       }
 
