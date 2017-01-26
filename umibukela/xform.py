@@ -89,6 +89,10 @@ def map_questions(form, submissions):
             'right_path': 'visit_reason',
         },
         {
+            'wrong_path': 'Do_you_have_any_disabilities',
+            'right_path': 'disabilities'
+        },
+        {
             'wrong_path': 'Select_your_gender',
             'right_path': 'demographics_group/gender',
         },
