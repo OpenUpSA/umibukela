@@ -369,7 +369,7 @@ $headings-color: $black;
   }
 
   .border-left {
-    border-left:1px solid rgb(0,0,0);
+    border-left:1px dashed rgb(0,0,0);
   }
 
   .survey {
@@ -382,7 +382,7 @@ $headings-color: $black;
     }
 
     .row {
-      border-top:2px dashed rgb(0,0,0);
+      border-top:1px dashed rgb(0,0,0);
       display:flex;
 
       &.no-border {
@@ -390,7 +390,7 @@ $headings-color: $black;
       }
 
       &.border-bottom {
-        border-bottom:2px dashed rgb(0,0,0);
+        border-bottom:1px dashed rgb(0,0,0);
       }
     }
 
@@ -875,7 +875,7 @@ $headings-color: $black;
   }
 
   .survey-item {
-    border-right:2px dashed rgb(0,0,0);
+    border-right:1px dashed rgb(0,0,0);
 
     &:last-child {
       border-right:none;

@@ -435,7 +435,7 @@ var PrintMaterials = function() {
 
               return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2 + countShift;
             })
-            .attr('x',shift)
+            .attr('x',shift - 2)
             .attr('fill',self.BLACK)
             .attr('stroke','none')
             .attr('font-size',labelFontSize)
@@ -569,13 +569,13 @@ var PrintMaterials = function() {
 
             g.append('image')
               .attr('xlink:href',function(d) { return d.icon })
-              .attr('width',legendIcon.width)
-              .attr('height',legendIcon.height);
+              .attr('width',legendIcon.width * 1.5)
+              .attr('height',legendIcon.height * 1.5);
 
             g.append('text')
               .attr('font-size',legendFontSize)
               .attr('x',legendIcon.width + 3)
-              .attr('y',(legendIcon.height - legendFontSize * 1.1) / 2 + legendFontSize)
+              .attr('y',(legendIcon.height * 1.5 - legendFontSize * 1.1) / 2 + legendFontSize)
               .text(function(d) { return d.label.toUpperCase() });
           break;
         }
@@ -1761,7 +1761,7 @@ var PrintMaterials = function() {
       tspans.each(function(d, i) {
         var tspan = d3.select(this);
 
-        tspan.attr('y',(boxHeight - fontSize * lineCount * lineHeight) / 2 + (fontSize * lineHeight) * i + fontSize / 2)
+        tspan.attr('y',(boxHeight - fontSize * lineCount * lineHeight) / 2 + (fontSize * lineHeight) * i + fontSize / 2 + 3)
       });
     });
   }
