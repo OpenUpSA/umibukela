@@ -345,6 +345,10 @@ $headings-color: $black;
       top: 70px;
       color: white !important;
       font-size: 21px;
+
+      &.long {
+        font-size: 18px;
+      }
     }
 
     .date {
@@ -560,6 +564,7 @@ $headings-color: $black;
           left: 11px;
           top: 33px;
           text-transform: uppercase;
+          width: 500px;
         }
       }
 
