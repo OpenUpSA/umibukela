@@ -1,9 +1,11 @@
 {% extends "admin/change_form.html" %}
 {% block content %}
 <div>
-  <a href="/sites/{{ original.site.slug }}/results/{{ original.id }}/poster.pdf">Poster</a>
+  <a href="{% url 'site-result-poster-pdf' original.site.slug original.id %}">Poster</a>
   |
   <a href="/admin/umibukela/cycleresultset/{{ original.id }}/comments.pdf">Comments</a>
+  |
+  <a href="{% url 'site-result-summary-pdf' original.site.slug original.id %}">Summary</a>
 </div>
 {{ block.super }}
 {% endblock %}

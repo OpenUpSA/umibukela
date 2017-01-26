@@ -109,6 +109,66 @@ def site_result(request, site_slug, result_id):
     })
 
 
+def summary(request, site_slug, result_id):
+    result_set = get_object_or_404(
+        CycleResultSet,
+        id=result_id,
+        site__slug__exact=site_slug
+    )
+    form, responses = result_set.get_survey()
+    if responses:
+        df = pandas.DataFrame(responses)
+        site_totals = analysis.count_submissions(df)
+        site_results = analysis.count_options(df, form['children'])
+        site_results = analysis.calc_q_percents(site_results)
+        prev_result_set = result_set.get_previous()
+        if prev_result_set:
+            prev_form, prev_responses = prev_result_set.get_survey()
+            if prev_responses:
+                site_totals = analysis.count_submissions(
+                    pandas.DataFrame(responses + prev_responses))
+                prev_df = pandas.DataFrame(prev_responses)
+                prev_results = analysis.count_options(prev_df, prev_form['children'])
+                prev_results = analysis.calc_q_percents(prev_results)
+            else:
+                prev_results = None
+        else:
+            prev_results = None
+        analysis.combine_curr_hist(site_results, prev_results)
+    else:
+        site_totals = {'male': 0, 'female': 0, 'total': 0}
+        site_results = None
+
+    return render(request, 'site_result_summary.html', {
+        'result_set': result_set,
+        'results': {
+            'questions_dict': site_results,
+            'totals': site_totals,
+        }
+    })
+
+
+def summary_pdf(request, site_slug, result_id):
+    result_set = get_object_or_404(
+        CycleResultSet,
+        id=result_id,
+    )
+    # render poster as pdf
+    url = reverse('site-result-summary', kwargs={'site_slug': site_slug, 'result_id': result_id})
+    url = request.build_absolute_uri(url)
+    print
+    print url
+    print
+    pdf = wkhtmltopdf(url, **{
+        'margin-top': '0.5cm',
+        'margin-right': '0.5cm',
+        'margin-bottom': '0.5cm',
+        'margin-left': '0.5cm',
+    })
+    filename = (u'Summary for %s - %s - %s.pdf' % (result_set.survey.name, result_set.partner.short_name, result_set.site.name)).encode('ascii', 'ignore')
+    return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
+
+
 def poster(request, site_slug, result_id):
     result_set = get_object_or_404(
         CycleResultSet,
