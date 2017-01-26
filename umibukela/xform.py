@@ -85,6 +85,22 @@ def map_questions(form, submissions):
     form = XForm(form)
     mappings = [
         {
+            'wrong_path': 'What_was_your_reason_for_visit',
+            'right_path': 'visit_reason',
+        },
+        {
+            'wrong_path': 'Do_you_have_any_disabilities',
+            'right_path': 'disabilities'
+        },
+        {
+            'wrong_path': 'Is_this_clinic_the_nearest_hea',
+            'right_path': 'distance'
+        },
+        {
+            'wrong_path': 'Where_do_you_earn_most_of_your',
+            'right_path': 'demographics_group/income'
+        },
+        {
             'wrong_path': 'Select_your_gender',
             'right_path': 'demographics_group/gender',
         },
@@ -193,8 +209,16 @@ def map_questions(form, submissions):
             form.del_by_path(mapping['wrong_path'])
             form.set_by_path(mapping['right_path'], q)
             for s in submissions:
-                s[mapping['right_path']] = s[mapping['wrong_path']]
-                del s[mapping['wrong_path']]
+                if q['type'] == 'select all that apply':
+                    for k, v in s.iteritems():
+                        if k.startswith(mapping['wrong_path'] + '/'):
+                            wrong_path = k
+                            right_path = k.replace(mapping['wrong_path'], mapping['right_path'], 1)
+                            s[right_path] = s[wrong_path]
+                            del s[wrong_path]
+                else:
+                    s[mapping['right_path']] = s[mapping['wrong_path']]
+                    del s[mapping['wrong_path']]
 
 
 def simplify_perf_group(form, responses):

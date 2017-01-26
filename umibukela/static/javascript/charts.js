@@ -337,7 +337,11 @@ var PrintMaterials = function() {
       // Range depends on number of response types
       var zRange = legendType == 'yes/no' ? [self.ORANGE,self.BLACK] : [self.ORANGE,self.WHITE,self.BLACK];
 
-      labels = legendType == 'yes/dk/no' ? [labels[1],labels[2],labels[0]] : labels;
+      if (legendType == 'yes/dk/no') {
+        labels = [labels[1],labels[2],labels[0]]
+      } else if (legendType == 'yes/no/na') {
+        labels = [labels[2],labels[1],labels[0]]
+      }
 
       for(var i = 0; i < maleData.length; i++) {
         maleData[i].total = 0;
@@ -493,6 +497,26 @@ var PrintMaterials = function() {
               .text('NO');
           break;
           case 'yes/dk/no':
+          zRange.slice(0).reverse().forEach(function(color,i) {
+            legend.append('rect')
+              .attr('fill',color)
+              .attr('height',legendIcon.height)
+              .attr('width',legendIcon.width)
+              .attr('stroke',function() { return color == self.WHITE ? self.BLACK : color })
+              .attr('stroke-width','0.25')
+              .attr('x',0)
+              .attr('y',i * (legendIcon.height + height / 20));
+          });
+
+          labels.slice(0).forEach(function(label,i) {
+            legend.append('text')
+              .attr('x',legendIcon.width + 5)
+              .attr('y',legendIcon.height / 1.5 + i * (legendIcon.height + height / 20))
+              .attr('font-size',legendFontSize)
+              .text(label.toUpperCase());
+          });
+          break;
+          case 'yes/no/na':
           zRange.slice(0).reverse().forEach(function(color,i) {
             legend.append('rect')
               .attr('fill',color)
