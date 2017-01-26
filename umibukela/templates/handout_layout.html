@@ -71,7 +71,7 @@ var questions = {{ questions_dict | jsonify }};
         <h1 class="banner">Citizen Monitoring</h1>
         <h1 class="partner">{{ partner.full_name }}</h1>
         <h3 class="date text-xs-right">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
-        <h class="site"><b><em>{{ site }}</em></b></h2>
+        <h3 class="site">{{ site }}</h3>
       </header>
       <section class="content">
         <div class="row margin-bottom">
@@ -88,8 +88,10 @@ var questions = {{ questions_dict | jsonify }};
             <div class="how-data-box">
               <h5>How data was collected</h5>
               <p>In each community, members of a community partner were recruited and trained how to conduct a micro-survey of citizens’ and frontline staff’s perceptions and experiences.</p>
-              <p>Survey respondents were not identified, so they could express their opinions freely. The questionnaire was developed by the Black Sash based on its own work and the DPME’s tools. The surveys try to highlight the VOICES of poor people and in particular that of women and girls.</p>
-              <p>The first survey was conducted in 2014. The second survey was done in June / July 2015.</p>
+              <p>Survey respondents were not identified, so they could express their opinions freely. The questionnaire was developed by the Black Sash with Community Partners based on its own work.
+              {% if "SASSA" in result_set.survey.name %}It was shown to SASSA and DPME for comments and input.{% endif %}
+              The surveys try to highlight the VOICES of poor people and in particular that of women and girls.</p>
+              <p>The survey was conducted in {{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}.</p>
             </div>
           </div>
         </div>
@@ -117,10 +119,11 @@ var questions = {{ questions_dict | jsonify }};
           </p>
         </div>
 
+        {% if prev_date %}
         <div class="comparison-box">
-          <h4>Cycle 1 and Cycle 2 comparisons</h4>
+          <h4>Comparisons</h4>
           <p>
-            It is important to be able to track the changes coming from the CBM surveys, over time. In order to do so, we need to compare the results of Cycle 1, to Cycle 2.
+            It is important to be able to track the changes coming from the CBM surveys, over time. In order to do so, we need to compare the results of the previous monitoring cycle, to the current cycle.
           </p>
           <p>
             It is important to remember that the number of people surveyed differs for each cycle.
@@ -129,12 +132,10 @@ var questions = {{ questions_dict | jsonify }};
             What this means is that when we analyse these two results, we always make sure that it is relative to the number of respondents from the previous cycle.
           </p>
           <p>
-            Based on feedback we received, percentages have been removed and instead, the number of participants is shown.
-          </p>
-          <p>
-            Cycle 1 (the narrower slice on the bar graphs) will not show the numbers as these have been adjusted to be relative to Cycle 2. It is important to understand that the bar will always show this relative comparison.
+            It is important to understand that the bar will always show this relative comparison.
           </p>
         </div>
+        {% endif %}
       </section>
       <footer class="text-right code4sa-footer">
         <img class="code4sa-logo" alt="Code4SA" src="{% static 'img/logo-code4sa.png' %}" />
