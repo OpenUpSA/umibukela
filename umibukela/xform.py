@@ -209,8 +209,16 @@ def map_questions(form, submissions):
             form.del_by_path(mapping['wrong_path'])
             form.set_by_path(mapping['right_path'], q)
             for s in submissions:
-                s[mapping['right_path']] = s[mapping['wrong_path']]
-                del s[mapping['wrong_path']]
+                if q['type'] == 'select all that apply':
+                    for k, v in s.iteritems():
+                        if k.startswith(mapping['wrong_path'] + '/'):
+                            wrong_path = k
+                            right_path = k.replace(mapping['wrong_path'], mapping['right_path'], 1)
+                            s[right_path] = s[wrong_path]
+                            del s[wrong_path]
+                else:
+                    s[mapping['right_path']] = s[mapping['wrong_path']]
+                    del s[mapping['wrong_path']]
 
 
 def simplify_perf_group(form, responses):
