@@ -93,6 +93,14 @@ def map_questions(form, submissions):
             'right_path': 'disabilities'
         },
         {
+            'wrong_path': 'Is_this_clinic_the_nearest_hea',
+            'right_path': 'distance'
+        },
+        {
+            'wrong_path': 'Where_do_you_earn_most_of_your',
+            'right_path': 'demographics_group/income'
+        },
+        {
             'wrong_path': 'Select_your_gender',
             'right_path': 'demographics_group/gender',
         },
