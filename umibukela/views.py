@@ -259,11 +259,33 @@ def comments(request, result_id):
             questions.append({
                 'label': child.get('label'),
                 'comments': comments,
+                'count': sum(comments.values()),
             })
     return render(request, 'comments.html', {
         'result_set': result_set,
         'questions': questions,
     })
+
+
+def comments_pdf(request, result_id):
+    result_set = get_object_or_404(
+        CycleResultSet,
+        id=result_id,
+    )
+    # render poster as pdf
+    url = reverse('admin:site-result-comments', kwargs={'result_id': result_id})
+    url = request.build_absolute_uri(url)
+    print
+    print url
+    print
+    pdf = wkhtmltopdf(url, **{
+        'margin-top': '0.5cm',
+        'margin-right': '0.5cm',
+        'margin-bottom': '0.5cm',
+        'margin-left': '0.5cm',
+    })
+    filename = (u'Comments for %s - %s - %s.pdf' % (result_set.survey.name, result_set.partner.short_name, result_set.site.name)).encode('ascii', 'ignore')
+    return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
 def partners(request):
