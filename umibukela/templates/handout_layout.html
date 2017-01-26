@@ -167,26 +167,13 @@ var questions = {{ questions_dict | jsonify }};
         </div>
       </header>
       <section class="survey-body">
-        <div class="row">
-          <div class="survey-item col-xs-4">
-            {% with q=questions_dict|get:'demographics_group/age' %}
-            <h4 class="question text-center">Age</h4>
-            {% endwith %}
-            <div class="response" data-key="demographics_group/age" data-type="6" data-width="226" data-height="288"></div>
-          </div>
-          <div class="survey-item col-xs-4">
-            {% with q=questions_dict|get:'service' %}
-            <h4 class="question text-center">{{ q.label }}</h4>
-            {% endwith %}
-            <div class="response" data-key="service" data-type="7" data-width="226" data-height="288"></div>
-          </div>
-          <div class="survey-item col-xs-4">
-            {% with q=questions_dict|get:'performance_group/service_satisfaction' %}
-            <h4 class="question text-center">{{ q.label }}</h4>
-            {% endwith %}
-            <div class="response" data-key="performance_group/service_satisfaction" data-type="8" data-width="226" data-height="288"></div>
-          </div>
-        </div>
+        {% if survey_type == 1 %}
+          {% include '_health_clinic_charts.html' %}
+        {% elif survey_type == 2 %}
+          {% include '_service_office_charts.html' %}
+        {% elif survey_type == 4 %}
+          {% include '_paypoint_charts.html' %}
+        {% endif %}
       </section>
     </div>
     <div class="col-xs-6 tips right">

@@ -1,0 +1,9 @@
+{% load lookup %}
+<div class="row">
+  <div class="survey-item col-xs-12">
+    {% with q=questions_dict|get:'demographics_group/age' %}
+    <h4 class="question text-center">Age</h4>
+    {% endwith %}
+    <div class="response" data-key="demographics_group/age" data-type="6" data-width="678" data-height="270"></div>
+  </div>
+</div>

@@ -684,6 +684,9 @@ $headings-color: $black;
   }
 
   &.page-2 {
+    .padding-top {
+      padding-top:15px;
+    }
     .survey {
       .survey-header {
         h2 {

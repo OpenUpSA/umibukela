@@ -207,6 +207,7 @@ def handout(request, site_slug, result_id):
         'questions_dict': [],
         'partner': result_set.partner,
         'site': result_set.site.name,
+        'survey_type': result_set.survey_type.id,
         'prev_date': None,
         'totals': {'male': 0, 'female': 0, 'total': 0},
         'DEBUG': settings.DEBUG,
