@@ -698,7 +698,6 @@ var PrintMaterials = function() {
       var fontSize = Math.round(height / 8);
       var legendSquare = colHeight * 0.45;
 
-      var optionKeys = _.keys(options.responses[0]);
       var years = cycleYears;
       var yearsReversed = [years[1],years[0]];
       var hasTwoPeriods = _.contains(optionKeys,'current') && _.contains(optionKeys,'prev');
@@ -1118,9 +1117,9 @@ var PrintMaterials = function() {
       var chart = options.el;
       var height = options.height;
       var width = options.width;
+      var optionKeys = options.optionKeys;
 
       var max = 0;
-      var optionKeys = _.keys(responses[0]);
 
       var data = responses.map(function(response, i) {
         var count = i;
@@ -1811,7 +1810,8 @@ var PrintMaterials = function() {
             bottom: parseFloat(response.attr('data-margin-bottom')) || 10,
             left: parseFloat(response.attr('data-margin-left')) || 10
           };
-          options.optionKeys = ['current','prev'];
+          options.optionKeys = _.keys(questions[key].options[0]);
+          options.optionKeys.sort(); // HACK: we want the order ['current', 'prev'], sometimes not both are there
           options.height = parseInt(response.attr('data-height'));
           options.width = parseInt(response.attr('data-width'));
           options.legendFormat = response.attr('data-legend-format');
