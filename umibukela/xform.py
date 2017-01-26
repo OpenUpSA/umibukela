@@ -85,6 +85,10 @@ def map_questions(form, submissions):
     form = XForm(form)
     mappings = [
         {
+            'wrong_path': 'What_was_your_reason_for_visit',
+            'right_path': 'visit_reason',
+        },
+        {
             'wrong_path': 'Select_your_gender',
             'right_path': 'demographics_group/gender',
         },
