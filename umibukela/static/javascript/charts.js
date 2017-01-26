@@ -78,6 +78,8 @@ var PrintMaterials = function() {
       var colorMale = self.colorMale;
       var colorFemale = self.colorFemale;
 
+      var years = cycleYears.slice(0).reverse();
+
       options.responses.forEach(function(response) {
         var key = response.current.key;
         var label = response.current.label;
@@ -122,12 +124,14 @@ var PrintMaterials = function() {
         .attr('height',icon.height)
         .attr('width',icon.width);
 
-      legend.append('rect')
-        .attr('fill',self.ORANGE)
-        .attr('width',icon.width)
-        .attr('height',icon.height / 2)
-        .attr('x',legendWidth / 2 - icon.width / 2)
-        .attr('y',icon.height / 2);
+      if(years[1]) {
+        legend.append('rect')
+          .attr('fill',self.ORANGE)
+          .attr('width',icon.width)
+          .attr('height',icon.height / 2)
+          .attr('x',legendWidth / 2 - icon.width / 2)
+          .attr('y',icon.height / 2);
+        }
 
       var figureHeight = height - legend.node().getBBox().height - gutter;
 
@@ -259,7 +263,7 @@ var PrintMaterials = function() {
 
       var maleLabel = legend.append('text')
         .attr('class','male-label')
-        .text(2015)
+        .text([years[0]])
         .attr('font-size',fontSize);
 
       maleLabel.attr('x',maleLabel.node().getBBox().width / 2)
@@ -267,19 +271,21 @@ var PrintMaterials = function() {
 
       var femaleLabel = legend.append('text')
         .attr('class','female-label')
-        .text(2015)
+        .text([years[0]])
         .attr('font-size',fontSize);
 
       femaleLabel.attr('x',legendWidth - femaleLabel.node().getBBox().width - femaleLabel.node().getBBox().width / 2.5)
       .attr('y',icon.height + femaleLabel.node().getBBox().height);
 
-      var prevLabel = legend.append('text')
-        .attr('class','prev-label')
-        .text(2014)
-        .attr('font-size',fontSize);
+      if(years[1]) {
+        var prevLabel = legend.append('text')
+          .attr('class','prev-label')
+          .text(years[1])
+          .attr('font-size',fontSize);
 
-      prevLabel.attr('x',legendWidth / 2 - prevLabel.node().getBBox().width / 2)
-        .attr('y',icon.height + prevLabel.node().getBBox().height)
+        prevLabel.attr('x',legendWidth / 2 - prevLabel.node().getBBox().width / 2)
+          .attr('y',icon.height + prevLabel.node().getBBox().height)
+      }
     },
     typeTwo: function(options) {
       var responses = options.responses;
