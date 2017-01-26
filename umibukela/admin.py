@@ -30,11 +30,31 @@ class AdminSite(admin.AdminSite):
         from django.conf.urls import url
         urls = super(AdminSite, self).get_urls()
         urls = [
-            url(r'^umibukela/cycleresultset/(?P<result_id>\d+)/comments$', 'umibukela.views.comments'),
-            url(r'^umibukela/kobo_forms/(?P<kobo_form_id>\d+)/site/(?P<site_name>\w+)/preview$', self.admin_view(views.kobo_form_site_preview)),
-            url(r'^umibukela/survey/(?P<survey_id>\d+)/kobo_submissions$', self.admin_view(views.survey_kobo_submissions)),
-            url(r'^umibukela/survey_from_kobo$', self.admin_view(views.survey_from_kobo)),
-            url(r'^umibukela/kobo_forms$', self.admin_view(views.kobo_forms)),
+            url(
+                r'^umibukela/cycleresultset/(?P<result_id>\d+)/comments$',
+                'umibukela.views.comments',
+                name='site-result-comments'
+            ),
+            url(
+                r'^umibukela/cycleresultset/(?P<result_id>\d+)/comments.pdf$',
+                'umibukela.views.comments_pdf'
+            ),
+            url(
+                r'^umibukela/kobo_forms/(?P<kobo_form_id>\d+)/site/(?P<site_name>\w+)/preview$',
+                self.admin_view(views.kobo_form_site_preview)
+            ),
+            url(
+                r'^umibukela/survey/(?P<survey_id>\d+)/kobo_submissions$',
+                self.admin_view(views.survey_kobo_submissions)
+            ),
+            url(
+                r'^umibukela/survey_from_kobo$',
+                self.admin_view(views.survey_from_kobo)
+            ),
+            url(
+                r'^umibukela/kobo_forms$',
+                self.admin_view(views.kobo_forms)
+            ),
         ] + urls
         return urls
 

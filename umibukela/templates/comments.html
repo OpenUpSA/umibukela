@@ -59,7 +59,7 @@
 
     {% for q in questions %}
     <h2>Q: {{ q.label }}</h2>
-    <p>Number of responses: {{ q.comments|length }}</p>
+    <p>Number of responses: {{ q.count }}</p>
     <ul>
       {% for comment in q.comments %}
       {% with count=q.comments|get:comment %}
