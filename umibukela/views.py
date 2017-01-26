@@ -188,6 +188,7 @@ def poster_pdf(request, site_slug, result_id):
         'margin-right': '0.5cm',
         'margin-bottom': '0.5cm',
         'margin-left': '0.5cm',
+        'page-size': 'A4',
     })
     filename = '%s-%s-poster.pdf' % (site_slug, result_id)
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
@@ -233,6 +234,7 @@ def handout_pdf(request, site_slug, result_id):
         'margin-right': '0.5cm',
         'margin-bottom': '0.5cm',
         'margin-left': '0.5cm',
+        'page-size': 'A3',
         'orientation': 'landscape',
     })
     filename = '%s-%s-handout.pdf' % (site_slug, result_id)
