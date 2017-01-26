@@ -1,0 +1,35 @@
+{% load lookup %}
+<div class="row">
+  <div class="survey-item col-xs-4">
+    {% with q=questions_dict|get:'demographics_group/age' %}
+    <h4 class="question text-center">Age</h4>
+    {% endwith %}
+    <div class="response" data-key="demographics_group/age" data-type="6" data-width="226" data-height="288"></div>
+  </div>
+  <div class="survey-item col-xs-4">
+    {% with q=questions_dict|get:'visit_reason' %}
+    <h4 class="question text-center">{{ q.label }}</h4>
+    {% endwith %}
+    <div class="response" data-key="visit_reason" data-type="7" data-width="226" data-height="288" data-label-type="1"></div>
+  </div>
+  <div class="survey-item col-xs-4">
+    {% with q=questions_dict|get:'demographics_group/disability' %}
+    <h4 class="question text-center">{{ q.label }}</h4>
+    {% endwith %}
+    <div class="response" data-key="demographics_group/disability" data-type="9" data-width="226" data-height="288"></div>
+  </div>
+</div>
+<div class="row padding-top">
+  <div class="survey-item col-xs-5">
+    {% with q=questions_dict|get:'distance' %}
+    <h4 class="question text-center">{{ q.label }}</h4>
+    {% endwith %}
+    <div class="response" data-key="distance" data-type="10" data-width="250" data-height="200"></div>
+  </div>
+  <div class="survey-item col-xs-7">
+    {% with q=questions_dict|get:'demographics_group/income' %}
+    <h4 class="question text-center">{{ q.label }}</h4>
+    {% endwith %}
+    <div class="response" data-key="demographics_group/income" data-type="7" data-width="428" data-height="200" data-label-type="3" data-legend="side"></div>
+  </div>
+</div>

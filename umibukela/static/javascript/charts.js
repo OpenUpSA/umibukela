@@ -10,6 +10,7 @@ var PrintMaterials = function() {
   self.WHITE = '#ffffff';
   self.RED = '#c9423f';
   self.BLUE = '#1561db';
+  self.PINK = '#ff4da6';
 
   self.colorFemale = d3.scaleOrdinal()
     .range([self.BLACK,self.ORANGE]);
@@ -41,6 +42,12 @@ var PrintMaterials = function() {
       break;
       case '8':
         self.charts.typeEight(options);
+      break;
+      case '9':
+        self.charts.typeNine(options);
+      break;
+      case '10':
+        self.charts.typeTen(options);
       break;
     }
   }
@@ -691,7 +698,6 @@ var PrintMaterials = function() {
       var fontSize = Math.round(height / 8);
       var legendSquare = colHeight * 0.45;
 
-      var optionKeys = _.keys(options.responses[0]);
       var years = cycleYears;
       var yearsReversed = [years[1],years[0]];
       var hasTwoPeriods = _.contains(optionKeys,'current') && _.contains(optionKeys,'prev');
@@ -1111,9 +1117,9 @@ var PrintMaterials = function() {
       var chart = options.el;
       var height = options.height;
       var width = options.width;
+      var optionKeys = options.optionKeys;
 
       var max = 0;
-      var optionKeys = _.keys(responses[0]);
 
       var data = responses.map(function(response, i) {
         var count = i;
@@ -1252,17 +1258,72 @@ var PrintMaterials = function() {
       var height = options.height;
       var width = options.width;
       var chart = options.el;
+      var labelType = options.labelType;
+      var legendType = options.legendType;
       var data = _.filter(_.values(options.responses), function(d) { return d.count.male + d.count.female > 0; });
+      var colors = [];
 
-      var legendLabels = [
-        'Apply for a new grant',
-        '\'Proof of Life\' certificate',
-        'Existing grant problem',
-        'Other',
-        'Test label'
-      ];
+      var legendLabels = [];
 
-      var radius = width / 2.5;
+      if(labelType) {
+        switch(labelType) {
+          case 1:
+          legendLabels = [
+            'Regular check-up/Medication',
+            'Not feeling well',
+            'Pregnant / for children',
+            'Other',
+            'Test label'
+          ];
+          break;
+          case 2:
+          legendLabels = [
+            'Apply for a new grant',
+            '\'Proof of Life\' certificate',
+            'Existing grant problem',
+            'Other',
+            'Test label'
+          ];
+          break;
+          case 3:
+          legendLabels = [
+            'Government grant',
+            'No income',
+            'Temporary employment',
+            'Other',
+            'Test label'
+          ];
+          break;
+        }
+      }
+
+      legendLabels = _.values(data).map(function(d) { return d.label });
+
+      switch(data.length) {
+        case 1:
+        colors = [self.ORANGE];
+        break;
+        case 2:
+        colors = [self.ORANGE, self.RED];
+        break;
+        case 3:
+        colors = [self.ORANGE, self.RED, self.WHITE];
+        break;
+        case 4:
+        colors = [self.ORANGE, self.RED, self.WHITE, self.BLUE];
+        break;
+        case 5:
+        colors = [self.ORANGE, self.RED, self.WHITE, self.BLUE, self.BLACK];
+        break;
+        case 6:
+        colors = [self.ORANGE, self.RED, self.WHITE, self.BLUE, self.BLACK, self.PINK];
+        break;
+        case 7:
+        colors = [self.ORANGE, self.RED, self.WHITE, self.BLUE, self.BLACK, self.PINK];
+        break;
+      }
+
+      var radius = (height + width) / 6.5;
 
       var svg = chart.append('svg')
           .attr('height',height)
@@ -1271,7 +1332,7 @@ var PrintMaterials = function() {
           .attr('transform','translate(25,5)');
 
       var color = d3.scaleOrdinal()
-        .range([self.ORANGE, self.RED, self.WHITE, self.BLUE, self.BLACK]);
+        .range(colors);
 
       var arc = d3.arc()
         .outerRadius(radius - 10)
@@ -1309,9 +1370,17 @@ var PrintMaterials = function() {
         .attr('text-anchor','middle')
         .text(function(d) { return d.value; });
 
+      var legendX = 10;
+      var legendY = radius * 2 + 5;
+
+      if(legendType && legendType == 'side') {
+        legendX = radius * 2 + 10;
+        legendY = 30;
+      }
+
       var legend = svg.append('g')
         .attr('class','legend')
-        .attr('transform','translate(10,' + (radius * 2 + 5) + ')');
+        .attr('transform','translate('+ legendX + ',' + legendY + ')');
 
       legend.selectAll('rect')
           .data(data)
@@ -1494,6 +1563,171 @@ var PrintMaterials = function() {
           .attr('y',function(d, i) { return (legendIcon.height + 5) * i + (legendIcon.height - legendFontSize * 1.1) / 2 + legendFontSize; })
           .text(function(d) { return d.toUpperCase() });
 
+    },
+
+    typeNine: function(options) {
+      var height = options.height;
+      var width = options.width;
+      var data = options.responses;
+      var chart = options.el;
+      var labels=['yes','no'];
+      var colors = [self.BLACK,self.ORANGE];
+
+      data = [{
+        yes: data.yes.count.male + data.yes.count.female,
+        no: data.no.count.male + data.no.count.female
+      }];
+
+      var svg = chart.append('svg')
+          .attr('height',height)
+          .attr('width',width)
+        .append('g')
+          .attr('transform','translate(10,10)');
+
+      var stack = d3.stack().keys(labels)(data);
+      var total = data[0].yes + data[0].no;
+
+      var y = d3.scaleLinear()
+        .domain([0,total])
+        .range([height,60]);
+      var z = d3.scaleOrdinal()
+        .domain(labels)
+        .range(colors);
+
+      var bars = svg.selectAll('g')
+          .data(stack)
+        .enter().append('g')
+          .attr('fill', function(d) { return z(d.key) })
+
+      bars.selectAll('rect')
+          .data(function(d) { return d; })
+        .enter().append('rect')
+        .attr('x',width / 3.4)
+        .attr('y',function(d) { return y(d[1]); })
+        .attr('width',width / 2.5)
+        .attr('height', function(d) { return y(d[0]) - y(d[1])});
+
+    var text = bars.selectAll('text.response')
+        .data(function(d) { return d; })
+      .enter().append('text')
+      .attr('class','response')
+      .attr('text-anchor','middle')
+      .attr('x', width / 2)
+      .attr('y', function(d) { return y(d[1]) + 20; })
+      .attr('font-size', '20px')
+      .attr('font-weight','bold')
+      .text(function(d) { return d[1] == total ? 'NO' : 'YES'; });
+
+    var textHeight = text.node().getBBox().height;
+
+    var count = bars.selectAll('text.count')
+        .data(function(d) { return d; })
+      .enter().append('text')
+      .attr('class','count')
+      .attr('text-anchor','middle')
+      .attr('font-size','20px')
+      .attr('x',width / 2)
+      .attr('y', function(d) { return y(d[0]) - 5; })
+      .text(function(d) { return d[1] == total ? d.data.no : d.data.yes; });
+
+    var countHeight = count.node().getBBox().height;
+
+    text.attr('fill', function(d) {
+      var barHeight = y(d[0]) - y(d[1]);
+      if(textHeight + countHeight < barHeight) return d[1] == total ? self.BLACK : self.ORANGE;
+      else return d[1] == total ? self.ORANGE : self.BLACK;
+    });
+
+    count.attr('fill', function(d) {
+      var barHeight = y(d[0]) - y(d[1]);
+
+      if(textHeight + countHeight < barHeight) return d[1] == total ? self.BLACK : self.ORANGE;
+      else return d[1] == total ? self.ORANGE : self.BLACK;
+    });
+    },
+
+    typeTen: function(options) {
+      var height = options.height;
+      var width = options.width;
+      var chart = options.el;
+      var labels = ['yes','no'];
+      var colors = [self.BLACK,self.ORANGE];
+      var data = options.responses;
+
+      data = [{
+        yes: data.yes.count.male + data.yes.count.female,
+        no: data.no.count.male + data.no.count.female
+      }];
+
+      var svg = chart.append('svg')
+          .attr('height',height)
+          .attr('width',width)
+        .append('g')
+          .attr('transform','translate(10,10)');
+
+      var stack = d3.stack().keys(labels)(data);
+      var total = data[0].yes + data[0].no;
+
+      var x = d3.scaleLinear()
+        .domain([0,total])
+        .range([0,width - 40]);
+      var z = d3.scaleOrdinal()
+        .domain(labels)
+        .range(colors);
+
+      var bars = svg.selectAll('g')
+          .data(stack)
+        .enter().append('g')
+          .attr('fill', function(d) { return z(d.key) })
+
+      bars.selectAll('rect')
+          .data(function(d) { return d; })
+        .enter().append('rect')
+        .attr('x',function(d) { return x(d[0]) })
+        .attr('y',40)
+        .attr('width',function(d) { return x(d[1]) - x(d[0])})
+        .attr('height', height / 2);
+
+    var text = bars.selectAll('text.response')
+        .data(function(d) { return d; })
+      .enter().append('text')
+      .attr('class','response')
+      .attr('text-anchor','middle')
+      .attr('y', height / 2 - 10)
+      .attr('x', function(d) { return x(d[0]) + 30; })
+      .attr('font-size', '20px')
+      .attr('font-weight','bold')
+      .text(function(d) { return d[1] == total ? 'NO' : 'YES'; });
+
+    var textWidth = text.node().getBBox().width;
+
+    var count = bars.selectAll('text.count')
+        .data(function(d) { return d; })
+      .enter().append('text')
+      .attr('class','count')
+      .attr('text-anchor','middle')
+      .attr('font-size','20px')
+      .attr('y',height / 2 + 10)
+      .attr('x', function(d) { return x(d[0]) + 30; })
+      .text(function(d) { return d[1] == total ? d.data.no : d.data.yes; });
+
+    var countWidth = count.node().getBBox().width;
+
+    text.attr('fill', function(d) {
+      var barWidth = x(d[1]) - x(d[0]);
+      var maxWidth = textWidth > countWidth ? textWidth : countWidth;
+
+      if(maxWidth < barWidth) return d[1] == total ? self.BLACK : self.ORANGE;
+      else return d[1] == total ? self.ORANGE : self.BLACK;
+    });
+
+    count.attr('fill', function(d) {
+      var barWidth = x(d[1]) - x(d[0]);
+      var maxWidth = textWidth > countWidth ? textWidth : countWidth;
+
+      if(maxWidth < barWidth) return d[1] == total ? self.BLACK : self.ORANGE;
+      else return d[1] == total ? self.ORANGE : self.BLACK;
+    });
     }
   }
 
@@ -1577,10 +1811,12 @@ var PrintMaterials = function() {
             left: parseFloat(response.attr('data-margin-left')) || 10
           };
           options.optionKeys = _.keys(questions[key].options[0]);
+          options.optionKeys.sort(); // HACK: we want the order ['current', 'prev'], sometimes not both are there
           options.height = parseInt(response.attr('data-height'));
           options.width = parseInt(response.attr('data-width'));
           options.legendFormat = response.attr('data-legend-format');
           options.figureHeight = parseInt(response.attr('data-figure-height'));
+          options.labelType = parseInt(response.attr('data-label-type'));
           options.key = key;
           self.drawChart(options);
         }

@@ -90,7 +90,7 @@ def map_questions(form, submissions):
         },
         {
             'wrong_path': 'Do_you_have_any_disabilities',
-            'right_path': 'disabilities'
+            'right_path': 'demographics_group/disability'
         },
         {
             'wrong_path': 'Is_this_clinic_the_nearest_hea',
