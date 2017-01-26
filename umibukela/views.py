@@ -200,10 +200,11 @@ def handout(request, site_slug, result_id):
         site__slug__exact=site_slug
     )
     prev_result_set = result_set.get_previous()
-    site_responses = [s.answers for s in result_set.submissions.all()]
+    form, responses = result_set.get_survey()
 
     context = {
         'result_set': result_set,
+        'questions_dict': [],
         'partner': result_set.partner,
         'site': result_set.site.name,
         'prev_date': None,
@@ -214,8 +215,10 @@ def handout(request, site_slug, result_id):
     if prev_result_set:
         context['prev_date'] = prev_result_set.cycle.start_date
 
-    if site_responses:
-        context['totals'] = analysis.count_submissions(pandas.DataFrame(site_responses))
+    if responses:
+        df = pandas.DataFrame(responses)
+        context['questions_dict'] = analysis.count_options(df, form['children'])
+        context['totals'] = analysis.count_submissions(pandas.DataFrame(responses))
 
     return render(request, 'handout_layout.html', context)
 

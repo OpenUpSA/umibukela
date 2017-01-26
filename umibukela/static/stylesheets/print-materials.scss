@@ -707,6 +707,15 @@ $headings-color: $black;
         h4 {
           font-size:15px;
         }
+
+        .survey-item {
+          padding:0 10px;
+
+          .question {
+            text-transform:uppercase;
+            font-size:12px;
+          }
+        }
       }
       .col-logo {
         img {
