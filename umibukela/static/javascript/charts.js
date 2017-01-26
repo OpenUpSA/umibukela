@@ -1260,10 +1260,21 @@ var PrintMaterials = function() {
       var chart = options.el;
       var labelType = options.labelType;
       var legendType = options.legendType;
-      var data = _.filter(_.values(options.responses), function(d) { return d.count.male + d.count.female > 0; });
-      var colors = [];
+      var data = _.filter(_.values(options.responses), function(d) { return d.count.male + d.count.female > 0; }).sort(function(a, b){ return a.count.male + a.count.female - b.count.male + b.count.female;});
+      var colors = [self.ORANGE, self.RED, self.WHITE, self.BLACK];
 
-      var legendLabels = [];
+      var legendLabels = _.values(data).map(function(d) { return d.label });
+
+      var last = data.slice(4);
+      var other = { label: 'Other', count: { male: 0, female: 0 } };
+
+      last.forEach(function(r) {
+        other.count.male += r.count.male;
+        other.count.female += r.count.female;
+      });
+
+      data = data.slice(0,3);
+      data.push(other);
 
       if(labelType) {
         switch(labelType) {
@@ -1273,7 +1284,6 @@ var PrintMaterials = function() {
             'Not feeling well',
             'Pregnant / for children',
             'Other',
-            'Test label'
           ];
           break;
           case 2:
@@ -1282,7 +1292,6 @@ var PrintMaterials = function() {
             '\'Proof of Life\' certificate',
             'Existing grant problem',
             'Other',
-            'Test label'
           ];
           break;
           case 3:
@@ -1291,36 +1300,9 @@ var PrintMaterials = function() {
             'No income',
             'Temporary employment',
             'Other',
-            'Test label'
           ];
           break;
         }
-      }
-
-      legendLabels = _.values(data).map(function(d) { return d.label });
-
-      switch(data.length) {
-        case 1:
-        colors = [self.ORANGE];
-        break;
-        case 2:
-        colors = [self.ORANGE, self.RED];
-        break;
-        case 3:
-        colors = [self.ORANGE, self.RED, self.WHITE];
-        break;
-        case 4:
-        colors = [self.ORANGE, self.RED, self.WHITE, self.BLUE];
-        break;
-        case 5:
-        colors = [self.ORANGE, self.RED, self.WHITE, self.BLUE, self.BLACK];
-        break;
-        case 6:
-        colors = [self.ORANGE, self.RED, self.WHITE, self.BLUE, self.BLACK, self.PINK];
-        break;
-        case 7:
-        colors = [self.ORANGE, self.RED, self.WHITE, self.BLUE, self.BLACK, self.PINK];
-        break;
       }
 
       var radius = (height + width) / 6.5;
