@@ -699,7 +699,7 @@ var PrintMaterials = function() {
       var icon = { width: 15, height: 30 };
       var figureHeight = height * 0.8;
       var widthCoefficient = 0.8;
-      var legendWidth = width * 0.2;
+      var legendWidth = width * 0.18;
       var figureWidth = width * 0.8;
       var fontSize = Math.round(height / 8);
       var legendSquare = colHeight * 0.45;
@@ -955,9 +955,10 @@ var PrintMaterials = function() {
         if(text.node().getBBox().width > maxTextWidth) maxTextWidth = text.node().getBBox().width;
       });
 
-      var renderedLegendWidth = legendSquare + 5 + maxTextWidth;
+      // Wkhtmltopdf doesn't seem to like this calculation
+      //var renderedLegendWidth = legendSquare + 5 + maxTextWidth;
 
-      legend.attr('transform','translate(' + (width + 10 - renderedLegendWidth) + ',' + (height - labels.length * (legendSquare + 2)) + ')');
+      legend.attr('transform','translate(' + (width + 10 - legendWidth) + ',' + (height - labels.length * (legendSquare + 2)) + ')');
     },
     typeFour: function(options) {
       var responses = options.responses;
