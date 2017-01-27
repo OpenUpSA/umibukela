@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load pipeline static jsonify lookup markup_tags %}
 
-{% block title %}Summary for {{ province.name }} - {{ survey_type.name }} - {{ cycle.name }}{% endblock %}
+{% block title %}Summary for {{ location_name }} - {{ survey_type.name }} - {{ cycle.name }}{% endblock %}
 {% block head-css %}
 {{ block.super }}
 {% stylesheet "print-materials" %}
@@ -33,7 +33,7 @@
     <div class="container">
       <h3><i class="fa fa-bar-chart-o"></i> Results Preview</h3>
 
-      <h1>{{ province.name }}</h1>
+      <h1>{{ location_name }}</h1>
       <h2>{{ survey_type.name }}</h2>
       <h2>{{ cycle }}</h2>
 

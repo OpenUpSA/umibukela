@@ -3,6 +3,16 @@
 {{ block.super }}
 
 <div>
+  National summaries:
+  <ul>
+    {% for cycle in cycles %}
+    <li>
+      <a href="{% url "national-summary" original.slug cycle.id %}">{{ cycle.name }}</a>
+      |
+      <a href="{% url "national-summary-pdf" original.slug cycle.id %}">PDF</a>
+    </li>
+    {% endfor %}
+  </ul>
   Province summaries:
   <ul>
     {% for province in provinces %}
@@ -11,9 +21,9 @@
       <ul>
         {% for cycle in cycles %}
         <li>
-          <a href="{% url "province-summary" province.slug original.slug cycle.id %}">{{ cycle.name }}</a>
+          <a href="{% url "province-summary" original.slug province.slug cycle.id %}">{{ cycle.name }}</a>
           |
-          <a href="{% url "province-summary-pdf" province.slug original.slug cycle.id %}">PDF</a>
+          <a href="{% url "province-summary-pdf" original.slug province.slug cycle.id %}">PDF</a>
         </li>
         {% endfor %}
       </ul>

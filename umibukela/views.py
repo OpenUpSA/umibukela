@@ -649,8 +649,88 @@ def province_summary(request, province_slug, survey_type_slug, cycle_id):
         totals = {'male': 0, 'female': 0, 'total': 0}
         results = None
 
-    return render(request, 'province_summary.html', {
-        'province': province,
+    return render(request, 'location_cycle_summary.html', {
+        'location_name': province.name,
+        'survey_type': survey_type,
+        'cycle': cycle,
+        'result_sets': result_sets,
+        'prev_cycle': prev_cycle,
+        'prev_result_sets': prev_result_sets,
+        'results': {
+            'questions_dict': results,
+            'totals': totals,
+        }
+    })
+
+
+def national_summary_pdf(request, survey_type_slug, cycle_id):
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    cycle = get_object_or_404(Cycle, id=cycle_id)
+    # render poster as pdf
+    url = reverse('national-summary', kwargs={
+        'survey_type_slug': survey_type_slug,
+        'cycle_id': cycle_id,
+    })
+    url = request.build_absolute_uri(url)
+    pdf = wkhtmltopdf(url, **{
+        'margin-top': '0.5cm',
+        'margin-right': '0.5cm',
+        'margin-bottom': '0.5cm',
+        'margin-left': '0.5cm',
+    })
+    filename = (u'Summary for South Africa - %s - %s.pdf' % (survey_type.name, cycle.name)).encode('ascii', 'ignore')
+    return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
+
+
+def national_summary(request, survey_type_slug, cycle_id):
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    cycle = get_object_or_404(Cycle, id=cycle_id)
+
+    result_sets = CycleResultSet.objects.filter(
+        cycle=cycle,
+        survey_type=survey_type
+    )
+    responses = []
+    form = None
+    for result_set in result_sets:
+        # Assume that get_survey will make all surveys compatible
+        # and therefore the last-set form applies to all
+        form, site_responses = result_set.get_survey()
+        responses.extend(site_responses)
+
+    prev_cycle = cycle.get_previous()
+    prev_result_sets = CycleResultSet.objects.filter(
+        cycle=prev_cycle,
+        survey_type=survey_type
+    )
+    prev_responses = []
+    prev_form = None
+    for result_set in prev_result_sets:
+        # Assume that get_survey will make all surveys compatible
+        # and therefore the last-set form applies to all
+        prev_form, site_responses = result_set.get_survey()
+        prev_responses.extend(site_responses)
+
+    if responses:
+        df = pandas.DataFrame(responses)
+        results = analysis.count_options(df, form['children'])
+        results = analysis.calc_q_percents(results)
+        if prev_responses:
+            totals = analysis.count_submissions(
+                pandas.DataFrame(responses + prev_responses))
+            prev_df = pandas.DataFrame(prev_responses)
+            prev_results = analysis.count_options(prev_df, prev_form['children'])
+            prev_results = analysis.calc_q_percents(prev_results)
+        else:
+            totals = analysis.count_submissions(df)
+            prev_results = None
+        analysis.combine_curr_hist(results, prev_results)
+    else:
+        totals = {'male': 0, 'female': 0, 'total': 0}
+        results = None
+
+    return render(request, 'location_cycle_summary.html', {
+        'location_name': 'South Africa',
         'survey_type': survey_type,
         'cycle': cycle,
         'result_sets': result_sets,
