@@ -579,3 +579,7 @@ def kobo_oauth_return(request):
     user_refresh_token.token = r.json()['refresh_token']
     user_refresh_token.save()
     return redirect(state)
+
+
+def province_summary(request, province_slug, survey_type):
+    pass

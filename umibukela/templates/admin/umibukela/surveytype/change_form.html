@@ -1,0 +1,13 @@
+{% extends "admin/change_form.html" %}
+{% block content %}
+{{ block.super }}
+
+<div>
+  Province summaries:
+  <ul>
+    {% for province in provinces %}
+    <li>{{ province.name }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

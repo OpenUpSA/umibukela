@@ -44,6 +44,7 @@ class Sector(models.Model):
 
 class Province(models.Model):
     name = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
 
     class Meta:
         ordering = ('name',)
@@ -199,7 +200,11 @@ class Cycle(models.Model):
 
 class SurveyType(models.Model):
     name = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField()
+
+    class Meta:
+        ordering = ('name',)
 
     def __str__(self):
         return self.name

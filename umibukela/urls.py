@@ -54,6 +54,10 @@ urlpatterns = patterns(
         'umibukela.views.partner',
         name='partner'),
 
+    url(r'^province/(?P<province_slug>[\w-]+)/survey/(?P<survey_type_slug>[\w-]+)/summary$',
+        'umibukela.views.province_summary',
+        name='province-summary'),
+
     # health-e
     url(r'^stockouts/$',
         'umibukela.healthe.views.home',
