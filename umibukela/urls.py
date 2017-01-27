@@ -54,12 +54,18 @@ urlpatterns = patterns(
         'umibukela.views.partner',
         name='partner'),
 
-    url(r'^province/(?P<province_slug>[\w-]+)/survey/(?P<survey_type_slug>[\w-]+)/cycle/(?P<cycle_id>\d+)/summary$',
+    url(r'^survey-type/(?P<survey_type_slug>[\w-]+)/province/(?P<province_slug>[\w-]+)/cycle/(?P<cycle_id>\d+)/summary$',
         'umibukela.views.province_summary',
         name='province-summary'),
-    url(r'^province/(?P<province_slug>[\w-]+)/survey/(?P<survey_type_slug>[\w-]+)/cycle/(?P<cycle_id>\d+)/summary.pdf$',
+    url(r'^survey-type/(?P<survey_type_slug>[\w-]+)/province/(?P<province_slug>[\w-]+)/cycle/(?P<cycle_id>\d+)/summary.pdf$',
         'umibukela.views.province_summary_pdf',
         name='province-summary-pdf'),
+    url(r'^survey-type/(?P<survey_type_slug>[\w-]+)/south-africa/cycle/(?P<cycle_id>\d+)/summary$',
+        'umibukela.views.national_summary',
+        name='national-summary'),
+    url(r'^survey-type/(?P<survey_type_slug>[\w-]+)/south-africa/cycle/(?P<cycle_id>\d+)/summary.pdf$',
+        'umibukela.views.national_summary_pdf',
+        name='national-summary-pdf'),
 
     # health-e
     url(r'^stockouts/$',
