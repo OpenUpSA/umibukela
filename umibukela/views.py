@@ -578,6 +578,27 @@ def kobo_oauth_return(request):
     return redirect(state)
 
 
+def province_summary_pdf(request, province_slug, survey_type_slug, cycle_id):
+    province = get_object_or_404(Province, slug=province_slug)
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    cycle = get_object_or_404(Cycle, id=cycle_id)
+    # render poster as pdf
+    url = reverse('province-summary', kwargs={
+        'province_slug': province_slug,
+        'survey_type_slug': survey_type_slug,
+        'cycle_id': cycle_id,
+    })
+    url = request.build_absolute_uri(url)
+    pdf = wkhtmltopdf(url, **{
+        'margin-top': '0.5cm',
+        'margin-right': '0.5cm',
+        'margin-bottom': '0.5cm',
+        'margin-left': '0.5cm',
+    })
+    filename = (u'Summary for %s - %s - %s.pdf' % (province.name, survey_type.name, cycle.name)).encode('ascii', 'ignore')
+    return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
+
+
 def province_summary(request, province_slug, survey_type_slug, cycle_id):
     province = get_object_or_404(Province, slug=province_slug)
     survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)

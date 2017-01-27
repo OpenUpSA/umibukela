@@ -6,6 +6,12 @@
 {{ block.super }}
 {% stylesheet "print-materials" %}
     <link href="{% static 'stylesheets/print-bootstrap.css' %}" rel="stylesheet" type="text/css"   />
+<style>
+  section.stat-row {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  }
+</style>
 {% endblock %}
 {% block js %}
 {{ block.super }}

@@ -12,6 +12,8 @@
         {% for cycle in cycles %}
         <li>
           <a href="{% url "province-summary" province.slug original.slug cycle.id %}">{{ cycle.name }}</a>
+          |
+          <a href="{% url "province-summary-pdf" province.slug original.slug cycle.id %}">PDF</a>
         </li>
         {% endfor %}
       </ul>
