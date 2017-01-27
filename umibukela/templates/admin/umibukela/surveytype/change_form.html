@@ -1,0 +1,24 @@
+{% extends "admin/change_form.html" %}
+{% block content %}
+{{ block.super }}
+
+<div>
+  Province summaries:
+  <ul>
+    {% for province in provinces %}
+    <li>
+      {{ province.name }}
+      <ul>
+        {% for cycle in cycles %}
+        <li>
+          <a href="{% url "province-summary" province.slug original.slug cycle.id %}">{{ cycle.name }}</a>
+          |
+          <a href="{% url "province-summary-pdf" province.slug original.slug cycle.id %}">PDF</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

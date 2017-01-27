@@ -63,6 +63,20 @@ class PartnerAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("short_name",)}
 
 
+class ProvinceAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+
+
+class SurveyTypeAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+
+    def change_view(self, request, id, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['provinces'] = Province.objects.all()
+        extra_context['cycles'] = Cycle.objects.all()
+        return super(SurveyTypeAdmin, self).change_view(request, id, extra_context=extra_context)
+
+
 class SiteAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     form = SiteForm
@@ -94,4 +108,4 @@ admin_site.register(Province)
 admin_site.register(Sector)
 admin_site.register(Site, SiteAdmin)
 admin_site.register(Survey)
-admin_site.register(SurveyType)
+admin_site.register(SurveyType, SurveyTypeAdmin)

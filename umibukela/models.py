@@ -44,6 +44,7 @@ class Sector(models.Model):
 
 class Province(models.Model):
     name = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
 
     class Meta:
         ordering = ('name',)
@@ -196,10 +197,26 @@ class Cycle(models.Model):
         else:
             return -1
 
+    def get_previous(self):
+        cycles = list(Cycle.objects.filter(
+            end_date__lte=self.start_date,
+            programme=self.programme,
+        ).all())
+        cycles.sort(cmp=Cycle.end_date_cmp)
+        cycles.reverse()
+        if cycles:
+            return cycles[0]
+        else:
+            return None
+
 
 class SurveyType(models.Model):
     name = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField()
+
+    class Meta:
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
