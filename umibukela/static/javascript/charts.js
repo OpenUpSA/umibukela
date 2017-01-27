@@ -352,9 +352,9 @@ var PrintMaterials = function() {
       var zRange = legendType == 'yes/no' ? [self.ORANGE,self.BLACK] : [self.ORANGE,self.WHITE,self.BLACK];
 
       if (legendType == 'yes/dk/no') {
-        labels = [labels[1],labels[2],labels[0]]
+        labels = [labels[1],labels[2],labels[0]];
       } else if (legendType == 'yes/no/na') {
-        labels = [labels[2],labels[1],labels[0]]
+        labels = [labels[2],labels[1],labels[0]];
       }
 
       for(var i = 0; i < maleData.length; i++) {
@@ -541,8 +541,10 @@ var PrintMaterials = function() {
               .attr('x',0)
               .attr('y',i * (legendIcon.height + height / 20));
           });
+          
+          legendLabels = [labels[0],labels[2],labels[1]];
 
-          labels.slice(0).forEach(function(label,i) {
+          legendLabels.forEach(function(label,i) {
             legend.append('text')
               .attr('x',legendIcon.width + 5)
               .attr('y',legendIcon.height / 1.5 + i * (legendIcon.height + height / 20))
