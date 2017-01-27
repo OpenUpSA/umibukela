@@ -73,6 +73,7 @@ class SurveyTypeAdmin(admin.ModelAdmin):
     def change_view(self, request, id, extra_context=None):
         extra_context = extra_context or {}
         extra_context['provinces'] = Province.objects.all()
+        extra_context['cycles'] = Cycle.objects.all()
         return super(SurveyTypeAdmin, self).change_view(request, id, extra_context=extra_context)
 
 

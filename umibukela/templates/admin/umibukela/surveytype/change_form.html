@@ -6,7 +6,16 @@
   Province summaries:
   <ul>
     {% for province in provinces %}
-    <li>{{ province.name }}</li>
+    <li>
+      {{ province.name }}
+      <ul>
+        {% for cycle in cycles %}
+        <li>
+          <a href="{% url "province-summary" province.slug original.slug cycle.id %}">{{ cycle.name }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </li>
     {% endfor %}
   </ul>
 </div>

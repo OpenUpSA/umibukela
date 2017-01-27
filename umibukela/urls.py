@@ -54,7 +54,7 @@ urlpatterns = patterns(
         'umibukela.views.partner',
         name='partner'),
 
-    url(r'^province/(?P<province_slug>[\w-]+)/survey/(?P<survey_type_slug>[\w-]+)/summary$',
+    url(r'^province/(?P<province_slug>[\w-]+)/survey/(?P<survey_type_slug>[\w-]+)/cycle/(?P<cycle_id>\d+)/summary$',
         'umibukela.views.province_summary',
         name='province-summary'),
 

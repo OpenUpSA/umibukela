@@ -16,12 +16,15 @@ import requests
 
 from .forms import CRSFromKoboForm
 from .models import (
+    Cycle,
     CycleResultSet,
     KoboRefreshToken,
     Partner,
+    Province,
     Site,
     Survey,
     SurveyKoboProject,
+    SurveyType,
     Submission,
 )
 
@@ -156,9 +159,6 @@ def summary_pdf(request, site_slug, result_id):
     # render poster as pdf
     url = reverse('site-result-summary', kwargs={'site_slug': site_slug, 'result_id': result_id})
     url = request.build_absolute_uri(url)
-    print
-    print url
-    print
     pdf = wkhtmltopdf(url, **{
         'margin-top': '0.5cm',
         'margin-right': '0.5cm',
@@ -337,9 +337,6 @@ def comments_pdf(request, result_id):
     # render poster as pdf
     url = reverse('admin:site-result-comments', kwargs={'result_id': result_id})
     url = request.build_absolute_uri(url)
-    print
-    print url
-    print
     pdf = wkhtmltopdf(url, **{
         'margin-top': '0.5cm',
         'margin-right': '0.5cm',
@@ -581,5 +578,65 @@ def kobo_oauth_return(request):
     return redirect(state)
 
 
-def province_summary(request, province_slug, survey_type):
-    pass
+def province_summary(request, province_slug, survey_type_slug, cycle_id):
+    province = get_object_or_404(Province, slug=province_slug)
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    cycle = get_object_or_404(Cycle, id=cycle_id)
+
+    result_sets = CycleResultSet.objects.filter(
+        site__province=province,
+        cycle=cycle,
+        survey_type=survey_type
+    )
+    responses = []
+    form = None
+    for result_set in result_sets:
+        # Assume that get_survey will make all surveys compatible
+        # and therefore the last-set form applies to all
+        form, site_responses = result_set.get_survey()
+        responses.extend(site_responses)
+
+    prev_cycle = cycle.get_previous()
+    prev_result_sets = CycleResultSet.objects.filter(
+        site__province=province,
+        cycle=prev_cycle,
+        survey_type=survey_type
+    )
+    prev_responses = []
+    prev_form = None
+    for result_set in prev_result_sets:
+        # Assume that get_survey will make all surveys compatible
+        # and therefore the last-set form applies to all
+        prev_form, site_responses = result_set.get_survey()
+        prev_responses.extend(site_responses)
+
+    if responses:
+        df = pandas.DataFrame(responses)
+        results = analysis.count_options(df, form['children'])
+        results = analysis.calc_q_percents(results)
+        if prev_responses:
+            totals = analysis.count_submissions(
+                pandas.DataFrame(responses + prev_responses))
+            prev_df = pandas.DataFrame(prev_responses)
+            prev_results = analysis.count_options(prev_df, prev_form['children'])
+            prev_results = analysis.calc_q_percents(prev_results)
+        else:
+            totals = analysis.count_submissions(df)
+            prev_results = None
+        analysis.combine_curr_hist(results, prev_results)
+    else:
+        totals = {'male': 0, 'female': 0, 'total': 0}
+        results = None
+
+    return render(request, 'province_summary.html', {
+        'province': province,
+        'survey_type': survey_type,
+        'cycle': cycle,
+        'result_sets': result_sets,
+        'prev_cycle': prev_cycle,
+        'prev_result_sets': prev_result_sets,
+        'results': {
+            'questions_dict': results,
+            'totals': totals,
+        }
+    })
