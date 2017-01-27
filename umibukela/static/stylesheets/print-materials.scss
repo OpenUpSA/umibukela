@@ -353,9 +353,21 @@ $headings-color: $black;
       position: absolute;
       top: 21px;
       left: 560px;
-      width: 200px;
-      height: 200px;
+      width: 180px;
+      height: 70px;
       background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .black-sash-logo {
+      background-image: url(/static/img/black-sash-logo.svg);
+      position: absolute;
+      top: 101px;
+      left: 560px;
+      width: 193px;
+      height: 50px;
+      background-repeat: no-repeat;
+      background-size: contain;
     }
 
     .partner {
