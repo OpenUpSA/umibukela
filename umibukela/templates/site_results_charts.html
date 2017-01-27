@@ -32,7 +32,7 @@
       {% for question_key in results.questions_dict.keys %}
       {% with question=results.questions_dict|get:question_key %}
       {% if question.options|length <= 3 %}
-      <section class="row stat-row">
+      <section class="row stat-row question">
         <div class="col-sm-4">
           <h3>
             {% with group_count=question.group_labels|length %}
@@ -90,7 +90,7 @@
         {% endfor %}
       </section>
       {% else %}
-      <section class="row stat-row">
+      <section class="row stat-row question">
         <div class="col-sm-4">
           <h3>
             {% with group_count=question.group_labels|length %}

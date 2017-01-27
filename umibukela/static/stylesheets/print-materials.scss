@@ -41,11 +41,18 @@ $headings-color: $black;
   }
 }
 
-.a4-portrait {
+.a4-portrait-single {
   // force size to be a4 page when printed with 0.5cm margins on all sides
   box-sizing: content-box;
   width: 20cm; // 21cm - 0.5cm margin
   height: 20cm * 1.414;
+  margin: 0cm; // 0.5cm margin applied during print
+}
+
+.a4-portrait-multi {
+  // force size to be a4 page when printed with 0.5cm margins on all sides
+  box-sizing: content-box;
+  width: 20cm; // 21cm - 0.5cm margin
   margin: 0cm; // 0.5cm margin applied during print
 }
 
@@ -902,4 +909,8 @@ $headings-color: $black;
       }
     }
   }
+}
+
+.question {
+    page-break-inside: avoid;
 }
