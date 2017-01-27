@@ -1339,7 +1339,7 @@ var PrintMaterials = function() {
           .attr('transform','translate(' + radius + ',' + radius + ')')
           .attr('class', 'arc');
 
-      g.append('path')
+      var path = g.append('path')
         .attr('d', arc)
         .style('stroke', function(d) {
           var arcColor = color(d.data.label);
@@ -1348,15 +1348,16 @@ var PrintMaterials = function() {
         })
         .style('fill', function (d) { return color(d.data.label); });
 
-      g.append('text')
+      var count = g.append('text')
         .attr('transform', function(d) {
-          //we have to make sure to set these before calling arc.centroid
-          d.outerRadius = radius; // Set Outer Coordinate
-          d.innerRadius = radius / 2; // Set Inner Coordinate
+          arc.innerRadius(radius);
+          arc.outerRadius(radius + 2);
           return "translate(" + arc.centroid(d) + ")rotate(0)";
-        })
-        .attr('fill',function(d, i) { return i == 2 ? self.BLACK : self.WHITE ; })
+        });
+
+      count.attr('fill',self.BLACK)
         .attr('text-anchor','middle')
+        .attr("dy", ".35em")
         .text(function(d) { return d.value; });
 
       var legendX = 10;
@@ -1624,14 +1625,14 @@ var PrintMaterials = function() {
     text.attr('fill', function(d) {
       var barHeight = y(d[0]) - y(d[1]);
       if(textHeight + countHeight < barHeight) return d[1] == total ? self.BLACK : self.ORANGE;
-      else return d[1] == total ? self.ORANGE : self.BLACK;
+      else return 'None';
     });
 
     count.attr('fill', function(d) {
       var barHeight = y(d[0]) - y(d[1]);
 
       if(textHeight + countHeight < barHeight) return d[1] == total ? self.BLACK : self.ORANGE;
-      else return d[1] == total ? self.ORANGE : self.BLACK;
+      else return 'None';
     });
     },
 
@@ -1707,7 +1708,7 @@ var PrintMaterials = function() {
       var maxWidth = textWidth > countWidth ? textWidth : countWidth;
 
       if(maxWidth < barWidth) return d[1] == total ? self.BLACK : self.ORANGE;
-      else return d[1] == total ? self.ORANGE : self.BLACK;
+      else return 'None';
     });
 
     count.attr('fill', function(d) {
@@ -1715,7 +1716,7 @@ var PrintMaterials = function() {
       var maxWidth = textWidth > countWidth ? textWidth : countWidth;
 
       if(maxWidth < barWidth) return d[1] == total ? self.BLACK : self.ORANGE;
-      else return d[1] == total ? self.ORANGE : self.BLACK;
+      else return 'None';
     });
     }
   }
