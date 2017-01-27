@@ -264,9 +264,10 @@ var PrintMaterials = function() {
       var maleLabel = legend.append('text')
         .attr('class','male-label')
         .text([years[0]])
-        .attr('font-size',fontSize);
+        .attr('font-size',fontSize)
+        .attr('text-anchor','start');
 
-      maleLabel.attr('x',maleLabel.node().getBBox().width / 2)
+      maleLabel.attr('x',Math.abs(icon.width - maleLabel.node().getComputedTextLength()) / 2)
         .attr('y',icon.height + maleLabel.node().getBBox().height);
 
       var femaleLabel = legend.append('text')
@@ -274,7 +275,7 @@ var PrintMaterials = function() {
         .text([years[0]])
         .attr('font-size',fontSize);
 
-      femaleLabel.attr('x',legendWidth - femaleLabel.node().getBBox().width - femaleLabel.node().getBBox().width / 2.5)
+      femaleLabel.attr('x',legendWidth - icon.width + Math.abs(icon.width - femaleLabel.node().getComputedTextLength()) / 2)
       .attr('y',icon.height + femaleLabel.node().getBBox().height);
 
       if(years[1]) {
