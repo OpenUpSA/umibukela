@@ -93,6 +93,10 @@ def map_questions(form, submissions):
             'right_path': 'demographics_group/disability'
         },
         {
+            'wrong_path': 'How_old_are_you',
+            'right_path': 'demographics_group/age'
+        },
+        {
             'wrong_path': 'Is_this_clinic_the_nearest_hea',
             'right_path': 'distance'
         },

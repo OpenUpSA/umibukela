@@ -78,6 +78,8 @@ var PrintMaterials = function() {
       var colorMale = self.colorMale;
       var colorFemale = self.colorFemale;
 
+      var years = cycleYears.slice(0).reverse();
+
       options.responses.forEach(function(response) {
         var key = response.current.key;
         var label = response.current.label;
@@ -122,12 +124,14 @@ var PrintMaterials = function() {
         .attr('height',icon.height)
         .attr('width',icon.width);
 
-      legend.append('rect')
-        .attr('fill',self.ORANGE)
-        .attr('width',icon.width)
-        .attr('height',icon.height / 2)
-        .attr('x',legendWidth / 2 - icon.width / 2)
-        .attr('y',icon.height / 2);
+      if(years[1]) {
+        legend.append('rect')
+          .attr('fill',self.ORANGE)
+          .attr('width',icon.width)
+          .attr('height',icon.height / 2)
+          .attr('x',legendWidth / 2 - icon.width / 2)
+          .attr('y',icon.height / 2);
+        }
 
       var figureHeight = height - legend.node().getBBox().height - gutter;
 
@@ -259,27 +263,30 @@ var PrintMaterials = function() {
 
       var maleLabel = legend.append('text')
         .attr('class','male-label')
-        .text(2015)
-        .attr('font-size',fontSize);
+        .text([years[0]])
+        .attr('font-size',fontSize)
+        .attr('text-anchor','start');
 
-      maleLabel.attr('x',maleLabel.node().getBBox().width / 2)
+      maleLabel.attr('x',Math.abs(icon.width - maleLabel.node().getComputedTextLength()) / 2)
         .attr('y',icon.height + maleLabel.node().getBBox().height);
 
       var femaleLabel = legend.append('text')
         .attr('class','female-label')
-        .text(2015)
+        .text([years[0]])
         .attr('font-size',fontSize);
 
-      femaleLabel.attr('x',legendWidth - femaleLabel.node().getBBox().width - femaleLabel.node().getBBox().width / 2.5)
+      femaleLabel.attr('x',legendWidth - icon.width + Math.abs(icon.width - femaleLabel.node().getComputedTextLength()) / 2)
       .attr('y',icon.height + femaleLabel.node().getBBox().height);
 
-      var prevLabel = legend.append('text')
-        .attr('class','prev-label')
-        .text(2014)
-        .attr('font-size',fontSize);
+      if(years[1]) {
+        var prevLabel = legend.append('text')
+          .attr('class','prev-label')
+          .text(years[1])
+          .attr('font-size',fontSize);
 
-      prevLabel.attr('x',legendWidth / 2 - prevLabel.node().getBBox().width / 2)
-        .attr('y',icon.height + prevLabel.node().getBBox().height)
+        prevLabel.attr('x',legendWidth / 2 - prevLabel.node().getBBox().width / 2)
+          .attr('y',icon.height + prevLabel.node().getBBox().height)
+      }
     },
     typeTwo: function(options) {
       var responses = options.responses;
@@ -345,9 +352,9 @@ var PrintMaterials = function() {
       var zRange = legendType == 'yes/no' ? [self.ORANGE,self.BLACK] : [self.ORANGE,self.WHITE,self.BLACK];
 
       if (legendType == 'yes/dk/no') {
-        labels = [labels[1],labels[2],labels[0]]
+        labels = [labels[1],labels[2],labels[0]];
       } else if (legendType == 'yes/no/na') {
-        labels = [labels[2],labels[1],labels[0]]
+        labels = [labels[2],labels[1],labels[0]];
       }
 
       for(var i = 0; i < maleData.length; i++) {
@@ -435,7 +442,7 @@ var PrintMaterials = function() {
 
               return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2 + countShift;
             })
-            .attr('x',shift)
+            .attr('x',shift - 2)
             .attr('fill',self.BLACK)
             .attr('stroke','none')
             .attr('font-size',labelFontSize)
@@ -534,8 +541,10 @@ var PrintMaterials = function() {
               .attr('x',0)
               .attr('y',i * (legendIcon.height + height / 20));
           });
+          
+          legendLabels = [labels[0],labels[2],labels[1]];
 
-          labels.slice(0).forEach(function(label,i) {
+          legendLabels.forEach(function(label,i) {
             legend.append('text')
               .attr('x',legendIcon.width + 5)
               .attr('y',legendIcon.height / 1.5 + i * (legendIcon.height + height / 20))
@@ -569,13 +578,13 @@ var PrintMaterials = function() {
 
             g.append('image')
               .attr('xlink:href',function(d) { return d.icon })
-              .attr('width',legendIcon.width)
-              .attr('height',legendIcon.height);
+              .attr('width',legendIcon.width * 1.5)
+              .attr('height',legendIcon.height * 1.5);
 
             g.append('text')
               .attr('font-size',legendFontSize)
               .attr('x',legendIcon.width + 3)
-              .attr('y',(legendIcon.height - legendFontSize * 1.1) / 2 + legendFontSize)
+              .attr('y',(legendIcon.height * 1.5 - legendFontSize * 1.1) / 2 + legendFontSize)
               .text(function(d) { return d.label.toUpperCase() });
           break;
         }
@@ -693,7 +702,7 @@ var PrintMaterials = function() {
       var icon = { width: 15, height: 30 };
       var figureHeight = height * 0.8;
       var widthCoefficient = 0.8;
-      var legendWidth = width * 0.2;
+      var legendWidth = width * 0.18;
       var figureWidth = width * 0.8;
       var fontSize = Math.round(height / 8);
       var legendSquare = colHeight * 0.45;
@@ -949,9 +958,10 @@ var PrintMaterials = function() {
         if(text.node().getBBox().width > maxTextWidth) maxTextWidth = text.node().getBBox().width;
       });
 
-      var renderedLegendWidth = legendSquare + 5 + maxTextWidth;
+      // Wkhtmltopdf doesn't seem to like this calculation
+      //var renderedLegendWidth = legendSquare + 5 + maxTextWidth;
 
-      legend.attr('transform','translate(' + (width + 10 - renderedLegendWidth) + ',' + (height - labels.length * (legendSquare + 2)) + ')');
+      legend.attr('transform','translate(' + (width + 10 - legendWidth) + ',' + (height - labels.length * (legendSquare + 2)) + ')');
     },
     typeFour: function(options) {
       var responses = options.responses;
@@ -1260,10 +1270,21 @@ var PrintMaterials = function() {
       var chart = options.el;
       var labelType = options.labelType;
       var legendType = options.legendType;
-      var data = _.filter(_.values(options.responses), function(d) { return d.count.male + d.count.female > 0; });
-      var colors = [];
+      var data = _.filter(_.values(options.responses), function(d) { return d.count.male + d.count.female > 0; }).sort(function(a, b){ return a.count.male + a.count.female - b.count.male + b.count.female;});
+      var colors = [self.ORANGE, self.RED, self.WHITE, self.BLACK];
 
-      var legendLabels = [];
+      var legendLabels = _.values(data).map(function(d) { return d.label });
+
+      var last = data.slice(4);
+      var other = { label: 'Other', count: { male: 0, female: 0 } };
+
+      last.forEach(function(r) {
+        other.count.male += r.count.male;
+        other.count.female += r.count.female;
+      });
+
+      data = data.slice(0,3);
+      data.push(other);
 
       if(labelType) {
         switch(labelType) {
@@ -1273,7 +1294,6 @@ var PrintMaterials = function() {
             'Not feeling well',
             'Pregnant / for children',
             'Other',
-            'Test label'
           ];
           break;
           case 2:
@@ -1282,7 +1302,6 @@ var PrintMaterials = function() {
             '\'Proof of Life\' certificate',
             'Existing grant problem',
             'Other',
-            'Test label'
           ];
           break;
           case 3:
@@ -1291,36 +1310,9 @@ var PrintMaterials = function() {
             'No income',
             'Temporary employment',
             'Other',
-            'Test label'
           ];
           break;
         }
-      }
-
-      legendLabels = _.values(data).map(function(d) { return d.label });
-
-      switch(data.length) {
-        case 1:
-        colors = [self.ORANGE];
-        break;
-        case 2:
-        colors = [self.ORANGE, self.RED];
-        break;
-        case 3:
-        colors = [self.ORANGE, self.RED, self.WHITE];
-        break;
-        case 4:
-        colors = [self.ORANGE, self.RED, self.WHITE, self.BLUE];
-        break;
-        case 5:
-        colors = [self.ORANGE, self.RED, self.WHITE, self.BLUE, self.BLACK];
-        break;
-        case 6:
-        colors = [self.ORANGE, self.RED, self.WHITE, self.BLUE, self.BLACK, self.PINK];
-        break;
-        case 7:
-        colors = [self.ORANGE, self.RED, self.WHITE, self.BLUE, self.BLACK, self.PINK];
-        break;
       }
 
       var radius = (height + width) / 6.5;
@@ -1350,7 +1342,7 @@ var PrintMaterials = function() {
           .attr('transform','translate(' + radius + ',' + radius + ')')
           .attr('class', 'arc');
 
-      g.append('path')
+      var path = g.append('path')
         .attr('d', arc)
         .style('stroke', function(d) {
           var arcColor = color(d.data.label);
@@ -1359,15 +1351,16 @@ var PrintMaterials = function() {
         })
         .style('fill', function (d) { return color(d.data.label); });
 
-      g.append('text')
+      var count = g.append('text')
         .attr('transform', function(d) {
-          //we have to make sure to set these before calling arc.centroid
-          d.outerRadius = radius; // Set Outer Coordinate
-          d.innerRadius = radius / 2; // Set Inner Coordinate
+          arc.innerRadius(radius);
+          arc.outerRadius(radius + 2);
           return "translate(" + arc.centroid(d) + ")rotate(0)";
-        })
-        .attr('fill',function(d, i) { return i == 2 ? self.BLACK : self.WHITE ; })
+        });
+
+      count.attr('fill',self.BLACK)
         .attr('text-anchor','middle')
+        .attr("dy", ".35em")
         .text(function(d) { return d.value; });
 
       var legendX = 10;
@@ -1635,14 +1628,14 @@ var PrintMaterials = function() {
     text.attr('fill', function(d) {
       var barHeight = y(d[0]) - y(d[1]);
       if(textHeight + countHeight < barHeight) return d[1] == total ? self.BLACK : self.ORANGE;
-      else return d[1] == total ? self.ORANGE : self.BLACK;
+      else return 'None';
     });
 
     count.attr('fill', function(d) {
       var barHeight = y(d[0]) - y(d[1]);
 
       if(textHeight + countHeight < barHeight) return d[1] == total ? self.BLACK : self.ORANGE;
-      else return d[1] == total ? self.ORANGE : self.BLACK;
+      else return 'None';
     });
     },
 
@@ -1718,7 +1711,7 @@ var PrintMaterials = function() {
       var maxWidth = textWidth > countWidth ? textWidth : countWidth;
 
       if(maxWidth < barWidth) return d[1] == total ? self.BLACK : self.ORANGE;
-      else return d[1] == total ? self.ORANGE : self.BLACK;
+      else return 'None';
     });
 
     count.attr('fill', function(d) {
@@ -1726,7 +1719,7 @@ var PrintMaterials = function() {
       var maxWidth = textWidth > countWidth ? textWidth : countWidth;
 
       if(maxWidth < barWidth) return d[1] == total ? self.BLACK : self.ORANGE;
-      else return d[1] == total ? self.ORANGE : self.BLACK;
+      else return 'None';
     });
     }
   }
@@ -1760,7 +1753,7 @@ var PrintMaterials = function() {
       tspans.each(function(d, i) {
         var tspan = d3.select(this);
 
-        tspan.attr('y',(boxHeight - fontSize * lineCount * lineHeight) / 2 + (fontSize * lineHeight) * i + fontSize / 2)
+        tspan.attr('y',(boxHeight - fontSize * lineCount * lineHeight) / 2 + (fontSize * lineHeight) * i + fontSize / 2 + 3)
       });
     });
   }
