@@ -9,6 +9,9 @@ Umibukela.Site = function() {
   };
 
   self.drawCharts = function() {
+    var pct = !(!!window.chartValues);
+    var valueKey = pct ? 'pct' : 'count';
+
     Highcharts.setOptions({
       credits: {enabled: false},
       chart: {animation: false},
@@ -22,7 +25,7 @@ Umibukela.Site = function() {
       legend: {enabled: false},
       tooltip: {
         formatter: function() {
-          return '<b>' + this.x + ': ' + this.y + '%</b><br>' + this.series.name;
+          return '<b>' + this.x + ': ' + this.y + (pct ? '%' : '') + '</b><br>' + this.series.name;
         }
       },
       plotOptions: {
@@ -34,13 +37,13 @@ Umibukela.Site = function() {
         column: {
           dataLabels: {
             enabled: true,
-            format: '{y}%',
+            format: '{y}' + (pct ? '%' : ''),
           },
         },
         bar: {
           dataLabels: {
             enabled: true,
-            format: '{y}%',
+            format: '{y}' + (pct ? '%' : ''),
           },
         },
       },
@@ -55,7 +58,7 @@ Umibukela.Site = function() {
       var chartType = $e.hasClass('chart-bar') ? 'bar' : 'column';
       var labels = _.map(q.options, function(o) { return o.current.label; });
       var currValues = _.map(q.options, function(o) {
-          return Math.round(o.current.pct[gender]);
+          return Math.round(o.current[valueKey][gender]);
       });
 
       var series = [{
@@ -68,7 +71,7 @@ Umibukela.Site = function() {
       var prevValues = [];
       _.map(q.options, function(o) {
           if (o.prev !== undefined) {
-              prevValues.push(Math.round(o.prev.pct[gender]));
+              prevValues.push(Math.round(o.prev[valueKey][gender]));
           }
       });
       if (prevValues.length === currValues.length) {

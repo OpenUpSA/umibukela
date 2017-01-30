@@ -1,128 +1,124 @@
 {% load lookup markup_tags %}
 
-  <div class="stat-table stat-overview page-section">
-    <div class="container">
-      <section class="row">
-        <div class="col-sm-4">
-          <div class="stat stat-number">
-            <div class="value">{{ results.totals.total }}</div>
-            <div class="name">Participants</div>
-          </div>
-        </div>
-
-        <div class="col-sm-4">
-          <div class="stat stat-number">
-            <div class="value">{{ results.totals.female }}</div>
-            <div class="name">Female</div>
-          </div>
-        </div>
-
-        <div class="col-sm-4">
-          <div class="stat stat-number">
-            <div class="value">{{ results.totals.male }}</div>
-            <div class="name">Male</div>
-          </div>
-        </div>
-      </section>
+<div class="stat-table page-section participants">
+  <section class="row">
+    <div class="col-sm-4">
+      <div class="stat stat-number">
+        <div class="value">{{ results.totals.total }}</div>
+        <div class="name">Participants</div>
+      </div>
     </div>
-  </div>
 
-  <div class="container">
-    <div class="stat-table page-section">
-      {% for question_key in results.questions_dict.keys %}
-      {% with question=results.questions_dict|get:question_key %}
-      {% with first_option=question.options|first %}
-      {% if question.options|length <= 3 and first_option.current.label|length < 10 %}
-      <section class="stat-row question">
-        <div class="row">
-          <div class="col-sm-12">
-            <h3>
-              {% with group_count=question.group_labels|length %}
-              {% if group_count > 0 %}
-              {{ question.group_labels | join:" - " }} -
-              {% endif %}
-              {% endwith %}
-              {{ question.label }}
-            </h3>
-          </div>
-        </div>
-        <div class="row">
-          {% for option in question.options %}
-          {% if forloop.counter0 == 0 %}
-          <div class="col-sm-3">
-            <h5>Female</h5>
-            <div class="stat stat-number">
-              <div class="value">{{ option.current.pct.female|floatformat }}%</div>
-              <div class="name">{{ option.current.label }}</div>
-              {% if option.prev %}
-              <div class="context">
-                <strong>
-                  {% if option.prev.pct.female > option.current.pct.female %} Down
-                  {% else %} Up
-                  {% endif %}
-                  from {{ option.prev.pct.female|floatformat }}%
-                </strong> in the previous cycle</div>
-              {% endif %}
-            </div>
-          </div>
+    <div class="col-sm-4">
+      <div class="stat stat-number">
+        <div class="value">{{ results.totals.female }}</div>
+        <div class="name">Female</div>
+      </div>
+    </div>
 
-          <div class="col-sm-3">
-            <div class="chart chart-column" data-indicator="{{ question.key }}:female"></div>
-          </div>
+    <div class="col-sm-4">
+      <div class="stat stat-number">
+        <div class="value">{{ results.totals.male }}</div>
+        <div class="name">Male</div>
+      </div>
+    </div>
+  </section>
+</div>
 
-          <div class="col-sm-3">
-            <h5>Male</h5>
-            <div class="stat stat-number">
-              <div class="value">{{ option.current.pct.male|floatformat }}%</div>
-              <div class="name">{{ option.current.label }}</div>
-              {% if option.prev %}
-              <div class="context">
-                <strong>
-                  {% if option.prev.pct.male > option.current.pct.male %} Down
-                  {% else %} Up
-                  {% endif %}
-                  from {{ option.prev.pct.male|floatformat }}%
-                </strong> in the previous cycle</div>
-              {% endif %}
-            </div>
-          </div>
-
-          <div class="col-sm-3">
-            <div class="chart chart-column" data-indicator="{{ question.key }}:male"></div>
-          </div>
+<div class="stat-table page-section">
+  {% for question_key in results.questions_dict.keys %}
+  {% with question=results.questions_dict|get:question_key %}
+  {% with first_option=question.options|first %}
+  {% if question.options|length <= 3 and first_option.current.label|length < 10 %}
+  <section class="stat-row question">
+    <div class="row">
+      <div class="col-sm-12">
+        <h3>
+          {% with group_count=question.group_labels|length %}
+          {% if group_count > 0 %}
+          {{ question.group_labels | join:" - " }} -
           {% endif %}
-          {% endfor %}
-        </div>
-      </section>
-      {% else %}
-      <section class="stat-row question">
-        <div class="row">
-          <div class="col-sm-12">
-            <h3>
-              {% with group_count=question.group_labels|length %}
-              {% if group_count > 0 %}
-              {{ question.group_labels | join:" - " }} -
+          {% endwith %}
+          {{ question.label }}
+        </h3>
+      </div>
+    </div>
+    <div class="row">
+      {% for option in question.options %}
+      {% if forloop.counter0 == 0 %}
+      <div class="col-sm-3">
+        <h5>Female</h5>
+        <div class="stat stat-number">
+          <div class="value">{{ option.current.count.female|floatformat }}</div>
+          <div class="name">{{ option.current.label }}</div>
+          {% if option.prev %}
+          <div class="context">
+            <strong>
+              {% if option.prev.count.female > option.current.count.female %} Down
+              {% else %} Up
               {% endif %}
-              {% endwith %}
-              {{ question.label }}
-            </h3>
-          </div>
+              from {{ option.prev.count.female|floatformat }}
+            </strong> in the previous cycle</div>
+          {% endif %}
         </div>
-        <div class="row">
-          <div class="col-sm-6">
-            <h5>Female</h5>
-            <div class="chart chart-bar" data-indicator="{{ question.key }}:female"></div>
-          </div>
+      </div>
 
-          <div class="col-sm-6">
-            <h5>Male</h5>
-            <div class="chart chart-bar" data-indicator="{{ question.key }}:male"></div>
-          </div>
+      <div class="col-sm-3">
+        <div class="chart chart-column" data-indicator="{{ question.key }}:female"></div>
+      </div>
+
+      <div class="col-sm-3">
+        <h5>Male</h5>
+        <div class="stat stat-number">
+          <div class="value">{{ option.current.count.male|floatformat }}</div>
+          <div class="name">{{ option.current.label }}</div>
+          {% if option.prev %}
+          <div class="context">
+            <strong>
+              {% if option.prev.count.male > option.current.count.male %} Down
+              {% else %} Up
+              {% endif %}
+              from {{ option.prev.count.male|floatformat }}
+            </strong> in the previous cycle</div>
+          {% endif %}
         </div>
-      </section>
+      </div>
+
+      <div class="col-sm-3">
+        <div class="chart chart-column" data-indicator="{{ question.key }}:male"></div>
+      </div>
       {% endif %}
-      {% endwith %}
-      {% endwith %}
       {% endfor %}
     </div>
-  </div>
+  </section>
+  {% else %}
+  <section class="stat-row question">
+    <div class="row">
+      <div class="col-sm-12">
+        <h3>
+          {% with group_count=question.group_labels|length %}
+          {% if group_count > 0 %}
+          {{ question.group_labels | join:" - " }} -
+          {% endif %}
+          {% endwith %}
+          {{ question.label }}
+        </h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <h5>Female</h5>
+        <div class="chart chart-bar" data-indicator="{{ question.key }}:female"></div>
+      </div>
+
+      <div class="col-sm-6">
+        <h5>Male</h5>
+        <div class="chart chart-bar" data-indicator="{{ question.key }}:male"></div>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+  {% endwith %}
+  {% endwith %}
+  {% endfor %}
+</div>

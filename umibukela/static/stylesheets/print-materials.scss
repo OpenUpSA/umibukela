@@ -32,6 +32,34 @@ $headings-color: $black;
 
 //============================================================================================
 
+.simple-bootstrap-rows {
+  // override bootstrap row and column padding, we do our own padding
+  .row {
+    margin: 0;
+  }
+  .col-xs-1,
+  .col-xs-2,
+  .col-xs-3,
+  .col-xs-4,
+  .col-xs-5,
+  .col-xs-6,
+  .col-xs-7,
+  .col-xs-8,
+  .col-xs-9,
+  .col-xs-10,
+  .col-xs-11,
+  .col-xs-12 {
+    padding: 0px;
+  }
+
+  .row {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display:         flex;
+  }
+}
+
 .print-page {
   overflow: hidden;
   page-break-after: always;
@@ -874,25 +902,6 @@ $headings-color: $black;
 .print-materials {
   -webkit-print-color-adjust: exact;
 
-  // override bootstrap row and column padding, we do our own padding
-  .row {
-    margin: 0;
-  }
-  .col-xs-1,
-  .col-xs-2,
-  .col-xs-3,
-  .col-xs-4,
-  .col-xs-5,
-  .col-xs-6,
-  .col-xs-7,
-  .col-xs-8,
-  .col-xs-9,
-  .col-xs-10,
-  .col-xs-11,
-  .col-xs-12 {
-    padding: 0px;
-  }
-
   h1, h2, h3, h4 {
     font-family: "Open Sans", Helvetica, Arial, sans-serif;
     font-weight: normal;
@@ -932,13 +941,6 @@ $headings-color: $black;
     padding-left:15px;
   }
 
-  .row {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display:         flex;
-  }
-
   .row-not-flex {
     display: block;
   }
@@ -959,6 +961,81 @@ $headings-color: $black;
   }
 }
 
-.question {
-    page-break-inside: avoid;
+.results-summary {
+  .cycle-results {
+    .header {
+      overflow: hidden;
+      height: 155px;
+      background-repeat: no-repeat;
+      background-size: 100% auto;
+
+      .banner, .survey, .cycle, .location {
+        position: absolute;
+        white-space: nowrap;
+      }
+      
+      .banner, .survey {
+        left: 10px;
+      }
+
+      .banner {
+        font-size: 50px;
+        text-transform: uppercase;
+        color: white;
+        top: 10px;
+      }
+
+      .black-sash-logo {
+        background-image: url(/static/img/black-sash-logo.svg);
+        position: absolute;
+        top: 101px;
+        left: 560px;
+        width: 193px;
+        height: 50px;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      .survey {
+        top: 70px;
+        color: white !important;
+        font-size: 21px;
+      }
+
+      .cycle {
+        top: 105px;
+        left: 0px;
+        font-size: 20px;
+      }
+
+      .location {
+        top: 130px;
+        left: 0px;
+        font-size: 20px;
+      }
+    }
+
+    .question {
+      page-break-inside: avoid;
+
+      h3 {
+        margin-bottom: 10px;
+      }
+    }
+
+    .stat-row {
+      padding: 10px 0px;
+      margin: 0px;
+    }
+  }
+
+  .participants {
+    border-bottom: 1px solid #eee;
+  }
+
+  .contributors {
+    h3 {
+      margin-bottom: 10px;
+    }
+  }
 }
