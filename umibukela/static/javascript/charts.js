@@ -326,43 +326,70 @@ var PrintMaterials = function() {
 
       periodKeys.reverse();
 
+      // Create data objects for each available period
       for(var i=0;i < periodKeys.length;i++) {
-        var period = periodKeys[i];
-
-        maleData.push({ period: period, year: period == 'current' ? years[1] : years[0] });
-        femaleData.push({ period: period, year: period == 'current' ? years[1] : years[0] });
+        var periodName = periodKeys[i];
+        maleData.push({ period: periodName, year: periodName == 'current' ? years[1] : years[0] });
+        femaleData.push({ period: periodName, year: periodName == 'current' ? years[1] : years[0] });
       }
 
+      var compare = function(a, b) {
+        if (a.current.key == "positive")
+          return 1;
+        if (b.current.key == "negative")
+          return 1;
+        if (b.current.key == "positive")
+          return -1;
+        if (a.current.key == "negative")
+          return -1;
+        if (a.current.key == "yes")
+          return 1;
+        if (b.current.key == "no")
+          return 1;
+        if (b.current.key == "yes")
+          return -1;
+        if (a.current.key == "no")
+          return -1;
+        console.log("unknown", a.current.key, "or", b.current.key);
+      }
+      var compare2 = function(a, b) {
+        var result = compare(a, b);
+        console.log(a.current.key, b.current.key, result);
+        return result;
+      }
+      responses.sort(compare2);
+
+      // Set the category values for the objects in the D3 data arrays
+      // Also add labels to the legend label array
       responses.forEach(function(response, i) {
-        for(period in response) {
-          var male_datum = _.find(maleData, function(item) { return item.period == period });
-          var female_datum = _.find(femaleData, function(item) { return item.period == period });
-          var key = response[period].key;
-          var label = response[period].label;
+        for(var i2 = 0; i2 < options.periodKeys.length; i2++) {
+          var periodName = options.periodKeys[i2];
+          var male_datum = _.find(maleData, function(item) { return item.period == periodName });
+          var female_datum = _.find(femaleData, function(item) { return item.period == periodName });
+          var key = response[periodName].key;
+          var label = response[periodName].label;
 
           if(key) labels.push(key);
           if(!_.contains(legendLabels, label)) legendLabels.push(label);
 
-          male_datum[labels[i]] = response[period].count.male;
-          female_datum[labels[i]] = response[period].count.female;
+          male_datum[labels[i]] = response[periodName].count.male;
+          female_datum[labels[i]] = response[periodName].count.female;
         }
       });
 
       // Range depends on number of response types
       var zRange = legendType == 'yes/no' ? [self.ORANGE,self.BLACK] : [self.ORANGE,self.WHITE,self.BLACK];
 
-      if (legendType == 'yes/dk/no') {
-        labels = [labels[1],labels[2],labels[0]];
-      } else if (legendType == 'yes/no/na') {
-        labels = [labels[2],labels[1],labels[0]];
-      }
-
+      // Calculate totals
       for(var i = 0; i < maleData.length; i++) {
         maleData[i].total = 0;
-        femaleData[i].total = 0;
-
         labels.forEach(function(label) {
           maleData[i].total += maleData[i][label];
+        });
+      }
+      for(var i = 0; i < femaleData.length; i++) {
+        femaleData[i].total = 0;
+        labels.forEach(function(label) {
           femaleData[i].total += femaleData[i][label];
         });
       }
@@ -510,7 +537,7 @@ var PrintMaterials = function() {
               .attr('font-size',legendFontSize)
               .text('NO');
           break;
-          case 'yes/dk/no':
+          case 'yes/other/no':
           zRange.slice(0).reverse().forEach(function(color,i) {
             legend.append('rect')
               .attr('fill',color)
@@ -522,29 +549,7 @@ var PrintMaterials = function() {
               .attr('y',i * (legendIcon.height + height / 20));
           });
 
-          labels.slice(0).forEach(function(label,i) {
-            legend.append('text')
-              .attr('x',legendIcon.width + 5)
-              .attr('y',legendIcon.height / 1.5 + i * (legendIcon.height + height / 20))
-              .attr('font-size',legendFontSize)
-              .text(label.toUpperCase());
-          });
-          break;
-          case 'yes/no/na':
-          zRange.slice(0).reverse().forEach(function(color,i) {
-            legend.append('rect')
-              .attr('fill',color)
-              .attr('height',legendIcon.height)
-              .attr('width',legendIcon.width)
-              .attr('stroke',function() { return color == self.WHITE ? self.BLACK : color })
-              .attr('stroke-width','0.25')
-              .attr('x',0)
-              .attr('y',i * (legendIcon.height + height / 20));
-          });
-
-          legendLabels = [labels[0],labels[2],labels[1]];
-
-          legendLabels.forEach(function(label,i) {
+          labels.slice(0).reverse().forEach(function(label,i) {
             legend.append('text')
               .attr('x',legendIcon.width + 5)
               .attr('y',legendIcon.height / 1.5 + i * (legendIcon.height + height / 20))
