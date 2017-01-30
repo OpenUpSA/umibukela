@@ -350,6 +350,14 @@ var PrintMaterials = function() {
           return -1;
         if (a.current.key == "no")
           return -1;
+        if (b.current.key == "very_difficult")
+          return 1;
+        if (a.current.key == "easy")
+          return 1;
+        if (a.current.key == "very_difficult")
+          return -1;
+        if (b.current.key == "easy")
+          return -1;
         console.log("unable to provide ordering: ", a.current.key, b.current.key);
       }
       responses.sort(compare);
