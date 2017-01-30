@@ -370,7 +370,7 @@ $headings-color: $black;
     }
 
     .banner {
-      font-size: 50px;
+      font-size: 41px;
       text-transform: uppercase;
       color: white;
       top: 10px;
@@ -1050,16 +1050,18 @@ $headings-color: $black;
         font-size: 21px;
       }
 
-      .cycle {
+      .location {
         top: 105px;
         left: 0px;
-        font-size: 20px;
+        font-size: 21px;
       }
 
-      .location {
-        top: 130px;
-        left: 0px;
-        font-size: 20px;
+      .date {
+        right: 5px;
+        top: 5px;
+        font-size: 12px;
+        text-transform: uppercase;
+        color: black !important;
       }
     }
 
