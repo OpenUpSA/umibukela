@@ -5,7 +5,7 @@
   <div class="survey-item col-xs-4">
     {% with q=questions_dict|get:'yes_no_group/all_medication' %}
       <h4 class="question text-center">{{ q.label }}</h4>
-    <div class="response text-center" data-key="yes_no_group/all_medication" data-type="2" data-width="215" data-legend="{% if q.options|length == 3 %}yes/other/no{% else %}yes/no{% endif %}" data-height="112"></div>
+      <div class="response text-center" data-key="yes_no_group/all_medication" data-type="2" data-width="215" data-legend="{% if q.options|length == 3 %}yes/other/no{% else %}yes/no{% endif %}" data-height="112"></div>
     {% endwith %}
   </div>
   <div class="survey-item col-xs-4">
@@ -85,25 +85,25 @@
   <div class="survey-item col-xs-3">
     {% with q10=questions_dict|get:'yes_no_group/safety' %}
       <h4 class="question text-center">{{ q10.label }}</h4>
+      <div class="response text-center" data-key="yes_no_group/safety" data-type="2" data-width="180" data-legend="{% if q10.options|length == 3 %}yes/other/no{% else %}yes/no{% endif %}" data-height="112"></div>
     {% endwith %}
-    <div class="response text-center" data-key="yes_no_group/safety" data-type="2" data-width="180" data-legend="yes/no" data-height="112"></div>
   </div>
   <div class="survey-item col-xs-3">
     {% with q11=questions_dict|get:'yes_no_group/examined_private' %}
       <h4 class="question text-center">{{ q11.label }}</h4>
+      <div class="response text-center" data-key="yes_no_group/examined_private" data-type="2" data-width="180" data-legend="{% if q11.options|length == 3 %}yes/other/no{% else %}yes/no{% endif %}" data-height="112"></div>
     {% endwith %}
-    <div class="response text-center" data-key="yes_no_group/examined_private" data-type="2" data-width="180" data-legend="yes/no" data-height="112"></div>
   </div>
   <div class="survey-item col-xs-3">
     {% with q=questions_dict|get:'yes_no_group/consent' %}
       <h4 class="question text-center">{{ q.label }}</h4>
-    <div class="response text-center" data-key="yes_no_group/consent" data-type="2" data-width="180" data-legend="{% if q.options|length == 3 %}yes/other/no{% else %}yes/no{% endif %}" data-height="112"></div>
+      <div class="response text-center" data-key="yes_no_group/consent" data-type="2" data-width="180" data-legend="{% if q.options|length == 3 %}yes/other/no{% else %}yes/no{% endif %}" data-height="112"></div>
     {% endwith %}
   </div>
   <div class="survey-item col-xs-3">
     {% with q=questions_dict|get:'yes_no_group/complaint' %}
       <h4 class="question text-center">{{ q.label }}</h4>
-    <div class="response text-center" data-key="yes_no_group/complaint" data-type="2" data-width="180" data-legend="{% if q.options|length == 3 %}yes/other/no{% else %}yes/no{% endif %}" data-height="112"></div>
+      <div class="response text-center" data-key="yes_no_group/complaint" data-type="2" data-width="180" data-legend="{% if q.options|length == 3 %}yes/other/no{% else %}yes/no{% endif %}" data-height="112"></div>
     {% endwith %}
   </div>
 </div>
@@ -113,7 +113,7 @@
       <div class="survey-item col-xs-4">
         {% with q=questions_dict|get:'yes_no_group/complaint_response' %}
           <h4 class="question text-center">{{ q.label }}</h4>
-        <div class="response text-center" data-key="yes_no_group/complaint_response" data-type="2" data-width="180" data-legend="{% if q.options|length == 3 %}yes/other/no{% else %}yes/no{% endif %}" data-height="112"></div>
+          <div class="response text-center" data-key="yes_no_group/complaint_response" data-type="2" data-width="180" data-legend="{% if q.options|length == 3 %}yes/other/no{% else %}yes/no{% endif %}" data-height="112"></div>
         {% endwith %}
       </div>
       <div class="survey-item col-xs-4">

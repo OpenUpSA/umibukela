@@ -381,7 +381,12 @@ var PrintMaterials = function() {
       });
 
       // Range depends on number of response types
-      var zRange = legendType == 'yes/no' ? [self.ORANGE,self.BLACK] : [self.ORANGE,self.WHITE,self.BLACK];
+      var zRange = null;
+      if (legendLabels.length == 2) {
+        zRange = [self.ORANGE,self.BLACK]
+      } else if (legendLabels.length == 3) {
+        zRange = [self.ORANGE,self.WHITE,self.BLACK];
+      }
 
       // Calculate totals
       for(var i = 0; i < maleData.length; i++) {
