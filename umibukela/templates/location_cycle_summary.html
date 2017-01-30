@@ -26,8 +26,8 @@ var chartValues = true;
       <h1 class="banner">Citizen Monitoring</h1>
       <div class="black-sash-logo"></div>
       <h2 class="survey">{{ survey_type.name }}</h2>
-      <h3 class="cycle">{{ cycle }}</h3>
       <h3 class="location">{{ location_name }}</h3>
+      <h3 class="date">{{ cycle.start_date|date:'F' }} / {{ cycle.end_date|date:'F' }} {{ cycle.end_date|date:'Y' }}</h3>
     </header>
 
     {% include "site_results_charts_print.html" %}
