@@ -19,6 +19,8 @@ var questions = {{ questions_dict | jsonify }};
       <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
         <h1 class="banner">Community Partner</h1>
         <h1 class="partner">{{ partner.full_name }}</h1>
+        <div class="funder-logo {{ result_set.cycle.programme.short_name|lower }}"></div>
+        <div class="black-sash-logo"></div>
       </header>
       <section class="content">
         <p class="margin-bottom">
@@ -72,6 +74,8 @@ var questions = {{ questions_dict | jsonify }};
         <h1 class="partner">{{ partner.full_name }}</h1>
         <h3 class="date text-xs-right">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
         <h3 class="site">{{ site }}</h3>
+        <div class="funder-logo {{ result_set.cycle.programme.short_name|lower }}"></div>
+        <div class="black-sash-logo"></div>
       </header>
       <section class="content">
         <div class="row margin-bottom">
