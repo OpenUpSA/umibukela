@@ -168,7 +168,8 @@ var questions = {{ questions_dict | jsonify }};
             <img src="{% static 'img/logo-code4sa.png' %}" alt="Code4SA" />
           </div>
           <div class="col-xs-2 col-logo">
-            <img src="{% static 'img/mavc-logo.png' %}" alt="MAVC" />
+            <div class="funder-logo {{ result_set.cycle.programme.short_name|lower }}"></div>
+            <div class="black-sash-logo"></div>
           </div>
         </div>
       </header>
