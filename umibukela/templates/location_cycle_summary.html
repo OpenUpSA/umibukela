@@ -13,7 +13,6 @@
 {{ block.super }}
 <script type="application/javascript">
 var questions = {{ results.questions_dict|jsonify }};
-var chartValues = true;
 </script>
 {% javascript "site" %}
 {% endblock %}

@@ -7,7 +7,7 @@
 {% block js %}
 {{ block.super }}
 <script type="application/javascript">
-  questions = {{ results.questions_dict|jsonify }};
+var questions = {{ results.questions_dict|jsonify }};
 </script>
 {% javascript "site" %}
 {% endblock %}

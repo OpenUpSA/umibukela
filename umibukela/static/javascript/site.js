@@ -1,15 +1,31 @@
 Umibukela.Site = function() {
-  var self = this;
+  var self = this,
+      orange = '#f6921d',
+      yes = 'black',
+      no = orange,
+      neutral = '#777';
 
   self.init = function() {
-    self.colours = ['#f6921d', '#ccc'];
+    self.colours = ['black', '#ccc'];
 
     // TODO: do this better
     self.drawCharts();
   };
 
+  self.pointColour = function(label, options) {
+    return {
+      Yes: yes,
+      Positive: yes,
+      No: no,
+      Negative: no,
+      Neutral: neutral,
+      Maybe: neutral,
+      Unsure: neutral,
+    }[label];
+  };
+
   self.drawCharts = function() {
-    var pct = !(!!window.chartValues);
+    var pct = false;  // always use counts, not percentages
     var valueKey = pct ? 'pct' : 'count';
 
     Highcharts.setOptions({
@@ -58,7 +74,10 @@ Umibukela.Site = function() {
       var chartType = $e.hasClass('chart-bar') ? 'bar' : 'column';
       var labels = _.map(q.options, function(o) { return o.current.label; });
       var currValues = _.map(q.options, function(o) {
-          return Math.round(o.current[valueKey][gender]);
+          return {
+            y: Math.round(o.current[valueKey][gender]),
+            color: self.pointColour(o.current.label, q.options),
+          };
       });
 
       var series = [{
@@ -74,6 +93,7 @@ Umibukela.Site = function() {
               prevValues.push(Math.round(o.prev[valueKey][gender]));
           }
       });
+
       if (prevValues.length === currValues.length) {
           var prevSeries = {
               data: prevValues,
@@ -91,7 +111,12 @@ Umibukela.Site = function() {
               series = series.reverse();
           }
       }
-      $(this).highcharts({
+
+      if (labels.length > 4 && chartType == 'bar') {
+        $e.height($e.height() * Math.ceil(labels.length / 3));
+      }
+
+      $e.highcharts({
         chart: {type: chartType},
         series: series,
         xAxis: {
