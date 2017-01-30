@@ -18,7 +18,7 @@
 {% block content %}
 <div class="print-materials poster print-page simple-bootstrap-rows a4-portrait-single {{ layout_class }} {% if DEBUG %}debug{% endif %}">
   <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
-    <h1 class="banner">Citizen Monitoring</h1>
+    <h1 class="banner">Community Monitoring</h1>
     <div class="funder-logo {{ result_set.cycle.programme.short_name|lower }}"></div>
     <div class="black-sash-logo"></div>
     <h1 class="partner {% if result_set.partner.full_name|length > 50 %}long{% endif %}">{{ result_set.partner.full_name }}</h1>
