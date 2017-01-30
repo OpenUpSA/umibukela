@@ -58,7 +58,7 @@ var PrintMaterials = function() {
       var height = options.height;
       var width = options.width;
       var margin = options.margin;
-      var optionKeys = options.optionKeys;
+      var periodKeys = options.periodKeys;
 
       var labelWidth = Math.floor(width / 5) - 3;
       var sideWidth = (width - labelWidth) / 2;
@@ -144,7 +144,7 @@ var PrintMaterials = function() {
         .paddingOuter(0)
         .align(0);
       var y1 = d3.scaleBand()
-        .domain(optionKeys)
+        .domain(periodKeys)
         .rangeRound([0.25, y0.bandwidth()])
         .padding(0);
       var xRight = d3.scaleLinear()
@@ -161,7 +161,7 @@ var PrintMaterials = function() {
         .attr('class','right');
 
       var scalingFactor = 1;
-      var isTwoPeriods = _.contains(optionKeys,'prev');
+      var isTwoPeriods = _.contains(periodKeys,'prev');
 
       right.append('rect')
         .attr('height', function(d) {
@@ -210,7 +210,7 @@ var PrintMaterials = function() {
 
           if(d.name == 'prev') {
             scalingFactor = 1 / 3;
-          } else if(_.contains(optionKeys,'prev')) {
+          } else if(_.contains(periodKeys,'prev')) {
             scalingFactor = 5 / 3;
           }
 
@@ -296,7 +296,7 @@ var PrintMaterials = function() {
       var margin = options.margin;
       var legendType = options.legendType;
       var legendFormat = options.legendFormat;
-      var optionKeys = options.optionKeys;
+      var periodKeys = options.periodKeys;
 
       var maleData = [];
       var femaleData = [];
@@ -322,12 +322,12 @@ var PrintMaterials = function() {
       var labelFontSize = width / 30;
       var colWidth = isBar ? (figureWidth - gutter) / 2 : (figureWidth - gutter - legendWidth) / 2;
       var years = cycleYears;
-      var hasTwoPeriods = _.contains(optionKeys,'current') && _.contains(optionKeys,'prev');
+      var hasTwoPeriods = _.contains(periodKeys,'current') && _.contains(periodKeys,'prev');
 
-      optionKeys.reverse();
+      periodKeys.reverse();
 
-      for(var i=0;i < optionKeys.length;i++) {
-        var period = optionKeys[i];
+      for(var i=0;i < periodKeys.length;i++) {
+        var period = periodKeys[i];
 
         maleData.push({ period: period, year: period == 'current' ? years[1] : years[0] });
         femaleData.push({ period: period, year: period == 'current' ? years[1] : years[0] });
@@ -614,7 +614,7 @@ var PrintMaterials = function() {
       if(legendType == 'top-bar' || legendType == 'bottom-bar') figureHeight = height - legendHeight;
 
       var x = d3.scaleBand()
-        .domain(optionKeys)
+        .domain(periodKeys)
         .rangeRound([0, colWidth])
         .padding(0.2);
       var y = d3.scaleLinear()
@@ -691,7 +691,7 @@ var PrintMaterials = function() {
       var height = options.height;
       var width = options.width; // 370
       var margin = options.margin;
-      var optionKeys = options.optionKeys;
+      var periodKeys = options.periodKeys;
 
       var maleData = [];
       var femaleData = [];
@@ -709,10 +709,10 @@ var PrintMaterials = function() {
 
       var years = cycleYears;
       var yearsReversed = [years[1],years[0]];
-      var hasTwoPeriods = _.contains(optionKeys,'current') && _.contains(optionKeys,'prev');
+      var hasTwoPeriods = _.contains(periodKeys,'current') && _.contains(periodKeys,'prev');
 
-      for(var i=0;i < optionKeys.length;i++) {
-        var period = optionKeys[i];
+      for(var i=0;i < periodKeys.length;i++) {
+        var period = periodKeys[i];
 
         maleData.push({ period: period, year: period == 'current' ? years[1] : years[0], total: 0 });
         femaleData.push({ period: period, year: period == 'current' ? years[1] : years[0], total: 0 });
@@ -757,7 +757,7 @@ var PrintMaterials = function() {
       var zRange = labels.length > 2 ? [self.BLACK,self.WHITE,self.ORANGE] : [self.BLACK,self.ORANGE];
 
       var y = d3.scaleBand()
-        .domain(optionKeys)
+        .domain(periodKeys)
         .rangeRound([0, colHeight])
         .paddingInner(0.1);
       var x = d3.scaleLinear()
@@ -1128,7 +1128,7 @@ var PrintMaterials = function() {
       var chart = options.el;
       var height = options.height;
       var width = options.width;
-      var optionKeys = options.optionKeys;
+      var periodKeys = options.periodKeys;
 
       var max = 0;
 
@@ -1804,8 +1804,8 @@ var PrintMaterials = function() {
             bottom: parseFloat(response.attr('data-margin-bottom')) || 10,
             left: parseFloat(response.attr('data-margin-left')) || 10
           };
-          options.optionKeys = _.keys(questions[key].options[0]);
-          options.optionKeys.sort(); // HACK: we want the order ['current', 'prev'], sometimes not both are there
+          options.periodKeys = _.keys(questions[key].options[0]);
+          options.periodKeys.sort(); // HACK: we want the order ['current', 'prev'], sometimes not both are there
           options.height = parseInt(response.attr('data-height'));
           options.width = parseInt(response.attr('data-width'));
           options.legendFormat = response.attr('data-legend-format');
