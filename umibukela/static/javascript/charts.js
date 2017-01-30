@@ -350,14 +350,9 @@ var PrintMaterials = function() {
           return -1;
         if (a.current.key == "no")
           return -1;
-        console.log("unknown", a.current.key, "or", b.current.key);
+        console.log("unable to provide ordering: ", a.current.key, b.current.key);
       }
-      var compare2 = function(a, b) {
-        var result = compare(a, b);
-        console.log(a.current.key, b.current.key, result);
-        return result;
-      }
-      responses.sort(compare2);
+      responses.sort(compare);
 
       // Set the category values for the objects in the D3 data arrays
       // Also add labels to the legend label array
