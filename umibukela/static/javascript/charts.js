@@ -541,7 +541,7 @@ var PrintMaterials = function() {
               .attr('x',0)
               .attr('y',i * (legendIcon.height + height / 20));
           });
-          
+
           legendLabels = [labels[0],labels[2],labels[1]];
 
           legendLabels.forEach(function(label,i) {
@@ -948,18 +948,19 @@ var PrintMaterials = function() {
           .data(legendLabels)
         .enter().append('text')
           .attr('x',legendSquare + 5)
-          .attr('y',function(d,i) { return Math.round(height / 7) + (legendSquare + 5) * i; })
-          .attr('font-size',Math.round(height / 7))
+          .attr('y',function(d,i) { return fontSize + (legendSquare + 5) * i; })
+          .attr('font-size',fontSize)
+          .attr('fill',self.BLACK)
           .html(function(d) { return d.toUpperCase(); });
 
       var maxTextWidth = 0;
 
-      text.each(function(d) {
-        if(text.node().getBBox().width > maxTextWidth) maxTextWidth = text.node().getBBox().width;
+      /*text.each(function(d) {
+        if(text.node().getComputedTextLength() > maxTextWidth) maxTextWidth = text.node().getComputedTextLength();
       });
 
       // Wkhtmltopdf doesn't seem to like this calculation
-      //var renderedLegendWidth = legendSquare + 5 + maxTextWidth;
+      //var renderedLegendWidth = legendSquare + 5 + maxTextWidth;*/
 
       legend.attr('transform','translate(' + (width + 10 - legendWidth) + ',' + (height - labels.length * (legendSquare + 2)) + ')');
     },
