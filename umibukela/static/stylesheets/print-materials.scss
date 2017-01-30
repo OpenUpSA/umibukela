@@ -32,6 +32,34 @@ $headings-color: $black;
 
 //============================================================================================
 
+.simple-bootstrap-rows {
+  // override bootstrap row and column padding, we do our own padding
+  .row {
+    margin: 0;
+  }
+  .col-xs-1,
+  .col-xs-2,
+  .col-xs-3,
+  .col-xs-4,
+  .col-xs-5,
+  .col-xs-6,
+  .col-xs-7,
+  .col-xs-8,
+  .col-xs-9,
+  .col-xs-10,
+  .col-xs-11,
+  .col-xs-12 {
+    padding: 0px;
+  }
+
+  .row {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display:         flex;
+  }
+}
+
 .print-page {
   overflow: hidden;
   page-break-after: always;
@@ -873,25 +901,6 @@ $headings-color: $black;
 .print-materials {
   -webkit-print-color-adjust: exact;
 
-  // override bootstrap row and column padding, we do our own padding
-  .row {
-    margin: 0;
-  }
-  .col-xs-1,
-  .col-xs-2,
-  .col-xs-3,
-  .col-xs-4,
-  .col-xs-5,
-  .col-xs-6,
-  .col-xs-7,
-  .col-xs-8,
-  .col-xs-9,
-  .col-xs-10,
-  .col-xs-11,
-  .col-xs-12 {
-    padding: 0px;
-  }
-
   h1, h2, h3, h4 {
     font-family: "Open Sans", Helvetica, Arial, sans-serif;
     font-weight: normal;
@@ -931,13 +940,6 @@ $headings-color: $black;
     padding-left:15px;
   }
 
-  .row {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display:         flex;
-  }
-
   .row-not-flex {
     display: block;
   }
@@ -958,6 +960,22 @@ $headings-color: $black;
   }
 }
 
-.question {
+.results-summary {
+  .question {
     page-break-inside: avoid;
+
+    h3 {
+      margin-bottom: 5px;
+    }
+  }
+
+  section.stat-row {
+    padding: 10px 0px;
+  }
+
+  .contributors {
+    h3 {
+      margin-bottom: 10px;
+    }
+  }
 }

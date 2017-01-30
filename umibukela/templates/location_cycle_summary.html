@@ -20,45 +20,40 @@
 </script>
 {% javascript "site" %}
 {% endblock %}
+
 {% block content %}
 
-{% block page-content %}
-    <div class="page-content">
-      <div class="wrapper">
-
-<div class="print-materials poster print-page a4-portrait-multi {{ layout_class }} {% if DEBUG %}debug{% endif %}">
-<div class="section cycle-results">
-  <!-- section-header -->
-  <div class="section-heading cycle-results-heading">
-    <div class="container">
+<div class="print-materials results-summary print-page a4-portrait-multi {{ layout_class }} {% if DEBUG %}debug{% endif %}">
+  <div class="section cycle-results">
+    <!-- section-header -->
+    <div class="section-heading cycle-results-heading">
       <h3><i class="fa fa-bar-chart-o"></i> Results Preview</h3>
 
       <h1>{{ location_name }}</h1>
       <h2>{{ survey_type.name }}</h2>
       <h2>{{ cycle }}</h2>
-
     </div>
+    <!-- /section-header -->
+
+    {% include "site_results_charts_print.html" %}
   </div>
-  <!-- /section-header -->
 
-  {% include "site_results_charts_print.html" %}
+  <div class="section contributors">
+    <h3>Data in this comparison</h3>
+    Cycle Result Sets:
+    <ul>
+      {% for result_set in result_sets %}
+      <li>{{ result_set }}</li>
+      {% endfor %}
+    </ul>
+    Previous Cycle Result Sets:
+    <ul>
+      {% for result_set in prev_result_sets %}
+      <li>{{ result_set }}</li>
+      {% endfor %}
+    </ul>
 
-  <h3>Data in this comparison</h3>
-  Cycle Result Sets:
-  <ul>
-    {% for result_set in result_sets %}
-    <li>{{ result_set }}</li>
-    {% endfor %}
-  </ul>
-  Previous Cycle Result Sets:
-  <ul>
-    {% for result_set in prev_result_sets %}
-    <li>{{ result_set }}</li>
-    {% endfor %}
-  </ul>
-
-</div>
+  </div>
 </div>
 
-{% endblock %}
 {% endblock %}
