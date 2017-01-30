@@ -111,7 +111,12 @@ Umibukela.Site = function() {
               series = series.reverse();
           }
       }
-      $(this).highcharts({
+
+      if (labels.length > 4 && chartType == 'bar') {
+        $e.height($e.height() * Math.ceil(labels.length / 3));
+      }
+
+      $e.highcharts({
         chart: {type: chartType},
         series: series,
         xAxis: {
