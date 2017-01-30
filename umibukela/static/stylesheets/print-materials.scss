@@ -684,6 +684,30 @@ $headings-color: $black;
       p {
         font-size: 12px;
       }
+
+      footer {
+        .funder-logo.mavc {
+          background-image: url(/static/img/mavc-logo-simple.svg);
+          position: absolute;
+          top: 0px;
+          left: 0px;
+          width: 180px;
+          height: 70px;
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+
+        .black-sash-logo {
+          background-image: url(/static/img/black-sash-logo.svg);
+          position: absolute;
+          top: 100px;
+          left: 0px;
+          width: 180px;
+          height: 50px;
+          background-repeat: no-repeat;
+          background-size: contain;
+        }
+      }
     }
 
     .right {
@@ -781,6 +805,30 @@ $headings-color: $black;
   }
 
   &.page-2 {
+    header {
+      .funder-logo.mavc {
+        background-image: url(/static/img/mavc-logo-simple.svg);
+        position: absolute;
+        top: 50px;
+        left: 0px;
+        width: 100%;
+        height: 70px;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      .black-sash-logo {
+        background-image: url(/static/img/black-sash-logo.svg);
+        position: absolute;
+        top: 20px;
+        left: 0px;
+        width: 100%;
+        height: 30px;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+    }
+
     .padding-top {
       padding-top:15px;
     }
