@@ -2,17 +2,13 @@
 {% load pipeline static jsonify lookup markup_tags %}
 
 {% block title %}Summary for {{ location_name }} - {{ survey_type.name }} - {{ cycle.name }}{% endblock %}
+
 {% block head-css %}
-{{ block.super }}
-{% stylesheet "print-materials" %}
-    <link href="{% static 'stylesheets/print-bootstrap.css' %}" rel="stylesheet" type="text/css"   />
-<style>
-  section.stat-row {
-  padding-bottom: 0;
-  margin-bottom: 0;
-  }
-</style>
+  {{ block.super }}
+  {% stylesheet "print-materials" %}
+  <link href="{% static 'stylesheets/print-bootstrap.css' %}" rel="stylesheet" type="text/css"   />
 {% endblock %}
+
 {% block js %}
 {{ block.super }}
 <script type="application/javascript">
@@ -25,34 +21,24 @@
 
 <div class="print-materials results-summary print-page a4-portrait-multi {{ layout_class }} {% if DEBUG %}debug{% endif %}">
   <div class="section cycle-results">
-    <!-- section-header -->
-    <div class="section-heading cycle-results-heading">
-      <h3><i class="fa fa-bar-chart-o"></i> Results Preview</h3>
-
-      <h1>{{ location_name }}</h1>
-      <h2>{{ survey_type.name }}</h2>
-      <h2>{{ cycle }}</h2>
-    </div>
-    <!-- /section-header -->
+    <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
+      <h1 class="banner">Citizen Monitoring</h1>
+      <div class="black-sash-logo"></div>
+      <h2 class="survey">{{ survey_type.name }}</h2>
+      <h3 class="cycle">{{ cycle }}</h3>
+      <h3 class="location">{{ location_name }}</h3>
+    </header>
 
     {% include "site_results_charts_print.html" %}
   </div>
 
   <div class="section contributors">
-    <h3>Data in this comparison</h3>
-    Cycle Result Sets:
+    <h3>Sites in {{ location_name }}:</h3>
     <ul>
       {% for result_set in result_sets %}
-      <li>{{ result_set }}</li>
+      <li>{{ result_set.site.name }}</li>
       {% endfor %}
     </ul>
-    Previous Cycle Result Sets:
-    <ul>
-      {% for result_set in prev_result_sets %}
-      <li>{{ result_set }}</li>
-      {% endfor %}
-    </ul>
-
   </div>
 </div>
 
