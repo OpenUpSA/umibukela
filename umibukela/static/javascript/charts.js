@@ -1231,7 +1231,12 @@ var PrintMaterials = function() {
       var height = options.height;
       var width = options.width;
       var chart = options.el;
-      var data = _.values(options.responses);
+      var data = [
+        options.responses['older_60'],
+        options.responses['41_60'],
+        options.responses['26_40'],
+        options.responses['under_25']
+      ];
       var maxCategory = _.max(data, function(d) { return d.count.male + d.count.female; });
 
       var chartLabels = ['60+','41 - 60','26-40','<25'];
