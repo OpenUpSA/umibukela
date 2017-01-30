@@ -946,7 +946,16 @@ var PrintMaterials = function() {
       var legend = svg.append('g')
         .attr('class','legend');
 
-      var legendLabels = labels.length > 2 ? ['<tspan dy="0">1</tspan><tspan font-size="' + (fontSize / 2) + '" dy="-' + (fontSize / 2) + '">st</tspan> <tspan dy="' + (fontSize / 2) + '">Visit</tspan>', '<tspan>2</tspan><tspan font-size="' + (fontSize / 2) + '" dy="-' + (fontSize / 2) + '">nd</tspan> <tspan dy="' + (fontSize / 2) + '">Visit</tspan>', '<tspan>3</tspan><tspan font-size="' + (fontSize / 2) + '" dy="-' + (fontSize / 2) + '">rd</tspan>  <tspan dy="' + (fontSize / 2) + '">Visit</tspan>'] : ['Yes','No'];
+      var mapLabels = function(label) {
+        if (label == 'first')
+          return '1 time';
+        if (label == 'second')
+          return '2 times';
+        if (label == 'third_more')
+          return '3+';
+        return label;
+      }
+      var legendLabels = labels.slice(0).map(mapLabels);
 
       legend.selectAll('rect')
           .data(zRange)
@@ -964,7 +973,7 @@ var PrintMaterials = function() {
           .attr('y',function(d,i) { return fontSize + (legendSquare + 5) * i; })
           .attr('font-size',fontSize)
           .attr('fill',self.BLACK)
-          .html(function(d) { return d.toUpperCase(); });
+          .text(function(d) { return d.toUpperCase(); });
 
       var maxTextWidth = 0;
 
