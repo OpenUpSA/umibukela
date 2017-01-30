@@ -4,7 +4,7 @@ from django.contrib.gis.db import models as gis_models
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
-from xform import map_questions, simplify_perf_group
+from xform import map_form, map_questions, simplify_perf_group
 import analysis
 import jsonfield
 import os
@@ -232,6 +232,7 @@ class SurveyType(models.Model):
 class Survey(models.Model):
     name = models.CharField(max_length=200, unique=True)
     form = jsonfield.JSONField()
+    map_to_form = jsonfield.JSONField(blank=True, null=True)
 
     class Meta:
         ordering = ('name', )
@@ -340,6 +341,9 @@ class CycleResultSet(models.Model):
         form = self.survey.form
         responses = [s.answers for s in self.submissions.all()]
         if map:
+            if self.survey.map_to_form:
+                map_form(form, responses, self.survey.map_to_form)
+                form = self.survey.map_to_form
             map_questions(form, responses)
             simplify_perf_group(form, responses)
         return form, responses

@@ -46,6 +46,19 @@ class XForm(dict):
             direct_parent = cls._get_child_by_path(parent, path[:-1])
             cls._set_child_by_path(direct_parent, [path[-1]], el)
 
+    @classmethod
+    def _get_questions(cls, path, elements):
+        for c in elements:
+            if c['type'] == 'group':
+                for q in cls._get_questions(path + [c['name']], c['children']):
+                    yield q
+            else:
+                yield (path + [c['name']], c)
+
+    def questions(self):
+        for q in self._get_questions([], self['children']):
+            yield q
+
 
 class Element(object):
     def __init__(self, element, path):
@@ -80,6 +93,7 @@ class SelectAllThatApply(MultipleChoice):
 def pathstr(path):
     """ / separated path from array of strings"""
     return '/'.join(path)
+
 
 def map_questions(form, submissions):
     form = XForm(form)
@@ -133,10 +147,6 @@ def map_questions(form, submissions):
             'right_path': 'clinic_feedback',
         },
         {
-            'wrong_path': 'How_far_did_you_travel_to_get_',
-            'right_path': 'travel_distance',
-        },
-        {
             'wrong_path': 'Waiting_Times/get_registered_at_reception',
             'right_path': 'waiting_group/register_time',
         },
@@ -185,17 +195,6 @@ def map_questions(form, submissions):
             'right_path': 'performance_group/respect_professionals',
         },
     ]
-    groups = {
-        'demographics_group': {
-            'label': 'Some questions about you',
-        },
-        'yes_no_group': {
-            'label': 'Please answer yes or no to the following questions',
-        },
-        'performance_group': {
-            'label': 'How would you rate the performance of the clinic staff in the following areas?',
-        },
-    }
     for mapping in mappings:
         q = form.get_by_path(mapping['wrong_path'])
         if q:
@@ -223,6 +222,21 @@ def map_questions(form, submissions):
                 else:
                     s[mapping['right_path']] = s[mapping['wrong_path']]
                     del s[mapping['wrong_path']]
+
+
+def map_form(form, submissions, map_to_form):
+    form = XForm(form)
+    map_to_form = XForm(map_to_form)
+    for path, q in map_to_form.questions():
+        if 'from_path' in q:
+            option_mapping = {}
+            for option in q['children']:
+                option_mapping[option['from_name']] = option['name']
+            wrong_pathstr = q['from_path']
+            right_pathstr = pathstr(path)
+            for s in submissions:
+                s[right_pathstr] = option_mapping[s[wrong_pathstr]]
+                del s[wrong_pathstr]
 
 
 def simplify_perf_group(form, responses):
