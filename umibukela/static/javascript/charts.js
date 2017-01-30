@@ -52,6 +52,34 @@ var PrintMaterials = function() {
     }
   }
 
+  var compare = function(a, b) {
+    if (a.current.key == "positive")
+      return 1;
+    if (b.current.key == "negative")
+      return 1;
+    if (b.current.key == "positive")
+      return -1;
+    if (a.current.key == "negative")
+      return -1;
+    if (a.current.key == "yes")
+      return 1;
+    if (b.current.key == "no")
+      return 1;
+    if (b.current.key == "yes")
+      return -1;
+    if (a.current.key == "no")
+      return -1;
+    if (b.current.key == "very_difficult")
+      return 1;
+    if (a.current.key == "easy")
+      return 1;
+    if (a.current.key == "very_difficult")
+      return -1;
+    if (b.current.key == "easy")
+      return -1;
+    console.log("unable to provide ordering: ", a.current.key, b.current.key);
+  }
+
   self.charts = {
     typeOne: function(options) {
       var response = options.el;
@@ -333,33 +361,6 @@ var PrintMaterials = function() {
         femaleData.push({ period: periodName, year: periodName == 'current' ? years[1] : years[0] });
       }
 
-      var compare = function(a, b) {
-        if (a.current.key == "positive")
-          return 1;
-        if (b.current.key == "negative")
-          return 1;
-        if (b.current.key == "positive")
-          return -1;
-        if (a.current.key == "negative")
-          return -1;
-        if (a.current.key == "yes")
-          return 1;
-        if (b.current.key == "no")
-          return 1;
-        if (b.current.key == "yes")
-          return -1;
-        if (a.current.key == "no")
-          return -1;
-        if (b.current.key == "very_difficult")
-          return 1;
-        if (a.current.key == "easy")
-          return 1;
-        if (a.current.key == "very_difficult")
-          return -1;
-        if (b.current.key == "easy")
-          return -1;
-        console.log("unable to provide ordering: ", a.current.key, b.current.key);
-      }
       responses.sort(compare);
 
       // Set the category values for the objects in the D3 data arrays
@@ -1476,8 +1477,9 @@ var PrintMaterials = function() {
         .domain(responseLabels)
         .range(colors);
 
-      var maleStack = d3.stack().keys(responseLabels)(maleData);
-      var femaleStack = d3.stack().keys(responseLabels)(femaleData);
+      var stackKeys = responseLabels.slice(0).reverse();
+      var maleStack = d3.stack().keys(stackKeys)(maleData);
+      var femaleStack = d3.stack().keys(stackKeys)(femaleData);
 
       var maleMax = _.max(data, function(d) { return d.count.male; }).count.male;
       var femaleMax = _.max(data, function(d) { return d.count.female; }).count.female;
@@ -1498,10 +1500,11 @@ var PrintMaterials = function() {
         .attr('height',function(d) { return y(d[0]) - y(d[1]); })
         .attr('width',barWidth);
 
+      // Draw male value on bar
       male.selectAll('text')
           .data(function(d) { return d; })
         .enter().append('text')
-          .filter(function(d) { return d[1] == maleMax; })
+          .filter(function(d) { return d[1] > maleMax; })
           .attr('fill',self.WHITE)
           .attr('stroke',self.WHITE)
           .attr('font-size','15px')
@@ -1528,10 +1531,13 @@ var PrintMaterials = function() {
         .attr('height',function(d) { return y(d[0]) - y(d[1]); })
         .attr('width',barWidth);
 
+      // Draw value on bar
       female.selectAll('text')
           .data(function(d) { return d; })
         .enter().append('text')
-          .filter(function(d) { return d[1] == femaleMax; })
+        .filter(function(d) {
+          return d[1] > femaleMax;
+        })
           .attr('fill',self.WHITE)
           .attr('stroke',self.WHITE)
           .attr('font-size','15px')
@@ -1564,7 +1570,7 @@ var PrintMaterials = function() {
       var legendLabels = ['Positive','Neutral','Negative'];
 
       legend.selectAll('image')
-          .data(legendIcons)
+          .data(legendIcons.slice(0).reverse())
         .enter().append('image')
           .attr('xlink:href',function(d) { return d; })
           .attr('y',function(d, i) { return (legendIcon.height + 5) * i; })
