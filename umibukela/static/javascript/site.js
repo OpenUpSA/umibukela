@@ -1,11 +1,27 @@
 Umibukela.Site = function() {
-  var self = this;
+  var self = this,
+      orange = '#f6921d',
+      yes = 'black',
+      no = orange,
+      neutral = '#777';
 
   self.init = function() {
-    self.colours = ['#f6921d', '#ccc'];
+    self.colours = ['black', '#ccc'];
 
     // TODO: do this better
     self.drawCharts();
+  };
+
+  self.pointColour = function(label, options) {
+    return {
+      Yes: yes,
+      Positive: yes,
+      No: no,
+      Negative: no,
+      Neutral: neutral,
+      Maybe: neutral,
+      Unsure: neutral,
+    }[label];
   };
 
   self.drawCharts = function() {
@@ -58,7 +74,10 @@ Umibukela.Site = function() {
       var chartType = $e.hasClass('chart-bar') ? 'bar' : 'column';
       var labels = _.map(q.options, function(o) { return o.current.label; });
       var currValues = _.map(q.options, function(o) {
-          return Math.round(o.current[valueKey][gender]);
+          return {
+            y: Math.round(o.current[valueKey][gender]),
+            color: self.pointColour(o.current.label, q.options),
+          };
       });
 
       var series = [{
