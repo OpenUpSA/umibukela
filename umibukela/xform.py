@@ -205,7 +205,7 @@ def map_questions(form, submissions):
                 group = form.get_by_path('/'.join(group_path))
                 if not group:
                     group = {
-                        "label": 'fake label',
+                        "label": '',
                         "type": "group",
                         "children": [],
                     }

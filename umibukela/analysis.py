@@ -88,7 +88,10 @@ def count_options(submissions, children, path=None, group_labels=None, results=N
         elif child.get('type') == 'group' and child['name'] in SKIP_GROUP_NAMES:
             pass
         elif child.get('type') == 'group':
-            deeper_group_labels = group_labels + [child.get('label', child['name'])]
+            label = child.get('label')
+            if not label:
+                label = child['name'].replace('_', ' ').capitalize()
+            deeper_group_labels = group_labels + [label]
             results = count_options(submissions, child['children'],
                                     deeper_path, deeper_group_labels, results)
         elif child.get('type') == 'select one':
