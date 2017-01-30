@@ -25,7 +25,7 @@ Umibukela.Site = function() {
   };
 
   self.drawCharts = function() {
-    var pct = !(!!window.chartValues);
+    var pct = false;  // always use counts, not percentages
     var valueKey = pct ? 'pct' : 'count';
 
     Highcharts.setOptions({
@@ -93,6 +93,7 @@ Umibukela.Site = function() {
               prevValues.push(Math.round(o.prev[valueKey][gender]));
           }
       });
+
       if (prevValues.length === currValues.length) {
           var prevSeries = {
               data: prevValues,
