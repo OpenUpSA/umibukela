@@ -108,6 +108,7 @@ var PrintMaterials = function() {
 
       var years = cycleYears.slice(0).reverse();
 
+      options.responses.sort(compare);
       options.responses.forEach(function(response) {
         var key = response.current.key;
         var label = response.current.label;
@@ -735,23 +736,29 @@ var PrintMaterials = function() {
       maleData.reverse();
       femaleData.reverse();
 
+      responses.sort(compare);
       responses.forEach(function(response) {
         if (response.prev) response.prev.key = response.current.key;
 
-        for(period in response) {
-          var male_datum = _.find(maleData, function(item) { return item.period == period; });
-          var female_datum = _.find(femaleData, function(item) { return item.period == period; });
+        for(var i2 = 0; i2 < options.periodKeys.length; i2++) {
+          var periodName = options.periodKeys[i2];
+          var male_datum = _.find(maleData, function(item) { return item.period == periodName; });
+          var female_datum = _.find(femaleData, function(item) { return item.period == periodName; });
 
-          if(response[period].key && period == 'current') labels.push(response[period].key.toLowerCase());
+          if(response[period].key && periodName == 'current') labels.push(response[periodName].key.toLowerCase());
 
-          male_datum[response[period].key.toLowerCase()] = response[period].count.male;
-          female_datum[response[period].key.toLowerCase()] = response[period].count.female;
+          male_datum[response[periodName].key.toLowerCase()] = response[periodName].count.male;
+          female_datum[response[periodName].key.toLowerCase()] = response[periodName].count.female;
         }
      });
 
       for(var i = 0;i < maleData.length; i++) {
         labels.forEach(function(label) {
           maleData[i].total += maleData[i][label];
+        });
+      }
+      for(var i = 0;i < femaleData.length; i++) {
+        labels.forEach(function(label) {
           femaleData[i].total += femaleData[i][label];
         });
       }
@@ -1004,6 +1011,7 @@ var PrintMaterials = function() {
         total: 0
       });
 
+      responses.sort(compare);
       responses.forEach(function(response){
         if(response.current) {
           if(response.current.key != 'none') {
@@ -1430,7 +1438,10 @@ var PrintMaterials = function() {
       var height = options.height;
       var width = options.width;
       var chart = options.el;
-      var data = _.values(options.responses);
+      var data = [options.responses['positive'],
+                  options.responses['neutral'],
+                  options.responses['negative']];
+
       var axisLabels = ['male','female'];
       var responseLabels = ['positive','neutral','negative'];
       var max = _.reduce(_.values(_.max(data, function(d) { return d.count.male + d.count.female; }).count), function(memo, num) { return memo + num });
@@ -1531,7 +1542,7 @@ var PrintMaterials = function() {
         .attr('height',function(d) { return y(d[0]) - y(d[1]); })
         .attr('width',barWidth);
 
-      // Draw value on bar
+      // Draw female value on bar
       female.selectAll('text')
           .data(function(d) { return d; })
         .enter().append('text')
@@ -1591,6 +1602,7 @@ var PrintMaterials = function() {
       var height = options.height;
       var width = options.width;
       var data = options.responses;
+      responses.sort(data);
       var chart = options.el;
       var labels=['yes','no'];
       var colors = [self.BLACK,self.ORANGE];
