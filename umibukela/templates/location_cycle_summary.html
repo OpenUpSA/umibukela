@@ -12,7 +12,8 @@
 {% block js %}
 {{ block.super }}
 <script type="application/javascript">
-  questions = {{ results.questions_dict|jsonify }};
+var questions = {{ results.questions_dict|jsonify }};
+var chartValues = true;
 </script>
 {% javascript "site" %}
 {% endblock %}

@@ -635,7 +635,7 @@ def province_summary(request, province_slug, survey_type_slug, cycle_id):
         df = pandas.DataFrame(responses)
         results = analysis.count_options(df, form['children'])
         results = analysis.calc_q_percents(results)
-        if prev_responses:
+        if False and prev_responses:
             totals = analysis.count_submissions(
                 pandas.DataFrame(responses + prev_responses))
             prev_df = pandas.DataFrame(prev_responses)
@@ -715,7 +715,7 @@ def national_summary(request, survey_type_slug, cycle_id):
         df = pandas.DataFrame(responses)
         results = analysis.count_options(df, form['children'])
         results = analysis.calc_q_percents(results)
-        if prev_responses:
+        if False and prev_responses:
             totals = analysis.count_submissions(
                 pandas.DataFrame(responses + prev_responses))
             prev_df = pandas.DataFrame(prev_responses)

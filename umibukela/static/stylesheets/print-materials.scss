@@ -1018,7 +1018,7 @@ $headings-color: $black;
       page-break-inside: avoid;
 
       h3 {
-        margin-bottom: 5px;
+        margin-bottom: 10px;
       }
     }
 
@@ -1027,6 +1027,11 @@ $headings-color: $black;
       margin: 0px;
     }
   }
+
+  .participants {
+    border-bottom: 1px solid #eee;
+  }
+
   .contributors {
     h3 {
       margin-bottom: 10px;

@@ -1,6 +1,6 @@
 {% load lookup markup_tags %}
 
-<div class="stat-table page-section">
+<div class="stat-table page-section participants">
   <section class="row">
     <div class="col-sm-4">
       <div class="stat stat-number">
@@ -49,15 +49,15 @@
       <div class="col-sm-3">
         <h5>Female</h5>
         <div class="stat stat-number">
-          <div class="value">{{ option.current.pct.female|floatformat }}%</div>
+          <div class="value">{{ option.current.count.female|floatformat }}</div>
           <div class="name">{{ option.current.label }}</div>
           {% if option.prev %}
           <div class="context">
             <strong>
-              {% if option.prev.pct.female > option.current.pct.female %} Down
+              {% if option.prev.count.female > option.current.count.female %} Down
               {% else %} Up
               {% endif %}
-              from {{ option.prev.pct.female|floatformat }}%
+              from {{ option.prev.count.female|floatformat }}
             </strong> in the previous cycle</div>
           {% endif %}
         </div>
@@ -70,15 +70,15 @@
       <div class="col-sm-3">
         <h5>Male</h5>
         <div class="stat stat-number">
-          <div class="value">{{ option.current.pct.male|floatformat }}%</div>
+          <div class="value">{{ option.current.count.male|floatformat }}</div>
           <div class="name">{{ option.current.label }}</div>
           {% if option.prev %}
           <div class="context">
             <strong>
-              {% if option.prev.pct.male > option.current.pct.male %} Down
+              {% if option.prev.count.male > option.current.count.male %} Down
               {% else %} Up
               {% endif %}
-              from {{ option.prev.pct.male|floatformat }}%
+              from {{ option.prev.count.male|floatformat }}
             </strong> in the previous cycle</div>
           {% endif %}
         </div>
