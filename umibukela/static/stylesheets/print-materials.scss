@@ -1017,7 +1017,7 @@ $headings-color: $black;
       background-repeat: no-repeat;
       background-size: 100% auto;
 
-      .banner, .survey, .cycle, .location {
+      .banner, .survey, .cycle, .location, .date {
         position: absolute;
         white-space: nowrap;
       }
@@ -1029,6 +1029,7 @@ $headings-color: $black;
       .banner {
         font-size: 41px;
         text-transform: uppercase;
+        font-weight: normal;
         color: white;
         top: 10px;
       }
