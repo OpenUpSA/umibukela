@@ -3,6 +3,8 @@
 <div>
   <a href="{% url 'site-result-poster-pdf' original.site.slug original.id %}">Poster</a>
   |
+  <a href="{% url 'site-result-handout-pdf' original.site.slug original.id %}">Handout</a>
+  |
   <a href="/admin/umibukela/cycleresultset/{{ original.id }}/comments.pdf">Comments</a>
   |
   <a href="{% url 'site-result-summary-pdf' original.site.slug original.id %}">Summary</a>
