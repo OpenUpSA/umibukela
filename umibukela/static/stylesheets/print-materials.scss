@@ -162,8 +162,9 @@ $headings-color: $black;
     .funder {
       position: absolute;
       bottom: 9px;
+      right: 0px;
+      left: 0px;
       font-size: 9px;
-      line-height: 1;
     }
   }
 
@@ -178,7 +179,7 @@ $headings-color: $black;
       }
     }
     .totals-table {
-      width:90%;
+      width:100%;
       font-size:9px;
       padding:5px;
 
@@ -197,9 +198,11 @@ $headings-color: $black;
 
     .code4sa-logo {
       width:125px;
-      position:absolute;
-      right:0;
-      top:-40px;
+    }
+
+    .summary {
+      display: block !important;
+      padding: 10px;
     }
   }
 
@@ -311,10 +314,8 @@ $headings-color: $black;
     }
 
     .summary {
-      .totals, .logo {
-        position:absolute;
-        bottom:2px;
-      }
+      padding-top: 20px;
+      padding-bottom: 10px;
 
       .totals {
         left:0;
@@ -452,7 +453,8 @@ $headings-color: $black;
   }
 
   .funder {
-    font-size: 11px;
+    font-size: 10px;
+    line-height: 1;
   }
 
   .survey {
