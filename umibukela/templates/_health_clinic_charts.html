@@ -9,8 +9,15 @@
   <div class="survey-item col-xs-4">
     {% with q=questions_dict|get:'visit_reason' %}
     <h4 class="question text-center">{{ q.label }}</h4>
+    <table class="survey-table">
+      {% for option in q.options.values|dictsort:"label" %}
+        <tr>
+          <td>{{ option.label }}</td>
+          <td>{{ option.count.male|add:option.count.female }}</td>
+        </tr>
+      {% endfor %}
+    </table>
     {% endwith %}
-    <div class="response" data-key="visit_reason" data-type="7" data-width="226" data-height="288" data-label-type="1"></div>
   </div>
   <div class="survey-item col-xs-4">
     {% with q=questions_dict|get:'demographics_group/disability' %}
