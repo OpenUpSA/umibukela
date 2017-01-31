@@ -80,6 +80,8 @@ class SurveyTypeAdmin(admin.ModelAdmin):
 class SiteAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     form = SiteForm
+    list_filter = ('province', 'sector')
+    list_display = ('name', 'province', 'sector')
 
 
 class CycleResultSetAttachmentInline(admin.TabularInline):
@@ -91,6 +93,8 @@ class CycleResultSetAdmin(admin.ModelAdmin):
         CycleResultSetAttachmentInline,
     ]
     form = CycleResultSetForm
+    list_filter = ('cycle__programme', 'survey_type', 'site__province', 'cycle')
+    list_display = ('id', 'survey', 'cycle', 'site', 'partner')
 
 
 admin_site = AdminSite()
