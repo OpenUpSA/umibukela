@@ -47,6 +47,7 @@ Assumptions:
 
 from logging import getLogger
 from xform import SelectOne, SelectAllThatApply
+import pandas
 
 
 # These are used for grouping. Trying to count them and group by them
@@ -56,6 +57,7 @@ SKIP_GROUP_NAMES = ['meta', 'formhub']
 GENDER_COLUMN = 'demographics_group/gender'
 
 log = getLogger(__name__)
+
 
 def count_submissions(submissions):
     results = {}
@@ -294,6 +296,34 @@ def calc_q_percents(questions):
             for gender in ['female', 'male']:
                 select_count = float(option['count'][gender])
                 response_count = float(question['response_count'][gender])
-                pct = (select_count/response_count)*100
+                pct = (select_count / response_count) * 100
                 deep_set(option, ['pct', gender], pct)
     return questions
+
+
+def cross_site_summary(result_sets):
+    """ Prepare a summary of responses from result sets from multiple sites.
+    """
+    responses = []
+    form = None
+    site_totals = {}
+    for result_set in result_sets:
+        # Assume that get_survey will make all surveys compatible
+        # and therefore the last-set form applies to all
+        form, site_responses = result_set.get_survey()
+        df = pandas.DataFrame(site_responses)
+        site_totals[result_set.site.id] = count_submissions(df)
+        responses.extend(site_responses)
+
+    if responses:
+        df = pandas.DataFrame(responses)
+        results = count_options(df, form['children'])
+        results = calc_q_percents(results)
+        totals = count_submissions(df)
+        combine_curr_hist(results, None)
+    else:
+        totals = {'male': 0, 'female': 0, 'total': 0}
+        results = None
+
+    totals['per_site'] = site_totals
+    return results, totals
