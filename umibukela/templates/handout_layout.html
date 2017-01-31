@@ -26,14 +26,16 @@ var questions = {{ questions_dict | jsonify }};
         <p class="margin-bottom">
           {{ partner.intro_statement }}
         </p>
-        <p>The monitors for this project are</p>
-        <ul class="margin-bottom">
+        <p>The monitors for this project are:</p>
+        <ul>
           {% for monitor in result_set.monitors.all %}
           <li>
             {{ monitor.name }}
           </li>
           {% endfor %}
         </ul>
+
+        <p class="margin-bottom">The funders for this site are: {{ result_set.funder.name }}.</p>
 
         <div class="border-solid contact-details">
           <h4>Contact Details</h4>
