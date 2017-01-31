@@ -31,7 +31,8 @@
     <div class="stat-table page-section">
       {% for question_key in results.questions_dict.keys %}
       {% with question=results.questions_dict|get:question_key %}
-      {% if question.options|length <= 3 %}
+      {% with first_option=question.options|first %}
+      {% if question.options|length <= 3 and first_option.current.label|length < 10 %}
       <section class="row stat-row question">
         <div class="col-sm-4">
           <h3>
@@ -113,6 +114,7 @@
         </div>
       </section>
       {% endif %}
+      {% endwith %}
       {% endwith %}
       {% endfor %}
     </div>
