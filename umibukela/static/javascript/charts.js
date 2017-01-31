@@ -1332,7 +1332,11 @@ var PrintMaterials = function() {
       var chart = options.el;
       var labelType = options.labelType;
       var legendType = options.legendType;
-      var data = _.filter(_.values(options.responses), function(d) { return d.count.male + d.count.female > 0; }).sort(function(a, b){ return a.count.male + a.count.female - b.count.male + b.count.female;});
+      var nonzero = function(d) { return d.count.male + d.count.female > 0; };
+      var someOrdering = function(a, b) {
+        return a.count.male + a.count.female - b.count.male + b.count.female;
+      };
+      var data = _.filter(_.values(options.responses), nonzero).sort(someOrdering);
       var colors = [self.ORANGE, self.RED, self.WHITE, self.BLACK];
 
       var legendLabels = _.values(data).map(function(d) { return d.label });
@@ -1632,7 +1636,6 @@ var PrintMaterials = function() {
       var height = options.height;
       var width = options.width;
       var data = options.responses;
-      responses.sort(data);
       var chart = options.el;
       var labels=['yes','no'];
       var colors = [self.BLACK,self.ORANGE];
