@@ -8,6 +8,7 @@
 {% block js %}
 <script type="application/javascript">
   var questions = {{ questions_dict|jsonify }};
+  var form = {{ form|jsonify }};
 </script>
 <script type="application/javascript">
   var cycleYears = [{{ result_set.get_previous.cycle.end_date|date:'Y' }}, {{ result_set.cycle.end_date|date:'Y' }}];

@@ -79,6 +79,31 @@ var PrintMaterials = function() {
       return -1;
     console.log("unable to provide ordering: ", a.current.key, b.current.key);
   }
+  var getQuestion = function(level, path) {
+    for (var i = 0; i < level.children.length; i++) {
+      var child = level.children[i];
+      if (child.name == path[0]) {
+        if (path.length == 1) {
+          return child;
+        } else {
+          return getQuestion(child, path.slice(1));
+        }
+      }
+    }
+  };
+  var formOrdering = function(questionKey) {
+    var question = getQuestion(form, questionKey.split("/"));
+    var ordering = question.children.map(function(option) { return option.name });
+    return function(a, b) {
+      var ai = ordering.indexOf(a.current.key);
+      var bi = ordering.indexOf(b.current.key);
+      if (ai >= 0 && bi >= 0) {
+        return bi - ai;
+      } else {
+        console.log("unable to provide ordering: ", a.current.key, b.current.key);
+      }
+    }
+  };
 
   self.charts = {
     typeOne: function(options) {
@@ -108,38 +133,7 @@ var PrintMaterials = function() {
 
       var years = cycleYears.slice(0).reverse();
 
-      var optionOrdering = function(a, b) {
-        ordering = [
-          // DOH 2016
-          "2km_or_less",
-          "3___5km",
-          "6___8km",
-          "more_than_8km",
-          "nothing",
-          "less_than_r10",
-          "r11___r25",
-          "r26___r50",
-          "r51___r75",
-          "more_than_r75",
-          "more_than_4_ho",
-          "3___4_hours",
-          "2___3_hours",
-          "1___2_hours",
-          "less_than_1_ho",
-          "under_25_years",
-          "26___40_years_",
-          "41___60_years_",
-          "older_than_60_"
-        ];
-        var ai = ordering.indexOf(a.current.key);
-        var bi = ordering.indexOf(b.current.key);
-        if (ai >= 0 && bi >= 0) {
-          return bi - ai;
-        } else {
-          console.log("unable to provide ordering: ", a.current.key, b.current.key);
-        }
-      }
-      options.responses.sort(optionOrdering).reverse();
+      options.responses.sort(formOrdering(options.key)).reverse();
       options.responses.forEach(function(response) {
         var key = response.current.key;
         var label = response.current.label;

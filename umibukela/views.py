@@ -227,6 +227,7 @@ def poster(request, site_slug, result_id):
         template += 'poster_layout.html'
 
     return render(request, template, {
+        'form': form,
         'result_set': result_set,
         'prev_date': prev_date,
         'totals': totals,
