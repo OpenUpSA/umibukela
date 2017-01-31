@@ -1281,10 +1281,10 @@ var PrintMaterials = function() {
       var width = options.width;
       var chart = options.el;
       var data = [
-        options.responses['older_60'],
-        options.responses['41_60'],
-        options.responses['26_40'],
-        options.responses['under_25']
+        options.responses['older_60'] || options.responses['older_than_60_'],
+        options.responses['41_60'] || options.responses['41___60_years_'],
+        options.responses['26_40'] || options.responses['26___40_years_'],
+        options.responses['under_25'] || options.responses['under_25_years']
       ];
       var maxCategory = _.max(data, function(d) { return d.count.male + d.count.female; });
 
