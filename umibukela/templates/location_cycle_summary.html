@@ -24,7 +24,7 @@ var questions = {{ results.questions_dict|jsonify }};
     <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
       <h1 class="banner">Community Monitoring</h1>
       <div class="black-sash-logo"></div>
-      {% if location_name == 'Western cape' %}
+      {% if location_name = 'Western Cape' %}
       <div class="funder-logo mavc"></div>
       {% endif %}
       <h2 class="survey">{{ survey_type.name }}</h2>
