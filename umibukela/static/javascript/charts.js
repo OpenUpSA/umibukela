@@ -761,7 +761,7 @@ var PrintMaterials = function() {
       maleData.reverse();
       femaleData.reverse();
 
-      responses.sort(yesnoposnegOrdering);
+      responses.sort(formOrdering(options.key)).reverse();
       responses.forEach(function(response) {
         if (response.prev) response.prev.key = response.current.key;
 
@@ -1036,7 +1036,7 @@ var PrintMaterials = function() {
         total: 0
       });
 
-      responses.sort(yesnoposnegOrdering1);
+      responses.sort(formOrdering(options.key)).reverse();
       responses.forEach(function(response){
         if(response.current) {
           if(response.current.key != 'none') {
