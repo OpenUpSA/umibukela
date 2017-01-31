@@ -961,6 +961,12 @@ $headings-color: $black;
       }
     }
   }
+
+  table.survey-table {
+    td { 
+      padding: 2px 0px;
+    }
+  }
 }
 
 .print-materials {
