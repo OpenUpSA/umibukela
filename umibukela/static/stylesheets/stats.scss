@@ -100,6 +100,10 @@
   .chart-bar {
     height: 180px;
   }
+
+  .chart rect.Neutral {
+    stroke: black;
+  }
 }
 
 .stat-table .stat-row {
