@@ -7,6 +7,7 @@ from .models import (
     CycleFrequency,
     CycleResultSet,
     CycleResultSetAttachment,
+    Funder,
     Monitor,
     Partner,
     Programme,
@@ -93,7 +94,7 @@ class CycleResultSetAdmin(admin.ModelAdmin):
         CycleResultSetAttachmentInline,
     ]
     form = CycleResultSetForm
-    list_filter = ('cycle__programme', 'survey_type', 'site__province', 'cycle')
+    list_filter = ('cycle__programme', 'survey_type', 'site__province', 'funder', 'cycle')
     list_display = ('id', 'survey', 'cycle', 'site', 'partner')
 
 
@@ -113,3 +114,4 @@ admin_site.register(Sector)
 admin_site.register(Site, SiteAdmin)
 admin_site.register(Survey)
 admin_site.register(SurveyType, SurveyTypeAdmin)
+admin_site.register(Funder)

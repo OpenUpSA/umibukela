@@ -53,6 +53,13 @@ class Province(models.Model):
         return self.name
 
 
+class Funder(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Partner(models.Model):
     short_name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
@@ -271,6 +278,7 @@ class CycleResultSet(models.Model):
     survey_type = models.ForeignKey(SurveyType, null=True, blank=True)
     survey = models.ForeignKey(Survey, null=True, blank=True)
     monitors = models.ManyToManyField("Monitor", blank=True, help_text="Only monitors for the current partner are shown. If you update the Partner you'll have to save and edit this Cycle Result Set again to see the available monitors.")
+    funder = models.ForeignKey(Funder, null=True, blank=True, on_delete=models.SET_NULL)
 
     action_items = models.TextField(null=True, blank=True, help_text="Key challenges identified for improvement. Markdown allowed.")
     follow_up_date = models.DateField(null=True, blank=True, help_text="Date when follow up check was performed")
