@@ -751,27 +751,51 @@ var PrintMaterials = function() {
       var yearsReversed = [years[1],years[0]];
       var hasTwoPeriods = _.contains(periodKeys,'current') && _.contains(periodKeys,'prev');
 
+      /** Construct initial structure for the D3 chart data objects.
+          These will eventually look something like
+          [{
+             period: 'current',    ...or 'prev'
+             year: 2015,
+             total: 248,
+             first: 200,           ...These next three are the options
+             second: 40,              in the question
+             third: 8
+           }]
+           There's
+      **/
       for(var i=0;i < periodKeys.length;i++) {
         var period = periodKeys[i];
-
-        maleData.push({ period: period, year: period == 'current' ? years[1] : years[0], total: 0 });
-        femaleData.push({ period: period, year: period == 'current' ? years[1] : years[0], total: 0 });
+        maleData.push({
+          period: period,
+          year: period == 'current' ? years[1] : years[0],
+          total: 0
+        });
+        femaleData.push({
+          period: period,
+          year: period == 'current' ? years[1] : years[0],
+          total: 0
+        });
       }
 
       maleData.reverse();
       femaleData.reverse();
 
       responses.sort(formOrdering(options.key)).reverse();
+      // For each option in the question
       responses.forEach(function(response) {
         if (response.prev) response.prev.key = response.current.key;
-
+        // for each period
         for(var i2 = 0; i2 < options.periodKeys.length; i2++) {
           var periodName = options.periodKeys[i2];
+          // find the right objects to give values
           var male_datum = _.find(maleData, function(item) { return item.period == periodName; });
           var female_datum = _.find(femaleData, function(item) { return item.period == periodName; });
 
-          if(response[period].key && periodName == 'current') labels.push(response[periodName].key.toLowerCase());
+          // Add the option key to the labels array once for each option
+          if(response[periodName].key && periodName == 'current')
+            labels.push(response[periodName].key.toLowerCase());
 
+          // Assign the value for the current option to the right property in the D3 chart data obj
           male_datum[response[periodName].key.toLowerCase()] = response[periodName].count.male;
           female_datum[response[periodName].key.toLowerCase()] = response[periodName].count.female;
         }
