@@ -3,7 +3,7 @@ Umibukela.Site = function() {
       orange = '#f6921d',
       yes = 'black',
       no = orange,
-      neutral = '#777';
+      neutral = 'white';
 
   self.init = function() {
     self.colours = ['black', '#ccc'];
@@ -77,6 +77,7 @@ Umibukela.Site = function() {
           return {
             y: Math.round(o.current[valueKey][gender]),
             color: self.pointColour(o.current.label, q.options),
+            className: o.current.label,
           };
       });
 

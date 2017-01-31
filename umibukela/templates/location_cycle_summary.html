@@ -24,21 +24,41 @@ var questions = {{ results.questions_dict|jsonify }};
     <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
       <h1 class="banner">Community Monitoring</h1>
       <div class="black-sash-logo"></div>
+      <div class="funder-logo {{ cycle.programme.short_name|lower }}"></div>
       <h2 class="survey">{{ survey_type.name }}</h2>
       <h3 class="location">{{ location_name }}</h3>
       <h3 class="date">{{ cycle.start_date|date:'F' }} / {{ cycle.end_date|date:'F' }} {{ cycle.end_date|date:'Y' }}</h3>
     </header>
 
-    {% include "site_results_charts_print.html" %}
-  </div>
+    <div class="section sites">
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Participants</th>
+            <th>Female</th>
+            <th>Male</th>
+        </thead>
+        <tbody>
+          {% for result_set in result_sets %}
+          <tr>
+            <td>{{ result_set.site.name }}</td>
+            <td>{{ result_set.totals.total }}</td>
+            <td>{{ result_set.totals.female }}</td>
+            <td>{{ result_set.totals.male }}</td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <th>{{ location_name }}</th>
+            <th>{{ results.totals.total }}</th>
+            <th>{{ results.totals.female }}</th>
+            <th>{{ results.totals.male }}</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <div class="section contributors">
-    <h3>Sites in {{ location_name }}:</h3>
-    <ul>
-      {% for result_set in result_sets %}
-      <li>{{ result_set.site.name }}</li>
-      {% endfor %}
-    </ul>
+    {% include "site_results_charts_print.html" %}
   </div>
 </div>
 

@@ -175,7 +175,6 @@ def poster(request, site_slug, result_id):
         id=result_id,
         site__slug__exact=site_slug
     )
-    sector_id = result_set.site.sector.id
     sector_name = result_set.site.sector.name
     survey_type = result_set.survey_type.name
     site = result_set.site.name
@@ -609,53 +608,16 @@ def province_summary(request, province_slug, survey_type_slug, cycle_id):
         cycle=cycle,
         survey_type=survey_type
     )
-    responses = []
-    form = None
+    results, totals = analysis.cross_site_summary(result_sets)
+    site_totals = totals.pop('per_site')
     for result_set in result_sets:
-        # Assume that get_survey will make all surveys compatible
-        # and therefore the last-set form applies to all
-        form, site_responses = result_set.get_survey()
-        responses.extend(site_responses)
-
-    prev_cycle = cycle.get_previous()
-    prev_result_sets = CycleResultSet.objects.filter(
-        site__province=province,
-        cycle=prev_cycle,
-        survey_type=survey_type
-    )
-    prev_responses = []
-    prev_form = None
-    for result_set in prev_result_sets:
-        # Assume that get_survey will make all surveys compatible
-        # and therefore the last-set form applies to all
-        prev_form, site_responses = result_set.get_survey()
-        prev_responses.extend(site_responses)
-
-    if responses:
-        df = pandas.DataFrame(responses)
-        results = analysis.count_options(df, form['children'])
-        results = analysis.calc_q_percents(results)
-        if False and prev_responses:
-            totals = analysis.count_submissions(
-                pandas.DataFrame(responses + prev_responses))
-            prev_df = pandas.DataFrame(prev_responses)
-            prev_results = analysis.count_options(prev_df, prev_form['children'])
-            prev_results = analysis.calc_q_percents(prev_results)
-        else:
-            totals = analysis.count_submissions(df)
-            prev_results = None
-        analysis.combine_curr_hist(results, prev_results)
-    else:
-        totals = {'male': 0, 'female': 0, 'total': 0}
-        results = None
+        result_set.totals = site_totals[result_set.site.id]
 
     return render(request, 'location_cycle_summary.html', {
         'location_name': province.name,
         'survey_type': survey_type,
         'cycle': cycle,
         'result_sets': result_sets,
-        'prev_cycle': prev_cycle,
-        'prev_result_sets': prev_result_sets,
         'results': {
             'questions_dict': results,
             'totals': totals,
@@ -690,52 +652,17 @@ def national_summary(request, survey_type_slug, cycle_id):
         cycle=cycle,
         survey_type=survey_type
     )
-    responses = []
-    form = None
+
+    results, totals = analysis.cross_site_summary(result_sets)
+    site_totals = totals.pop('per_site')
     for result_set in result_sets:
-        # Assume that get_survey will make all surveys compatible
-        # and therefore the last-set form applies to all
-        form, site_responses = result_set.get_survey()
-        responses.extend(site_responses)
-
-    prev_cycle = cycle.get_previous()
-    prev_result_sets = CycleResultSet.objects.filter(
-        cycle=prev_cycle,
-        survey_type=survey_type
-    )
-    prev_responses = []
-    prev_form = None
-    for result_set in prev_result_sets:
-        # Assume that get_survey will make all surveys compatible
-        # and therefore the last-set form applies to all
-        prev_form, site_responses = result_set.get_survey()
-        prev_responses.extend(site_responses)
-
-    if responses:
-        df = pandas.DataFrame(responses)
-        results = analysis.count_options(df, form['children'])
-        results = analysis.calc_q_percents(results)
-        if False and prev_responses:
-            totals = analysis.count_submissions(
-                pandas.DataFrame(responses + prev_responses))
-            prev_df = pandas.DataFrame(prev_responses)
-            prev_results = analysis.count_options(prev_df, prev_form['children'])
-            prev_results = analysis.calc_q_percents(prev_results)
-        else:
-            totals = analysis.count_submissions(df)
-            prev_results = None
-        analysis.combine_curr_hist(results, prev_results)
-    else:
-        totals = {'male': 0, 'female': 0, 'total': 0}
-        results = None
+        result_set.totals = site_totals[result_set.site.id]
 
     return render(request, 'location_cycle_summary.html', {
         'location_name': 'South Africa',
         'survey_type': survey_type,
         'cycle': cycle,
         'result_sets': result_sets,
-        'prev_cycle': prev_cycle,
-        'prev_result_sets': prev_result_sets,
         'results': {
             'questions_dict': results,
             'totals': totals,
