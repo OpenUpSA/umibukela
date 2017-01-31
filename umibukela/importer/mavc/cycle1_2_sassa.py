@@ -184,7 +184,7 @@ replacements_all = {
     'visit_frequency': {
         'This is my second visit for this same issue': 'first',
         'This is my first visit for this issue': 'second',
-        'This is my 3rd or more visit for the same issue': 'third_mode',
+        'This is my 3rd or more visit for the same issue': 'third_more',
     },
     'waiting_time': {
         '30 minutes - 1 hour': 'thirty_one',
