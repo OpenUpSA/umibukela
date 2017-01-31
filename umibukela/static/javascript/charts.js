@@ -52,7 +52,7 @@ var PrintMaterials = function() {
     }
   }
 
-  var compare = function(a, b) {
+  var yesnoposnegOrdering = function(a, b) {
     if (a.current.key == "positive")
       return 1;
     if (b.current.key == "negative")
@@ -79,6 +79,31 @@ var PrintMaterials = function() {
       return -1;
     console.log("unable to provide ordering: ", a.current.key, b.current.key);
   }
+  var getQuestion = function(level, path) {
+    for (var i = 0; i < level.children.length; i++) {
+      var child = level.children[i];
+      if (child.name == path[0]) {
+        if (path.length == 1) {
+          return child;
+        } else {
+          return getQuestion(child, path.slice(1));
+        }
+      }
+    }
+  };
+  var formOrdering = function(questionKey) {
+    var question = getQuestion(form, questionKey.split("/"));
+    var ordering = question.children.map(function(option) { return option.name });
+    return function(a, b) {
+      var ai = ordering.indexOf(a.current.key);
+      var bi = ordering.indexOf(b.current.key);
+      if (ai >= 0 && bi >= 0) {
+        return bi - ai;
+      } else {
+        console.log("unable to provide ordering: ", a.current.key, b.current.key);
+      }
+    }
+  };
 
   self.charts = {
     typeOne: function(options) {
@@ -108,7 +133,7 @@ var PrintMaterials = function() {
 
       var years = cycleYears.slice(0).reverse();
 
-      options.responses.sort(compare);
+      options.responses.sort(formOrdering(options.key)).reverse();
       options.responses.forEach(function(response) {
         var key = response.current.key;
         var label = response.current.label;
@@ -362,7 +387,7 @@ var PrintMaterials = function() {
         femaleData.push({ period: periodName, year: periodName == 'current' ? years[1] : years[0] });
       }
 
-      responses.sort(compare);
+      responses.sort(yesnoposnegOrdering);
 
       // Set the category values for the objects in the D3 data arrays
       // Also add labels to the legend label array
@@ -736,7 +761,7 @@ var PrintMaterials = function() {
       maleData.reverse();
       femaleData.reverse();
 
-      responses.sort(compare);
+      responses.sort(formOrdering(options.key)).reverse();
       responses.forEach(function(response) {
         if (response.prev) response.prev.key = response.current.key;
 
@@ -1011,7 +1036,7 @@ var PrintMaterials = function() {
         total: 0
       });
 
-      responses.sort(compare);
+      responses.sort(formOrdering(options.key)).reverse();
       responses.forEach(function(response){
         if(response.current) {
           if(response.current.key != 'none') {
@@ -1307,7 +1332,11 @@ var PrintMaterials = function() {
       var chart = options.el;
       var labelType = options.labelType;
       var legendType = options.legendType;
-      var data = _.filter(_.values(options.responses), function(d) { return d.count.male + d.count.female > 0; }).sort(function(a, b){ return a.count.male + a.count.female - b.count.male + b.count.female;});
+      var nonzero = function(d) { return d.count.male + d.count.female > 0; };
+      var someOrdering = function(a, b) {
+        return a.count.male + a.count.female - b.count.male + b.count.female;
+      };
+      var data = _.filter(_.values(options.responses), nonzero).sort(someOrdering);
       var colors = [self.ORANGE, self.RED, self.WHITE, self.BLACK];
 
       var legendLabels = _.values(data).map(function(d) { return d.label });
@@ -1607,7 +1636,6 @@ var PrintMaterials = function() {
       var height = options.height;
       var width = options.width;
       var data = options.responses;
-      responses.sort(data);
       var chart = options.el;
       var labels=['yes','no'];
       var colors = [self.BLACK,self.ORANGE];
