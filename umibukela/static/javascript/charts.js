@@ -52,7 +52,7 @@ var PrintMaterials = function() {
     }
   }
 
-  var compare = function(a, b) {
+  var yesnoposnegOrdering = function(a, b) {
     if (a.current.key == "positive")
       return 1;
     if (b.current.key == "negative")
@@ -108,7 +108,38 @@ var PrintMaterials = function() {
 
       var years = cycleYears.slice(0).reverse();
 
-      options.responses.sort(compare);
+      var optionOrdering = function(a, b) {
+        ordering = [
+          // DOH 2016
+          "2km_or_less",
+          "3___5km",
+          "6___8km",
+          "more_than_8km",
+          "nothing",
+          "less_than_r10",
+          "r11___r25",
+          "r26___r50",
+          "r51___r75",
+          "more_than_r75",
+          "more_than_4_ho",
+          "3___4_hours",
+          "2___3_hours",
+          "1___2_hours",
+          "less_than_1_ho",
+          "under_25_years",
+          "26___40_years_",
+          "41___60_years_",
+          "older_than_60_"
+        ];
+        var ai = ordering.indexOf(a.current.key);
+        var bi = ordering.indexOf(b.current.key);
+        if (ai >= 0 && bi >= 0) {
+          return bi - ai;
+        } else {
+          console.log("unable to provide ordering: ", a.current.key, b.current.key);
+        }
+      }
+      options.responses.sort(optionOrdering).reverse();
       options.responses.forEach(function(response) {
         var key = response.current.key;
         var label = response.current.label;
@@ -362,7 +393,7 @@ var PrintMaterials = function() {
         femaleData.push({ period: periodName, year: periodName == 'current' ? years[1] : years[0] });
       }
 
-      responses.sort(compare);
+      responses.sort(yesnoposnegOrdering);
 
       // Set the category values for the objects in the D3 data arrays
       // Also add labels to the legend label array
@@ -736,7 +767,7 @@ var PrintMaterials = function() {
       maleData.reverse();
       femaleData.reverse();
 
-      responses.sort(compare);
+      responses.sort(yesnoposnegOrdering);
       responses.forEach(function(response) {
         if (response.prev) response.prev.key = response.current.key;
 
@@ -1011,7 +1042,7 @@ var PrintMaterials = function() {
         total: 0
       });
 
-      responses.sort(compare);
+      responses.sort(yesnoposnegOrdering1);
       responses.forEach(function(response){
         if(response.current) {
           if(response.current.key != 'none') {
