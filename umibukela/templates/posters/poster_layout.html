@@ -19,7 +19,7 @@
 <div class="print-materials poster print-page simple-bootstrap-rows a4-portrait-single {{ layout_class }} {% if DEBUG %}debug{% endif %}">
   <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
     <h1 class="banner">Community Monitoring</h1>
-    <div class="funder-logo {{ result_set.cycle.programme.short_name|lower }}"></div>
+    <div class="funder-logo {{ result_set.funder.name|slugify }}"></div>
     <div class="black-sash-logo"></div>
     <h1 class="partner {% if result_set.partner.full_name|length > 50 %}long{% endif %}">{{ result_set.partner.full_name }}</h1>
     <h3 class="date">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>

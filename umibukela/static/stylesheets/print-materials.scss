@@ -141,14 +141,14 @@ $headings-color: $black;
       width:75%;
       margin:0 auto;
       display:block;
-      margin-top:15px;
+      margin-top:5px;
     }
 
     .totals-table {
       width:85%;
       font-size:9px;
       padding:5px;
-      margin:15px auto 0;
+      margin:5px auto 0;
 
       .text-large {
         font-size:11px;
@@ -157,6 +157,13 @@ $headings-color: $black;
       .text-medium {
         font-size:10px;
       }
+    }
+
+    .funder {
+      position: absolute;
+      bottom: 9px;
+      font-size: 9px;
+      line-height: 1;
     }
   }
 
@@ -206,6 +213,10 @@ $headings-color: $black;
 
     .no-padding {
       padding:0;
+    }
+
+    .funder {
+      margin-top: 10px;
     }
 
     .pointer {
@@ -438,6 +449,10 @@ $headings-color: $black;
 
   .border-left {
     border-left:1px dashed rgb(0,0,0);
+  }
+
+  .funder {
+    font-size: 11px;
   }
 
   .survey {
