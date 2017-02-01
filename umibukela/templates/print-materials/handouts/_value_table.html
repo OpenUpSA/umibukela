@@ -1,0 +1,8 @@
+<table class="survey-table">
+  {% for option in q.options.values|dictsort:"label" %}
+    <tr>
+      <td>{{ option.label }}</td>
+      <td>{{ option.count.male|add:option.count.female }}</td>
+    </tr>
+  {% endfor %}
+</table>
