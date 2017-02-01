@@ -326,6 +326,7 @@ def comments(request, result_id):
     return render(request, 'print-materials/site_result_comments.html', {
         'result_set': result_set,
         'questions': questions,
+        'site': result_set.site.name,
     })
 
 
