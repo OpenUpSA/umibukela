@@ -323,7 +323,7 @@ def comments(request, result_id):
                 'comments': comments,
                 'count': sum(comments.values()),
             })
-    return render(request, 'comments.html', {
+    return render(request, 'print-materials/site_result_comments.html', {
         'result_set': result_set,
         'questions': questions,
     })
