@@ -240,6 +240,11 @@ def poster(request, site_slug, result_id):
 
 
 def poster_pdf(request, site_slug, result_id):
+    result_set = get_object_or_404(
+        CycleResultSet,
+        id=result_id,
+        site__slug__exact=site_slug
+    )
     # render poster as pdf
     url = reverse('site-result-poster', kwargs={'site_slug': site_slug, 'result_id': result_id})
     url = request.build_absolute_uri(url)
@@ -250,7 +255,7 @@ def poster_pdf(request, site_slug, result_id):
         'margin-left': '0.5cm',
         'page-size': 'A4',
     })
-    filename = '%s-%s-poster.pdf' % (site_slug, result_id)
+    filename = (u'Poster for %s - %s - %s.pdf' % (result_set.survey.name, result_set.partner.short_name, result_set.site.name)).encode('ascii', 'ignore')
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
@@ -286,6 +291,11 @@ def handout(request, site_slug, result_id):
 
 
 def handout_pdf(request, site_slug, result_id):
+    result_set = get_object_or_404(
+        CycleResultSet,
+        id=result_id,
+        site__slug__exact=site_slug
+    )
     # render handout as pdf
     url = reverse('site-result-handout', kwargs={'site_slug': site_slug, 'result_id': result_id})
     url = request.build_absolute_uri(url)
@@ -297,7 +307,7 @@ def handout_pdf(request, site_slug, result_id):
         'page-size': 'A3',
         'orientation': 'landscape',
     })
-    filename = '%s-%s-handout.pdf' % (site_slug, result_id)
+    filename = (u'Handout for %s - %s - %s.pdf' % (result_set.survey.name, result_set.partner.short_name, result_set.site.name)).encode('ascii', 'ignore')
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
