@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from itertools import groupby
 from wkhtmltopdf.utils import wkhtmltopdf
 from wkhtmltopdf.views import PDFResponse
-from xform import XForm, map_questions, field_per_SATA_option
+from xform import XForm, map_questions, field_per_SATA_option, skipped_as_na
 import analysis
 import pandas
 import requests
@@ -119,20 +119,21 @@ def summary(request, site_slug, result_id):
         site__slug__exact=site_slug
     )
     form, responses = result_set.get_survey()
+    gender_disagg = not not XForm(form).get_by_path('demographics_group/gender')
     if responses:
         df = pandas.DataFrame(responses)
-        site_totals = analysis.count_submissions(df)
-        site_results = analysis.count_options(df, form['children'])
-        site_results = analysis.calc_q_percents(site_results)
+        site_totals = analysis.count_submissions(df, gender_disagg)
+        site_results = analysis.count_options(df, form['children'], gender_disagg=gender_disagg)
+        site_results = analysis.calc_q_percents(site_results, gender_disagg)
         prev_result_set = result_set.get_previous()
         if prev_result_set:
             prev_form, prev_responses = prev_result_set.get_survey()
             if prev_responses:
                 site_totals = analysis.count_submissions(
-                    pandas.DataFrame(responses + prev_responses))
+                    pandas.DataFrame(responses + prev_responses), gender_disagg)
                 prev_df = pandas.DataFrame(prev_responses)
-                prev_results = analysis.count_options(prev_df, prev_form['children'])
-                prev_results = analysis.calc_q_percents(prev_results)
+                prev_results = analysis.count_options(prev_df, prev_form['children'], gender_disagg)
+                prev_results = analysis.calc_q_percents(prev_results, gender_disagg)
             else:
                 prev_results = None
         else:
@@ -445,6 +446,7 @@ def survey_kobo_submissions(request, survey_id):
                 crs_id = int(request.POST['crs_%d' % i])
                 facility_crs[facility_name] = CycleResultSet.objects.get(pk=crs_id)
             submissions = field_per_SATA_option(survey.form, submissions)
+            submissions = skipped_as_na(survey.form, submissions)
             for answers in submissions:
                 facility_name = answers[facility_q_name]
                 submission = Submission(

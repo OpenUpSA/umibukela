@@ -296,3 +296,14 @@ def set_select_all_that_apply_fields(dict, q_key, possible_vals):
         dict['/'.join([q_key, val])] = 'True'
     del dict[q_key]
     return dict
+
+
+def skipped_as_na(form, submissions):
+    """
+    Set the value of unanswered questions to "n/a" as formhub csvwriter did.
+    """
+    for path, q in XForm(form).questions():
+        for s in submissions:
+            if pathstr(path) not in s:
+                s[pathstr(path)] = 'n/a'
+    return submissions
