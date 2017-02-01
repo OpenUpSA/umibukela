@@ -199,31 +199,42 @@ def count_select_all_that_apply_responses(submissions, q, gender_disagg):
 
 
 def set_select_all_that_apply_selection_counts(q, opt, results, option_table, gender_disagg):
-    for gender in ['male', 'female']:
-        try:
-            val = int(option_table.loc[gender])
-        except KeyError:
-            # values that aren't counted because they don't occur in the
-            # results for this question won't be indexes in the counts
-            log.debug("Question %s option %s %s not found in counts DataFrame %s",
-                      q.pathstr, gender, opt.name, option_table)
-            val = 0
-        results = deep_set(results, [q.pathstr, 'options', opt.name, 'count', gender], val)
+    if gender_disagg:
+        for gender in ['male', 'female']:
+            try:
+                val = int(option_table.loc[gender])
+            except KeyError:
+                # values that aren't counted because they don't occur in the
+                # results for this question won't be indexes in the counts
+                log.debug("Question %s option %s %s not found in counts DataFrame %s",
+                          q.pathstr, gender, opt.name, option_table)
+                val = 0
+            results = deep_set(results, [q.pathstr, 'options', opt.name, 'count', gender], val)
     return results
 
 
 def set_select_one_selection_counts(q, option, results, option_table, gender_disagg):
-    for gender in ['male', 'female']:
-        try:
-            val = int(option_table.loc[gender, option.name])
-        except KeyError:
-            # values that aren't counted because they don't occur in the
-            # results for this question won't be indexes in the counts
-            log.debug("Question %s option %s %s not found in counts DataFrame %s",
-                      q.pathstr, gender, option.name, option_table)
-            val = 0
+    if gender_disagg:
+        for gender in ['male', 'female']:
+            try:
+                val = int(option_table.loc[gender, option.name])
+            except KeyError:
+                # values that aren't counted because they don't occur in the
+                # results for this question won't be indexes in the counts
+                log.debug("Question %s option %s %s not found in counts DataFrame %s",
+                          q.pathstr, gender, option.name, option_table)
+                val = 0
 
-        results = deep_set(results, [q.pathstr, 'options', option.name, 'count', gender], val)
+            results = deep_set(results, [q.pathstr, 'options', option.name, 'count', gender], val)
+    try:
+        val = int(option_table.loc[option.name])
+    except KeyError:
+        # values that aren't counted because they don't occur in the
+        # results for this question won't be indexes in the counts
+        log.debug("Question %s option %s not found in counts DataFrame %s",
+                  q.pathstr, option.name, option_table)
+        val = 0
+    results = deep_set(results, [q.pathstr, 'options', option.name, 'count', 'total'], val)
     return results
 
 
@@ -308,7 +319,7 @@ def calc_q_percents(questions, gender_disagg=True):
     """
     for q_key, question in questions.iteritems():
         for o_key, option in question['options'].iteritems():
-            for gender in ['female', 'male']:
+            for gender in ['total']:
                 select_count = float(option['count'][gender])
                 response_count = float(question['response_count'][gender])
                 pct = (select_count / response_count) * 100

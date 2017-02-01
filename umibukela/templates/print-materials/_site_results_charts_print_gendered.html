@@ -7,7 +7,7 @@
   {% if question.options|length <= 3 and first_option.current.label|length < 10 %}
   <section class="stat-row question">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-12">
         <h3>
           {% with group_count=question.group_labels|length %}
           {% if group_count > 0 %}
@@ -17,29 +17,51 @@
           {{ question.label }}
         </h3>
       </div>
+    </div>
+    <div class="row">
       {% for option in question.options %}
       {% if forloop.counter0 == 0 %}
       <div class="col-sm-3">
-        <h5>Total</h5>
+        <h5>Female</h5>
         <div class="stat stat-number">
-          <div class="value">{{ option.current.count.total|floatformat }}</div>
+          <div class="value">{{ option.current.count.female|floatformat }}</div>
           <div class="name">{{ option.current.label }}</div>
           {% if option.prev %}
           <div class="context">
             <strong>
-              {% if option.prev.count.total > option.current.count.total %} Down
+              {% if option.prev.count.female > option.current.count.female %} Down
               {% else %} Up
               {% endif %}
-              from {{ option.prev.count.total|floatformat }}
+              from {{ option.prev.count.female|floatformat }}
             </strong> in the previous cycle</div>
           {% endif %}
         </div>
       </div>
 
       <div class="col-sm-3">
-        <div class="chart chart-column" data-indicator="{{ question.key }}:total"></div>
+        <div class="chart chart-column" data-indicator="{{ question.key }}:female"></div>
       </div>
 
+      <div class="col-sm-3">
+        <h5>Male</h5>
+        <div class="stat stat-number">
+          <div class="value">{{ option.current.count.male|floatformat }}</div>
+          <div class="name">{{ option.current.label }}</div>
+          {% if option.prev %}
+          <div class="context">
+            <strong>
+              {% if option.prev.count.male > option.current.count.male %} Down
+              {% else %} Up
+              {% endif %}
+              from {{ option.prev.count.male|floatformat }}
+            </strong> in the previous cycle</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-sm-3">
+        <div class="chart chart-column" data-indicator="{{ question.key }}:male"></div>
+      </div>
       {% endif %}
       {% endfor %}
     </div>
@@ -47,7 +69,7 @@
   {% else %}
   <section class="stat-row question">
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-12">
         <h3>
           {% with group_count=question.group_labels|length %}
           {% if group_count > 0 %}
@@ -57,9 +79,16 @@
           {{ question.label }}
         </h3>
       </div>
+    </div>
+    <div class="row">
       <div class="col-sm-6">
-        <h5>Total</h5>
-        <div class="chart chart-bar" data-indicator="{{ question.key }}:total"></div>
+        <h5>Female</h5>
+        <div class="chart chart-bar" data-indicator="{{ question.key }}:female"></div>
+      </div>
+
+      <div class="col-sm-6">
+        <h5>Male</h5>
+        <div class="chart chart-bar" data-indicator="{{ question.key }}:male"></div>
       </div>
     </div>
   </section>

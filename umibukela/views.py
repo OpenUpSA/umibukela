@@ -143,7 +143,11 @@ def summary(request, site_slug, result_id):
         site_totals = {'male': 0, 'female': 0, 'total': 0}
         site_results = None
 
-    return render(request, 'site_result_summary.html', {
+    return render(request, 'print-materials/location_cycle_summary.html', {
+        'location_name': result_set.site.name,
+        'survey_type': result_set.survey_type,
+        'cycle': result_set.cycle,
+        'gender_disagg': gender_disagg,
         'result_set': result_set,
         'results': {
             'questions_dict': site_results,

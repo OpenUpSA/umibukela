@@ -38,29 +38,38 @@ var questions = {{ results.questions_dict|jsonify }};
           <tr>
             <th></th>
             <th>Participants</th>
+            {% if gender_disagg %}
             <th>Female</th>
             <th>Male</th>
+            {% endif %}
         </thead>
         <tbody>
           {% for result_set in result_sets %}
           <tr>
             <td>{{ result_set.site.name }}</td>
             <td>{{ result_set.totals.total }}</td>
+            {% if gender_disagg %}
             <td>{{ result_set.totals.female }}</td>
             <td>{{ result_set.totals.male }}</td>
+            {% endif %}
           </tr>
           {% endfor %}
           <tr>
             <th>{{ location_name }}</th>
             <th>{{ results.totals.total }}</th>
+            {% if gender_disagg %}
             <th>{{ results.totals.female }}</th>
             <th>{{ results.totals.male }}</th>
+            {% endif %}
           </tr>
         </tbody>
       </table>
     </div>
-
+    {% if gender_disagg %}
+    {% include "print-materials/_site_results_charts_print_gendered.html" %}
+    {% else %}
     {% include "print-materials/_site_results_charts_print.html" %}
+    {% endif %}
   </div>
 </div>
 
