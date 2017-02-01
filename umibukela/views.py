@@ -614,7 +614,7 @@ def province_summary(request, province_slug, survey_type_slug, cycle_id):
     for result_set in result_sets:
         result_set.totals = site_totals[result_set.site.id]
 
-    return render(request, 'location_cycle_summary.html', {
+    return render(request, 'print-materials/location_cycle_summary.html', {
         'location_name': province.name,
         'survey_type': survey_type,
         'cycle': cycle,
@@ -659,7 +659,7 @@ def national_summary(request, survey_type_slug, cycle_id):
     for result_set in result_sets:
         result_set.totals = site_totals[result_set.site.id]
 
-    return render(request, 'location_cycle_summary.html', {
+    return render(request, 'print-materials/location_cycle_summary.html', {
         'location_name': 'South Africa',
         'survey_type': survey_type,
         'cycle': cycle,
