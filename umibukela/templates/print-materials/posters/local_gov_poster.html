@@ -1,4 +1,4 @@
-{% extends 'posters/poster_layout.html' %}
+{% extends 'print-materials/posters/poster_layout.html' %}
 {% load pipeline lookup static markup_tags %}
 {% block survey %}
 <h3 class="black-banner">COMMUNITY PERCEPTIONS</h3>
@@ -71,7 +71,7 @@
     </div>
     <div class="row no-border summary">
       <div class="col-xs-6 totals">
-        {% include 'posters/_survey_totals.html' %}
+        {% include 'print-materials/posters/_survey_totals.html' %}
       </div>
       <div class="col-xs-6 logo">
         <img class="code4sa-logo" src="{% static 'img/logo-code4sa.png' %}" alt="code4sa" />

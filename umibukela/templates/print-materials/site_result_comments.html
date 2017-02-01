@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load pipeline static jsonify lookup markup_tags %}
+
+{% block title %}Comments for {{ result_set.survey.name }} - {{ result_set.partner.short_name }} - {{ result_set.site.name }}{% endblock %}
+
+{% block head-css %}
+  {{ block.super }}
+  {% stylesheet "print-materials" %}
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+{% javascript "site" %}
+{% endblock %}
+
+{% block content %}
+<div class="print-materials results-summary print-page a4-portrait-multi {{ layout_class }} {% if DEBUG %}debug{% endif %}">
+  <div class="section cycle-results">
+    <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
+      <h1 class="banner">Community Monitoring</h1>
+      <div class="funder-logo {{ result_set.funder.name|slugify }}"></div>
+      <div class="black-sash-logo"></div>
+      <h1 class="partner {% if result_set.partner.full_name|length > 50 %}long{% endif %}">{{ result_set.partner.full_name }}</h1>
+      <h3 class="date">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
+      <h2 class="site {% if site|length > 40 %}long{% endif %}">{% if sector %}{{ sector }}: {% endif %}{{ site }}</h2>
+    </header>
+
+    <div class="section participants">
+      <h4>{{ result_set.submissions.all|length }} participants</h4>
+    </div>
+
+    {% for q in questions %}
+      <div class="section comments">
+        <h4>Q: {{ q.label }}</h4>
+        <p>{{ q.count }} responses</p>
+        <ul>
+          {% for comment in q.comments %}
+          {% with count=q.comments|get:comment %}
+          <li>{{ comment }}{% if count != 1 %} <em>({{ count }})</em>{% endif %}</li>
+          {% endwith %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+
+  </div>
+</div>
+{% endblock %}

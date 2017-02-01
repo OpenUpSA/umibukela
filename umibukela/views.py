@@ -180,7 +180,7 @@ def poster(request, site_slug, result_id):
     site = result_set.site.name
     layout_class = '-'.join(' '.join([x.strip() for x in survey_type.split('-')]).lower().split(' '))
     location = None
-    template = 'posters/'
+    template = 'print-materials/posters/'
     form, responses = result_set.get_survey()
     totals = {'current': {'male': 0, 'female': 0, 'total': 0}, 'previous': {'male': 0, 'female': 0, 'total': 0}}
     site_results = None
@@ -287,7 +287,7 @@ def handout(request, site_slug, result_id):
         context['questions_dict'] = analysis.count_options(df, form['children'])
         context['totals'] = analysis.count_submissions(pandas.DataFrame(responses))
 
-    return render(request, 'handout_layout.html', context)
+    return render(request, 'print-materials/handouts/handout_layout.html', context)
 
 
 def handout_pdf(request, site_slug, result_id):
@@ -333,9 +333,10 @@ def comments(request, result_id):
                 'comments': comments,
                 'count': sum(comments.values()),
             })
-    return render(request, 'comments.html', {
+    return render(request, 'print-materials/site_result_comments.html', {
         'result_set': result_set,
         'questions': questions,
+        'site': result_set.site.name,
     })
 
 
@@ -624,7 +625,7 @@ def province_summary(request, province_slug, survey_type_slug, cycle_id):
     for result_set in result_sets:
         result_set.totals = site_totals[result_set.site.id]
 
-    return render(request, 'location_cycle_summary.html', {
+    return render(request, 'print-materials/location_cycle_summary.html', {
         'location_name': province.name,
         'survey_type': survey_type,
         'cycle': cycle,
@@ -669,7 +670,7 @@ def national_summary(request, survey_type_slug, cycle_id):
     for result_set in result_sets:
         result_set.totals = site_totals[result_set.site.id]
 
-    return render(request, 'location_cycle_summary.html', {
+    return render(request, 'print-materials/location_cycle_summary.html', {
         'location_name': 'South Africa',
         'survey_type': survey_type,
         'cycle': cycle,
