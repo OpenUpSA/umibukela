@@ -9,14 +9,7 @@
   <div class="survey-item col-xs-4">
     {% with q=questions_dict|get:'visit_reason' %}
     <h4 class="question text-center">{{ q.label }}</h4>
-    <table class="survey-table">
-      {% for option in q.options.values|dictsort:"label" %}
-        <tr>
-          <td>{{ option.label }}</td>
-          <td>{{ option.count.male|add:option.count.female }}</td>
-        </tr>
-      {% endfor %}
-    </table>
+    {% include "print-materials/handouts/_value_table.html" with q=q %}
     {% endwith %}
   </div>
   <div class="survey-item col-xs-4">
@@ -36,7 +29,7 @@
   <div class="survey-item col-xs-7">
     {% with q=questions_dict|get:'demographics_group/income' %}
     <h4 class="question text-center">{{ q.label }}</h4>
+    {% include "print-materials/handouts/_value_table.html" with q=q %}
     {% endwith %}
-    <div class="response" data-key="demographics_group/income" data-type="7" data-width="428" data-height="200" data-label-type="3" data-legend="side"></div>
   </div>
 </div>
