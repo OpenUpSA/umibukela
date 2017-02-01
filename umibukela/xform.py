@@ -147,18 +147,6 @@ def map_questions(form, submissions):
             'right_path': 'clinic_feedback',
         },
         {
-            'wrong_path': 'Waiting_Times/get_registered_at_reception',
-            'right_path': 'waiting_group/register_time',
-        },
-        {
-            'wrong_path': 'Waiting_Times/see_a_professional_nurse_or_doctor_',
-            'right_path': 'waiting_group/professional_time',
-        },
-        {
-            'wrong_path': 'Waiting_Times/collect_your_medication',
-            'right_path': 'waiting_group/medicine_time',
-        },
-        {
             'wrong_path': 'Did_you_feel_safe_in_and_aroun',
             'right_path': 'yes_no_group/safety',
         },
