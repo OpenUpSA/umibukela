@@ -392,15 +392,13 @@ var PrintMaterials = function() {
       // Set the category values for the objects in the D3 data arrays
       // Also add labels to the legend label array
       responses.forEach(function(response, i) {
-        for(var i2 = 0; i2 < options.periodKeys.length; i2++) {
-          var periodName = options.periodKeys[i2];
+        if (response.prev) response.prev.key = response.current.key;
+        labels.push(response.current.key);
+        legendLabels.push(response.current.label);
+
+        for (periodName in response) {
           var male_datum = _.find(maleData, function(item) { return item.period == periodName });
           var female_datum = _.find(femaleData, function(item) { return item.period == periodName });
-          var key = response[periodName].key;
-          var label = response[periodName].label;
-
-          if(key) labels.push(key);
-          if(!_.contains(legendLabels, label)) legendLabels.push(label);
 
           male_datum[labels[i]] = response[periodName].count.male;
           female_datum[labels[i]] = response[periodName].count.female;
@@ -572,7 +570,7 @@ var PrintMaterials = function() {
               .attr('font-size',legendFontSize)
               .text('NO');
           break;
-          case 'yes/other/no':
+        case 'yes/other/no':
           zRange.slice(0).reverse().forEach(function(color,i) {
             legend.append('rect')
               .attr('fill',color)
