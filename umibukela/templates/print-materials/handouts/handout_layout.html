@@ -177,11 +177,11 @@ var questions = {{ questions_dict | jsonify }};
       </header>
       <section class="survey-body">
         {% if survey_type == 1 %}
-          {% include '_health_clinic_charts.html' %}
+          {% include 'print-materials/handouts/_health_clinic_charts.html' %}
         {% elif survey_type == 2 %}
-          {% include '_service_office_charts.html' %}
+          {% include 'print-materials/handouts/_service_office_charts.html' %}
         {% elif survey_type == 4 %}
-          {% include '_paypoint_charts.html' %}
+          {% include 'print-materials/handouts/_paypoint_charts.html' %}
         {% endif %}
       </section>
     </div>

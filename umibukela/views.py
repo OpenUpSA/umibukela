@@ -180,7 +180,7 @@ def poster(request, site_slug, result_id):
     site = result_set.site.name
     layout_class = '-'.join(' '.join([x.strip() for x in survey_type.split('-')]).lower().split(' '))
     location = None
-    template = 'posters/'
+    template = 'print-materials/posters/'
     form, responses = result_set.get_survey()
     totals = {'current': {'male': 0, 'female': 0, 'total': 0}, 'previous': {'male': 0, 'female': 0, 'total': 0}}
     site_results = None
@@ -282,7 +282,7 @@ def handout(request, site_slug, result_id):
         context['questions_dict'] = analysis.count_options(df, form['children'])
         context['totals'] = analysis.count_submissions(pandas.DataFrame(responses))
 
-    return render(request, 'handout_layout.html', context)
+    return render(request, 'print-materials/handouts/handout_layout.html', context)
 
 
 def handout_pdf(request, site_slug, result_id):

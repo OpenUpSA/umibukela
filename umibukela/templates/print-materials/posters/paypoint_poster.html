@@ -1,4 +1,4 @@
-{% extends 'posters/poster_layout.html' %}
+{% extends 'print-materials/posters/poster_layout.html' %}
 {% load pipeline lookup static markup_tags %}
 {% block survey %}
 <div class="row">
@@ -97,7 +97,7 @@
     <div class="response text-center" data-key="clinic_feedback" data-type="2" data-width="170" data-legend="attitude" data-height="125"></div>
   </div>
   <div class="col-xs-3 summary">
-    {% include 'posters/_survey_totals.html' %}
+    {% include 'print-materials/posters/_survey_totals.html' %}
     <img class="code4sa-logo" alt="Code4SA" src="{% static 'img/logo-code4sa.png' %}" />
     <div class="funder">The funders for this site are {{ result_set.funder.name }}.</div>
   </div>
