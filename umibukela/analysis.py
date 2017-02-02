@@ -95,7 +95,7 @@ def count_options(submissions, children, path=None, group_labels=None, results=N
                 label = child['name'].replace('_', ' ').capitalize()
             deeper_group_labels = group_labels + [label]
             results = count_options(submissions, child['children'],
-                                    deeper_path, deeper_group_labels, results, gender_disagg)
+                                    deeper_path, deeper_group_labels, results, gender_disagg=gender_disagg)
         elif child.get('type') == 'select one':
             control = child.get('control', None)
             if control:
@@ -210,6 +210,15 @@ def set_select_all_that_apply_selection_counts(q, opt, results, option_table, ge
                           q.pathstr, gender, opt.name, option_table)
                 val = 0
             results = deep_set(results, [q.pathstr, 'options', opt.name, 'count', gender], val)
+    try:
+        val = len(option_table)
+    except KeyError:
+        # values that aren't counted because they don't occur in the
+        # results for this question won't be indexes in the counts
+        log.debug("Question %s option %s %s not found in counts DataFrame %s",
+                  q.pathstr, gender, opt.name, option_table)
+        val = 0
+        results = deep_set(results, [q.pathstr, 'options', opt.name, 'count', 'total'], val)
     return results
 
 
@@ -317,13 +326,20 @@ def calc_q_percents(questions, gender_disagg=True):
     """
     updates and returns a questions dict with percentages for option counts
     """
+    if gender_disagg:
+        counts = ['male', 'female']
+    else:
+        counts = ['total']
     for q_key, question in questions.iteritems():
         for o_key, option in question['options'].iteritems():
-            for gender in ['total']:
-                select_count = float(option['count'][gender])
-                response_count = float(question['response_count'][gender])
-                pct = (select_count / response_count) * 100
-                deep_set(option, ['pct', gender], pct)
+            for count in counts:
+                select_count = float(option['count'][count])
+                response_count = float(question['response_count'][count])
+                if not (response_count or select_count):
+                    pct = 0
+                else:
+                    pct = (select_count / response_count) * 100
+                deep_set(option, ['pct', count], pct)
     return questions
 
 
