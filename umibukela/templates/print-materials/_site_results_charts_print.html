@@ -6,6 +6,7 @@
   <p><em>Note:</em> {{ element.label }}</p>
   {% elif element.type == 'text' %}
   {% with q=text_questions|get:element.name %}
+  {% if q %}
   <h4>Q: {{ q.label }}</h4>
   <p>{{ q.count }} responses</p>
   <ul>
@@ -15,6 +16,7 @@
     {% endwith %}
     {% endfor %}
   </ul>
+  {% endif %}<!-- if q -->
   {% endwith %}
   {% else %}
   {% with question_key=element.name %}

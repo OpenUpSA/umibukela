@@ -343,7 +343,7 @@ def calc_q_percents(questions, gender_disagg=True):
     return questions
 
 
-def cross_site_summary(result_sets):
+def cross_site_summary(result_sets, gender_disagg=True):
     """ Prepare a summary of responses from result sets from multiple sites.
     """
     responses = []
@@ -354,14 +354,14 @@ def cross_site_summary(result_sets):
         # and therefore the last-set form applies to all
         form, site_responses = result_set.get_survey()
         df = pandas.DataFrame(site_responses)
-        site_totals[result_set.site.id] = count_submissions(df)
+        site_totals[result_set.site.id] = count_submissions(df, gender_disagg=gender_disagg)
         responses.extend(site_responses)
 
     if responses:
         df = pandas.DataFrame(responses)
-        results = count_options(df, form['children'])
-        results = calc_q_percents(results)
-        totals = count_submissions(df)
+        results = count_options(df, form['children'], gender_disagg=gender_disagg)
+        results = calc_q_percents(results, gender_disagg=gender_disagg)
+        totals = count_submissions(df, gender_disagg=gender_disagg)
         combine_curr_hist(results, None)
     else:
         totals = {'male': 0, 'female': 0, 'total': 0}

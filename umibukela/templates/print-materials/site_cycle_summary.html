@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load pipeline static jsonify lookup markup_tags %}
+
+{% block title %}Summary for {{ result_set.site.name }} - {{ survey_type.name }} - {{ cycle.name }}{% endblock %}
+
+{% block head-css %}
+  {{ block.super }}
+  {% stylesheet "print-materials" %}
+  <link href="{% static 'stylesheets/print-bootstrap.css' %}" rel="stylesheet" type="text/css"   />
+{% endblock %}
+
+{% block js %}
+{{ block.super }}
+<script type="application/javascript">
+var questions = {{ results.questions_dict|jsonify }};
+</script>
+{% javascript "site" %}
+{% endblock %}
+
+{% block content %}
+
+<div class="print-materials results-summary print-page a4-portrait-multi {{ layout_class }} {% if DEBUG %}debug{% endif %}">
+  <div class="section cycle-results">
+    <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
+      <h1 class="banner">Community Monitoring</h1>
+      <div class="black-sash-logo"></div>
+      <h2 class="partner {% if result_set.partner.full_name|length > 50 %}long{% endif %}">{{ result_set.partner.full_name }}</h2>
+      <h3 class="date">{{ cycle.start_date|date:'F' }} / {{ cycle.end_date|date:'F' }} {{ cycle.end_date|date:'Y' }}</h3>
+      {% with site=result_set.site.name %}
+      <h2 class="site {% if site|length > 40 %}long{% endif %}">{% if sector %}{{ sector }}: {% endif %}{{ site }}</h2>
+      {% endwith %}
+    </header>
+
+    <div class="section sites">
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Participants</th>
+            {% if gender_disagg %}
+            <th>Female</th>
+            <th>Male</th>
+            {% endif %}
+        </thead>
+        <tbody>
+          {% for result_set in result_sets %}
+          <tr>
+            <td>{{ result_set.site.name }}</td>
+            <td>{{ result_set.totals.total }}</td>
+            {% if gender_disagg %}
+            <td>{{ result_set.totals.female }}</td>
+            <td>{{ result_set.totals.male }}</td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+          <tr>
+            <th>{{ result_set.partner.long_name }}</th>
+            <th>{{ results.totals.total }}</th>
+            {% if gender_disagg %}
+            <th>{{ results.totals.female }}</th>
+            <th>{{ results.totals.male }}</th>
+            {% endif %}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    {% if gender_disagg %}
+    {% include "print-materials/_site_results_charts_print_gendered.html" %}
+    {% else %}
+    {% include "print-materials/_site_results_charts_print.html" %}
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

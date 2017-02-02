@@ -1,7 +1,28 @@
-{% load lookup markup_tags %}
+{% load lookup markup_tags jsonify %}
 
 <div class="stat-table page-section">
-  {% for question_key in results.questions_dict.keys %}
+  {% for element in form.children %}
+  <!-- {{ element|jsonify }} -->
+  {% if element.type == 'note' %}
+  <p><em>Note:</em> {{ element.label }}</p>
+  {% elif element.type == 'text' %}
+  {% if text_questions %}
+  {% with q=text_questions|get:element.name %}
+  {% if q %}
+  <h4>Q: {{ q.label }}</h4>
+  <p>{{ q.count }} responses</p>
+  <ul>
+    {% for comment in q.comments %}
+    {% with count=q.comments|get:comment %}
+    <li>{{ comment }}{% if count != 1 %} <em>({{ count }})</em>{% endif %}</li>
+    {% endwith %}
+    {% endfor %}
+  </ul>
+  {% endif %}{# q is defined #}
+  {% endwith %}
+  {% endif %}{# text_questions is defined #}
+  {% else %}
+  {% with question_key=element.name %}
   {% with question=results.questions_dict|get:question_key %}
   {% with first_option=question.options|first %}
   {% if question.options|length <= 3 and first_option.current.label|length < 10 %}
@@ -95,5 +116,7 @@
   {% endif %}
   {% endwith %}
   {% endwith %}
+  {% endwith %}
+  {% endif %}
   {% endfor %}
 </div>
