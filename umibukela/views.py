@@ -118,11 +118,12 @@ def summary(request, site_slug, result_id):
         id=result_id,
         site__slug__exact=site_slug
     )
+    # Multiple choice question responses
     form, responses = result_set.get_survey()
     gender_disagg = not not XForm(form).get_by_path('demographics_group/gender')
     if responses:
         df = pandas.DataFrame(responses)
-        site_totals = analysis.count_submissions(df, gender_disagg)
+        site_totals = analysis.count_submissions(df, gender_disagg=gender_disagg)
         site_results = analysis.count_options(df, form['children'], gender_disagg=gender_disagg)
         site_results = analysis.calc_q_percents(site_results, gender_disagg)
         prev_result_set = result_set.get_previous()
@@ -130,9 +131,13 @@ def summary(request, site_slug, result_id):
             prev_form, prev_responses = prev_result_set.get_survey()
             if prev_responses:
                 site_totals = analysis.count_submissions(
-                    pandas.DataFrame(responses + prev_responses), gender_disagg)
+                    pandas.DataFrame(responses + prev_responses),
+                    gender_disagg=gender_disagg
+                )
                 prev_df = pandas.DataFrame(prev_responses)
-                prev_results = analysis.count_options(prev_df, prev_form['children'], gender_disagg)
+                prev_results = analysis.count_options(
+                    prev_df,
+                    prev_form['children'], gender_disagg=gender_disagg)
                 prev_results = analysis.calc_q_percents(prev_results, gender_disagg)
             else:
                 prev_results = None
@@ -142,8 +147,27 @@ def summary(request, site_slug, result_id):
     else:
         site_totals = {'male': 0, 'female': 0, 'total': 0}
         site_results = None
+    # Text questions
+    skip_questions = [
+        'surveyor',
+        'capturer',
+    ]
+    text_questions = {}
+    for child in result_set.survey.form.get('children'):
+        if child.get('type', None) == 'text' and child.get('name') not in skip_questions:
+            comments = Counter([s.answers.get(child['name'], None)
+                                for s in result_set.submissions.all()])
+            comments.pop(None, None)
+            comments.pop('n/a', None)
 
+            text_questions[child.get('name')] = {
+                'label': child.get('label'),
+                'comments': comments,
+                'count': sum(comments.values()),
+            }
     return render(request, 'print-materials/location_cycle_summary.html', {
+        'form': form,
+        'text_questions': text_questions,
         'location_name': result_set.site.name,
         'survey_type': result_set.survey_type,
         'cycle': result_set.cycle,
