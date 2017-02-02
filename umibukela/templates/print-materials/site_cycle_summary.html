@@ -13,6 +13,7 @@
 {{ block.super }}
 <script type="application/javascript">
 var questions = {{ results.questions_dict|jsonify }};
+var form = {{ form|jsonify }};
 </script>
 {% javascript "site" %}
 {% endblock %}

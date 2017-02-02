@@ -5,6 +5,11 @@ but for now we're allowing some domain-specific data to be in here
 
 
 class XForm(dict):
+    def __init__(self, dict):
+        super(XForm, self).__init__(dict)
+        for path, el in self._get_elements([], self.get('children')):
+            el['path'] = path
+            el['pathstr'] = pathstr(path)
 
     def set_by_path(self, path, el):
         return self._set_child_by_path(self, path.split('/'), el)
@@ -47,17 +52,18 @@ class XForm(dict):
             cls._set_child_by_path(direct_parent, [path[-1]], el)
 
     @classmethod
-    def _get_questions(cls, path, elements):
-        for c in elements:
-            if c['type'] == 'group':
-                for q in cls._get_questions(path + [c['name']], c['children']):
-                    yield q
-            else:
-                yield (path + [c['name']], c)
+    def _get_elements(cls, path, elements):
+        """Returns tuples (path_list, element)"""
+        for child in elements:
+            yield (path + [child['name']], child)
+            if child['type'] == 'group':
+                for grandchild_tuple in cls._get_elements(path + [child['name']], child['children']):
+                    yield grandchild_tuple
 
     def questions(self):
-        for q in self._get_questions([], self['children']):
-            yield q
+        for path, child in self._get_elements([], self['children']):
+            if child.get('type') not in {'group', 'note'}:
+                yield (path, child)
 
 
 class Element(object):
@@ -98,10 +104,6 @@ def pathstr(path):
 def map_questions(form, submissions):
     form = XForm(form)
     mappings = [
-        {
-            'wrong_path': 'What_was_your_reason_for_visit',
-            'right_path': 'visit_reason',
-        },
         {
             'wrong_path': 'Do_you_have_any_disabilities',
             'right_path': 'demographics_group/disability'
@@ -220,11 +222,19 @@ def map_form(form, submissions, map_to_form):
             option_mapping = {}
             for option in q['children']:
                 option_mapping[option['from_name']] = option['name']
-            wrong_pathstr = q['from_path']
-            right_pathstr = pathstr(path)
-            for s in submissions:
-                s[right_pathstr] = option_mapping[s[wrong_pathstr]]
-                del s[wrong_pathstr]
+            if q['type'] == 'select all that apply':
+                for o in q['children']:
+                    wrong_pathstr = q['from_path'] + '/' + o['from_name']
+                    right_pathstr = pathstr(path + [o['name']])
+                    for s in submissions:
+                        s[right_pathstr] = s[wrong_pathstr]
+                        del s[wrong_pathstr]
+            else:
+                wrong_pathstr = q['from_path']
+                right_pathstr = pathstr(path)
+                for s in submissions:
+                    s[right_pathstr] = option_mapping[s[wrong_pathstr]]
+                    del s[wrong_pathstr]
 
 
 def simplify_perf_group(form, responses):

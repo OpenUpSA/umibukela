@@ -166,6 +166,8 @@ def summary(request, site_slug, result_id):
                 'count': sum(comments.values()),
             }
     return render(request, 'print-materials/site_cycle_summary.html', {
+        'ignore_types': ['start', 'end', 'meta'],
+        'multiple_choice_types': ['select all that apply', 'select one'],
         'form': form,
         'text_questions': text_questions,
         'location_name': result_set.site.name,
