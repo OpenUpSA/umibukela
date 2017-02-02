@@ -113,20 +113,12 @@ def map_questions(form, submissions):
             'right_path': 'demographics_group/age'
         },
         {
-            'wrong_path': 'Is_this_clinic_the_nearest_hea',
-            'right_path': 'distance'
-        },
-        {
             'wrong_path': 'Where_do_you_earn_most_of_your',
             'right_path': 'demographics_group/income'
         },
         {
             'wrong_path': 'Select_your_gender',
             'right_path': 'demographics_group/gender',
-        },
-        {
-            'wrong_path': 'Did_you_get_all_the_medication',
-            'right_path': 'yes_no_group/all_medication',
         },
         {
             'wrong_path': 'How_would_you_rate_the_perform/how_good_are_the_ambulance_services_',
@@ -147,26 +139,6 @@ def map_questions(form, submissions):
         {
             'wrong_path': 'Do_you_think_that_this_clinic_',
             'right_path': 'clinic_feedback',
-        },
-        {
-            'wrong_path': 'Did_you_feel_safe_in_and_aroun',
-            'right_path': 'yes_no_group/safety',
-        },
-        {
-            'wrong_path': 'Did_the_staff_respect_your_rig',
-            'right_path': 'yes_no_group/examined_private',
-        },
-        {
-            'wrong_path': 'Did_the_nurse_or_doctor_explai',
-            'right_path': 'yes_no_group/consent',
-        },
-        {
-            'wrong_path': 'Do_you_know_how_to_make_a_comp',
-            'right_path': 'yes_no_group/complaint',
-        },
-        {
-            'wrong_path': 'Do_you_think_that_the_clinic_w',
-            'right_path': 'yes_no_group/complaint_response',
         },
         {
             'wrong_path': 'How_would_you_rate_the_perform/was_the_clinic_clean_',
@@ -221,7 +193,7 @@ def map_form(form, submissions, map_to_form):
         if 'from_path' in q:
             option_mapping = {}
             for option in q['children']:
-                option_mapping[option['from_name']] = option['name']
+                option_mapping[option.get('from_name', option.get('name'))] = option['name']
             if q['type'] == 'select all that apply':
                 for o in q['children']:
                     wrong_pathstr = q['from_path'] + '/' + o['from_name']
