@@ -104,58 +104,6 @@ def pathstr(path):
 def map_questions(form, submissions):
     form = XForm(form)
     mappings = [
-        {
-            'wrong_path': 'Do_you_have_any_disabilities',
-            'right_path': 'demographics_group/disability'
-        },
-        {
-            'wrong_path': 'How_old_are_you',
-            'right_path': 'demographics_group/age'
-        },
-        {
-            'wrong_path': 'Where_do_you_earn_most_of_your',
-            'right_path': 'demographics_group/income'
-        },
-        {
-            'wrong_path': 'Select_your_gender',
-            'right_path': 'demographics_group/gender',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/how_good_are_the_ambulance_services_',
-            'right_path': 'performance_group/ambulance',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/does_the_clinic_have_the_necessary_equipment_in_good_working_condition_to_provide_the_services_you_need_',
-            'right_path': 'performance_group/equipment',
-        },
-        {
-            'wrong_path': 'Does_this_clinic_have_a_Clinic',
-            'right_path': 'clinic_committee',
-        },
-        {
-            'wrong_path': 'Do_you_know_what_the_Clinic_Co',
-            'right_path': 'clinic_committee_function',
-        },
-        {
-            'wrong_path': 'Do_you_think_that_this_clinic_',
-            'right_path': 'clinic_feedback',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/was_the_clinic_clean_',
-            'right_path': 'performance_group/clean',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/did_the_clinic_manage_queues_well_',
-            'right_path': 'performance_group/queues',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/did_the_administrative_staff_treat_you_respectfully_',
-            'right_path': 'performance_group/respect_admin',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/did_the_health_professionals_doctors_and_nurses_treat_you_respectfully_',
-            'right_path': 'performance_group/respect_professionals',
-        },
     ]
     for mapping in mappings:
         q = form.get_by_path(mapping['wrong_path'])
