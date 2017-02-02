@@ -17,31 +17,11 @@
           {{ question.label }}
         </h3>
       </div>
-      {% for option in question.options %}
-      {% if forloop.counter0 == 0 %}
-      <div class="col-sm-3">
-        <h5>Total</h5>
-        <div class="stat stat-number">
-          <div class="value">{{ option.current.count.total|floatformat }}</div>
-          <div class="name">{{ option.current.label }}</div>
-          {% if option.prev %}
-          <div class="context">
-            <strong>
-              {% if option.prev.count.total > option.current.count.total %} Down
-              {% else %} Up
-              {% endif %}
-              from {{ option.prev.count.total|floatformat }}
-            </strong> in the previous cycle</div>
-          {% endif %}
-        </div>
-      </div>
 
       <div class="col-sm-3">
         <div class="chart chart-column" data-indicator="{{ question.key }}:total"></div>
       </div>
 
-      {% endif %}
-      {% endfor %}
     </div>
   </section>
   {% else %}
