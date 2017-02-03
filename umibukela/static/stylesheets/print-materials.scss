@@ -301,7 +301,7 @@ $headings-color: $black;
   &.local-government-citizen {
     .header {
       padding-bottom:50px;
-      height:165px;
+      height: 165px;
 
       .site {
         top: 112px;
@@ -966,7 +966,7 @@ $headings-color: $black;
   }
 
   table.survey-table {
-    td { 
+    td {
       padding: 2px 0px;
     }
   }
@@ -1036,9 +1036,13 @@ $headings-color: $black;
 
 .results-summary {
   .cycle-results {
+    .page-section {
+      padding: 0;
+    }
+
     .header {
       overflow: hidden;
-      height: 155px;
+      height: 213px;
       background-repeat: no-repeat;
       background-size: 100% auto;
 
@@ -1046,7 +1050,7 @@ $headings-color: $black;
         position: absolute;
         white-space: nowrap;
       }
-      
+
       .banner, .survey, .partner {
         left: 10px;
       }
@@ -1091,6 +1095,10 @@ $headings-color: $black;
         top: 105px;
         left: 0px;
         font-size: 21px;
+      }
+
+      .survey-type {
+          top: 136px;
       }
 
       .date {
