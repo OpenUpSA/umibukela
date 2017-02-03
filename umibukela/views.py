@@ -344,53 +344,6 @@ def handout_pdf(request, site_slug, result_id):
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
-def comments(request, result_id):
-    result_set = get_object_or_404(
-        CycleResultSet,
-        id=result_id,
-    )
-    skip_questions = [
-        'surveyor',
-        'capturer',
-    ]
-    questions = []
-    for child in result_set.survey.form.get('children'):
-        if child.get('type', None) == 'text' and child.get('name') not in skip_questions:
-            comments = Counter([s.answers.get(child['name'], None)
-                                for s in result_set.submissions.all()])
-            comments.pop(None, None)
-            comments.pop('n/a', None)
-
-            questions.append({
-                'label': child.get('label'),
-                'comments': comments,
-                'count': sum(comments.values()),
-            })
-    return render(request, 'print-materials/site_result_comments.html', {
-        'result_set': result_set,
-        'questions': questions,
-        'site': result_set.site.name,
-    })
-
-
-def comments_pdf(request, result_id):
-    result_set = get_object_or_404(
-        CycleResultSet,
-        id=result_id,
-    )
-    # render poster as pdf
-    url = reverse('admin:site-result-comments', kwargs={'result_id': result_id})
-    url = request.build_absolute_uri(url)
-    pdf = wkhtmltopdf(url, **{
-        'margin-top': '0.5cm',
-        'margin-right': '0.5cm',
-        'margin-bottom': '0.5cm',
-        'margin-left': '0.5cm',
-    })
-    filename = (u'Comments for %s - %s - %s.pdf' % (result_set.survey.name, result_set.partner.short_name, result_set.site.name)).encode('ascii', 'ignore')
-    return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
-
-
 def partners(request):
     partners = Partner.objects.all()
     return render(request, 'partners.html', {

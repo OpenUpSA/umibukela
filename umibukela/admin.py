@@ -32,15 +32,6 @@ class AdminSite(admin.AdminSite):
         urls = super(AdminSite, self).get_urls()
         urls = [
             url(
-                r'^umibukela/cycleresultset/(?P<result_id>\d+)/comments$',
-                'umibukela.views.comments',
-                name='site-result-comments'
-            ),
-            url(
-                r'^umibukela/cycleresultset/(?P<result_id>\d+)/comments.pdf$',
-                'umibukela.views.comments_pdf'
-            ),
-            url(
                 r'^umibukela/kobo_forms/(?P<kobo_form_id>\d+)/site/(?P<site_name>\w+)/preview$',
                 self.admin_view(views.kobo_form_site_preview)
             ),
