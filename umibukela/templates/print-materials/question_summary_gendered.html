@@ -2,8 +2,8 @@
 
   <!-- {{ element|jsonify }} -->
 
-  {% if element.type in ignore_types %}
-  <!-- skipping element.type -->
+  {% if element.type in ignore_types or element.pathstr in ignore_paths %}
+  <!-- skipping element.type={{ element.type }} or path={{ element.pathstr }} -->
 
   {#### GROUP ####}
   {% elif element.type == 'group' %}

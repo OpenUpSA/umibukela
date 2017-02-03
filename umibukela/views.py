@@ -166,7 +166,8 @@ def summary(request, site_slug, result_id):
                 'count': sum(comments.values()),
             }
     return render(request, 'print-materials/site_cycle_summary.html', {
-        'ignore_types': ['start', 'end', 'meta'],
+        'ignore_paths': ['facility'],
+        'ignore_types': ['start', 'end', 'meta', 'today'],
         'multiple_choice_types': ['select all that apply', 'select one'],
         'form': form,
         'text_questions': text_questions,
@@ -652,13 +653,19 @@ def province_summary(request, province_slug, survey_type_slug, cycle_id):
         cycle=cycle,
         survey_type=survey_type
     )
-    results, totals = analysis.cross_site_summary(result_sets)
+    form = result_sets.first().survey.form
+    gender_disagg = not not XForm(form).get_by_path('demographics_group/gender')
+    results, totals = analysis.cross_site_summary(result_sets, gender_disagg=gender_disagg)
     site_totals = totals.pop('per_site')
     for result_set in result_sets:
         result_set.totals = site_totals[result_set.site.id]
 
     return render(request, 'print-materials/location_cycle_summary.html', {
+        'ignore_paths': ['facility'],
+        'ignore_types': ['start', 'end', 'meta', 'today'],
+        'multiple_choice_types': ['select all that apply', 'select one'],
         'form': form,
+        'gender_disagg': gender_disagg,
         'location_name': province.name,
         'survey_type': survey_type,
         'cycle': cycle,
@@ -706,6 +713,9 @@ def national_summary(request, survey_type_slug, cycle_id):
         result_set.totals = site_totals[result_set.site.id]
 
     return render(request, 'print-materials/location_cycle_summary.html', {
+        'ignore_paths': ['facility'],
+        'ignore_types': ['start', 'end', 'meta', 'today'],
+        'multiple_choice_types': ['select all that apply', 'select one'],
         'form': form,
         'gender_disagg': gender_disagg,
         'location_name': 'South Africa',
