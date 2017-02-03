@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from itertools import groupby
 from wkhtmltopdf.utils import wkhtmltopdf
 from wkhtmltopdf.views import PDFResponse
-from xform import XForm, map_questions, field_per_SATA_option
+from xform import map_questions, field_per_SATA_option, skipped_as_na
 import analysis
 import pandas
 import requests
@@ -28,6 +28,7 @@ from .models import (
     Submission,
 )
 
+IGNORE_TYPES = ['start', 'end', 'meta', 'today', 'username', 'phonenumber']
 
 def home(request):
     return render(request, 'index.html', {
@@ -118,21 +119,27 @@ def summary(request, site_slug, result_id):
         id=result_id,
         site__slug__exact=site_slug
     )
+    # Multiple choice question responses
     form, responses = result_set.get_survey()
+    gender_disagg = not not form.get_by_path('demographics_group/gender')
     if responses:
         df = pandas.DataFrame(responses)
-        site_totals = analysis.count_submissions(df)
-        site_results = analysis.count_options(df, form['children'])
-        site_results = analysis.calc_q_percents(site_results)
+        site_totals = analysis.count_submissions(df, gender_disagg=gender_disagg)
+        site_results = analysis.count_options(df, form['children'], gender_disagg=gender_disagg)
+        site_results = analysis.calc_q_percents(site_results, gender_disagg)
         prev_result_set = result_set.get_previous()
         if prev_result_set:
             prev_form, prev_responses = prev_result_set.get_survey()
             if prev_responses:
                 site_totals = analysis.count_submissions(
-                    pandas.DataFrame(responses + prev_responses))
+                    pandas.DataFrame(responses + prev_responses),
+                    gender_disagg=gender_disagg
+                )
                 prev_df = pandas.DataFrame(prev_responses)
-                prev_results = analysis.count_options(prev_df, prev_form['children'])
-                prev_results = analysis.calc_q_percents(prev_results)
+                prev_results = analysis.count_options(
+                    prev_df,
+                    prev_form['children'], gender_disagg=gender_disagg)
+                prev_results = analysis.calc_q_percents(prev_results, gender_disagg)
             else:
                 prev_results = None
         else:
@@ -141,8 +148,34 @@ def summary(request, site_slug, result_id):
     else:
         site_totals = {'male': 0, 'female': 0, 'total': 0}
         site_results = None
+    # Text questions
+    skip_questions = [
+        'surveyor',
+        'capturer',
+    ]
+    text_questions = {}
+    for child in result_set.survey.form.get('children'):
+        if child.get('type', None) == 'text' and child.get('name') not in skip_questions:
+            comments = Counter([s.answers.get(child['name'], None)
+                                for s in result_set.submissions.all()])
+            comments.pop(None, None)
+            comments.pop('n/a', None)
 
-    return render(request, 'site_result_summary.html', {
+            text_questions[child.get('name')] = {
+                'label': child.get('label'),
+                'comments': comments,
+                'count': sum(comments.values()),
+            }
+    return render(request, 'print-materials/site_cycle_summary.html', {
+        'ignore_paths': ['facility'],
+        'ignore_types': IGNORE_TYPES,
+        'multiple_choice_types': ['select all that apply', 'select one'],
+        'form': form,
+        'text_questions': text_questions,
+        'location_name': result_set.site.name,
+        'survey_type': result_set.survey_type,
+        'cycle': result_set.cycle,
+        'gender_disagg': gender_disagg,
         'result_set': result_set,
         'results': {
             'questions_dict': site_results,
@@ -416,7 +449,7 @@ def survey_kobo_submissions(request, survey_id):
         submissions = r.json()
         facilities = []
         facility_labels = {}
-        form = XForm(survey.form)
+        form = survey.form
         if form.get_by_path('facility'):
             facility_q_name = 'facility'
         elif form.get_by_path('site'):
@@ -445,6 +478,7 @@ def survey_kobo_submissions(request, survey_id):
                 crs_id = int(request.POST['crs_%d' % i])
                 facility_crs[facility_name] = CycleResultSet.objects.get(pk=crs_id)
             submissions = field_per_SATA_option(survey.form, submissions)
+            submissions = skipped_as_na(survey.form, submissions)
             for answers in submissions:
                 facility_name = answers[facility_q_name]
                 submission = Submission(
@@ -620,12 +654,18 @@ def province_summary(request, province_slug, survey_type_slug, cycle_id):
         cycle=cycle,
         survey_type=survey_type
     )
-    results, totals = analysis.cross_site_summary(result_sets)
+
+    form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
     site_totals = totals.pop('per_site')
     for result_set in result_sets:
         result_set.totals = site_totals[result_set.site.id]
 
     return render(request, 'print-materials/location_cycle_summary.html', {
+        'ignore_paths': ['facility'],
+        'ignore_types': IGNORE_TYPES,
+        'multiple_choice_types': ['select all that apply', 'select one'],
+        'form': form,
+        'gender_disagg': gender_disagg,
         'location_name': province.name,
         'survey_type': survey_type,
         'cycle': cycle,
@@ -665,12 +705,17 @@ def national_summary(request, survey_type_slug, cycle_id):
         survey_type=survey_type
     )
 
-    results, totals = analysis.cross_site_summary(result_sets)
+    form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
     site_totals = totals.pop('per_site')
     for result_set in result_sets:
         result_set.totals = site_totals[result_set.site.id]
 
     return render(request, 'print-materials/location_cycle_summary.html', {
+        'ignore_paths': ['facility'],
+        'ignore_types': IGNORE_TYPES,
+        'multiple_choice_types': ['select all that apply', 'select one'],
+        'form': form,
+        'gender_disagg': gender_disagg,
         'location_name': 'South Africa',
         'survey_type': survey_type,
         'cycle': cycle,

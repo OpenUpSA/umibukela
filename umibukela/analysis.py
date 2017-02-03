@@ -46,7 +46,7 @@ Assumptions:
 """
 
 from logging import getLogger
-from xform import SelectOne, SelectAllThatApply
+from xform import SelectOne, SelectAllThatApply, XForm
 import pandas
 
 
@@ -59,27 +59,27 @@ GENDER_COLUMN = 'demographics_group/gender'
 log = getLogger(__name__)
 
 
-def count_submissions(submissions):
+def count_submissions(submissions, gender_disagg=True):
     results = {}
-    # per-gender counts
-    cols = ['_uuid', GENDER_COLUMN]
-    question_table = submissions.loc[:, cols]
-    gender_counts = question_table.groupby(
-        [GENDER_COLUMN]
-    ).count()
-    results['female'] = int(gender_counts.loc['female'])
-    results['male'] = int(gender_counts.loc['male'])
     results['total'] = int(submissions.loc[:, ['_uuid']].count())
-
+    if gender_disagg:
+        cols = ['_uuid', GENDER_COLUMN]
+        question_table = submissions.loc[:, cols]
+        gender_counts = question_table.groupby(
+            [GENDER_COLUMN]
+        ).count()
+        results['female'] = int(gender_counts.loc['female'])
+        results['male'] = int(gender_counts.loc['male'])
     return results
 
 
-def count_options(submissions, children, path=None, group_labels=None, results=None):
+def count_options(submissions, children, path=None, group_labels=None, results=None, gender_disagg=True):
     """
     returns nested dicts where the keys are the names of the XForm element
     branches to each question and each option of a question. Only multiple
     choice questions are supported.
     """
+    gender_disagg = gender_disagg or False
     path = path or []  # list of names in structure leading to current element
     group_labels = group_labels or []  # list of labels in groups in path
     results = results or {}  # results nested dict under construction
@@ -95,85 +95,98 @@ def count_options(submissions, children, path=None, group_labels=None, results=N
                 label = child['name'].replace('_', ' ').capitalize()
             deeper_group_labels = group_labels + [label]
             results = count_options(submissions, child['children'],
-                                    deeper_path, deeper_group_labels, results)
+                                    deeper_path, deeper_group_labels, results, gender_disagg=gender_disagg)
         elif child.get('type') == 'select one':
             control = child.get('control', None)
             if control:
                 if control.get('appearance') == 'label':
                     continue
             question = SelectOne(child, path, group_labels)
-            results = count_select_one(submissions, question, results)
+            results = count_select_one(submissions, question, results, gender_disagg)
         elif child.get('type') == 'select all that apply':
             question = SelectAllThatApply(child, path, group_labels)
-            results = count_select_all_that_apply(submissions, question, results)
+            results = count_select_all_that_apply(submissions, question, results, gender_disagg)
         else:
             pass
     return results
 
 
-def count_select_one(submissions, q, results):
+def count_select_one(submissions, q, results, gender_disagg):
     """
     assumes distinct values in question column as per formhub csvwriter
     """
-    select_counts = count_select_one_selections(submissions, q)
+    select_counts = count_select_one_selections(submissions, q, gender_disagg)
     results = deep_set(results, [q.pathstr, 'label'], q.label)
     results = deep_set(results, [q.pathstr, 'group_labels'], q.group_labels)
-    response_counts = count_select_one_responses(submissions, q)
-    results = set_response_counts(q, results, response_counts)
+    response_counts = count_select_one_responses(submissions, q, gender_disagg)
+    results = set_response_counts(q, results, response_counts, gender_disagg)
     for idx in range(len(q.options)):
         opt = q.options[idx]
         results = deep_set(results, [q.pathstr, 'options', opt.name, 'label'], opt.label)
         results = deep_set(results, [q.pathstr, 'options', opt.name, 'idx'], idx)
-        results = set_select_one_selection_counts(q, opt, results, select_counts)
+        results = set_select_one_selection_counts(q, opt, results, select_counts, gender_disagg)
     return results
 
 
-def count_select_all_that_apply(submissions, q, results):
+def count_select_all_that_apply(submissions, q, results, gender_disagg):
     """
     assumes column per option as per formhub csvwriter
     """
     results = deep_set(results, [q.pathstr, 'label'], q.label)
     results = deep_set(results, [q.pathstr, 'group_labels'], q.group_labels)
-    response_counts = count_select_all_that_apply_responses(submissions, q)
-    results = set_response_counts(q, results, response_counts)
+    response_counts = count_select_all_that_apply_responses(submissions, q, gender_disagg)
+    results = set_response_counts(q, results, response_counts, gender_disagg)
     for idx in range(len(q.options)):
         opt = q.options[idx]
-        select_counts = count_select_all_that_apply_selections(submissions, opt)
+        select_counts = count_select_all_that_apply_selections(submissions, opt, gender_disagg)
         results = deep_set(results, [q.pathstr, 'options', opt.name, 'label'], opt.label)
         results = deep_set(results, [q.pathstr, 'options', opt.name, 'idx'], idx)
-        results = set_select_all_that_apply_selection_counts(q, opt, results, select_counts)
+        results = set_select_all_that_apply_selection_counts(q, opt, results, select_counts, gender_disagg)
     return results
 
 
-def count_select_one_selections(submissions, question):
-    cols = ['_uuid', GENDER_COLUMN, question.pathstr]
+def count_select_one_selections(submissions, question, gender_disagg):
+    if gender_disagg:
+        group_cols = [GENDER_COLUMN, question.pathstr]
+    else:
+        group_cols = [question.pathstr]
+    cols = ['_uuid'] + group_cols
     question_table = submissions.loc[:, cols]
-    question_counts = question_table.groupby([GENDER_COLUMN, question.pathstr]).count()
+    question_counts = question_table.groupby(group_cols).count()
     return question_counts
 
 
-def count_select_all_that_apply_selections(submissions, option):
+def count_select_all_that_apply_selections(submissions, option, gender_disagg):
     """
     assumes selecting this option gives value 'True' as per formhub csvwriter
     """
     option_col = option.pathstr
-    cols = [GENDER_COLUMN, option_col]
-    option_table = submissions.loc[:, cols]
-    option_chosen_table = option_table.where(submissions[option_col] == 'True')
-    option_counts = option_chosen_table.groupby([GENDER_COLUMN]).count()
+    if gender_disagg:
+        cols = [GENDER_COLUMN, option_col]
+        option_table = submissions.loc[:, cols]
+        option_chosen_table = option_table.where(submissions[option_col] == 'True')
+        option_counts = option_chosen_table.groupby([GENDER_COLUMN]).count()
+    else:
+        option_table = submissions.loc[:, [option_col]]
+        option_chosen_table = option_table.where(submissions[option_col] == 'True')
+        option_counts = option_chosen_table.groupby([GENDER_COLUMN]).count()
     return option_counts
 
 
-def count_select_one_responses(submissions, q):
+def count_select_one_responses(submissions, q, gender_disagg):
     """
     assumes that an un-answered 'select one' question column is
     set to 'n/a' as per formhub csvwriter
     """
-    question_table = submissions.loc[:, [GENDER_COLUMN, q.pathstr]]
-    return question_table.where(submissions[q.pathstr] != 'n/a').groupby([GENDER_COLUMN]).count()
+    if gender_disagg:
+        question_table = submissions.loc[:, [GENDER_COLUMN, q.pathstr]]
+        return question_table.where(submissions[q.pathstr] != 'n/a').groupby([GENDER_COLUMN]).count()
+    else:
+        question_table = submissions.loc[:, q.pathstr]
+        return question_table.where(submissions[q.pathstr] != 'n/a').count()
 
 
-def count_select_all_that_apply_responses(submissions, q):
+def count_select_all_that_apply_responses(submissions, q, gender_disagg):
     """
     assumes that an un-answered 'select all that apply' question
     has all option columns set to 'n/a' as per formhub csvwriter
@@ -185,41 +198,63 @@ def count_select_all_that_apply_responses(submissions, q):
     ).groupby([GENDER_COLUMN]).count()
 
 
-def set_select_all_that_apply_selection_counts(q, opt, results, option_table):
-    for gender in ['male', 'female']:
-        try:
-            val = int(option_table.loc[gender])
-        except KeyError:
-            # values that aren't counted because they don't occur in the
-            # results for this question won't be indexes in the counts
-            log.debug("Question %s option %s %s not found in counts DataFrame %s",
-                      q.pathstr, gender, opt.name, option_table)
-            val = 0
-        results = deep_set(results, [q.pathstr, 'options', opt.name, 'count', gender], val)
+def set_select_all_that_apply_selection_counts(q, opt, results, option_table, gender_disagg):
+    if gender_disagg:
+        for gender in ['male', 'female']:
+            try:
+                val = int(option_table.loc[gender])
+            except KeyError:
+                # values that aren't counted because they don't occur in the
+                # results for this question won't be indexes in the counts
+                log.debug("Question %s option %s %s not found in counts DataFrame %s",
+                          q.pathstr, gender, opt.name, option_table)
+                val = 0
+            results = deep_set(results, [q.pathstr, 'options', opt.name, 'count', gender], val)
+    try:
+        val = len(option_table)
+    except KeyError:
+        # values that aren't counted because they don't occur in the
+        # results for this question won't be indexes in the counts
+        log.debug("Question %s option %s %s not found in counts DataFrame %s",
+                  q.pathstr, gender, opt.name, option_table)
+        val = 0
+        results = deep_set(results, [q.pathstr, 'options', opt.name, 'count', 'total'], val)
     return results
 
 
-def set_select_one_selection_counts(q, option, results, option_table):
-    for gender in ['male', 'female']:
-        try:
-            val = int(option_table.loc[gender, option.name])
-        except KeyError:
-            # values that aren't counted because they don't occur in the
-            # results for this question won't be indexes in the counts
-            log.debug("Question %s option %s %s not found in counts DataFrame %s",
-                      q.pathstr, gender, option.name, option_table)
-            val = 0
+def set_select_one_selection_counts(q, option, results, option_table, gender_disagg):
+    if gender_disagg:
+        for gender in ['male', 'female']:
+            try:
+                val = int(option_table.loc[gender, option.name])
+            except KeyError:
+                # values that aren't counted because they don't occur in the
+                # results for this question won't be indexes in the counts
+                log.debug("Question %s option %s %s not found in counts DataFrame %s",
+                          q.pathstr, gender, option.name, option_table)
+                val = 0
 
-        results = deep_set(results, [q.pathstr, 'options', option.name, 'count', gender], val)
+            results = deep_set(results, [q.pathstr, 'options', option.name, 'count', gender], val)
+    try:
+        val = int(option_table.loc[option.name])
+    except KeyError:
+        # values that aren't counted because they don't occur in the
+        # results for this question won't be indexes in the counts
+        log.debug("Question %s option %s not found in counts DataFrame %s",
+                  q.pathstr, option.name, option_table)
+        val = 0
+    results = deep_set(results, [q.pathstr, 'options', option.name, 'count', 'total'], val)
     return results
 
 
-def set_response_counts(q, results, counts_table):
-    total = 0
-    for gender in ['male', 'female']:
-        val = int(counts_table.loc[gender])
-        total += val
-        results = deep_set(results, [q.pathstr, 'response_count', gender], val)
+def set_response_counts(q, results, counts_table, gender_disagg):
+    if gender_disagg:
+        total = len(counts_table)
+        for gender in ['male', 'female']:
+            val = int(counts_table.loc[gender])
+            results = deep_set(results, [q.pathstr, 'response_count', gender], val)
+    else:
+        total = counts_table
     results = deep_set(results, [q.pathstr, 'response_count', 'total'], total)
     return results
 
@@ -287,17 +322,24 @@ def is_comparable(q1, q2):
     return set(q1['options'].keys()) == set(q2['options'].keys())
 
 
-def calc_q_percents(questions):
+def calc_q_percents(questions, gender_disagg=True):
     """
     updates and returns a questions dict with percentages for option counts
     """
+    if gender_disagg:
+        counts = ['male', 'female']
+    else:
+        counts = ['total']
     for q_key, question in questions.iteritems():
         for o_key, option in question['options'].iteritems():
-            for gender in ['female', 'male']:
-                select_count = float(option['count'][gender])
-                response_count = float(question['response_count'][gender])
-                pct = (select_count / response_count) * 100
-                deep_set(option, ['pct', gender], pct)
+            for count in counts:
+                select_count = float(option['count'][count])
+                response_count = float(question['response_count'][count])
+                if not (response_count or select_count):
+                    pct = 0
+                else:
+                    pct = (select_count / response_count) * 100
+                deep_set(option, ['pct', count], pct)
     return questions
 
 
@@ -305,25 +347,31 @@ def cross_site_summary(result_sets):
     """ Prepare a summary of responses from result sets from multiple sites.
     """
     responses = []
+    # define these outside loop scope so we can rightfully use whatever's set after loop
     form = None
+    gender_disagg = None
     site_totals = {}
+    facility_options = []
     for result_set in result_sets:
         # Assume that get_survey will make all surveys compatible
         # and therefore the last-set form applies to all
         form, site_responses = result_set.get_survey()
+        facility_options.extend(form.get_by_path('facility').get('children'))
+        gender_disagg = not not form.get_by_path('demographics_group/gender')
         df = pandas.DataFrame(site_responses)
-        site_totals[result_set.site.id] = count_submissions(df)
+        site_totals[result_set.site.id] = count_submissions(df, gender_disagg=gender_disagg)
         responses.extend(site_responses)
 
     if responses:
         df = pandas.DataFrame(responses)
-        results = count_options(df, form['children'])
-        results = calc_q_percents(results)
-        totals = count_submissions(df)
+        results = count_options(df, form['children'], gender_disagg=gender_disagg)
+        results = calc_q_percents(results, gender_disagg=gender_disagg)
+        totals = count_submissions(df, gender_disagg=gender_disagg)
         combine_curr_hist(results, None)
     else:
         totals = {'male': 0, 'female': 0, 'total': 0}
         results = None
 
+    form.get_by_path('facility')['children'] = facility_options
     totals['per_site'] = site_totals
-    return results, totals
+    return form, gender_disagg, results, totals

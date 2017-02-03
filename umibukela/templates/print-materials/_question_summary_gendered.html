@@ -1,0 +1,128 @@
+{% load lookup markup_tags jsonify %}
+
+  <!-- {{ element|jsonify }} -->
+
+  {% if element.type in ignore_types or element.pathstr in ignore_paths %}
+  <!-- skipping element.type={{ element.type }} or path={{ element.pathstr }} -->
+
+  {#### GROUP ####}
+  {% elif element.type == 'group' %}
+  <h3>{{ element.label }}</h3>
+  {% for element in element.children %}
+  {% include "print-materials/_question_summary_gendered.html" %}
+  {% endfor %}
+
+  {#### GROUP HEADER ####}
+  {% elif element.control.appearance == 'label' %}
+  <h3>{{ element.label }}</h3>
+
+  {#### NOTE ####}
+  {% elif element.type == 'note' %}
+  <p><em>Note:</em> {{ element.label }}</p>
+
+  {#### TEXT QUESTION ####}
+  {% elif element.type == 'text' %}
+  {% if text_questions %}
+  {% with q=text_questions|get:element.name %}
+  {% if q %}
+  <h4>Q: {{ q.label }}</h4>
+  <p>{{ q.count }} responses</p>
+  <ul>
+    {% for comment in q.comments %}
+    {% with count=q.comments|get:comment %}
+    <li>{{ comment }}{% if count != 1 %} <em>({{ count }})</em>{% endif %}</li>
+    {% endwith %}
+    {% endfor %}
+  </ul>
+  {% endif %}{# q is defined #}
+  {% endwith %}
+  {% endif %}{# text_questions is defined #}
+
+  {#### MULTIPLE CHOICE ####}
+  {% elif element.type in multiple_choice_types %}
+  {% with question_key=element.pathstr %}
+  {% with question=results.questions_dict|get:question_key %}
+  {% with first_option=question.options|first %}
+  {% if question.options|length <= 3 and first_option.current.label|length < 10 %}
+  <section class="stat-row question">
+    <div class="row">
+      <div class="col-sm-12">
+        <h3>
+          {{ question.label }}
+        </h3>
+      </div>
+    </div>
+    <div class="row">
+      {% for option in question.options %}
+      {% if forloop.counter0 == 0 %}
+      <div class="col-sm-3">
+        <h5>Female</h5>
+        <div class="stat stat-number">
+          <div class="value">{{ option.current.count.female|floatformat }}</div>
+          <div class="name">{{ option.current.label }}</div>
+          {% if option.prev %}
+          <div class="context">
+            <strong>
+              {% if option.prev.count.female > option.current.count.female %} Down
+              {% else %} Up
+              {% endif %}
+              from {{ option.prev.count.female|floatformat }}
+            </strong> in the previous cycle</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-sm-3">
+        <div class="chart chart-column" data-indicator="{{ question.key }}:female"></div>
+      </div>
+
+      <div class="col-sm-3">
+        <h5>Male</h5>
+        <div class="stat stat-number">
+          <div class="value">{{ option.current.count.male|floatformat }}</div>
+          <div class="name">{{ option.current.label }}</div>
+          {% if option.prev %}
+          <div class="context">
+            <strong>
+              {% if option.prev.count.male > option.current.count.male %} Down
+              {% else %} Up
+              {% endif %}
+              from {{ option.prev.count.male|floatformat }}
+            </strong> in the previous cycle</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-sm-3">
+        <div class="chart chart-column" data-indicator="{{ question.key }}:male"></div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+  {% else %}
+  <section class="stat-row question">
+    <div class="row">
+      <div class="col-sm-12">
+        <h3>
+          {{ question.label }}
+        </h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <h5>Female</h5>
+        <div class="chart chart-bar" data-indicator="{{ question.key }}:female"></div>
+      </div>
+
+      <div class="col-sm-6">
+        <h5>Male</h5>
+        <div class="chart chart-bar" data-indicator="{{ question.key }}:male"></div>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+  {% endwith %}
+  {% endwith %}
+  {% endwith %}
+  {% endif %}

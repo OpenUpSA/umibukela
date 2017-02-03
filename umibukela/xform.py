@@ -5,6 +5,11 @@ but for now we're allowing some domain-specific data to be in here
 
 
 class XForm(dict):
+    def __init__(self, dict):
+        super(XForm, self).__init__(dict)
+        for path, el in self._get_elements([], self.get('children')):
+            el['path'] = path
+            el['pathstr'] = pathstr(path)
 
     def set_by_path(self, path, el):
         return self._set_child_by_path(self, path.split('/'), el)
@@ -47,17 +52,18 @@ class XForm(dict):
             cls._set_child_by_path(direct_parent, [path[-1]], el)
 
     @classmethod
-    def _get_questions(cls, path, elements):
-        for c in elements:
-            if c['type'] == 'group':
-                for q in cls._get_questions(path + [c['name']], c['children']):
-                    yield q
-            else:
-                yield (path + [c['name']], c)
+    def _get_elements(cls, path, elements):
+        """Returns tuples (path_list, element)"""
+        for child in elements:
+            yield (path + [child['name']], child)
+            if child['type'] == 'group':
+                for grandchild_tuple in cls._get_elements(path + [child['name']], child['children']):
+                    yield grandchild_tuple
 
     def questions(self):
-        for q in self._get_questions([], self['children']):
-            yield q
+        for path, child in self._get_elements([], self['children']):
+            if child.get('type') not in {'group', 'note'}:
+                yield (path, child)
 
 
 class Element(object):
@@ -96,91 +102,11 @@ def pathstr(path):
 
 
 def map_questions(form, submissions):
-    form = XForm(form)
+    form = form
     mappings = [
-        {
-            'wrong_path': 'What_was_your_reason_for_visit',
-            'right_path': 'visit_reason',
-        },
-        {
-            'wrong_path': 'Do_you_have_any_disabilities',
-            'right_path': 'demographics_group/disability'
-        },
-        {
-            'wrong_path': 'How_old_are_you',
-            'right_path': 'demographics_group/age'
-        },
-        {
-            'wrong_path': 'Is_this_clinic_the_nearest_hea',
-            'right_path': 'distance'
-        },
-        {
-            'wrong_path': 'Where_do_you_earn_most_of_your',
-            'right_path': 'demographics_group/income'
-        },
         {
             'wrong_path': 'Select_your_gender',
             'right_path': 'demographics_group/gender',
-        },
-        {
-            'wrong_path': 'Did_you_get_all_the_medication',
-            'right_path': 'yes_no_group/all_medication',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/how_good_are_the_ambulance_services_',
-            'right_path': 'performance_group/ambulance',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/does_the_clinic_have_the_necessary_equipment_in_good_working_condition_to_provide_the_services_you_need_',
-            'right_path': 'performance_group/equipment',
-        },
-        {
-            'wrong_path': 'Does_this_clinic_have_a_Clinic',
-            'right_path': 'clinic_committee',
-        },
-        {
-            'wrong_path': 'Do_you_know_what_the_Clinic_Co',
-            'right_path': 'clinic_committee_function',
-        },
-        {
-            'wrong_path': 'Do_you_think_that_this_clinic_',
-            'right_path': 'clinic_feedback',
-        },
-        {
-            'wrong_path': 'Did_you_feel_safe_in_and_aroun',
-            'right_path': 'yes_no_group/safety',
-        },
-        {
-            'wrong_path': 'Did_the_staff_respect_your_rig',
-            'right_path': 'yes_no_group/examined_private',
-        },
-        {
-            'wrong_path': 'Did_the_nurse_or_doctor_explai',
-            'right_path': 'yes_no_group/consent',
-        },
-        {
-            'wrong_path': 'Do_you_know_how_to_make_a_comp',
-            'right_path': 'yes_no_group/complaint',
-        },
-        {
-            'wrong_path': 'Do_you_think_that_the_clinic_w',
-            'right_path': 'yes_no_group/complaint_response',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/was_the_clinic_clean_',
-            'right_path': 'performance_group/clean',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/did_the_clinic_manage_queues_well_',
-            'right_path': 'performance_group/queues',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/did_the_administrative_staff_treat_you_respectfully_',
-            'right_path': 'performance_group/respect_admin',
-        },
-        {
-            'wrong_path': 'How_would_you_rate_the_perform/did_the_health_professionals_doctors_and_nurses_treat_you_respectfully_',
-            'right_path': 'performance_group/respect_professionals',
         },
     ]
     for mapping in mappings:
@@ -213,18 +139,26 @@ def map_questions(form, submissions):
 
 
 def map_form(form, submissions, map_to_form):
-    form = XForm(form)
-    map_to_form = XForm(map_to_form)
+    form = form
+    map_to_form = map_to_form
     for path, q in map_to_form.questions():
         if 'from_path' in q:
             option_mapping = {}
             for option in q['children']:
-                option_mapping[option['from_name']] = option['name']
-            wrong_pathstr = q['from_path']
-            right_pathstr = pathstr(path)
-            for s in submissions:
-                s[right_pathstr] = option_mapping[s[wrong_pathstr]]
-                del s[wrong_pathstr]
+                option_mapping[option.get('from_name', option.get('name'))] = option['name']
+            if q['type'] == 'select all that apply':
+                for o in q['children']:
+                    wrong_pathstr = q['from_path'] + '/' + o['from_name']
+                    right_pathstr = pathstr(path + [o['name']])
+                    for s in submissions:
+                        s[right_pathstr] = s[wrong_pathstr]
+                        del s[wrong_pathstr]
+            else:
+                wrong_pathstr = q['from_path']
+                right_pathstr = pathstr(path)
+                for s in submissions:
+                    s[right_pathstr] = option_mapping[s[wrong_pathstr]]
+                    del s[wrong_pathstr]
 
 
 def simplify_perf_group(form, responses):
@@ -296,3 +230,14 @@ def set_select_all_that_apply_fields(dict, q_key, possible_vals):
         dict['/'.join([q_key, val])] = 'True'
     del dict[q_key]
     return dict
+
+
+def skipped_as_na(form, submissions):
+    """
+    Set the value of unanswered questions to "n/a" as formhub csvwriter did.
+    """
+    for path, q in XForm(form).questions():
+        for s in submissions:
+            if pathstr(path) not in s:
+                s[pathstr(path)] = 'n/a'
+    return submissions
