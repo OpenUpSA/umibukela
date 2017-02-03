@@ -661,6 +661,7 @@ def province_summary(request, province_slug, survey_type_slug, cycle_id):
         result_set.totals = site_totals[result_set.site.id]
 
     return render(request, 'print-materials/location_cycle_summary.html', {
+        'survey_type': survey_type,
         'ignore_paths': ['facility'],
         'ignore_types': IGNORE_TYPES,
         'multiple_choice_types': ['select all that apply', 'select one'],
@@ -711,6 +712,7 @@ def national_summary(request, survey_type_slug, cycle_id):
         result_set.totals = site_totals[result_set.site.id]
 
     return render(request, 'print-materials/location_cycle_summary.html', {
+        'survey_type': survey_type,
         'ignore_paths': ['facility'],
         'ignore_types': IGNORE_TYPES,
         'multiple_choice_types': ['select all that apply', 'select one'],

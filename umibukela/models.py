@@ -220,7 +220,7 @@ class Cycle(models.Model):
 class SurveyType(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
-    description = models.TextField()
+    description = models.TextField(help_text="This is a short line to indicate who is being surveyed to what degree, e.g. \"Light-touch survey completed by users of facility X\"")
 
     class Meta:
         ordering = ('name',)
