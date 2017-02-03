@@ -104,6 +104,10 @@ def pathstr(path):
 def map_questions(form, submissions):
     form = form
     mappings = [
+        {
+            'wrong_path': 'Select_your_gender',
+            'right_path': 'demographics_group/gender',
+        },
     ]
     for mapping in mappings:
         q = form.get_by_path(mapping['wrong_path'])

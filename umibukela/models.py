@@ -4,7 +4,7 @@ from django.contrib.gis.db import models as gis_models
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
-from xform import map_form, map_questions, simplify_perf_group, XForm
+from xform import map_form, simplify_perf_group, XForm
 import analysis
 import jsonfield
 import os
@@ -351,7 +351,6 @@ class CycleResultSet(models.Model):
             if self.survey.map_to_form:
                 map_form(form, responses, self.survey.map_to_form)
                 form = self.survey.map_to_form
-            map_questions(form, responses)
             simplify_perf_group(form, responses)
         return form, responses
 
