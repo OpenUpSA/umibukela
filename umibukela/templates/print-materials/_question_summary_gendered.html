@@ -9,7 +9,7 @@
   {% elif element.type == 'group' %}
   <h3>{{ element.label }}</h3>
   {% for element in element.children %}
-  {% include "print-materials/question_summary_gendered.html" %}
+  {% include "print-materials/_question_summary_gendered.html" %}
   {% endfor %}
 
   {#### GROUP HEADER ####}
