@@ -221,6 +221,7 @@ class SurveyType(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField(help_text="This is a short line to indicate who is being surveyed to what degree, e.g. \"Light-touch survey completed by users of facility X\"")
+    ignore_paths = models.TextField(default='', help_text="Paths that should not be presented on summaries. Separate by space, e.g. each path on a new line.")
 
     class Meta:
         ordering = ('name',)

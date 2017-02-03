@@ -149,10 +149,7 @@ def summary(request, site_slug, result_id):
         site_totals = {'male': 0, 'female': 0, 'total': 0}
         site_results = None
     # Text questions
-    skip_questions = [
-        'surveyor',
-        'capturer',
-    ]
+    skip_questions = result_set.survey_type.ignore_paths.split()
     text_questions = {}
     for child in result_set.survey.form.get('children'):
         if child.get('type', None) == 'text' and child.get('name') not in skip_questions:
@@ -167,7 +164,7 @@ def summary(request, site_slug, result_id):
                 'count': sum(comments.values()),
             }
     return render(request, 'print-materials/site_cycle_summary.html', {
-        'ignore_paths': ['facility'],
+        'ignore_paths': ['facility'] + skip_questions,
         'ignore_types': IGNORE_TYPES,
         'multiple_choice_types': ['select all that apply', 'select one'],
         'form': form,
@@ -189,7 +186,6 @@ def summary_pdf(request, site_slug, result_id):
         CycleResultSet,
         id=result_id,
     )
-    # render poster as pdf
     url = reverse('site-result-summary', kwargs={'site_slug': site_slug, 'result_id': result_id})
     url = request.build_absolute_uri(url)
     pdf = wkhtmltopdf(url, **{
@@ -662,7 +658,7 @@ def province_summary(request, province_slug, survey_type_slug, cycle_id):
 
     return render(request, 'print-materials/location_cycle_summary.html', {
         'survey_type': survey_type,
-        'ignore_paths': ['facility'],
+        'ignore_paths': ['facility'] + survey_type.ignore_paths.split(),
         'ignore_types': IGNORE_TYPES,
         'multiple_choice_types': ['select all that apply', 'select one'],
         'form': form,
@@ -713,7 +709,7 @@ def national_summary(request, survey_type_slug, cycle_id):
 
     return render(request, 'print-materials/location_cycle_summary.html', {
         'survey_type': survey_type,
-        'ignore_paths': ['facility'],
+        'ignore_paths': ['facility'] + survey_type.ignore_paths.split(),
         'ignore_types': IGNORE_TYPES,
         'multiple_choice_types': ['select all that apply', 'select one'],
         'form': form,
