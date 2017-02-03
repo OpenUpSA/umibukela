@@ -144,7 +144,7 @@ def map_form(form, submissions, map_to_form):
     for path, q in map_to_form.questions():
         if 'from_path' in q:
             option_mapping = {}
-            for option in q['children']:
+            for option in q.get('children', []):
                 option_mapping[option.get('from_name', option.get('name'))] = option['name']
             if q['type'] == 'select all that apply':
                 for o in q['children']:
@@ -153,12 +153,20 @@ def map_form(form, submissions, map_to_form):
                     for s in submissions:
                         s[right_pathstr] = s[wrong_pathstr]
                         del s[wrong_pathstr]
-            else:
+            elif q['type'] == 'select one':
                 wrong_pathstr = q['from_path']
                 right_pathstr = pathstr(path)
                 for s in submissions:
                     s[right_pathstr] = option_mapping[s[wrong_pathstr]]
                     del s[wrong_pathstr]
+            elif q['type'] == 'text':
+                wrong_pathstr = q['from_path']
+                right_pathstr = pathstr(path)
+                for s in submissions:
+                    s[right_pathstr] = s[wrong_pathstr]
+                    del s[wrong_pathstr]
+            else:
+                raise Exception("Don't know how to map this question %r" % q)
 
 
 def simplify_perf_group(form, responses):
