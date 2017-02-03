@@ -234,10 +234,11 @@ class Survey(models.Model):
     form = jsonfield.JSONField()
     map_to_form = jsonfield.JSONField(blank=True, null=True)
 
-    def __getattr__(self, attrname):
-        attr = super(Survey, self).__getattr__(attrname)
+    def __getattribute__(self, attrname):
+        attr = super(Survey, self).__getattribute__(attrname)
         if attrname in {'form', 'map_to_form'}:
-            attr = XForm(attr)
+            if attr:
+                attr = XForm(attr)
         return attr
 
     class Meta:

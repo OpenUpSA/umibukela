@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from itertools import groupby
 from wkhtmltopdf.utils import wkhtmltopdf
 from wkhtmltopdf.views import PDFResponse
-from xform import XForm, map_questions, field_per_SATA_option, skipped_as_na
+from xform import map_questions, field_per_SATA_option, skipped_as_na
 import analysis
 import pandas
 import requests
@@ -28,6 +28,7 @@ from .models import (
     Submission,
 )
 
+IGNORE_TYPES = ['start', 'end', 'meta', 'today', 'username', 'phonenumber']
 
 def home(request):
     return render(request, 'index.html', {
@@ -120,7 +121,7 @@ def summary(request, site_slug, result_id):
     )
     # Multiple choice question responses
     form, responses = result_set.get_survey()
-    gender_disagg = not not XForm(form).get_by_path('demographics_group/gender')
+    gender_disagg = not not form.get_by_path('demographics_group/gender')
     if responses:
         df = pandas.DataFrame(responses)
         site_totals = analysis.count_submissions(df, gender_disagg=gender_disagg)
@@ -167,7 +168,7 @@ def summary(request, site_slug, result_id):
             }
     return render(request, 'print-materials/site_cycle_summary.html', {
         'ignore_paths': ['facility'],
-        'ignore_types': ['start', 'end', 'meta', 'today'],
+        'ignore_types': IGNORE_TYPES,
         'multiple_choice_types': ['select all that apply', 'select one'],
         'form': form,
         'text_questions': text_questions,
@@ -448,7 +449,7 @@ def survey_kobo_submissions(request, survey_id):
         submissions = r.json()
         facilities = []
         facility_labels = {}
-        form = XForm(survey.form)
+        form = survey.form
         if form.get_by_path('facility'):
             facility_q_name = 'facility'
         elif form.get_by_path('site'):
@@ -653,16 +654,15 @@ def province_summary(request, province_slug, survey_type_slug, cycle_id):
         cycle=cycle,
         survey_type=survey_type
     )
-    form = result_sets.first().survey.form
-    gender_disagg = not not XForm(form).get_by_path('demographics_group/gender')
-    results, totals = analysis.cross_site_summary(result_sets, gender_disagg=gender_disagg)
+
+    form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
     site_totals = totals.pop('per_site')
     for result_set in result_sets:
         result_set.totals = site_totals[result_set.site.id]
 
     return render(request, 'print-materials/location_cycle_summary.html', {
         'ignore_paths': ['facility'],
-        'ignore_types': ['start', 'end', 'meta', 'today'],
+        'ignore_types': IGNORE_TYPES,
         'multiple_choice_types': ['select all that apply', 'select one'],
         'form': form,
         'gender_disagg': gender_disagg,
@@ -705,16 +705,14 @@ def national_summary(request, survey_type_slug, cycle_id):
         survey_type=survey_type
     )
 
-    form = result_sets.first().survey.form
-    gender_disagg = not not XForm(form).get_by_path('demographics_group/gender')
-    results, totals = analysis.cross_site_summary(result_sets, gender_disagg=gender_disagg)
+    form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
     site_totals = totals.pop('per_site')
     for result_set in result_sets:
         result_set.totals = site_totals[result_set.site.id]
 
     return render(request, 'print-materials/location_cycle_summary.html', {
         'ignore_paths': ['facility'],
-        'ignore_types': ['start', 'end', 'meta', 'today'],
+        'ignore_types': IGNORE_TYPES,
         'multiple_choice_types': ['select all that apply', 'select one'],
         'form': form,
         'gender_disagg': gender_disagg,

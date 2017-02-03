@@ -46,7 +46,7 @@ Assumptions:
 """
 
 from logging import getLogger
-from xform import SelectOne, SelectAllThatApply
+from xform import SelectOne, SelectAllThatApply, XForm
 import pandas
 
 
@@ -343,16 +343,21 @@ def calc_q_percents(questions, gender_disagg=True):
     return questions
 
 
-def cross_site_summary(result_sets, gender_disagg=True):
+def cross_site_summary(result_sets):
     """ Prepare a summary of responses from result sets from multiple sites.
     """
     responses = []
+    # define these outside loop scope so we can rightfully use whatever's set after loop
     form = None
+    gender_disagg = None
     site_totals = {}
+    facility_options = []
     for result_set in result_sets:
         # Assume that get_survey will make all surveys compatible
         # and therefore the last-set form applies to all
         form, site_responses = result_set.get_survey()
+        facility_options.extend(form.get_by_path('facility').get('children'))
+        gender_disagg = not not form.get_by_path('demographics_group/gender')
         df = pandas.DataFrame(site_responses)
         site_totals[result_set.site.id] = count_submissions(df, gender_disagg=gender_disagg)
         responses.extend(site_responses)
@@ -367,5 +372,6 @@ def cross_site_summary(result_sets, gender_disagg=True):
         totals = {'male': 0, 'female': 0, 'total': 0}
         results = None
 
+    form.get_by_path('facility')['children'] = facility_options
     totals['per_site'] = site_totals
-    return results, totals
+    return form, gender_disagg, results, totals

@@ -102,7 +102,7 @@ def pathstr(path):
 
 
 def map_questions(form, submissions):
-    form = XForm(form)
+    form = form
     mappings = [
     ]
     for mapping in mappings:
@@ -135,8 +135,8 @@ def map_questions(form, submissions):
 
 
 def map_form(form, submissions, map_to_form):
-    form = XForm(form)
-    map_to_form = XForm(map_to_form)
+    form = form
+    map_to_form = map_to_form
     for path, q in map_to_form.questions():
         if 'from_path' in q:
             option_mapping = {}
