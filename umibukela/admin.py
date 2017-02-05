@@ -1,5 +1,6 @@
 from django.contrib import admin
 from umibukela import views
+from itertools import groupby
 
 from .models import (
     AttachmentNature,
@@ -98,12 +99,23 @@ class CycleResultSetAdmin(admin.ModelAdmin):
     list_display = ('id', 'survey', 'cycle', 'site', 'partner')
 
 
+class CycleAdmin(admin.ModelAdmin):
+
+    def change_view(self, request, id, extra_context=None):
+        extra_context = extra_context or {}
+
+        cycle_result_sets = CycleResultSet.objects.filter(cycle__id=id)\
+                                .order_by('site__province', 'partner', 'site', 'survey_type')
+        extra_context['cycle_result_sets'] = cycle_result_sets
+        return super(CycleAdmin, self).change_view(request, id, extra_context=extra_context)
+
+
 admin_site = AdminSite()
 
 admin_site.site_header = 'Umibukela administration'
 
 admin_site.register(AttachmentNature)
-admin_site.register(Cycle)
+admin_site.register(Cycle, CycleAdmin)
 admin_site.register(CycleFrequency)
 admin_site.register(CycleResultSet, CycleResultSetAdmin)
 admin_site.register(Monitor)
