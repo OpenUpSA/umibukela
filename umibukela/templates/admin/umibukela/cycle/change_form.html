@@ -2,44 +2,37 @@
 {% block content %}
 {{ block.super }}
 
-<ul>
-  {% for prov in provinces %}
-  <li>
-    {{ prov.name }}
-    <ul>
-      {% for partner in prov.partners %}
-      <li>
-        {{ partner.name }}
-        <ul>
-          {% for site in partner.sites %}
-          <li>
-            {{ site.name }}
-            <ul>
-              {% for survey_type in site.survey_types %}
-              {% if survey_type.cycle_result_sets %}
-              <li>
-                {{ survey_type.name }}
-                <ul>
-                  {% for crs in survey_type.cycle_result_sets %}
-                  {% if 'citizen' in survey_type.name|lower %}
-                  <li>poster</li>
-                  <li>handout</li>
-                  {% endif %}
-                  <li>summary</li>
-                  {% endfor %}
-                </ul>
-              </li>
-              {% endif %}
-              {% endfor %}
-            </ul>
-          </li>
-          {% endfor %}
-        </ul>
-      </li>
-      {% endfor %}
-    </ul>
-  </li>
+<table>
+  <tr>
+    <th>province</th>
+    <th>partner</th>
+    <th>site</th>
+    <th>survey type</th>
+    <th>artifact</th>
+  </tr>
+  {% for crs in cycle_result_sets %}
+  {% if 'citizen' in crs.survey_type.name|lower %}
+  <tr>
+    <td rowspan="3">{{ crs.site.province.name }}</td>
+    <td rowspan="3">{{ crs.partner.short_name }}</td>
+    <td rowspan="3" title="{{ crs.site.name }}">{{ crs.site.name|truncatechars:40 }}</td>
+    <td rowspan="3">{{ crs.survey_type.name }}</td>
+    <td><a href="{% url 'site-result-poster-pdf' crs.site.slug crs.id %}">Poster</a></td>
+  </tr>
+  <tr>
+    <td><a href="{% url 'site-result-handout-pdf' crs.site.slug crs.id %}">Handout</a></td>
+  </tr>
+  <tr>
+    <td><a href="{% url 'site-result-summary-pdf' crs.site.slug crs.id %}">Summary</a></td>
+  </tr>
+  {% else %}
+  <tr>
+    <td>{{ crs.site.province.name }}</td>
+    <td>{{ crs.partner.short_name }}</td>
+    <td title="{{ crs.site.name }}">{{ crs.site.name|truncatechars:40 }}</td>
+    <td>{{ crs.survey_type.name }}</td>
+    <td><a href="{% url 'site-result-summary-pdf' crs.site.slug crs.id %}">Summary</a></td>
+  </tr>
+  {% endif %}
   {% endfor %}
-</ul>
-
 {% endblock %}
