@@ -1,5 +1,6 @@
 from django.contrib import admin
 from umibukela import views
+from itertools import groupby
 
 from .models import (
     AttachmentNature,
@@ -98,12 +99,44 @@ class CycleResultSetAdmin(admin.ModelAdmin):
     list_display = ('id', 'survey', 'cycle', 'site', 'partner')
 
 
+class CycleAdmin(admin.ModelAdmin):
+
+    def change_view(self, request, id, extra_context=None):
+        extra_context = extra_context or {}
+
+        def crs_province(x): return str(x.site.province)
+
+        def crs_partner(x): return str(x.partner)
+
+        def crs_site(x): return str(x.site)
+
+        def crs_survey_type(x): return str(x.survey_type)
+
+        provinces = []
+        cycle_result_sets = sorted(CycleResultSet.objects.filter(cycle__id=id), key=crs_province)
+        for province, prov_group in groupby(cycle_result_sets, crs_province):
+            partners = []
+            for partner, partner_group in groupby(sorted(prov_group, key=crs_partner), crs_partner):
+                sites = []
+                for site, site_group in groupby(sorted(partner_group, key=crs_site), crs_site):
+                    survey_types = []
+                    for survey_type, survey_type_group in groupby(sorted(site_group, key=crs_survey_type), crs_survey_type):
+                        print province, partner, site, survey_type
+
+                        survey_types.append({'name': survey_type, 'cycle_result_sets': survey_type_group})
+                    sites.append({'name': site, 'survey_types': survey_types})
+                partners.append({'name': partner, 'sites': sites})
+            provinces.append({'name': province, 'partners': partners})
+        extra_context['provinces'] = provinces
+        return super(CycleAdmin, self).change_view(request, id, extra_context=extra_context)
+
+
 admin_site = AdminSite()
 
 admin_site.site_header = 'Umibukela administration'
 
 admin_site.register(AttachmentNature)
-admin_site.register(Cycle)
+admin_site.register(Cycle, CycleAdmin)
 admin_site.register(CycleFrequency)
 admin_site.register(CycleResultSet, CycleResultSetAdmin)
 admin_site.register(Monitor)

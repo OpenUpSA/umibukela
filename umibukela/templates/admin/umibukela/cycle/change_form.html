@@ -1,0 +1,45 @@
+{% extends "admin/change_form.html" %}
+{% block content %}
+{{ block.super }}
+
+<ul>
+  {% for prov in provinces %}
+  <li>
+    {{ prov.name }}
+    <ul>
+      {% for partner in prov.partners %}
+      <li>
+        {{ partner.name }}
+        <ul>
+          {% for site in partner.sites %}
+          <li>
+            {{ site.name }}
+            <ul>
+              {% for survey_type in site.survey_types %}
+              {% if survey_type.cycle_result_sets %}
+              <li>
+                {{ survey_type.name }}
+                <ul>
+                  {% for crs in survey_type.cycle_result_sets %}
+                  {% if 'citizen' in survey_type.name|lower %}
+                  <li>poster</li>
+                  <li>handout</li>
+                  {% endif %}
+                  <li>summary</li>
+                  {% endfor %}
+                </ul>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+          {% endfor %}
+        </ul>
+      </li>
+      {% endfor %}
+    </ul>
+  </li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
