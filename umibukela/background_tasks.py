@@ -9,7 +9,7 @@ from django.core.files import File
 from models import Cycle
 
 
-@background(schedule=60)
+@background(schedule=0)
 def create_zip(cycle_id, artifacts):
     tmpdir = mkdtemp()
     try:
