@@ -704,10 +704,10 @@ var PrintMaterials = function() {
 
         counts.each(function(d, i) {
           var label = d3.select(this);
-          var labelY = parseFloat(label.attr('y'));
+          var labelY = label.attr('y');
 
           if (lastLabel && lastLabel.attr('y') - labelY < labelFontSize) {
-            label.attr('y', labelY - labelFontSize);
+            label.attr('y', Math.max(lastLabel.attr('y') - 5, labelY - labelFontSize));
           }
 
           lastLabel = label;
