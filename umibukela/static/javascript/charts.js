@@ -499,7 +499,7 @@ var PrintMaterials = function() {
 
               return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2 + countShift;
             })
-            .attr('x',shift - 2)
+            .attr('x', shift - 2)
             .attr('fill',self.BLACK)
             .attr('stroke','none')
             .attr('font-size',labelFontSize)
@@ -699,15 +699,19 @@ var PrintMaterials = function() {
       var maleIcon = drawIcon(svg, '/static/img/man-icon.png', maleIconShift);
       var femaleIcon = drawIcon(svg, '/static/img/woman-icon.png', femaleIconShift);
 
-      var lastLabel = null;
+      _.each([maleCount, femaleCount], function(counts) {
+        var lastLabel = null;
 
-      maleCount.each(function(d, i) {
+        counts.each(function(d, i) {
           var label = d3.select(this);
-          var labelY = label.attr('y');
+          var labelY = parseFloat(label.attr('y'));
 
-        if(lastLabel && lastLabel.attr('y') - labelY < labelFontSize) {
-          lastLabel.attr('y',labelY + labelFontSize / 2);
-        }
+          if (lastLabel && lastLabel.attr('y') - labelY < labelFontSize) {
+            label.attr('y', labelY - labelFontSize);
+          }
+
+          lastLabel = label;
+        });
       });
 
       svg.append('line')
