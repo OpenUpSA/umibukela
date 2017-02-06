@@ -16,7 +16,7 @@
     {% with q=questions_dict|get:'demographics_group/disability' %}
     <h4 class="question text-center">{{ q.label }}</h4>
     {% endwith %}
-    <div class="response" data-key="demographics_group/disability" data-type="9" data-width="226" data-height="200"></div>
+    <div class="response" data-key="demographics_group/disability" data-type="2" data-legend="yes/no" data-width="226" data-height="200"></div>
   </div>
 </div>
 <div class="row padding-top">
@@ -24,7 +24,7 @@
     {% with q=questions_dict|get:'distance' %}
     <h4 class="question text-center">{{ q.label }}</h4>
     {% endwith %}
-    <div class="response" data-key="distance" data-type="10" data-width="250" data-height="200"></div>
+    <div class="response" data-key="distance" data-type="2" data-legend="yes/no" data-width="250" data-height="200"></div>
   </div>
   <div class="survey-item col-xs-7">
     {% with q=questions_dict|get:'demographics_group/income' %}
