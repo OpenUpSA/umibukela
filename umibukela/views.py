@@ -11,6 +11,8 @@ from wkhtmltopdf.utils import wkhtmltopdf
 from wkhtmltopdf.views import PDFResponse
 from xform import map_questions, field_per_SATA_option, skipped_as_na
 import analysis
+import background_tasks
+import os
 import pandas
 import requests
 
@@ -29,6 +31,7 @@ from .models import (
 )
 
 IGNORE_TYPES = ['start', 'end', 'meta', 'today', 'username', 'phonenumber']
+
 
 def home(request):
     return render(request, 'index.html', {
@@ -747,3 +750,32 @@ def national_summary(request, survey_type_slug, cycle_id):
             'totals': totals,
         }
     })
+
+
+def create_zip(request, cycle_id):
+    artifacts = []
+    for crs in list(CycleResultSet.objects.filter(cycle__id=cycle_id)):
+        params = {'site_slug': crs.site.slug, 'result_id': crs.id}
+        dir = os.path.join(
+            crs.site.province.name.encode('ascii', 'ignore'),
+            crs.partner.short_name.encode('ascii', 'ignore'),
+            crs.site.name.encode('ascii', 'ignore'),
+        )
+        url = request.build_absolute_uri(reverse('site-result-summary-pdf', kwargs=params))
+        artifacts.append({
+            'url': url,
+            'dir': dir,
+        })
+        if 'citizen' in crs.survey_type.name.lower():
+            url = request.build_absolute_uri(reverse('site-result-poster-pdf', kwargs=params))
+            artifacts.append({
+                'url': url,
+                'dir': dir,
+            })
+            url = request.build_absolute_uri(reverse('site-result-handout-pdf', kwargs=params))
+            artifacts.append({
+                'url': url,
+                'dir': dir,
+            })
+    background_tasks.create_zip(cycle_id, artifacts)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

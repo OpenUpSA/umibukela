@@ -2,6 +2,7 @@
 {% block content %}
 {{ block.super }}
 
+<a href="{% url 'admin:cycle-create-zip' original.id %}">Create Zip</a>
 <table>
   <tr>
     <th>province</th>
