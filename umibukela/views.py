@@ -344,16 +344,24 @@ def handout_pdf(request, site_slug, result_id):
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
-def comments(request, result_id):
+def comments(request, site_slug, result_id):
     result_set = get_object_or_404(
         CycleResultSet,
         id=result_id,
+        site__slug__exact=site_slug
     )
+    form, responses = result_set.get_survey()
+    gender_disagg = not not form.get_by_path('demographics_group/gender')
+    if responses:
+        df = pandas.DataFrame(responses)
+        site_totals = analysis.count_submissions(df, gender_disagg=gender_disagg)
+    else:
+        site_totals = {'male': 0, 'female': 0, 'total': 0}
     skip_questions = [
         'surveyor',
         'capturer',
     ]
-    questions = []
+    text_questions = {}
     for child in result_set.survey.form.get('children'):
         if child.get('type', None) == 'text' and child.get('name') not in skip_questions:
             comments = Counter([s.answers.get(child['name'], None)
@@ -361,25 +369,37 @@ def comments(request, result_id):
             comments.pop(None, None)
             comments.pop('n/a', None)
 
-            questions.append({
+            text_questions[child.get('name')] = {
                 'label': child.get('label'),
                 'comments': comments,
                 'count': sum(comments.values()),
-            })
-    return render(request, 'print-materials/site_result_comments.html', {
+            }
+    return render(request, 'print-materials/site_cycle_summary.html', {
+        'ignore_paths': ['facility'],
+        'ignore_types': IGNORE_TYPES,
+        'multiple_choice_types': ['select all that apply', 'select one'],
+        'form': form,
+        'text_questions': text_questions,
+        'location_name': result_set.site.name,
+        'survey_type': result_set.survey_type,
+        'cycle': result_set.cycle,
+        'gender_disagg': gender_disagg,
         'result_set': result_set,
-        'questions': questions,
-        'site': result_set.site.name,
+        'results': {
+            'questions_dict': None,
+            'totals': site_totals,
+        }
     })
 
 
-def comments_pdf(request, result_id):
+def comments_pdf(request, site_slug, result_id):
     result_set = get_object_or_404(
         CycleResultSet,
         id=result_id,
+        site__slug__exact=site_slug
     )
     # render poster as pdf
-    url = reverse('admin:site-result-comments', kwargs={'result_id': result_id})
+    url = reverse('site-result-comments', kwargs={'site_slug': site_slug, 'result_id': result_id})
     url = request.build_absolute_uri(url)
     pdf = wkhtmltopdf(url, **{
         'margin-top': '0.5cm',

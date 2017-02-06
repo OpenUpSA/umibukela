@@ -6,7 +6,7 @@
   <!-- skipping element.type={{ element.type }} or path={{ element.pathstr }} -->
 
   {#### GROUP ####}
-  {% elif element.type == 'group' %}
+  {% elif element.type == 'group'  and results.questions_dict %}
   <h3>{{ element.label }}</h3>
   {% for element in element.children %}
   {% include "print-materials/_question_summary_gendered.html" %}
@@ -39,7 +39,7 @@
   {% endif %}{# text_questions is defined #}
 
   {#### MULTIPLE CHOICE ####}
-  {% elif element.type in multiple_choice_types %}
+  {% elif element.type in multiple_choice_types and results.questions_dict %}
   {% with question_key=element.pathstr %}
   {% with question=results.questions_dict|get:question_key %}
   {% with first_option=question.options|first %}
@@ -125,4 +125,4 @@
   {% endwith %}
   {% endwith %}
   {% endwith %}
-  {% endif %}
+  {% endif %}{# question type #}
