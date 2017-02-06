@@ -63,6 +63,7 @@ $headings-color: $black;
 .print-page {
   overflow: hidden;
   page-break-after: always;
+  position: relative;
 
   &.debug {
     border: 5px dashed hotpink;
@@ -873,8 +874,6 @@ $headings-color: $black;
         }
       }
       .survey-body {
-        margin-top:80px;
-
         h4 {
           font-size:15px;
         }
@@ -911,7 +910,10 @@ $headings-color: $black;
     }
 
     .i-plan {
-      margin-top:20px;
+      position: absolute;
+      left: 0px;
+      right: 0px;
+      top: 600px;
 
       .i-plan-table {
         padding:0 15px;
