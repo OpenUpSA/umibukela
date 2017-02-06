@@ -24,6 +24,7 @@ var form = {{ form|jsonify }};
   <div class="section cycle-results">
     <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
       <h1 class="banner">Community Monitoring</h1>
+      <div class="funder-logo {{ result_set.funder.name|slugify }}"></div>
       <div class="black-sash-logo"></div>
       <h2 class="partner {% if result_set.partner.full_name|length > 50 %}long{% endif %}">{{ result_set.partner.full_name }}</h2>
       <h3 class="date">{{ cycle.start_date|date:'F' }} / {{ cycle.end_date|date:'F' }} {{ cycle.end_date|date:'Y' }}</h3>
