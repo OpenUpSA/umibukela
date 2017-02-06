@@ -396,11 +396,10 @@ $headings-color: $black;
     }
 
     .funder-logo.brot-fur-die-welt {
-      top: 20px;
-      left: 557px;
-      width: 198px;
-      height: 72px;
-      background-position-x: 4px;
+      top: 19px;
+      left: 555px;
+      width: 200px;
+      height: 73px;
     }
 
     .black-sash-logo {
@@ -612,10 +611,10 @@ $headings-color: $black;
       }
 
       .funder-logo.brot-fur-die-welt {
-        top: 20px;
+        top: 19px;
         left: 540px;
         width: 198px;
-        height: 72px;
+        height: 73px;
         background-position-x: 8px;
       }
 
@@ -768,7 +767,8 @@ $headings-color: $black;
         right:0;
         top:0;
         font-size:13px;
-        color:rgb(0,0,0);
+        color: black;
+        white-space: nowrap;
       }
 
       .site {
@@ -1040,6 +1040,8 @@ $headings-color: $black;
   .funder-logo {
     background-repeat: no-repeat;
     background-size: contain;
+    background-origin: border-box;
+    background-position: 0px 0px;
   }
 
   .funder-logo.mavc {
