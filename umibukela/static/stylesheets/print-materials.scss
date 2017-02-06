@@ -396,7 +396,6 @@ $headings-color: $black;
     }
 
     .funder-logo.brot-fur-die-welt {
-      position: absolute;
       top: 20px;
       left: 560px;
       width: 196px;
@@ -612,7 +611,6 @@ $headings-color: $black;
       }
 
       .funder-logo.brot-fur-die-welt {
-        position: absolute;
         top: 20px;
         left: 560px;
         width: 196px;
@@ -1092,15 +1090,19 @@ $headings-color: $black;
         background-size: contain;
       }
 
-      .funder-logo.mavc {
-        background-image: url(/static/img/mavc-logo-simple.svg);
+      .funder-logo {
         position: absolute;
         top: 21px;
         left: 560px;
         width: 180px;
         height: 70px;
-        background-repeat: no-repeat;
-        background-size: cover;
+      }
+
+      .funder-logo.brot-fur-die-welt {
+        top: 20px;
+        left: 560px;
+        width: 196px;
+        height: 72px;
       }
 
       .survey, .partner {
