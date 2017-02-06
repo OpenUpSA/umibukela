@@ -761,11 +761,6 @@ def create_zip(request, cycle_id):
             crs.partner.short_name.encode('ascii', 'ignore'),
             crs.site.name.encode('ascii', 'ignore'),
         )
-        url = request.build_absolute_uri(reverse('site-result-summary-pdf', kwargs=params))
-        artifacts.append({
-            'url': url,
-            'dir': dir,
-        })
         if 'citizen' in crs.survey_type.name.lower():
             url = request.build_absolute_uri(reverse('site-result-poster-pdf', kwargs=params))
             artifacts.append({
@@ -777,5 +772,17 @@ def create_zip(request, cycle_id):
                 'url': url,
                 'dir': dir,
             })
+            url = request.build_absolute_uri(reverse('site-result-comments-pdf', kwargs=params))
+            artifacts.append({
+                'url': url,
+                'dir': dir,
+            })
+        else:
+            url = request.build_absolute_uri(reverse('site-result-summary-pdf', kwargs=params))
+            artifacts.append({
+                'url': url,
+                'dir': dir,
+            })
+
     background_tasks.create_zip(cycle_id, artifacts)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
