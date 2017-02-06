@@ -833,6 +833,8 @@ $headings-color: $black;
 
   &.page-2 {
     header {
+      height: 120px;
+
       .funder-logo {
         position: absolute;
         top: 50px;
@@ -876,6 +878,7 @@ $headings-color: $black;
       .survey-body {
         h4 {
           font-size:15px;
+          margin-bottom: 20px;
         }
 
         .survey-item {
