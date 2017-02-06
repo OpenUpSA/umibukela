@@ -1278,11 +1278,16 @@ var PrintMaterials = function() {
       var height = options.height;
       var width = options.width;
       var chart = options.el;
+
+      options.responses = _.indexBy(options.responses, function(opt) {
+        return opt.current.key;
+      });
+      
       var data = [
-        options.responses['older_60'] || options.responses['older_than_60_'],
-        options.responses['41_60'] || options.responses['41___60_years_'],
-        options.responses['26_40'] || options.responses['26___40_years_'],
-        options.responses['under_25'] || options.responses['under_25_years']
+        (options.responses['older_60'] || options.responses['older_than_60_']).current,
+        (options.responses['41_60'] || options.responses['41___60_years_']).current,
+        (options.responses['26_40'] || options.responses['26___40_years_']).current,
+        (options.responses['under_25'] || options.responses['under_25_years']).current,
       ];
       var maxCategory = _.max(data, function(d) { return d.count.male + d.count.female; });
 
