@@ -46,9 +46,6 @@ var PrintMaterials = function() {
       case '9':
         self.charts.typeNine(options);
       break;
-      case '10':
-        self.charts.typeTen(options);
-      break;
     }
   }
 
@@ -1739,90 +1736,6 @@ var PrintMaterials = function() {
       else return 'None';
     });
     },
-
-    typeTen: function(options) {
-      var height = options.height;
-      var width = options.width;
-      var chart = options.el;
-      var labels = ['yes','no'];
-      var colors = [self.BLACK,self.ORANGE];
-      var data = options.responses;
-
-      data = [{
-        yes: data.yes.count.male + data.yes.count.female,
-        no: data.no.count.male + data.no.count.female
-      }];
-
-      var svg = chart.append('svg')
-          .attr('height',height)
-          .attr('width',width)
-        .append('g')
-          .attr('transform','translate(10,10)');
-
-      var stack = d3.stack().keys(labels)(data);
-      var total = data[0].yes + data[0].no;
-
-      var x = d3.scaleLinear()
-        .domain([0,total])
-        .range([0,width - 40]);
-      var z = d3.scaleOrdinal()
-        .domain(labels)
-        .range(colors);
-
-      var bars = svg.selectAll('g')
-          .data(stack)
-        .enter().append('g')
-          .attr('fill', function(d) { return z(d.key) })
-
-      bars.selectAll('rect')
-          .data(function(d) { return d; })
-        .enter().append('rect')
-        .attr('x',function(d) { return x(d[0]) })
-        .attr('y',40)
-        .attr('width',function(d) { return x(d[1]) - x(d[0])})
-        .attr('height', height / 2);
-
-    var text = bars.selectAll('text.response')
-        .data(function(d) { return d; })
-      .enter().append('text')
-      .attr('class','response')
-      .attr('text-anchor','middle')
-      .attr('y', height / 2 - 10)
-      .attr('x', function(d) { return x(d[0]) + 30; })
-      .attr('font-size', '20px')
-      .attr('font-weight','bold')
-      .text(function(d) { return d[1] == total ? 'NO' : 'YES'; });
-
-    var textWidth = text.node().getBBox().width;
-
-    var count = bars.selectAll('text.count')
-        .data(function(d) { return d; })
-      .enter().append('text')
-      .attr('class','count')
-      .attr('text-anchor','middle')
-      .attr('font-size','20px')
-      .attr('y',height / 2 + 10)
-      .attr('x', function(d) { return x(d[0]) + 30; })
-      .text(function(d) { return d[1] == total ? d.data.no : d.data.yes; });
-
-    var countWidth = count.node().getBBox().width;
-
-    text.attr('fill', function(d) {
-      var barWidth = x(d[1]) - x(d[0]);
-      var maxWidth = textWidth > countWidth ? textWidth : countWidth;
-
-      if(maxWidth < barWidth) return d[1] == total ? self.BLACK : self.ORANGE;
-      else return 'None';
-    });
-
-    count.attr('fill', function(d) {
-      var barWidth = x(d[1]) - x(d[0]);
-      var maxWidth = textWidth > countWidth ? textWidth : countWidth;
-
-      if(maxWidth < barWidth) return d[1] == total ? self.BLACK : self.ORANGE;
-      else return 'None';
-    });
-    }
   }
 
   self.wrap = function(textNodes, boxWidth, boxHeight, fontSize) {
