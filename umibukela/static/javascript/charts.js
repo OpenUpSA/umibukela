@@ -102,6 +102,25 @@ var PrintMaterials = function() {
     }
   };
 
+  var spaceCounts = function(counts, attr, labelFontSize) {
+    var lastLabel = null;
+
+    counts.each(function(d, i) {
+      var label = d3.select(this);
+      var val = parseFloat(label.attr(attr));
+
+      if (lastLabel && Math.abs(lastLabel.attr(attr) - val) < labelFontSize) {
+        if (attr == 'y') {
+          label.attr(attr, Math.max(lastLabel.attr(attr) - 5, val - labelFontSize));
+        } else {
+          label.attr(attr, val + labelFontSize * 0.75);
+        }
+      }
+
+      lastLabel = label;
+    });
+  };
+
   self.charts = {
     typeOne: function(options) {
       var response = options.el;
@@ -699,20 +718,8 @@ var PrintMaterials = function() {
       var maleIcon = drawIcon(svg, '/static/img/man-icon.png', maleIconShift);
       var femaleIcon = drawIcon(svg, '/static/img/woman-icon.png', femaleIconShift);
 
-      _.each([maleCount, femaleCount], function(counts) {
-        var lastLabel = null;
-
-        counts.each(function(d, i) {
-          var label = d3.select(this);
-          var labelY = label.attr('y');
-
-          if (lastLabel && lastLabel.attr('y') - labelY < labelFontSize) {
-            label.attr('y', Math.max(lastLabel.attr('y') - 5, labelY - labelFontSize));
-          }
-
-          lastLabel = label;
-        });
-      });
+      spaceCounts(maleCount, 'y', labelFontSize);
+      spaceCounts(femaleCount, 'y', labelFontSize);
 
       svg.append('line')
         .attr('x1',lineShift)
@@ -882,7 +889,7 @@ var PrintMaterials = function() {
             return y.bandwidth() * scalingFactor + barPadding;
           });
 
-      female.selectAll('text.count')
+      var femaleCount = female.selectAll('text.count')
           .data(function(d) { return d; })
         .enter().append('text')
           .attr('class','count')
@@ -952,7 +959,7 @@ var PrintMaterials = function() {
             return y.bandwidth() * scalingFactor + barPadding;
           });
 
-      male.selectAll('text.count')
+      var maleCount = male.selectAll('text.count')
           .data(function(d) { return d; })
         .enter().append('text')
           .attr('class','count')
@@ -1041,6 +1048,9 @@ var PrintMaterials = function() {
       //var renderedLegendWidth = legendSquare + 5 + maxTextWidth;*/
 
       legend.attr('transform','translate(' + (width + 10 - legendWidth) + ',' + (height - labels.length * (legendSquare + 2)) + ')');
+
+      spaceCounts(maleCount, 'x', fontSize);
+      spaceCounts(femaleCount, 'x', fontSize);
     },
     typeFour: function(options) {
       var responses = options.responses;
