@@ -5,7 +5,7 @@
   |
   <a href="{% url 'site-result-handout-pdf' original.site.slug original.id %}">Handout</a>
   |
-  <a href="/admin/umibukela/cycleresultset/{{ original.id }}/comments.pdf">Comments</a>
+  <a href="{% url 'site-result-comments-pdf' original.site.slug original.id %}">Comments</a>
   |
   <a href="{% url 'site-result-summary-pdf' original.site.slug original.id %}">Summary</a>
 </div>
