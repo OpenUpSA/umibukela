@@ -1063,6 +1063,9 @@ $headings-color: $black;
   .cycle-results {
     .page-section {
       padding: 0;
+      h3 {
+        page-break-after: avoid;
+      }
     }
 
     .header {
