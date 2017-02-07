@@ -7,6 +7,9 @@ but for now we're allowing some domain-specific data to be in here
 class XForm(dict):
     def __init__(self, dict):
         super(XForm, self).__init__(dict)
+        self._set_path_fields()
+
+    def _set_path_fields(self):
         for path, el in self._get_elements([], self.get('children')):
             el['path'] = path
             el['pathstr'] = pathstr(path)
@@ -136,6 +139,7 @@ def map_questions(form, submissions):
                 else:
                     s[mapping['right_path']] = s[mapping['wrong_path']]
                     del s[mapping['wrong_path']]
+    form._set_path_fields()  # update now paths have changed
 
 
 def map_form(form, submissions, map_to_form):
@@ -167,6 +171,7 @@ def map_form(form, submissions, map_to_form):
                     del s[wrong_pathstr]
             else:
                 raise Exception("Don't know how to map this question %r" % q)
+    form._set_path_fields()  # update now paths have changed
 
 
 def simplify_perf_group(form, responses):
