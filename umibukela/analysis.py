@@ -46,7 +46,7 @@ Assumptions:
 """
 
 from logging import getLogger
-from xform import SelectOne, SelectAllThatApply, XForm
+from xform import SelectOne, SelectAllThatApply
 import pandas
 
 
