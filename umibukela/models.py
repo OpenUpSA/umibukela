@@ -186,6 +186,7 @@ class Cycle(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     programme = models.ForeignKey(Programme)
+    materials = models.FileField(blank=True, null=True)
 
     class Meta:
         unique_together = ('name', 'programme')

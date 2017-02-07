@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'background_task',
     'pipeline',
     'django_extensions',
     'jsonfield',

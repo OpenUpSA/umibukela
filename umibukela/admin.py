@@ -33,6 +33,11 @@ class AdminSite(admin.AdminSite):
         urls = super(AdminSite, self).get_urls()
         urls = [
             url(
+                r'^umibukela/cycle/(?P<cycle_id>\d+)/create_zip$',
+                'umibukela.views.create_zip',
+                name='cycle-create-zip'
+            ),
+            url(
                 r'^umibukela/kobo_forms/(?P<kobo_form_id>\d+)/site/(?P<site_name>\w+)/preview$',
                 self.admin_view(views.kobo_form_site_preview)
             ),
