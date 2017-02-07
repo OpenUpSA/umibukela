@@ -170,7 +170,7 @@ def summary(request, site_slug, result_id):
                 'count': sum(comments.values()),
             }
     return render(request, 'print-materials/site_cycle_summary.html', {
-        'ignore_paths': ['facility'],
+        'ignore_paths': ['facility', 'demographics_group/gender'],
         'ignore_types': IGNORE_TYPES,
         'multiple_choice_types': ['select all that apply', 'select one'],
         'form': form,
