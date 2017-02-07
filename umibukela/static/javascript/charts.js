@@ -111,7 +111,7 @@ var PrintMaterials = function() {
 
       if (lastLabel && Math.abs(lastLabel.attr(attr) - val) < labelFontSize) {
         if (attr == 'y') {
-          label.attr(attr, Math.max(lastLabel.attr(attr) - 5, val - labelFontSize));
+          label.attr(attr, Math.max(lastLabel.attr(attr) - 6, val - labelFontSize));
         } else {
           label.attr(attr, val + labelFontSize * 0.75);
         }
