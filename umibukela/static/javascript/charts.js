@@ -46,9 +46,6 @@ var PrintMaterials = function() {
       case '9':
         self.charts.typeNine(options);
       break;
-      case '10':
-        self.charts.typeTen(options);
-      break;
     }
   }
 
@@ -103,6 +100,25 @@ var PrintMaterials = function() {
         console.log("unable to provide ordering: ", a.current.key, b.current.key);
       }
     }
+  };
+
+  var spaceCounts = function(counts, attr, labelFontSize) {
+    var lastLabel = null;
+
+    counts.each(function(d, i) {
+      var label = d3.select(this);
+      var val = parseFloat(label.attr(attr));
+
+      if (lastLabel && Math.abs(lastLabel.attr(attr) - val) < labelFontSize) {
+        if (attr == 'y') {
+          label.attr(attr, Math.max(lastLabel.attr(attr) - 6, val - labelFontSize));
+        } else {
+          label.attr(attr, val + labelFontSize * 0.75);
+        }
+      }
+
+      lastLabel = label;
+    });
   };
 
   self.charts = {
@@ -502,7 +518,7 @@ var PrintMaterials = function() {
 
               return y(d[1]) + Math.abs(y(d[1]) - y(d[0])) / 2 + countShift;
             })
-            .attr('x',shift - 2)
+            .attr('x', shift - 2)
             .attr('fill',self.BLACK)
             .attr('stroke','none')
             .attr('font-size',labelFontSize)
@@ -702,16 +718,8 @@ var PrintMaterials = function() {
       var maleIcon = drawIcon(svg, '/static/img/man-icon.png', maleIconShift);
       var femaleIcon = drawIcon(svg, '/static/img/woman-icon.png', femaleIconShift);
 
-      var lastLabel = null;
-
-      maleCount.each(function(d, i) {
-          var label = d3.select(this);
-          var labelY = label.attr('y');
-
-        if(lastLabel && lastLabel.attr('y') - labelY < labelFontSize) {
-          lastLabel.attr('y',labelY + labelFontSize / 2);
-        }
-      });
+      spaceCounts(maleCount, 'y', labelFontSize);
+      spaceCounts(femaleCount, 'y', labelFontSize);
 
       svg.append('line')
         .attr('x1',lineShift)
@@ -881,7 +889,7 @@ var PrintMaterials = function() {
             return y.bandwidth() * scalingFactor + barPadding;
           });
 
-      female.selectAll('text.count')
+      var femaleCount = female.selectAll('text.count')
           .data(function(d) { return d; })
         .enter().append('text')
           .attr('class','count')
@@ -951,7 +959,7 @@ var PrintMaterials = function() {
             return y.bandwidth() * scalingFactor + barPadding;
           });
 
-      male.selectAll('text.count')
+      var maleCount = male.selectAll('text.count')
           .data(function(d) { return d; })
         .enter().append('text')
           .attr('class','count')
@@ -1040,6 +1048,9 @@ var PrintMaterials = function() {
       //var renderedLegendWidth = legendSquare + 5 + maxTextWidth;*/
 
       legend.attr('transform','translate(' + (width + 10 - legendWidth) + ',' + (height - labels.length * (legendSquare + 2)) + ')');
+
+      spaceCounts(maleCount, 'x', fontSize);
+      spaceCounts(femaleCount, 'x', fontSize);
     },
     typeFour: function(options) {
       var responses = options.responses;
@@ -1278,11 +1289,16 @@ var PrintMaterials = function() {
       var height = options.height;
       var width = options.width;
       var chart = options.el;
+
+      options.responses = _.indexBy(options.responses, function(opt) {
+        return opt.current.key;
+      });
+      
       var data = [
-        options.responses['older_60'] || options.responses['older_than_60_'],
-        options.responses['41_60'] || options.responses['41___60_years_'],
-        options.responses['26_40'] || options.responses['26___40_years_'],
-        options.responses['under_25'] || options.responses['under_25_years']
+        (options.responses['older_60'] || options.responses['older_than_60_']).current,
+        (options.responses['41_60'] || options.responses['41___60_years_']).current,
+        (options.responses['26_40'] || options.responses['26___40_years_']).current,
+        (options.responses['under_25'] || options.responses['under_25_years']).current,
       ];
       var maxCategory = _.max(data, function(d) { return d.count.male + d.count.female; });
 
@@ -1734,90 +1750,6 @@ var PrintMaterials = function() {
       else return 'None';
     });
     },
-
-    typeTen: function(options) {
-      var height = options.height;
-      var width = options.width;
-      var chart = options.el;
-      var labels = ['yes','no'];
-      var colors = [self.BLACK,self.ORANGE];
-      var data = options.responses;
-
-      data = [{
-        yes: data.yes.count.male + data.yes.count.female,
-        no: data.no.count.male + data.no.count.female
-      }];
-
-      var svg = chart.append('svg')
-          .attr('height',height)
-          .attr('width',width)
-        .append('g')
-          .attr('transform','translate(10,10)');
-
-      var stack = d3.stack().keys(labels)(data);
-      var total = data[0].yes + data[0].no;
-
-      var x = d3.scaleLinear()
-        .domain([0,total])
-        .range([0,width - 40]);
-      var z = d3.scaleOrdinal()
-        .domain(labels)
-        .range(colors);
-
-      var bars = svg.selectAll('g')
-          .data(stack)
-        .enter().append('g')
-          .attr('fill', function(d) { return z(d.key) })
-
-      bars.selectAll('rect')
-          .data(function(d) { return d; })
-        .enter().append('rect')
-        .attr('x',function(d) { return x(d[0]) })
-        .attr('y',40)
-        .attr('width',function(d) { return x(d[1]) - x(d[0])})
-        .attr('height', height / 2);
-
-    var text = bars.selectAll('text.response')
-        .data(function(d) { return d; })
-      .enter().append('text')
-      .attr('class','response')
-      .attr('text-anchor','middle')
-      .attr('y', height / 2 - 10)
-      .attr('x', function(d) { return x(d[0]) + 30; })
-      .attr('font-size', '20px')
-      .attr('font-weight','bold')
-      .text(function(d) { return d[1] == total ? 'NO' : 'YES'; });
-
-    var textWidth = text.node().getBBox().width;
-
-    var count = bars.selectAll('text.count')
-        .data(function(d) { return d; })
-      .enter().append('text')
-      .attr('class','count')
-      .attr('text-anchor','middle')
-      .attr('font-size','20px')
-      .attr('y',height / 2 + 10)
-      .attr('x', function(d) { return x(d[0]) + 30; })
-      .text(function(d) { return d[1] == total ? d.data.no : d.data.yes; });
-
-    var countWidth = count.node().getBBox().width;
-
-    text.attr('fill', function(d) {
-      var barWidth = x(d[1]) - x(d[0]);
-      var maxWidth = textWidth > countWidth ? textWidth : countWidth;
-
-      if(maxWidth < barWidth) return d[1] == total ? self.BLACK : self.ORANGE;
-      else return 'None';
-    });
-
-    count.attr('fill', function(d) {
-      var barWidth = x(d[1]) - x(d[0]);
-      var maxWidth = textWidth > countWidth ? textWidth : countWidth;
-
-      if(maxWidth < barWidth) return d[1] == total ? self.BLACK : self.ORANGE;
-      else return 'None';
-    });
-    }
   }
 
   self.wrap = function(textNodes, boxWidth, boxHeight, fontSize) {

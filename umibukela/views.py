@@ -320,7 +320,10 @@ def handout(request, site_slug, result_id):
 
     if responses:
         df = pandas.DataFrame(responses)
-        context['questions_dict'] = analysis.count_options(df, form['children'])
+        site_results = analysis.count_options(df, form['children'])
+        analysis.combine_curr_hist(site_results, None)
+
+        context['questions_dict'] = site_results
         context['totals'] = analysis.count_submissions(pandas.DataFrame(responses))
 
     return render(request, 'print-materials/handouts/handout_layout.html', context)

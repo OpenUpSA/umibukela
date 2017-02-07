@@ -7,7 +7,8 @@
 
 {% block js %}
 <script type="text/javascript">
-var questions = {{ questions_dict | jsonify }};
+  var questions = {{ questions_dict | jsonify }};
+  var cycleYears = [{{ result_set.get_previous.cycle.end_date|date:'Y' }}, {{ result_set.cycle.end_date|date:'Y' }}];
 </script>
 {% javascript "print-materials" %}
 {% endblock %}
@@ -131,6 +132,9 @@ var questions = {{ questions_dict | jsonify }};
           <h4>Comparisons</h4>
           <p>
             It is important to be able to track the changes coming from the CBM surveys, over time. In order to do so, we need to compare the results of the previous monitoring cycle, to the current cycle.
+            {% if survey_type == 1 %}
+            In the event that the question and/or possible responses have changed from the previous cycle, it is not possible to show comparisons as this data needs to be accurate.
+            {% endif %}
           </p>
           <p>
             It is important to remember that the number of people surveyed differs for each cycle.

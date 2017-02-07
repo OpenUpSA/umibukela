@@ -9,20 +9,13 @@
   <div class="survey-item col-xs-4">
     {% with q=questions_dict|get:'service' %}
     <h4 class="question text-center">{{ q.label }}</h4>
-    <table class="survey-table">
-      {% for option in q.options.values|dictsort:"label" %}
-        <tr>
-          <td>{{ option.label }}</td>
-          <td>{{ option.count.male|add:option.count.female }}</td>
-        </tr>
-      {% endfor %}
-    </table>
+    {% include "print-materials/handouts/_value_table.html" with q=q %}
     {% endwith %}
   </div>
   <div class="survey-item col-xs-4">
     {% with q=questions_dict|get:'performance_group/service_satisfaction' %}
     <h4 class="question text-center">{{ q.label }}</h4>
     {% endwith %}
-    <div class="response" data-key="performance_group/service_satisfaction" data-type="8" data-width="226" data-height="288"></div>
+    <div class="response" data-key="performance_group/service_satisfaction" data-legend="attitude" data-type="2" data-width="226" data-height="288"></div>
   </div>
 </div>
