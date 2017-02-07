@@ -107,6 +107,8 @@ var PrintMaterials = function() {
 
     counts.each(function(d, i) {
       var label = d3.select(this);
+      if (!label.text()) return;
+
       var val = parseFloat(label.attr(attr));
 
       if (lastLabel && Math.abs(lastLabel.attr(attr) - val) < labelFontSize) {
