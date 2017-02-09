@@ -247,11 +247,15 @@ def poster(request, site_slug, result_id):
         'form': form,
         'layout_class': slugify(result_set.survey_type.name),
         'prev_date': prev_date,
+        'start_date': result_set.cycle.start_date,
+        'end_date': result_set.cycle.end_date,
         'questions_dict': site_results,
         'result_set': result_set,
         'sector': result_set.site.sector.name,
         'location': result_set.site.name,
         'totals': totals,
+        'funder_name': result_set.funder.name,
+        'partner_name': result_set.partner.full_name,
     })
 
 
@@ -778,16 +782,19 @@ def national_poster(request, survey_type_slug, cycle_id):
 
     form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
 
-    return render(request, poster_template(result_sets[0].survey_type), {
+    return render(request, poster_template(survey_type), {
         'DEBUG': settings.DEBUG,
         'form': form,
-        'layout_class': slugify(result_sets[0].survey_type.name),
+        'layout_class': slugify(survey_type.name),
         'prev_date': None,
+        'start_date': cycle.start_date,
+        'end_date': cycle.end_date,
         'questions_dict': results,
         'result_set': result_sets[0],
         'sector': result_sets[0].site.sector.name,
         'location': 'South Africa',
         'totals': totals,
+        'funder_name': 'MAVC',
     })
 
 
