@@ -798,12 +798,55 @@ def national_poster(request, survey_type_slug, cycle_id):
     })
 
 
-def province_poster(request, survey_type_slug, cycle_id):
-    pass
+def province_poster_pdf(request, province_slug, survey_type_slug, cycle_id):
+    province = get_object_or_404(Province, slug=province_slug)
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    cycle = get_object_or_404(Cycle, id=cycle_id)
+    # render poster as pdf
+    url = reverse('province-poster', kwargs={
+        'province_slug': province_slug,
+        'survey_type_slug': survey_type_slug,
+        'cycle_id': cycle_id,
+    })
+    url = request.build_absolute_uri(url)
+    pdf = wkhtmltopdf(url, **{
+        'margin-top': '0.5cm',
+        'margin-right': '0.5cm',
+        'margin-bottom': '0.5cm',
+        'margin-left': '0.5cm',
+    })
+    filename = (u'Poster for %s - %s - %s.pdf' % (province.name, survey_type.name, cycle.name)).encode('ascii', 'ignore')
+    return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
-def province_poster_pdf(request, survey_type_slug, cycle_id):
-    pass
+def province_poster(request, province_slug, survey_type_slug, cycle_id):
+    province = get_object_or_404(Province, slug=province_slug)
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    cycle = get_object_or_404(Cycle, id=cycle_id)
+
+    result_sets = CycleResultSet.objects.filter(
+        site__province=province,
+        cycle=cycle,
+        survey_type=survey_type
+    )
+
+    form, gender_disagg, results, curr_totals = analysis.cross_site_summary(result_sets)
+    totals = {'current': curr_totals}
+
+    return render(request, poster_template(survey_type), {
+        'DEBUG': settings.DEBUG,
+        'form': form,
+        'layout_class': slugify(survey_type.name),
+        'prev_date': None,
+        'start_date': cycle.start_date,
+        'end_date': cycle.end_date,
+        'questions_dict': results,
+        'sector': result_sets[0].site.sector.name,
+        'location': province.name,
+        'totals': totals,
+        'funder_name': 'MAVC',
+        'survey_type': survey_type,
+    })
 
 
 def create_zip(request, cycle_id):
