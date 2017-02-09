@@ -777,20 +777,17 @@ def national_poster(request, survey_type_slug, cycle_id):
     )
 
     form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
-    site_totals = totals.pop('per_site')
-    for result_set in result_sets:
-        result_set.totals = site_totals[result_set.site.id]
 
-    return render(request, poster_template(result_set.survey_type), {
+    return render(request, poster_template(result_sets[0].survey_type), {
         'DEBUG': settings.DEBUG,
         'form': form,
-        'layout_class': layout_class,
-        'prev_date': prev_date,
-        'questions_dict': site_results,
-        'result_set': result_set,
-        'sector': sector_name,
+        'layout_class': slugify(result_sets[0].survey_type.name),
+        'prev_date': None,
+        'questions_dict': results,
+        'result_set': result_sets[0],
+        'sector': result_sets[0].site.sector.name,
+        'location': 'South Africa',
         'totals': totals,
-        'location': site.name,
     })
 
 
