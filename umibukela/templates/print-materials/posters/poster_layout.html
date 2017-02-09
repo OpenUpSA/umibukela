@@ -20,7 +20,11 @@
     <h1 class="banner">Community Monitoring</h1>
     <div class="funder-logo {{ funder_name|slugify }}"></div>
     <div class="black-sash-logo"></div>
+    {% if partner_name %}
     <h1 class="partner {% if partner_name|length > 50 %}long{% endif %}">{{ partner_name }}</h1>
+    {% else %}
+    <h2 class="survey">{{ survey_type.name }}</h2>
+    {% endif %}
     <h3 class="date">
       {{ start_date|date:'F' }}
       {% if start_date|date:'Y' != end_date|date:'Y' %}

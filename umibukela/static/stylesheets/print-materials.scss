@@ -372,12 +372,12 @@ $headings-color: $black;
     background-repeat: no-repeat;
     background-size: 100% auto;
 
-    .partner, .date, .site, .banner {
+    .survey, .partner, .date, .site, .banner {
       position: absolute;
       white-space: nowrap;
     }
 
-    .partner, .site, .location, .banner {
+    .survey, .partner, .site, .location, .banner {
       left: 10px;
     }
 
@@ -414,7 +414,7 @@ $headings-color: $black;
       background-size: contain;
     }
 
-    .partner {
+    .survey, .partner {
       top: 70px;
       color: white !important;
       font-size: 21px;

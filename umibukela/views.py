@@ -793,6 +793,7 @@ def national_poster(request, survey_type_slug, cycle_id):
         'location': 'South Africa',
         'totals': totals,
         'funder_name': 'MAVC',
+        'survey_type': survey_type,
     })
 
 
