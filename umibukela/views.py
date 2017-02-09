@@ -779,7 +779,8 @@ def national_poster(request, survey_type_slug, cycle_id):
         survey_type=survey_type
     )
 
-    form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
+    form, gender_disagg, results, curr_totals = analysis.cross_site_summary(result_sets)
+    totals = {'current': curr_totals}
 
     return render(request, poster_template(survey_type), {
         'DEBUG': settings.DEBUG,
