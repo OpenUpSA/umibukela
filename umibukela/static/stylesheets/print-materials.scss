@@ -160,8 +160,7 @@ $headings-color: $black;
       }
     }
 
-    .funder {
-      display: none;
+    .site-names {
       font-size: 9px;
       margin-top: -10px;
     }
@@ -217,8 +216,8 @@ $headings-color: $black;
       padding:0;
     }
 
-    .funder {
-      display: none;
+    .site-names {
+      font-size: 9px;
       margin-top: 10px;
     }
 
@@ -456,9 +455,8 @@ $headings-color: $black;
     border-left:1px dashed rgb(0,0,0);
   }
 
-  .funder {
-    display: none;
-    font-size: 10px;
+  .site-names {
+    font-size: 9px;
     line-height: 1;
   }
 

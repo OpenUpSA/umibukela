@@ -795,6 +795,7 @@ def national_poster(request, survey_type_slug, cycle_id):
         'totals': totals,
         'funder_name': 'MAVC',
         'survey_type': survey_type,
+        'site_names': [crs.site.name for crs in result_sets],
     })
 
 
@@ -846,6 +847,7 @@ def province_poster(request, province_slug, survey_type_slug, cycle_id):
         'totals': totals,
         'funder_name': 'MAVC',
         'survey_type': survey_type,
+        'site_names': [crs.site.name for crs in result_sets],
     })
 
 
