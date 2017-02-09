@@ -99,7 +99,7 @@
   <div class="col-xs-3 summary">
     {% include 'print-materials/posters/_survey_totals.html' %}
     <img class="code4sa-logo" alt="Code4SA" src="{% static 'img/logo-code4sa.png' %}" />
-    <div class="funder">The funders for this site are {{ result_set.funder.name }}.</div>
+    {% include 'print-materials/posters/_site_list.html' %}
   </div>
 </div>
 {% endblock %}

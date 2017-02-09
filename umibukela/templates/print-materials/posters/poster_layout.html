@@ -9,7 +9,7 @@
 <script type="application/javascript">
   var questions = {{ questions_dict|jsonify }};
   var form = {{ form|jsonify }};
-  var cycleYears = [{{ result_set.get_previous.cycle.end_date|date:'Y' }}, {{ result_set.cycle.end_date|date:'Y' }}];
+  var cycleYears = [{{ prev_date|date:'Y' }}, {{ start_date|date:'Y' }}];
 </script>
 {% javascript "print-materials" %}
 {% endblock %}
@@ -18,14 +18,23 @@
 <div class="print-materials poster print-page simple-bootstrap-rows a4-portrait-single {{ layout_class }} {% if DEBUG %}debug{% endif %}">
   <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
     <h1 class="banner">Community Monitoring</h1>
-    <div class="funder-logo {{ result_set.funder.name|slugify }}"></div>
+    <div class="funder-logo {{ funder_name|slugify }}"></div>
     <div class="black-sash-logo"></div>
-    <h1 class="partner {% if result_set.partner.full_name|length > 50 %}long{% endif %}">{{ result_set.partner.full_name }}</h1>
-    <h3 class="date">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
-    <h2 class="site {% if site|length > 40 %}long{% endif %}">{% if sector %}{{ sector }}: {% endif %}{{ site }}</h2>
-    {% if location %}
-    <h3 class="location">{{ location }}</h3>
+    {% if partner_name %}
+    <h1 class="partner {% if partner_name|length > 50 %}long{% endif %}">{{ partner_name }}</h1>
+    {% else %}
+    <h2 class="survey">{{ survey_type.name }}</h2>
     {% endif %}
+    <h3 class="date">
+      {{ start_date|date:'F' }}
+      {% if start_date|date:'Y' != end_date|date:'Y' %}
+      {{ end_date|date:'Y' }}
+      -
+      {% else %}
+      /
+      {% endif %}
+      {{ end_date|date:'F' }} {{ end_date|date:'Y' }}</h3>
+    <h2 class="site {% if location|length > 40 %}long{% endif %}">{{ location }}</h2>
   </header>
   <section class="survey">
   {% block survey %}

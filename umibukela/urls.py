@@ -60,6 +60,7 @@ urlpatterns = patterns(
         'umibukela.views.partner',
         name='partner'),
 
+    # regional summary
     url(r'^survey-type/(?P<survey_type_slug>[\w-]+)/province/(?P<province_slug>[\w-]+)/cycle/(?P<cycle_id>\d+)/summary$',
         'umibukela.views.province_summary',
         name='province-summary'),
@@ -72,6 +73,20 @@ urlpatterns = patterns(
     url(r'^survey-type/(?P<survey_type_slug>[\w-]+)/south-africa/cycle/(?P<cycle_id>\d+)/summary.pdf$',
         'umibukela.views.national_summary_pdf',
         name='national-summary-pdf'),
+
+    # regional poster
+    url(r'^survey-type/(?P<survey_type_slug>[\w-]+)/province/(?P<province_slug>[\w-]+)/cycle/(?P<cycle_id>\d+)/poster$',
+        'umibukela.views.province_poster',
+        name='province-poster'),
+    url(r'^survey-type/(?P<survey_type_slug>[\w-]+)/province/(?P<province_slug>[\w-]+)/cycle/(?P<cycle_id>\d+)/poster.pdf$',
+        'umibukela.views.province_poster_pdf',
+        name='province-poster-pdf'),
+    url(r'^survey-type/(?P<survey_type_slug>[\w-]+)/south-africa/cycle/(?P<cycle_id>\d+)/poster$',
+        'umibukela.views.national_poster',
+        name='national-poster'),
+    url(r'^survey-type/(?P<survey_type_slug>[\w-]+)/south-africa/cycle/(?P<cycle_id>\d+)/poster.pdf$',
+        'umibukela.views.national_poster_pdf',
+        name='national-poster-pdf'),
 
     # health-e
     url(r'^stockouts/$',

@@ -7,9 +7,10 @@
   <ul>
     {% for cycle in cycles %}
     <li>
-      <a href="{% url "national-summary" original.slug cycle.id %}">{{ cycle.name }}</a>
+      {{ cycle.name }} -
+      <a href="{% url "national-summary-pdf" original.slug cycle.id %}">Summary</a>
       |
-      <a href="{% url "national-summary-pdf" original.slug cycle.id %}">PDF</a>
+      <a href="{% url "national-poster-pdf" original.slug cycle.id %}">Poster</a>
     </li>
     {% endfor %}
   </ul>
@@ -21,9 +22,10 @@
       <ul>
         {% for cycle in cycles %}
         <li>
-          <a href="{% url "province-summary" original.slug province.slug cycle.id %}">{{ cycle.name }}</a>
+          {{ cycle.name }} -
+          <a href="{% url "province-summary-pdf" original.slug province.slug cycle.id %}">Summary</a>
           |
-          <a href="{% url "province-summary-pdf" original.slug province.slug cycle.id %}">PDF</a>
+          <a href="{% url "province-poster-pdf" original.slug province.slug cycle.id %}">Poster</a>
         </li>
         {% endfor %}
       </ul>

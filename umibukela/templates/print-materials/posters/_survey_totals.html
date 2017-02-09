@@ -1,8 +1,8 @@
-{% with prev_exists=result_set.get_previous %}
+{% with prev_exists=prev_date %}
 <div class="totals-table">
   <div class="row no-border text-medium">
     <div class="col-xs-8"></div>
-    <div class="{% if prev_exists %}col-xs-2{% else %}col-xs-4 text-center{% endif %}"><b>{{ result_set.cycle.end_date|date:'Y' }}</b></div>
+    <div class="{% if prev_exists %}col-xs-2{% else %}col-xs-4 text-center{% endif %}"><b>{{ end_date|date:'Y' }}</b></div>
     {% if prev_exists %}
         <div class="col-xs-2"><b>{{ prev_date|date:'Y' }}</b></div>
     {% endif %}

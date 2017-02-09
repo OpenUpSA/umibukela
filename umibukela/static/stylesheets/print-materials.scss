@@ -160,8 +160,7 @@ $headings-color: $black;
       }
     }
 
-    .funder {
-      display: none;
+    .site-names {
       font-size: 9px;
       margin-top: -10px;
     }
@@ -217,8 +216,8 @@ $headings-color: $black;
       padding:0;
     }
 
-    .funder {
-      display: none;
+    .site-names {
+      font-size: 9px;
       margin-top: 10px;
     }
 
@@ -372,12 +371,12 @@ $headings-color: $black;
     background-repeat: no-repeat;
     background-size: 100% auto;
 
-    .partner, .date, .site, .banner {
+    .survey, .partner, .date, .site, .banner {
       position: absolute;
       white-space: nowrap;
     }
 
-    .partner, .site, .location, .banner {
+    .survey, .partner, .site, .location, .banner {
       left: 10px;
     }
 
@@ -414,7 +413,7 @@ $headings-color: $black;
       background-size: contain;
     }
 
-    .partner {
+    .survey, .partner {
       top: 70px;
       color: white !important;
       font-size: 21px;
@@ -456,9 +455,8 @@ $headings-color: $black;
     border-left:1px dashed rgb(0,0,0);
   }
 
-  .funder {
-    display: none;
-    font-size: 10px;
+  .site-names {
+    font-size: 9px;
     line-height: 1;
   }
 
