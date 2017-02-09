@@ -6,6 +6,7 @@ from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
+from django.utils.text import slugify
 from itertools import groupby
 from wkhtmltopdf.utils import wkhtmltopdf
 from wkhtmltopdf.views import PDFResponse
@@ -211,14 +212,11 @@ def poster(request, site_slug, result_id):
         id=result_id,
         site__slug__exact=site_slug
     )
-    sector_name = result_set.site.sector.name
-    survey_type = result_set.survey_type.name
-    site = result_set.site.name
-    layout_class = '-'.join(' '.join([x.strip() for x in survey_type.split('-')]).lower().split(' '))
-    location = None
-    template = 'print-materials/posters/'
     form, responses = result_set.get_survey()
-    totals = {'current': {'male': 0, 'female': 0, 'total': 0}, 'previous': {'male': 0, 'female': 0, 'total': 0}}
+    totals = {
+        'current': {'male': 0, 'female': 0, 'total': 0},
+        'previous': {'male': 0, 'female': 0, 'total': 0},
+    }
     site_results = None
 
     if responses:
@@ -244,34 +242,16 @@ def poster(request, site_slug, result_id):
             prev_date = None
         analysis.combine_curr_hist(site_results, prev_results)
 
-    if 'pay point' in result_set.site.name.lower():
-        template += 'paypoint_poster.html'
-        sector_name = None
-    elif 'local gov' in result_set.site.sector.name.lower():
-        template += 'local_gov_poster.html'
-        sector_name = 'Participatory Governance'
-        location = result_set.site.name
-        site = 'Western Cape'
-    elif 'health' in result_set.site.sector.name.lower():
-        template += 'health_clinic_poster.html'
-        sector_name = None
-    elif 'service office' in result_set.site.name.lower():
-        template += 'service_office_poster.html'
-        sector_name = None
-    else:
-        template += 'poster_layout.html'
-
-    return render(request, template, {
-        'form': form,
-        'result_set': result_set,
-        'prev_date': prev_date,
-        'totals': totals,
-        'site': site,
-        'sector': sector_name,
-        'location': location,
-        'questions_dict': site_results,
-        'layout_class': layout_class,
+    return render(request, poster_template(result_set.survey_type), {
         'DEBUG': settings.DEBUG,
+        'form': form,
+        'layout_class': slugify(result_set.survey_type.name),
+        'prev_date': prev_date,
+        'questions_dict': site_results,
+        'result_set': result_set,
+        'sector': result_set.site.sector.name,
+        'location': result_set.site.name,
+        'totals': totals,
     })
 
 
@@ -293,6 +273,19 @@ def poster_pdf(request, site_slug, result_id):
     })
     filename = (u'Poster for %s - %s - %s.pdf' % (result_set.survey.name, result_set.partner.short_name, result_set.site.name)).encode('ascii', 'ignore')
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
+
+
+def poster_template(survey_type):
+    template = 'print-materials/posters/'
+    if 'paypoint' in survey_type.name.lower():
+        template += 'paypoint_poster.html'
+    elif 'health' in survey_type.name.lower():
+        template += 'health_clinic_poster.html'
+    elif 'service office' in survey_type.name.lower():
+        template += 'service_office_poster.html'
+    else:
+        template += 'poster_layout.html'
+    return template
 
 
 def handout(request, site_slug, result_id):
@@ -753,6 +746,60 @@ def national_summary(request, survey_type_slug, cycle_id):
             'totals': totals,
         }
     })
+
+
+def national_poster_pdf(request, survey_type_slug, cycle_id):
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    cycle = get_object_or_404(Cycle, id=cycle_id)
+    # render poster as pdf
+    url = reverse('national-poster', kwargs={
+        'survey_type_slug': survey_type_slug,
+        'cycle_id': cycle_id,
+    })
+    url = request.build_absolute_uri(url)
+    pdf = wkhtmltopdf(url, **{
+        'margin-top': '0.5cm',
+        'margin-right': '0.5cm',
+        'margin-bottom': '0.5cm',
+        'margin-left': '0.5cm',
+    })
+    filename = (u'Poster for South Africa - %s - %s.pdf' % (survey_type.name, cycle.name)).encode('ascii', 'ignore')
+    return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
+
+
+def national_poster(request, survey_type_slug, cycle_id):
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    cycle = get_object_or_404(Cycle, id=cycle_id)
+
+    result_sets = CycleResultSet.objects.filter(
+        cycle=cycle,
+        survey_type=survey_type
+    )
+
+    form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
+    site_totals = totals.pop('per_site')
+    for result_set in result_sets:
+        result_set.totals = site_totals[result_set.site.id]
+
+    return render(request, poster_template(result_set.survey_type), {
+        'DEBUG': settings.DEBUG,
+        'form': form,
+        'layout_class': layout_class,
+        'prev_date': prev_date,
+        'questions_dict': site_results,
+        'result_set': result_set,
+        'sector': sector_name,
+        'totals': totals,
+        'location': site.name,
+    })
+
+
+def province_poster(request, survey_type_slug, cycle_id):
+    pass
+
+
+def province_poster_pdf(request, survey_type_slug, cycle_id):
+    pass
 
 
 def create_zip(request, cycle_id):
