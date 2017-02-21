@@ -1,14 +1,21 @@
-
+from background_task import background
 from django.contrib.auth.models import User
 from django.contrib.gis.db import models as gis_models
+from django.core.files import File
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
+from os import makedirs, path
+from tempfile import mkdtemp, NamedTemporaryFile
 from xform import map_form, simplify_perf_group, XForm
+from zipfile import ZipFile
 import analysis
 import jsonfield
-import os
 import pandas
+import re
+import requests
+import shutil
 import uuid
 
 # ------------------------------------------------------------------------------
@@ -19,13 +26,19 @@ import uuid
 def image_filename(instance, filename):
     """ Make image filenames
     """
-    return 'images/%s_%s' % (uuid.uuid4(), os.path.basename(filename))
+    return 'images/%s_%s' % (uuid.uuid4(), path.basename(filename))
 
 
 def attachment_filename(instance, filename):
     """ Make attachment filenames
     """
-    return 'attachments/%s/%s' % (uuid.uuid4(), os.path.basename(filename))
+    return 'attachments/%s/%s' % (uuid.uuid4(), path.basename(filename))
+
+
+def cycle_materials_filename(instance, filename):
+    """ Make cycle materials Zip filenames
+    """
+    return 'cycle_materials/%s' % path.basename(filename)
 
 # ------------------------------------------------------------------------------
 # Models
@@ -186,7 +199,7 @@ class Cycle(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     programme = models.ForeignKey(Programme)
-    materials = models.FileField(blank=True, null=True)
+    materials = models.FileField(upload_to=cycle_materials_filename, blank=True, null=True)
 
     class Meta:
         unique_together = ('name', 'programme')
@@ -216,6 +229,52 @@ class Cycle(models.Model):
             return cycles[0]
         else:
             return None
+
+    @staticmethod
+    @background(schedule=0)
+    def schedule_create_materials_zip(cycle_id, artifacts):
+        cycle = Cycle.objects.get(id=cycle_id)
+        cycle.create_materials_zip(artifacts)
+
+    def create_materials_zip(self, artifacts):
+        tmpdir = mkdtemp()
+        try:
+            to_archive = []
+            for artifact in artifacts:
+                archive_dir = artifact['dir']
+                localdir = path.join(tmpdir, archive_dir)
+                if not path.isdir(localdir):
+                    makedirs(localdir)
+                r = requests.get(artifact['url'], stream=True)
+                d = r.headers['content-disposition']
+                filename = re.findall("filename=\"(.+)\"", d)[0]
+                local_filename = path.join(localdir, filename)
+                archive_filename = path.join(archive_dir, filename)
+                with open(local_filename, 'wb') as f:
+                    for chunk in r.iter_content(chunk_size=1024):
+                        if chunk:  # filter out keep-alive new chunks
+                            f.write(chunk)
+                to_archive.append({
+                    'local_filename': local_filename,
+                    'archive_filename': archive_filename,
+                })
+            ziptmpdir = mkdtemp()
+            try:
+                with NamedTemporaryFile(dir=ziptmpdir, delete=False) as zfh:
+                    with ZipFile(zfh, 'w') as zf:
+                        for file in to_archive:
+                            zf.write(file['local_filename'], file['archive_filename'])
+                    filename = "%s-%s-%s-to-%s.zip" % (
+                        slugify(self.name),
+                        slugify(self.programme.short_name),
+                        self.start_date,
+                        self.end_date,
+                    )
+                    self.materials.save(filename, File(zfh))
+            finally:
+                shutil.rmtree(ziptmpdir)
+        finally:
+            shutil.rmtree(tmpdir)
 
 
 class SurveyType(models.Model):
@@ -279,7 +338,7 @@ class CycleResultSet(models.Model):
     Cycle per site, the cycle start and end dates and name would be repeated
     for each site.
     """
-    cycle = models.ForeignKey(Cycle)
+    cycle = models.ForeignKey(Cycle, related_name="cycle_result_sets")
     site = models.ForeignKey(Site, related_name='cycle_result_sets')
     partner = models.ForeignKey(Partner, related_name='cycle_result_sets')
     # This is meant to allow identifying comparable CycleResultSets

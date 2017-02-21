@@ -1,6 +1,5 @@
 from django.contrib import admin
 from umibukela import views
-from itertools import groupby
 
 from .models import (
     AttachmentNature,
@@ -34,7 +33,7 @@ class AdminSite(admin.AdminSite):
         urls = [
             url(
                 r'^umibukela/cycle/(?P<cycle_id>\d+)/create_zip$',
-                'umibukela.views.create_zip',
+                'umibukela.views.create_materials_zip',
                 name='cycle-create-zip'
             ),
             url(
