@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="print-materials poster print-page simple-bootstrap-rows a4-portrait-single {{ layout_class }} {% if DEBUG %}debug{% endif %}">
+<div class="print-materials poster print-page simple-bootstrap-rows a4-portrait-single {{ layout_class }} {% if DEBUG %}{% endif %}">
   <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
     <h1 class="banner">Community Monitoring</h1>
     <div class="funder-logo {{ funder_name|slugify }}"></div>
