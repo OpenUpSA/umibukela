@@ -23,6 +23,7 @@ from .models import (
     CycleResultSet,
     KoboRefreshToken,
     Partner,
+    Programme,
     Province,
     Site,
     Survey,
@@ -74,6 +75,23 @@ def site(request, site_slug):
         'site': site,
     })
 
+def programmes(request):
+
+    programmes = Programme.objects.all()
+
+    return render(request, 'programmes.html', {
+        'active_tab': 'programmes',
+        'programmes': programmes,
+    })
+
+def cycles(request):
+
+    cycles = Cycle.objects.all()
+
+    return render(request, 'cycles.html', {
+        'active_tab': 'cycles',
+        'cycles': cycles,
+    })
 
 def site_result(request, site_slug, result_id):
     result_set = get_object_or_404(

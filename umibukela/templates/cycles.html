@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}Cycles{% endblock %}
+{% block page-content %}
+
+<!-- breadcrumbs -->
+<div class="container breadcrumb-container">
+  <ol class="breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li class="active">Cycles</li>
+  </ol>
+</div>
+<!-- /breadcrumbs -->
+
+<div class="section" id="cycles">
+
+  <!-- section-header -->
+  <div class="section-heading">
+    <div class="container">
+      <h1><i class="fa fa-refresh"></i> Cycles</h1>
+    </div>
+  </div>
+  <!-- /section-header -->
+
+{% for cycle in cycles %}
+  <p>{{ cycle.name }}</p>
+{% endfor %}
+</div>
+
+{% endblock %}

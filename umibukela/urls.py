@@ -53,6 +53,14 @@ urlpatterns = patterns(
         'umibukela.views.comments_pdf',
         name='site-result-comments-pdf'),
 
+    # live dashboard
+    url(r'^cycles$',
+        'umibukela.views.cycles',
+        name='cycles'),
+    url(r'^programmes$',
+        'umibukela.views.programmes',
+        name='programmes'),
+
     url(r'^partners$',
         'umibukela.views.partners',
         name='partners'),
