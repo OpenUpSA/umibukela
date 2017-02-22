@@ -12,7 +12,6 @@ from wkhtmltopdf.utils import wkhtmltopdf
 from wkhtmltopdf.views import PDFResponse
 from xform import map_questions, field_per_SATA_option, skipped_as_na
 import analysis
-import background_tasks
 import os
 import pandas
 import requests
@@ -851,9 +850,13 @@ def province_poster(request, province_slug, survey_type_slug, cycle_id):
     })
 
 
-def create_zip(request, cycle_id):
+def create_materials_zip(request, cycle_id):
     artifacts = []
-    for crs in list(CycleResultSet.objects.filter(cycle__id=cycle_id)):
+    # We pre-generate the list of urls and directories to lean on
+    # request.build_absolute_uri here, since we can only pass
+    # serialisable variables to background_tasks.create_zip.
+    cycle = Cycle.objects.get(id=cycle_id)
+    for crs in cycle.cycle_result_sets.all():
         params = {'site_slug': crs.site.slug, 'result_id': crs.id}
         dir = os.path.join(
             crs.site.province.name.encode('ascii', 'ignore'),
@@ -882,6 +885,5 @@ def create_zip(request, cycle_id):
                 'url': url,
                 'dir': dir,
             })
-
-    background_tasks.create_zip(cycle_id, artifacts)
+    Cycle.schedule_create_materials_zip(cycle_id, artifacts)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
