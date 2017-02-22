@@ -450,7 +450,10 @@ def survey_from_kobo(request):
             r = requests.get("https://kc.kobotoolbox.org/api/v1/forms",
                              headers=headers)
             r.raise_for_status()
-            available_surveys = r.json()
+            available_surveys = []
+            for survey in r.json():
+                if not SurveyKoboProject.objects.filter(form_id=survey['formid']).count():
+                    available_surveys.append(survey)
             return render(request, 'survey_from_kobo.html', {
                 'forms': available_surveys,
             })
@@ -604,7 +607,6 @@ def start_kobo_oauth(request):
         payload = {
             'grant_type': 'refresh_token',
             'refresh_token': user_refresh_token.token,
-            'redirect_uri': 'http://localhost:8000/admin/kobo-oauth'
         }
         r = requests.post("https://kc.kobotoolbox.org/o/token/",
                           params=payload,
