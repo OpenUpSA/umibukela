@@ -176,6 +176,11 @@ class Programme(models.Model):
     description = models.TextField()
     frequency = models.ForeignKey(CycleFrequency, null=True, blank=True)
 
+    def cycles(self):
+        cycles = list(set(Cycle.objects.all()))
+        cycles.sort(key=lambda p: p.name)
+        return cycles
+
     def __str__(self):
         return self.long_name
 
@@ -215,6 +220,16 @@ class Cycle(models.Model):
             return cycles[0]
         else:
             return None
+
+    def partners(self):
+        partners = list(set(Partner.objects.all()))
+        partners.sort(key=lambda p: p.slug)
+        return partners
+
+    def result_sets(self):
+        result_sets = list(set(CycleResultSet.objects.all()))
+        result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
+        return result_sets
 
 
 class SurveyType(models.Model):

@@ -75,23 +75,6 @@ def site(request, site_slug):
         'site': site,
     })
 
-def programmes(request):
-
-    programmes = Programme.objects.all()
-
-    return render(request, 'programmes.html', {
-        'active_tab': 'programmes',
-        'programmes': programmes,
-    })
-
-def cycles(request):
-
-    cycles = Cycle.objects.all()
-
-    return render(request, 'cycles.html', {
-        'active_tab': 'cycles',
-        'cycles': cycles,
-    })
 
 def site_result(request, site_slug, result_id):
     result_set = get_object_or_404(
@@ -444,6 +427,28 @@ def partner(request, partner_slug):
     return render(request, 'partner_detail.html', {
         'active_tab': 'partners',
         'partner': partner,
+    })
+
+
+def programmes(request):
+    programmes = Programme.objects.all()
+    return render(request, 'programmes.html', {
+        'active_tab': 'programmes',
+        'programmes': programmes,
+    })
+
+def programme(request, programme_id):
+    programme = get_object_or_404(Programme, id=programme_id)
+    return render(request, 'programme_detail.html', {
+        'active_tab': 'programmes',
+        'programme': programme,
+    })
+
+def cycle(request, cycle_id):
+    cycle = get_object_or_404(Cycle, id=cycle_id)
+    return render(request, 'cycle_detail.html', {
+        'active_tab': 'cycle',
+        'cycle': cycle,
     })
 
 

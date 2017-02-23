@@ -54,12 +54,15 @@ urlpatterns = patterns(
         name='site-result-comments-pdf'),
 
     # live dashboard
-    url(r'^cycles$',
-        'umibukela.views.cycles',
-        name='cycles'),
     url(r'^programmes$',
         'umibukela.views.programmes',
         name='programmes'),
+    url(r'^programmes/(?P<programme_id>[\w-]+)$',
+        'umibukela.views.programme',
+        name='programme'),
+    url(r'^cycles/(?P<cycle_id>[\w-]+)$',
+        'umibukela.views.cycle',
+        name='cycle'),
 
     url(r'^partners$',
         'umibukela.views.partners',

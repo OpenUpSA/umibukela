@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
-{% block title %}Programmes{% endblock %}
+{% block title %}{{ cycle.name }}{% endblock %}
+
 {% block page-content %}
 
 <!-- breadcrumbs -->
@@ -17,7 +18,7 @@
   <!-- section-header -->
   <div class="section-heading">
     <div class="container">
-      <h1><i class="fa fa-cogs"></i> Programmes</h1>
+      <h1><i class="fa fa-cogs"></i> {{ cycle.name }}</h1>
     </div>
   </div>
   <!-- /section-header -->
@@ -28,13 +29,19 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th data-sort="string">Programme</th>
+            <th data-sort="string">Cycle</th>
+            <th data-sort="string">Start date</th>
+            <th data-sort="string">End date</th>
           </tr>
         </thead>
-        {% for programme in programmes %}
-        <tr>
-          <td><a href="#">{{ programme.long_name }}</a></td>
-        </tr>
+        {% for result in result_sets %}
+          {% for partner in cycle.partners %}
+            {% if partner.id == results.partner_id %}
+              <tr>
+                <td><a href="#">{{ partner.short_name }}</a></td>
+              </tr>
+            {% endif %}
+          {% endfor %}
         {% endfor %}
       </table>
     </div>
