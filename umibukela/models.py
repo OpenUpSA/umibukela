@@ -4,6 +4,7 @@ from django.contrib.gis.db import models as gis_models
 from django.core.files import File
 from django.core.urlresolvers import reverse
 from django.db import models
+from kobo import Kobo
 from django.utils import timezone
 from django.utils.text import slugify
 from os import makedirs, path
@@ -17,6 +18,7 @@ import re
 import requests
 import shutil
 import uuid
+from xform import field_per_SATA_option, skipped_as_na
 
 # ------------------------------------------------------------------------------
 # General utilities
@@ -200,6 +202,7 @@ class Cycle(models.Model):
     end_date = models.DateField()
     programme = models.ForeignKey(Programme)
     materials = models.FileField(upload_to=cycle_materials_filename, blank=True, null=True)
+    auto_import = models.BooleanField()
 
     class Meta:
         unique_together = ('name', 'programme')
@@ -307,6 +310,34 @@ class Survey(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def programme(self):
+        return set(self.cycle_result_sets.all()).pop().cycle.programme
+
+    def import_submissions(self):
+        refresh_token = self.programme.kobo_refresh_token
+        kobo = Kobo.from_refresh_token(refresh_token.token)
+        refresh_token.token = kobo.refresh_token
+        refresh_token.save()
+        responses = kobo.get_responses(self.surveykoboproject.form_id)
+        if self.form.get_by_path('facility'):
+            facility_q_name = 'facility'
+        elif self.form.get_by_path('site'):
+            facility_q_name = 'site'
+        else:
+            raise Exception('No facility/site/location question')
+        facility_crs = {}
+        for crs in self.cycle_result_sets.all():
+            facility_crs[crs.site_option_name] = crs
+        responses = field_per_SATA_option(self.form, responses)
+        responses = skipped_as_na(self.form, responses)
+        for response in responses:
+            facility_name = response[facility_q_name]
+            Submission.objects.get_or_create(
+                answers=response,
+                cycle_result_set=facility_crs[facility_name]
+            )
+
 
 class SurveyKoboProject(models.Model):
     survey = models.OneToOneField(Survey, on_delete=models.CASCADE, primary_key=True)
@@ -319,8 +350,13 @@ class SurveyKoboProject(models.Model):
     form_id = models.IntegerField(unique=True, null=False)
 
 
-class KoboRefreshToken(models.Model):
+class UserKoboRefreshToken(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    token = models.TextField(null=False, blank=False)
+
+
+class ProgrammeKoboRefreshToken(models.Model):
+    programme = models.OneToOneField(Programme, on_delete=models.CASCADE, primary_key=True, related_name="kobo_refresh_token")
     token = models.TextField(null=False, blank=False)
 
 
@@ -340,11 +376,12 @@ class CycleResultSet(models.Model):
     """
     cycle = models.ForeignKey(Cycle, related_name="cycle_result_sets")
     site = models.ForeignKey(Site, related_name='cycle_result_sets')
+    site_option_name = models.TextField()
     partner = models.ForeignKey(Partner, related_name='cycle_result_sets')
     # This is meant to allow identifying comparable CycleResultSets
     # which don't necessarily have exactly the same survey
     survey_type = models.ForeignKey(SurveyType, null=True, blank=True)
-    survey = models.ForeignKey(Survey, null=True, blank=True)
+    survey = models.ForeignKey(Survey, null=True, blank=True, related_name="cycle_result_sets")
     monitors = models.ManyToManyField("Monitor", blank=True, help_text="Only monitors for the current partner are shown. If you update the Partner you'll have to save and edit this Cycle Result Set again to see the available monitors.")
     funder = models.ForeignKey(Funder, null=True, blank=True, on_delete=models.SET_NULL)
 

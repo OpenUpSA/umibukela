@@ -1,0 +1,11 @@
+{% extends "admin/change_form.html" %}
+{% block content %}
+{% if original.kobo_refresh_token %}
+Kobo integration configured.
+{% else %}
+<div>
+  <a href="{% url 'admin:programme-kobo-grant' programme_id=original.id %}">Connect this programme to Kobo Toolbox</a>
+</div>
+{% endif %}
+{{ block.super }}
+{% endblock %}
