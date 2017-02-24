@@ -8,7 +8,8 @@
 <div class="container breadcrumb-container">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
-    <li class="active">Programmes</li>
+    <li><a href="/programmes">Programmes</a></li>
+    <li class="active">Cycles</li>
   </ol>
 </div>
 <!-- /breadcrumbs -->
@@ -29,20 +30,16 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th data-sort="string">Cycle</th>
-            <th data-sort="string">Start date</th>
-            <th data-sort="string">End date</th>
+            <th data-sort="string">Partner</th>
+            <th data-sort="string">Number of submissions</th>
           </tr>
         </thead>
-        {% for result in result_sets %}
-          {% for partner in cycle.partners %}
-            {% if partner.id == results.partner_id %}
-              <tr>
-                <td><a href="#">{{ partner.short_name }}</a></td>
-              </tr>
-            {% endif %}
+          {% for partner, count in partner_counts.iteritems %}
+          <tr>
+            <td>{{ partner.full_name }}</td>
+            <td>{{ count }}</td>
+          </tr>
           {% endfor %}
-        {% endfor %}
       </table>
     </div>
   </div>

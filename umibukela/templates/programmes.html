@@ -33,7 +33,7 @@
         </thead>
         {% for programme in programmes %}
         <tr>
-          <td><a href="#">{{ programme.long_name }}</a></td>
+          <td><a href="{% url 'programme' programme_id=programme.id %}">{{ programme.long_name }}</a></td>
         </tr>
         {% endfor %}
       </table>

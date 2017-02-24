@@ -221,16 +221,6 @@ class Cycle(models.Model):
         else:
             return None
 
-    def partners(self):
-        partners = list(set(Partner.objects.all()))
-        partners.sort(key=lambda p: p.slug)
-        return partners
-
-    def result_sets(self):
-        result_sets = list(set(CycleResultSet.objects.all()))
-        result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
-        return result_sets
-
 
 class SurveyType(models.Model):
     name = models.CharField(max_length=200, unique=True)
@@ -293,7 +283,7 @@ class CycleResultSet(models.Model):
     Cycle per site, the cycle start and end dates and name would be repeated
     for each site.
     """
-    cycle = models.ForeignKey(Cycle)
+    cycle = models.ForeignKey(Cycle, related_name='cycle_result_sets')
     site = models.ForeignKey(Site, related_name='cycle_result_sets')
     partner = models.ForeignKey(Partner, related_name='cycle_result_sets')
     # This is meant to allow identifying comparable CycleResultSets

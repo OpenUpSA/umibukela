@@ -446,10 +446,25 @@ def programme(request, programme_id):
 
 def cycle(request, cycle_id):
     cycle = get_object_or_404(Cycle, id=cycle_id)
+    partner_counts = {}
+    for crs in cycle.cycle_result_sets.all():
+        if crs.partner in partner_counts:
+            partner_counts[crs.partner] = partner_counts[crs.partner] + len(crs.submissions.all())
+        else:
+            partner_counts[crs.partner] = len(crs.submissions.all())
+
     return render(request, 'cycle_detail.html', {
-        'active_tab': 'cycle',
+        'active_tab': 'programmes',
+        'partner_counts': partner_counts,
         'cycle': cycle,
     })
+
+def something(request):
+    cycle = get_object_or_404(Cycle, id=cycle_id)
+    return render(request, 'cycle_detail.html'), {
+        'active_tab': 'programmes',
+        'cycle': cycle,
+    }
 
 
 def survey_from_kobo(request):
