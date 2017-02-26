@@ -45,6 +45,11 @@ class AdminSite(admin.AdminSite):
                 self.admin_view(views.survey_kobo_submissions)
             ),
             url(
+                r'^umibukela/programme/(?P<programme_id>\d+)/kobo_grant$',
+                self.admin_view(views.programme_kobo_grant),
+                name='programme-kobo-grant'
+            ),
+            url(
                 r'^umibukela/survey_from_kobo$',
                 self.admin_view(views.survey_from_kobo)
             ),

@@ -8,10 +8,12 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from django.utils.text import slugify
 from itertools import groupby
+from kobo import Kobo
 from wkhtmltopdf.utils import wkhtmltopdf
 from wkhtmltopdf.views import PDFResponse
 from xform import map_questions, field_per_SATA_option, skipped_as_na
 import analysis
+import json
 import os
 import pandas
 import requests
@@ -20,14 +22,16 @@ from .forms import CRSFromKoboForm
 from .models import (
     Cycle,
     CycleResultSet,
-    KoboRefreshToken,
     Partner,
+    Programme,
+    ProgrammeKoboRefreshToken,
     Province,
     Site,
+    Submission,
     Survey,
     SurveyKoboProject,
     SurveyType,
-    Submission,
+    UserKoboRefreshToken,
 )
 
 IGNORE_TYPES = ['start', 'end', 'meta', 'today', 'username', 'phonenumber']
@@ -450,7 +454,10 @@ def survey_from_kobo(request):
             r = requests.get("https://kc.kobotoolbox.org/api/v1/forms",
                              headers=headers)
             r.raise_for_status()
-            available_surveys = r.json()
+            available_surveys = []
+            for survey in r.json():
+                if not SurveyKoboProject.objects.filter(form_id=survey['formid']).count():
+                    available_surveys.append(survey)
             return render(request, 'survey_from_kobo.html', {
                 'forms': available_surveys,
             })
@@ -598,50 +605,46 @@ def is_kobo_authed(request):
 
 
 def start_kobo_oauth(request):
-    user_refresh_token = KoboRefreshToken.objects.filter(pk=request.user)
-    if user_refresh_token.count():
-        user_refresh_token = user_refresh_token.get()
-        payload = {
-            'grant_type': 'refresh_token',
-            'refresh_token': user_refresh_token.token,
-            'redirect_uri': 'http://localhost:8000/admin/kobo-oauth'
-        }
-        r = requests.post("https://kc.kobotoolbox.org/o/token/",
-                          params=payload,
-                          auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
-        r.raise_for_status()
-        request.session['kobo_access_token'] = r.json()['access_token']
-        expiry_datetime = datetime.utcnow() + timedelta(seconds=r.json()['expires_in'])
-        request.session['kobo_access_token_expiry'] = expiry_datetime.isoformat()
-        user_refresh_token.token = r.json()['refresh_token']
-        user_refresh_token.save()
-        state = request.path
-        return redirect(state)
+    refresh_token_query = UserKoboRefreshToken.objects.filter(pk=request.user)
+    if refresh_token_query.count():
+        refresh_token = refresh_token_query.get()
+        kobo = Kobo.from_refresh_token(refresh_token.token)
+        request.session['kobo_access_token'] = kobo.access_token
+        request.session['kobo_access_token_expiry'] = kobo.expiry_datetime.isoformat()
+        refresh_token.token = kobo.refresh_token
+        refresh_token.save()
+        return redirect(request.path)
     else:
-        state = request.path
-        return redirect("https://kc.kobotoolbox.org/o/authorize?client_id=%s&response_type=code&scope=read&state=%s" % (settings.KOBO_CLIENT_ID, state))
+        state = {
+            'path': request.path,
+            'type': 'user',
+        }
+        return redirect("https://kc.kobotoolbox.org/o/authorize?client_id=%s&response_type=code&scope=read&state=%s" % (settings.KOBO_CLIENT_ID, json.dumps(state)))
+
+
+def programme_kobo_grant(request, programme_id):
+    state = {
+        'path': reverse('admin:umibukela_programme_change', args=[programme_id]),
+        'type': 'programme',
+        'id': programme_id,
+    }
+    return redirect("https://kc.kobotoolbox.org/o/authorize?client_id=%s&response_type=code&scope=read&state=%s" % (settings.KOBO_CLIENT_ID, json.dumps(state)))
 
 
 def kobo_oauth_return(request):
-    state = request.GET.get('state')
-    code = request.GET.get('code')
-    payload = {
-        'grant_type': 'authorization_code',
-        'code': code,
-        'redirect_uri': request.build_absolute_uri('/admin/kobo-oauth')
-    }
-    r = requests.post("https://kc.kobotoolbox.org/o/token/",
-                      params=payload,
-                      auth=(settings.KOBO_CLIENT_ID, settings.KOBO_CLIENT_SECRET))
-    r.raise_for_status()
-    request.session['kobo_access_token'] = r.json()['access_token']
-    expiry_datetime = datetime.utcnow() + timedelta(seconds=r.json()['expires_in'])
-    request.session['kobo_access_token_expiry'] = expiry_datetime.isoformat()
-
-    user_refresh_token, created = KoboRefreshToken.objects.get_or_create(user=request.user)
-    user_refresh_token.token = r.json()['refresh_token']
-    user_refresh_token.save()
-    return redirect(state)
+    state = json.loads(request.GET.get('state'))
+    redirect_uri = request.build_absolute_uri('/admin/kobo-oauth')
+    kobo = Kobo.from_auth_code(request.GET.get('code'), redirect_uri)
+    request.session['kobo_access_token'] = kobo.access_token
+    request.session['kobo_access_token_expiry'] = kobo.expiry_datetime.isoformat()
+    if state['type'] == 'user':
+        refresh_token, created = UserKoboRefreshToken.objects.get_or_create(user=request.user)
+    elif state['type'] == 'programme':
+        programme = Programme.objects.get(id=state['id'])
+        refresh_token, created = ProgrammeKoboRefreshToken.objects.get_or_create(programme=programme)
+    refresh_token.token = kobo.refresh_token
+    refresh_token.save()
+    return redirect(state['path'])
 
 
 def province_summary_pdf(request, province_slug, survey_type_slug, cycle_id):

@@ -1,5 +1,6 @@
 {% extends "admin/change_form.html" %}
 {% block content %}
+{% if original %}
 <div>
   <a href="{% url 'site-result-poster-pdf' original.site.slug original.id %}">Poster</a>
   |
@@ -9,5 +10,6 @@
   |
   <a href="{% url 'site-result-summary-pdf' original.site.slug original.id %}">Summary</a>
 </div>
+{% endif %}
 {{ block.super }}
 {% endblock %}
