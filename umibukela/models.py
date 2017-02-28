@@ -422,9 +422,9 @@ class CycleResultSet(models.Model):
 
     def summary(self):
         if getattr(self, '_summary', None) is None:
-            answers = [s.answers for s in self.submissions.all()]
-            if answers:
-                df = pandas.DataFrame(answers)
+            form, responses = self.get_survey()
+            if responses:
+                df = pandas.DataFrame(responses)
                 self._summary = analysis.count_submissions(df)
             else:
                 self._summary = {'male': 0, 'female': 0, 'total': 0}
