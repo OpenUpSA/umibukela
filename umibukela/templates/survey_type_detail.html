@@ -35,15 +35,11 @@
             <th data-sort="string">End date</th>
           </tr>
         </thead>
-        {% for cycle in programme.cycles %}
-          {% if cycle.programme_id == programme.id %}
-            <tr>
-              <td><a href="{% url 'cycle' cycle_id=cycle.id %}">{{ cycle.name }}</a></td>
-              <td>{{ cycle.start_date }}</td>
-              <td>{{ cycle.end_date }}</td>
-            </tr>
-          {% endif %}
-        {% endfor %}
+          {% for cycle in cycles %}
+          <tr>
+            <td>{{ cycle.id }}</td>
+          </tr>
+          {% endfor %}
       </table>
     </div>
   </div>
