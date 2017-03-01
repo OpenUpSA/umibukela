@@ -429,6 +429,19 @@ def partner(request, partner_slug):
         'partner': partner,
     })
 
+def survey_types(request):
+    survey_types = SurveyType.objects.all()
+    return render(request, 'survey_types.html', {
+        'active_tab': 'surveys',
+        'survey_types': survey_types,
+    })
+
+def survey_type(request, survey_type_slug):
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    return render(request, 'survey_type_detail.html', {
+        'active_tab': 'surveys',
+        'survey_type': survey_type,
+    })
 
 def programmes(request):
     programmes = Programme.objects.all()
@@ -458,13 +471,6 @@ def cycle(request, cycle_id):
         'partner_counts': partner_counts,
         'cycle': cycle,
     })
-
-def something(request):
-    cycle = get_object_or_404(Cycle, id=cycle_id)
-    return render(request, 'cycle_detail.html'), {
-        'active_tab': 'programmes',
-        'cycle': cycle,
-    }
 
 
 def survey_from_kobo(request):

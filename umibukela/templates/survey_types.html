@@ -1,15 +1,13 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ cycle.name }}{% endblock %}
-
+{% block title %}Surveys{% endblock %}
 {% block page-content %}
 
 <!-- breadcrumbs -->
 <div class="container breadcrumb-container">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
-    <li><a href="{% url 'programmes' %}">Programmes</a></li>
-    <li class="active">Cycles</li>
+    <li class="active">Surveys</li>
   </ol>
 </div>
 <!-- /breadcrumbs -->
@@ -19,7 +17,7 @@
   <!-- section-header -->
   <div class="section-heading">
     <div class="container">
-      <h1><i class="fa fa-cogs"></i> {{ cycle.name }}</h1>
+      <h1><i class="fa fa-file-text-o"></i> Surveys</h1>
     </div>
   </div>
   <!-- /section-header -->
@@ -30,16 +28,16 @@
       <table class="table table-striped">
         <thead>
           <tr>
-            <th data-sort="string">Partner</th>
-            <th data-sort="string">Number of submissions</th>
+            <th data-sort="string">Survey type</th>
+            <th data-sort="string">Decription</th>
           </tr>
         </thead>
-          {% for partner, count in partner_counts.iteritems %}
-          <tr>
-            <td>{{ partner.full_name }}</td>
-            <td>{{ count }}</td>
-          </tr>
-          {% endfor %}
+        {% for type in survey_types %}
+        <tr>
+          <td><a href="{% url 'survey_type' survey_type_slug=type.slug %}">{{ type.name }}</a></td>
+          <td>{{ type.description }}</td>
+        </tr>
+        {% endfor %}
       </table>
     </div>
   </div>

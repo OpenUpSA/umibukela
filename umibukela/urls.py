@@ -64,6 +64,13 @@ urlpatterns = patterns(
         'umibukela.views.cycle',
         name='cycle'),
 
+    url(r'^survey-types$',
+        'umibukela.views.survey_types',
+        name='survey-types'),
+    url(r'^survey-types/(?P<survey_type_slug>[\w-]+)$',
+        'umibukela.views.survey_type',
+        name='survey_type'),
+
     url(r'^partners$',
         'umibukela.views.partners',
         name='partners'),
