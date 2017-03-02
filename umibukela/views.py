@@ -461,6 +461,7 @@ def survey_type(request, survey_type_slug):
     province_count = list(Submission.objects.filter(
         cycle_result_set__cycle__id=latest_cycle.id,
         cycle_result_set__survey_type__id=survey_type.id).values(
+        'cycle_result_set__site__province__slug',
         'cycle_result_set__site__province__id',
         'cycle_result_set__site__province__name').annotate(
         dcount=Count('cycle_result_set__site__province__name')))

@@ -35,12 +35,14 @@
           <tr>
             <th data-sort="string">Site</th>
             <th data-sort="string">Number of responses</th>
+            <th data-sort="string">Summary</th>
           </tr>
         </thead>
         {% for site in province.sites %}
         <tr>
           <td><a href="{% url 'site' site_slug=site.cycle_result_set__site__slug %}">{{ site.cycle_result_set__site__name }}</a></td>
           <td><a href="{% url 'site-result' site_slug=site.cycle_result_set__site__slug result_id=site.cycle_result_set__id %}">{{ site.dcount }}</a></td>
+          <td><a href="{% url 'site-result-summary' site_slug=site.cycle_result_set__site__slug result_id=site.cycle_result_set__id %}">Summary</a></td>
         </tr>
         {% endfor %}
       </table>
