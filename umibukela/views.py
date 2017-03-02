@@ -446,14 +446,45 @@ def survey_type(request, survey_type_slug):
     ).order_by('cycle_id').distinct('cycle').filter(survey_type__id=survey_type.id))
     cycles = sorted(cycles, key=lambda x: x['cycle__start_date']) 
     latest_cycle = Cycle.objects.get(id=cycles[-1]['cycle__id'])
+    latest_cycle_resultset = CycleResultSet.objects.filter(
+        cycle__id=latest_cycle.id,
+        survey_type_id=survey_type.id).values(
+        'id',
+        'survey_type_id',
+        'partner_id',
+        'site_id',
+        )
     total_count = Submission.objects.filter(
         cycle_result_set__cycle__id=latest_cycle.id,
-        cycle_result_set__survey_type__id=survey_type.id).values('cycle_result_set__site__province__name')
-    province_count = Submission.objects.filter(cycle_result_set__cycle__id=latest_cycle.id, cycle_result_set__survey_type__id=survey_type.id).values('cycle_result_set__site__province__name').annotate(dcount=Count('cycle_result_set__site__province__name'))
+        cycle_result_set__survey_type__id=survey_type.id).values(
+        'cycle_result_set__site__province__name')
+    province_count = list(Submission.objects.filter(
+        cycle_result_set__cycle__id=latest_cycle.id,
+        cycle_result_set__survey_type__id=survey_type.id).values(
+        'cycle_result_set__site__province__id',
+        'cycle_result_set__site__province__name').annotate(
+        dcount=Count('cycle_result_set__site__province__name')))
+    for province in province_count:
+        site_count = Submission.objects.filter(
+            cycle_result_set__cycle__id=latest_cycle.id,
+            cycle_result_set__survey_type__id=survey_type.id,
+            cycle_result_set__site__province__id=province['cycle_result_set__site__province__id'],
+            ).values(
+            'cycle_result_set__id',
+            'cycle_result_set__site',
+            'cycle_result_set__site__slug',
+            'cycle_result_set__site__name').annotate(
+            dcount=Count('cycle_result_set__site'))
+        province['sites'] = site_count
 
     return render(request, 'survey_type_detail.html', {
         'active_tab': 'surveys',
         'survey_type': survey_type,
+        'cycles': cycles,
+        'latest_cycle': latest_cycle,
+        'total_count': total_count,
+        'province_count': province_count,
+        'latest_cycle_resultset': latest_cycle_resultset,
     })
 
 def programmes(request):

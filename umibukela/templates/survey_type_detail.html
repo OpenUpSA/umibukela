@@ -27,24 +27,27 @@
   <!-- programmes-table -->
   <div class="sites-table page-section">
     <div class="container">
+      <h3>SA: {{ total_count.count }}</h3>
+      {% for province in province_count %}
+      <h3>{{ province.cycle_result_set__site__province__name }}</h3>
       <table class="table table-striped">
         <thead>
           <tr>
-            <th data-sort="string">Cycle</th>
-            <th data-sort="string">Start date</th>
-            <th data-sort="string">End date</th>
+            <th data-sort="string">Site</th>
+            <th data-sort="string">Number of responses</th>
           </tr>
         </thead>
-          {% for cycle in cycles %}
-          <tr>
-            <td>{{ cycle.id }}</td>
-          </tr>
-          {% endfor %}
+        {% for site in province.sites %}
+        <tr>
+          <td><a href="{% url 'site' site_slug=site.cycle_result_set__site__slug %}">{{ site.cycle_result_set__site__name }}</a></td>
+          <td><a href="{% url 'site-result' site_slug=site.cycle_result_set__site__slug result_id=site.cycle_result_set__id %}">{{ site.dcount }}</a></td>
+        </tr>
+        {% endfor %}
       </table>
+      {% endfor %}
     </div>
   </div>
   <!-- /programmes-table -->
-
 </div>
 
 {% endblock %}
