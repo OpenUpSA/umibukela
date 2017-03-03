@@ -95,8 +95,18 @@ class CycleResultSetAdmin(admin.ModelAdmin):
         CycleResultSetAttachmentInline,
     ]
     form = CycleResultSetForm
-    list_filter = ('cycle__programme', 'survey_type', 'site__province', 'funder', 'cycle')
-    list_display = ('id', 'survey', 'cycle', 'site', 'partner')
+    list_filter = (
+        'survey__cycle__programme',
+        'survey__type',
+        'site__province',
+        'funder',
+        'survey__cycle'
+    )
+
+    def cycle(instance):
+        return instance.survey.cycle
+
+    list_display = ('id', 'survey', cycle, 'site', 'partner')
 
 
 class CycleAdmin(admin.ModelAdmin):

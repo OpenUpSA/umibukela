@@ -294,6 +294,8 @@ class SurveyType(models.Model):
 
 class Survey(models.Model):
     name = models.CharField(max_length=200, unique=True)
+    cycle = models.ForeignKey(Cycle, null=True, related_name="cycle_result_sets")
+    type = models.ForeignKey(SurveyType, null=True)
     form = jsonfield.JSONField()
     map_to_form = jsonfield.JSONField(blank=True, null=True)
 
@@ -363,7 +365,7 @@ class ProgrammeKoboRefreshToken(models.Model):
 
 class CycleResultSet(models.Model):
     """
-    An entity representing the data collection cycle for a given site
+    An entity representing the data collection period for a given site
     and survey type, by the partner that collected the data for that site in
     the given cycle.
 
@@ -375,13 +377,11 @@ class CycleResultSet(models.Model):
     Cycle per site, the cycle start and end dates and name would be repeated
     for each site.
     """
-    cycle = models.ForeignKey(Cycle, related_name="cycle_result_sets")
     site = models.ForeignKey(Site, related_name='cycle_result_sets')
     site_option_name = models.TextField()
     partner = models.ForeignKey(Partner, related_name='cycle_result_sets')
     # This is meant to allow identifying comparable CycleResultSets
     # which don't necessarily have exactly the same survey
-    survey_type = models.ForeignKey(SurveyType, null=True, blank=True)
     survey = models.ForeignKey(Survey, null=True, blank=True, related_name="cycle_result_sets")
     monitors = models.ManyToManyField("Monitor", blank=True, help_text="Only monitors for the current partner are shown. If you update the Partner you'll have to save and edit this Cycle Result Set again to see the available monitors.")
     funder = models.ForeignKey(Funder, null=True, blank=True, on_delete=models.SET_NULL)
@@ -392,7 +392,7 @@ class CycleResultSet(models.Model):
     published = models.BooleanField(null=False, blank=False, help_text="Whether the results may be listed publicly with the assumption that it's somewhat validated", default=False)
 
     class Meta:
-        unique_together = ('cycle', 'site', 'survey_type')
+        unique_together = ('site', 'survey')
         ordering = ('site__name', 'partner__short_name')
 
     def __str__(self):
