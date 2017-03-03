@@ -431,7 +431,7 @@ def partner(request, partner_slug):
     })
 
 def survey_types(request):
-    survey_types = SurveyType.objects.all()
+    survey_types = SurveyType.objects.filter(public=True).all()
     return render(request, 'survey_types.html', {
         'active_tab': 'surveys',
         'survey_types': survey_types,
@@ -440,12 +440,12 @@ def survey_types(request):
 def survey_type(request, survey_type_slug):
     survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
     cycles = list(CycleResultSet.objects.values(
-        'cycle__name', 
+        'cycle__name',
         'cycle__id',
         'cycle__start_date',
         'cycle__end_date'
     ).order_by('cycle_id').distinct('cycle').filter(survey_type__id=survey_type.id))
-    cycles = sorted(cycles, key=lambda x: x['cycle__start_date']) 
+    cycles = sorted(cycles, key=lambda x: x['cycle__start_date'])
     latest_cycle = Cycle.objects.get(id=cycles[-1]['cycle__id'])
     latest_cycle_resultset = CycleResultSet.objects.filter(
         cycle__id=latest_cycle.id,
