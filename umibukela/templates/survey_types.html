@@ -41,7 +41,7 @@
         <div class="row">
           {% for type in survey_types %}
           <div class="survey-name col-md-6">        
-            <a href="{% url 'survey_type' survey_type_slug=type.slug %}">{{ type.name }}</a>
+            <a href="{% url 'survey-type' survey_type_slug=type.slug %}">{{ type.name }}</a>
           </div>
           {% endfor %}
         </div>

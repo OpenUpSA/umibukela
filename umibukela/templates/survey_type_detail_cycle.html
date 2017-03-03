@@ -8,8 +8,9 @@
 <div class="container breadcrumb-container">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
-    <li><a href="{% url 'survey-types' %}">Surveys</a></li>  
-    <li class="active">{{ survey_type.name }}</li>
+    <li><a href="{% url 'survey-types' %}">Surveys</a></li>
+    <li><a href="{% url 'survey-type' survey_type_slug=survey_type.slug %}">{{ survey_type.name }}</a></li>
+    <li class="active">{{ this_cycle.name }}</li>
   </ol>
 </div>
 <!-- /breadcrumbs -->
