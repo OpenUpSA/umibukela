@@ -41,8 +41,8 @@
           <td class="hidden-xs">
             {% if partner.latest_complete_result %}
             <a href="{% url 'site-result' site_slug=partner.latest_complete_result.site.slug result_id=partner.latest_complete_result.id %}">
-              {{ partner.latest_complete_result.cycle.start_date|date:'j F Y' }}
-              - {{ partner.latest_complete_result.cycle.end_date|date:'j F Y' }}
+              {{ partner.latest_complete_result.survey.cycle.start_date|date:'j F Y' }}
+              - {{ partner.latest_complete_result.survey.cycle.end_date|date:'j F Y' }}
             </a>
             {% endif %}
           </td>

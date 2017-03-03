@@ -31,7 +31,7 @@ var form = {{ form|jsonify }};
       {% with site=result_set.site.name %}
       <h2 class="site {% if site|length > 40 %}long{% endif %}">{% if sector %}{{ sector }}: {% endif %}{{ site }}</h2>
       {% endwith %}
-      <h2 class="survey-type">{{ result_set.survey_type.description }}</h2>
+      <h2 class="survey-type">{{ result_set.survey.type.description }}</h2>
     </header>
 
     <div class="section sites">

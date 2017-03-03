@@ -180,8 +180,8 @@ def summary(request, site_slug, result_id):
         'form': form,
         'text_questions': text_questions,
         'location_name': result_set.site.name,
-        'survey_type': result_set.survey_type,
-        'cycle': result_set.cycle,
+        'survey_type': result_set.survey.type,
+        'cycle': result_set.survey.cycle,
         'gender_disagg': gender_disagg,
         'result_set': result_set,
         'results': {
@@ -236,7 +236,7 @@ def poster(request, site_slug, result_id):
                 prev_df = pandas.DataFrame(prev_responses)
                 prev_results = analysis.count_options(prev_df, prev_form['children'])
                 prev_results = analysis.calc_q_percents(prev_results)
-                prev_date = prev_result_set.cycle.start_date
+                prev_date = prev_result_set.survey.cycle.start_date
             else:
                 prev_results = None
                 prev_date = None
@@ -245,13 +245,13 @@ def poster(request, site_slug, result_id):
             prev_date = None
         analysis.combine_curr_hist(site_results, prev_results)
 
-    return render(request, poster_template(result_set.survey_type), {
+    return render(request, poster_template(result_set.survey.type), {
         'DEBUG': settings.DEBUG,
         'form': form,
-        'layout_class': slugify(result_set.survey_type.name),
+        'layout_class': slugify(result_set.survey.type.name),
         'prev_date': prev_date,
-        'start_date': result_set.cycle.start_date,
-        'end_date': result_set.cycle.end_date,
+        'start_date': result_set.survey.cycle.start_date,
+        'end_date': result_set.survey.cycle.end_date,
         'questions_dict': site_results,
         'sector': result_set.site.sector.name,
         'location': result_set.site.name,
@@ -308,14 +308,14 @@ def handout(request, site_slug, result_id):
         'questions_dict': [],
         'partner': result_set.partner,
         'site': result_set.site.name,
-        'survey_type': result_set.survey_type.id,
+        'survey_type': result_set.survey.type.id,
         'prev_date': None,
         'totals': {'male': 0, 'female': 0, 'total': 0},
         'DEBUG': settings.DEBUG,
     }
 
     if prev_result_set:
-        context['prev_date'] = prev_result_set.cycle.start_date
+        context['prev_date'] = prev_result_set.survey.cycle.start_date
 
     if responses:
         df = pandas.DataFrame(responses)
@@ -386,8 +386,8 @@ def comments(request, site_slug, result_id):
         'form': form,
         'text_questions': text_questions,
         'location_name': result_set.site.name,
-        'survey_type': result_set.survey_type,
-        'cycle': result_set.cycle,
+        'survey_type': result_set.survey.type,
+        'cycle': result_set.survey.cycle,
         'gender_disagg': gender_disagg,
         'result_set': result_set,
         'results': {
@@ -859,14 +859,14 @@ def create_materials_zip(request, cycle_id):
     # request.build_absolute_uri here, since we can only pass
     # serialisable variables to background_tasks.create_zip.
     cycle = Cycle.objects.get(id=cycle_id)
-    for crs in cycle.cycle_result_sets.all():
+    for crs in CycleResultSet.objects.filter(survey__cycle=cycle):
         params = {'site_slug': crs.site.slug, 'result_id': crs.id}
         dir = os.path.join(
             crs.site.province.name.encode('ascii', 'ignore'),
             crs.partner.short_name.encode('ascii', 'ignore'),
             crs.site.name.encode('ascii', 'ignore'),
         )
-        if 'citizen' in crs.survey_type.name.lower():
+        if 'citizen' in crs.survey.type.name.lower():
             url = request.build_absolute_uri(reverse('site-result-poster-pdf', kwargs=params))
             artifacts.append({
                 'url': url,

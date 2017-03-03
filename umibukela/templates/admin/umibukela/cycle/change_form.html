@@ -15,12 +15,12 @@
     <th>artifact</th>
   </tr>
   {% for crs in cycle_result_sets %}
-  {% if 'citizen' in crs.survey_type.name|lower %}
+  {% if 'citizen' in crs.survey.type.name|lower %}
   <tr>
     <td rowspan="3">{{ crs.site.province.name }}</td>
     <td rowspan="3">{{ crs.partner.short_name }}</td>
     <td rowspan="3" title="{{ crs.site.name }}">{{ crs.site.name|truncatechars:40 }}</td>
-    <td rowspan="3">{{ crs.survey_type.name }}</td>
+    <td rowspan="3">{{ crs.survey.type.name }}</td>
     <td><a href="{% url 'site-result-poster-pdf' crs.site.slug crs.id %}">Poster</a></td>
   </tr>
   <tr>
@@ -34,7 +34,7 @@
     <td>{{ crs.site.province.name }}</td>
     <td>{{ crs.partner.short_name }}</td>
     <td title="{{ crs.site.name }}">{{ crs.site.name|truncatechars:40 }}</td>
-    <td>{{ crs.survey_type.name }}</td>
+    <td>{{ crs.survey.type.name }}</td>
     <td><a href="{% url 'site-result-summary-pdf' crs.site.slug crs.id %}">Summary</a></td>
   </tr>
   {% endif %}

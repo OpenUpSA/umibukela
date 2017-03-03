@@ -98,7 +98,7 @@ class Partner(models.Model):
 
     def completed_result_sets(self):
         result_sets = list(self.cycle_result_sets.filter(
-            cycle__end_date__lte=timezone.now(),
+            survey__cycle__end_date__lte=timezone.now(),
             published=True
         ).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
@@ -153,7 +153,7 @@ class Site(models.Model):
 
     def completed_result_sets(self):
         result_sets = list(self.cycle_result_sets.filter(
-            cycle__end_date__lte=timezone.now(),
+            survey__cycle__end_date__lte=timezone.now(),
             published=True
         ).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
@@ -315,7 +315,7 @@ class Survey(models.Model):
     @property
     def programme(self):
         # Assumes all cycle_result_sets of a Survey have the same Cycle
-        return self.cycle_result_sets.first().cycle.programme
+        return self.cycle_result_sets.first().survey.cycle.programme
 
     def import_submissions(self):
         refresh_token = self.programme.kobo_refresh_token
@@ -397,17 +397,17 @@ class CycleResultSet(models.Model):
 
     def __str__(self):
         return "%s <- %s (%s: %s)" % (
-            self.site.name, self.partner.short_name, self.survey_type, self.cycle
+            self.site.name, self.partner.short_name, self.survey.type, self.survey.cycle
         )
 
     def end_date_cmp(a, b):
-        return Cycle.end_date_cmp(a.cycle, b.cycle)
+        return Cycle.end_date_cmp(a.survey.cycle, b.survey.cycle)
 
     def get_previous(self):
         result_sets = list(CycleResultSet.objects.filter(
-            cycle__end_date__lte=self.cycle.start_date,
+            survey__cycle__end_date__lte=self.survey.cycle.start_date,
             site__exact=self.site,
-            survey_type=self.survey_type,
+            survey__type=self.survey.type,
             published=True
         ).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp)

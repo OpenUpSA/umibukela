@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 {% load pipeline static jsonify lookup markup_tags %}
 
-{% block title %}Results for {{ result_set.cycle.name }}{% endblock %}
-{% block description %}Results for {{ result_set.cycle.programme.name }} {{ result_set.cycle.name }} for {{result_set.site.name }}{% endblock %}
+{% block title %}Results for {{ result_set.survey.cycle.name }}{% endblock %}
+{% block description %}Results for {{ result_set.survey.cycle.programme.name }} {{ result_set.survey.cycle.name }} for {{result_set.site.name }}{% endblock %}
 
 {% block js %}
 {{ block.super }}
@@ -36,8 +36,8 @@ var questions = {{ results.questions_dict|jsonify }};
 
       <div class="row">
         <div class="col-sm-8">
-          <h2>{{ result_set.cycle.programme.long_name}} {{ result_set.cycle.name}}</h2>
-          <h2>{{ result_set.cycle.start_date|date:'j F Y' }} - {{ result_set.cycle.end_date|date:'j F Y' }}</h2>
+          <h2>{{ result_set.survey.cycle.programme.long_name}} {{ result_set.survey.cycle.name}}</h2>
+          <h2>{{ result_set.survey.cycle.start_date|date:'j F Y' }} - {{ result_set.survey.cycle.end_date|date:'j F Y' }}</h2>
         </div>
 
         <div class="col-sm-4">
