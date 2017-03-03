@@ -855,6 +855,64 @@ blockquote cite{
   }
 }
 
+.survey-types {
+
+
+  .survey-name {
+    background-color: #efefef;
+    font-weight: 700;
+    border-left: 7px solid #9E9E9E;
+    color: #9e9e9e;
+    padding: 10px 10px;
+    margin: 10px 0px;
+  }
+
+  .survey-resources {
+
+    margin: 20px 0px;
+    list-style-type: none;
+
+    .survey-resources a:hover {
+      color: #f7f7f7;
+    }
+    .resource-c1, .resource-c2, .resource-c3 {
+      list-style-type: none;
+      padding: 10px 10px;
+      margin-bottom: 20px;
+      color: #f7f7f7;
+      font-weight: 700;
+    }
+
+    .resource-c1 {
+      background-color: #669933;
+      border-left: 7px solid #457910;
+    }
+    .resource-c1 a {
+      color: #457910;
+    }
+    .resource-c2 {
+      background-color: #236477;
+      border-left: 7px solid #0c495a;
+    }
+    .resource-c2 a {
+      color: #0c495a;
+    }
+    .resource-c3 {
+      background-color: #bb0a0a;
+      border-left: 7px solid #a20505;
+    }
+    .resource-c3 a {
+      color: #a20505; 
+    }
+    .resource-context {
+      font-weight: 300;
+    }
+  }
+
+
+}
+
+
 //== Social Media
 a.social-media{
   display: inline-block;
