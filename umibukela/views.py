@@ -442,7 +442,8 @@ def survey_type(request, survey_type_slug):
     cycles = list(CycleResultSet.objects.values(
         'cycle__name', 
         'cycle__id',
-        'cycle__start_date'
+        'cycle__start_date',
+        'cycle__end_date'
     ).order_by('cycle_id').distinct('cycle').filter(survey_type__id=survey_type.id))
     cycles = sorted(cycles, key=lambda x: x['cycle__start_date']) 
     latest_cycle = Cycle.objects.get(id=cycles[-1]['cycle__id'])
