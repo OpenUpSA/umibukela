@@ -19,10 +19,51 @@
   <!-- section-header -->
   <div class="section-heading">
     <div class="container">
-      <h1><i class="fa fa-file-text-o"></i> {{ survey_type.name }}</h1>
+      <h1><i class="fa fa-file-text-o"></i> {{ survey_type.name }}<br><small>{{ survey_type.description }}</small></h1>
     </div>
   </div>
   <!-- /section-header -->
+
+  <div class="sites-table page-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4"> <!--begin location nav -->
+        {{ cycles }}
+          <div class="monitoring-period">
+            <p>Monitoring period:</p>
+            
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Dropdown
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                {% for cycle in cycles %}
+                <li><a href="#">{{ cycle.cycle__name }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+
+          </div> <!-- end monitoring period -->
+
+          <div id="fixed-location-nav">
+            <ul class="location-nav">
+              <li><a href="#nat">National</a></li>
+              <li><a href="#ec">Eastern Cape</a></li>
+              <li><a href="#fs">Free State</a></li>
+              <li><a href="#mp">Mpumalanga</a></li>
+              <li><a href="#gt">Gauteng</a></li>
+              <li><a href="#nc">Northern Cape</a></li>
+              <li><a href="#lp">Limpopo</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 
   <!-- programmes-table -->
   <div class="sites-table page-section">
