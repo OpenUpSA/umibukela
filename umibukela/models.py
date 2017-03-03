@@ -227,14 +227,16 @@ class Cycle(models.Model):
 class SurveyType(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
-    description = models.TextField(help_text="This is a short line to indicate who is being surveyed to what degree, e.g. \"Light-touch survey completed by users of facility X\"")
+    short_description = models.TextField(help_text="This is a short line to indicate who is being surveyed to what degree, e.g. \"Light-touch survey completed by users of facility X\"")
+    full_description = models.TextField(help_text="This is a thorough description used to fully explain the purpose behind the surveys of this type.")
+    public = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('name',)
 
     def __str__(self):
         return self.name
-        
+
 
 class Survey(models.Model):
     name = models.CharField(max_length=200, unique=True)
