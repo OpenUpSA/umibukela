@@ -1,6 +1,5 @@
 from django.contrib import admin
 from umibukela import views
-from itertools import groupby
 
 from .models import (
     AttachmentNature,
@@ -34,7 +33,7 @@ class AdminSite(admin.AdminSite):
         urls = [
             url(
                 r'^umibukela/cycle/(?P<cycle_id>\d+)/create_zip$',
-                'umibukela.views.create_zip',
+                'umibukela.views.create_materials_zip',
                 name='cycle-create-zip'
             ),
             url(
@@ -44,6 +43,11 @@ class AdminSite(admin.AdminSite):
             url(
                 r'^umibukela/survey/(?P<survey_id>\d+)/kobo_submissions$',
                 self.admin_view(views.survey_kobo_submissions)
+            ),
+            url(
+                r'^umibukela/programme/(?P<programme_id>\d+)/kobo_grant$',
+                self.admin_view(views.programme_kobo_grant),
+                name='programme-kobo-grant'
             ),
             url(
                 r'^umibukela/survey_from_kobo$',

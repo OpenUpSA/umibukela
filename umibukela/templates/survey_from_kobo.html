@@ -6,13 +6,14 @@
 
   <h3>Forms available from Kobo Toolbox</h3>
   <table>
-    <tr><th>Form</th><th></th><tr>
+    <tr><th>Form</th><th>Num of Submissions</th><th></th><tr>
     {% for form in forms %}
     <tr>
       <td>{{ form.title }}</td>
+      <td>{{ form.num_of_submissions }}</td>
       <td>
         <form action="/admin/umibukela/survey_from_kobo" method="post">
-          <input type="submit" value="Add">
+          <input type="submit" value="Import">
           <input type="hidden" name="form_id" value="{{ form.formid }}">
           {% csrf_token %}
         </form>

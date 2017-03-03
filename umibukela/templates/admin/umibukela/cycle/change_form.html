@@ -2,7 +2,10 @@
 {% block content %}
 {{ block.super }}
 
+{% if original %}
 <a href="{% url 'admin:cycle-create-zip' original.id %}">Create Zip</a>
+{% endif %}
+{% if cycle_result_sets %}
 <table>
   <tr>
     <th>province</th>
@@ -36,4 +39,6 @@
   </tr>
   {% endif %}
   {% endfor %}
+</table>
+{% endif %}
 {% endblock %}
