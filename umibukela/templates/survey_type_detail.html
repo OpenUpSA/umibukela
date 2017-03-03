@@ -27,9 +27,13 @@
   <!-- programmes-table -->
   <div class="sites-table page-section">
     <div class="container">
-      <h3>SA: {{ total_count.count }}</h3>
+      <h3>SA: {{ total_count.count }}
+      <small><a href="{% url 'national-summary' survey_type_slug=survey_type.slug cycle_id=latest_cycle.id %}">Summary</a></small>
+      </h3>
       {% for province in province_count %}
-      <h3>{{ province.cycle_result_set__site__province__name }}</h3>
+      <h3>{{ province.cycle_result_set__site__province__name }}
+      <small><a href="{% url 'province-summary' survey_type_slug=survey_type.slug province_slug=province.cycle_result_set__site__province__slug cycle_id=latest_cycle.id %}">Summary</a></small>
+      </h3>
       <table class="table table-striped">
         <thead>
           <tr>
