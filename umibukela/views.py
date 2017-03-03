@@ -542,39 +542,8 @@ def survey_type_cycle(request, survey_type_slug, cycle_id):
         'this_cycle': this_cycle,
         'total_count': total_count,
         'province_count': province_count,
-        'latest_cycle_resultset': this_cycle_resultset,
+        'this_cycle_resultset': this_cycle_resultset,
     })
-
-
-def programmes(request):
-    programmes = Programme.objects.all()
-    return render(request, 'programmes.html', {
-        'active_tab': 'programmes',
-        'programmes': programmes,
-    })
-
-def programme(request, programme_id):
-    programme = get_object_or_404(Programme, id=programme_id)
-    return render(request, 'programme_detail.html', {
-        'active_tab': 'programmes',
-        'programme': programme,
-    })
-
-def cycle(request, cycle_id):
-    cycle = get_object_or_404(Cycle, id=cycle_id)
-    partner_counts = {}
-    for crs in cycle.cycle_result_sets.all():
-        if crs.partner in partner_counts:
-            partner_counts[crs.partner] = partner_counts[crs.partner] + len(crs.submissions.all())
-        else:
-            partner_counts[crs.partner] = len(crs.submissions.all())
-
-    return render(request, 'cycle_detail.html', {
-        'active_tab': 'programmes',
-        'partner_counts': partner_counts,
-        'cycle': cycle,
-    })
-
 
 def survey_from_kobo(request):
     if not is_kobo_authed(request):

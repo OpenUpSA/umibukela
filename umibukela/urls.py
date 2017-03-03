@@ -53,17 +53,7 @@ urlpatterns = patterns(
         'umibukela.views.comments_pdf',
         name='site-result-comments-pdf'),
 
-    # live dashboard
-    url(r'^programmes$',
-        'umibukela.views.programmes',
-        name='programmes'),
-    url(r'^programmes/(?P<programme_id>[\w-]+)$',
-        'umibukela.views.programme',
-        name='programme'),
-    url(r'^cycles/(?P<cycle_id>[\w-]+)$',
-        'umibukela.views.cycle',
-        name='cycle'),
-
+    # survey types
     url(r'^survey-types$',
         'umibukela.views.survey_types',
         name='survey-types'),
