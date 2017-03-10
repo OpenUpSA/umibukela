@@ -44,6 +44,8 @@ class SiteForm(forms.ModelForm):
 
 
 class CycleResultSetForm(forms.ModelForm):
+    site_option_name = forms.CharField(widget=forms.TextInput)
+
     class Meta(object):
         model = CycleResultSet
         exclude = []
@@ -56,6 +58,7 @@ class CycleResultSetForm(forms.ModelForm):
         else:
             partner = None
         self.fields['monitors'].queryset = Monitor.objects.filter(partner=partner)
+        self.fields['site_option_name'].help_text = "This is the name of the option for this site in the form, e.g. for 'Folweni clinic' it's probably 'folweni' (without the single quotes). You can find the names of options in the relevant Survey admin page."
 
 
 class CRSFromKoboForm(forms.Form):
