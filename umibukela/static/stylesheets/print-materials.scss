@@ -176,8 +176,13 @@ $headings-color: $black;
         }
       }
       .row.last {
-          border-bottom: 1px dashed black;
-          height: 176px;
+          .col {
+              border-bottom: 1px dashed black;
+              height: 176px;
+          }
+          .col.spill {
+              border-bottom: none;
+          }
       }
     }
     .totals-table {
