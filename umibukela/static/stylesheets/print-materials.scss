@@ -175,6 +175,15 @@ $headings-color: $black;
           font-size:9px;
         }
       }
+      .row.last {
+          .col {
+              border-bottom: 1px dashed black;
+              height: 176px;
+          }
+          .col.spill {
+              border-bottom: none;
+          }
+      }
     }
     .totals-table {
       width:100%;

@@ -16,6 +16,7 @@ import analysis
 import json
 import os
 import pandas
+import re
 import requests
 
 from .forms import CRSFromKoboForm
@@ -35,7 +36,8 @@ from .models import (
 )
 
 IGNORE_TYPES = ['start', 'end', 'meta', 'today', 'username', 'phonenumber']
-
+TRIM_SITE_RE = r"SASSA Service Office: |SASSA Pay Point: "
+TRIM_TYPE_RE = r" - Citizen"
 
 def home(request):
     return render(request, 'index.html', {
@@ -797,7 +799,8 @@ def national_poster(request, survey_type_slug, cycle_id):
         'totals': totals,
         'funder_name': 'MAVC',
         'survey_type': survey_type,
-        'site_names': [crs.site.name for crs in result_sets],
+        'site_type': re.sub(TRIM_TYPE_RE, "", survey_type.name),
+        'site_names': [re.sub(TRIM_SITE_RE, "", crs.site.name) for crs in result_sets],
     })
 
 
@@ -835,7 +838,6 @@ def province_poster(request, province_slug, survey_type_slug, cycle_id):
 
     form, gender_disagg, results, curr_totals = analysis.cross_site_summary(result_sets)
     totals = {'current': curr_totals}
-
     return render(request, poster_template(survey_type), {
         'DEBUG': settings.DEBUG,
         'form': form,
@@ -849,7 +851,8 @@ def province_poster(request, province_slug, survey_type_slug, cycle_id):
         'totals': totals,
         'funder_name': 'MAVC',
         'survey_type': survey_type,
-        'site_names': [crs.site.name for crs in result_sets],
+        'site_type': re.sub(TRIM_TYPE_RE, "", survey_type.name),
+        'site_names': [re.sub(TRIM_SITE_RE, "", crs.site.name) for crs in result_sets],
     })
 
 
