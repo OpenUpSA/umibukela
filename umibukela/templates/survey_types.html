@@ -24,7 +24,7 @@
 
 </div>
 
-<section class="survey-types ">
+<section class="survey-types">
   
   <!-- begin container -->
   <div class="container">
@@ -36,34 +36,16 @@
 
   <div class="row">
 
-    <div class="col-md-6 col-xs-12">
-      <h3>Survey types</h3>
+    <div class="col-md-12">
         <div class="row">
-          {% for type in survey_types %}
-          <div class="survey-name col-md-6">        
-            <a href="{% url 'survey-type' survey_type_slug=type.slug %}">{{ type.name }}</a>
-          </div>
-          {% endfor %}
+            {% for type in survey_types %}
+            <div class="col-md-3">
+              <div class="survey-name">     
+                <a href="{% url 'survey-type' survey_type_slug=type.slug %}">{{ type.name }}</a>
+              </div>
+            </div>
+            {% endfor %}
         </div>
-    </div>
-
-    <div class="col-md-6 col-xs-12">
-      <h3>Monitor Resources</h3>
-      <ul class="survey-resources">
-        
-        <li class="resource-c1">
-          <i class="fa fa-book" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Monitoring Handbook <a href="#" target="_blank"> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a><br><span class="resource-context">Aliquam libero metus, feugiat non lorem ut, lobortis dignissim risus.</span>
-        </li>
-
-        <li class="resource-c2">
-          <i class="fa fa-print" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Paper-based RTP form <a href="#" target="_blank"> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a><br><span class="resource-context">Aliquam libero metus, feugiat non lorem ut, lobortis dignissim risus.</span>
-        </li>
-
-        <li class="resource-c3">
-          <i class="fa fa-list" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Link to form <a href="#" target="_blank"> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a><br><span class="resource-context">Aliquam libero metus, feugiat non lorem ut, lobortis dignissim risus.</span>
-        </li>
-
-      </ul>
     </div>
   
   </div> <!-- end col-md-6 row -->
