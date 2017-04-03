@@ -29,17 +29,21 @@
   <!-- begin container -->
   <div class="container">
 
-  <div class="info">
-  <h2>Survey types are these things.</h2>
-    <p>Aenean varius felis neque, quis tincidunt magna posuere quis. Nulla aliquam libero eu nunc egestas blandit. Sed dignissim porta tellus et placerat. Sed at feugiat metus.</p>
-  </div>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="info">
+            <h2>Survey types are these things.</h2>
+            <p>Aenean varius felis neque, quis tincidunt magna posuere quis. Nulla aliquam libero eu nunc egestas blandit. Sed dignissim porta tellus et placerat. Sed at feugiat metus.</p>
+        </div>
+      </div>
+    </div>
 
   <div class="row">
 
     <div class="col-md-12">
         <div class="row">
             {% for type in survey_types %}
-            <div class="col-md-3">
+            <div class="col-md-3 col-sm-6 col-xs-6">
               <div class="survey-name">     
                 <a href="{% url 'survey-type' survey_type_slug=type.slug %}">{{ type.name }}</a>
               </div>
