@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load staticfiles %}
 
 {% block title %}Surveys{% endblock %}
 {% block page-content %}
@@ -26,7 +27,6 @@
 
 <section class="survey-types">
   
-  <!-- begin container -->
   <div class="container">
 
     <div class="row">
@@ -38,21 +38,34 @@
       </div>
     </div>
 
-  <div class="row">
-
-    <div class="col-md-12">
-        <div class="row">
-            {% for type in survey_types %}
-            <div class="col-md-3 col-sm-6 col-xs-6">
-              <div class="survey-name">     
-                <a href="{% url 'survey-type' survey_type_slug=type.slug %}">{{ type.name }}</a>
+    <div class="row">
+      <div class="col-md-12">
+          <div class="row">
+              {% for type in survey_types %}
+              <div class="col-xs-6 col-md-3">
+                <div class="survey-name">     
+                  <a href="{% url 'survey-type' survey_type_slug=type.slug %}">{{ type.name }}</a>
+                </div>
               </div>
-            </div>
-            {% endfor %}
-        </div>
+              {% endfor %}
+          </div>
+      </div>
     </div>
-  
-  </div> <!-- end col-md-6 row -->
+
+  </div>
+</section>
+
+<section class="resources">
+  <div class="container">
+    <h2>Resources</h2>
+    <p>Useful resources</p>
+    <div class="row">
+      <div class="col-md-6">
+        <a href="{% static 'resources/ODK_collect_user_guide.pdf' %}" target="_blank">ODK collect user guide</a>
+        <p></p>
+
+      </div>
+    </div>
   </div>
 </section>
 
