@@ -855,6 +855,9 @@ blockquote cite{
   }
 }
 
+
+//== Survey Types
+
 .survey-types {
 
   h3 {
@@ -881,8 +884,19 @@ blockquote cite{
 
 }
 
+#cycles {
+
+  .survey-type-detail-desc {
+    margin: 15px 0;
+  }
+
+}
+
+
+
 
 //== Social Media
+
 a.social-media{
   display: inline-block;
   float: right;
