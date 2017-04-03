@@ -15,6 +15,7 @@ from .models import (
     Sector,
     Site,
     Survey,
+    SurveyKoboProject,
     SurveyType,
 )
 
@@ -135,5 +136,6 @@ admin_site.register(Province)
 admin_site.register(Sector)
 admin_site.register(Site, SiteAdmin)
 admin_site.register(Survey)
+admin_site.register(SurveyKoboProject)
 admin_site.register(SurveyType, SurveyTypeAdmin)
 admin_site.register(Funder)

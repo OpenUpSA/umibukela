@@ -360,6 +360,12 @@ class SurveyKoboProject(models.Model):
     # https://kc.kobotoolbox.org/api/v1/data/69399?format=json (the submissions)
     form_id = models.IntegerField(unique=True, null=False)
 
+    class Meta:
+        ordering = ('survey__name',)
+
+    def __str__(self):
+        return "Kobo project %d: %s" % (self.form_id, self.survey)
+
 
 class UserKoboRefreshToken(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
