@@ -27,9 +27,6 @@
 
   <div class="sites-table page-section">
     <div class="container">
-      
-
-
 
       <div class="row">
         <div class="col-md-12"> <!--begin location nav -->
@@ -60,11 +57,9 @@
           </div>
 
         </div>
-        </div>
+      </div>
 
-
-
-        <div class="row">
+      <div class="row">
         <div class="col-md-12">
 
           <section class="location-item">
@@ -83,61 +78,36 @@
               <p>{{ total_count.count }}</p>
               <p>Participants</p>
             </div>
-            <!-- <div class="callouts">
-              <p>107</p>
-              <p>Male</p>
-            </div>
-            <div class="callouts">
-              <p>197</p>
-              <p>Female</p>
-            </div> -->
 
             <!-- downloadable resources -->
             <p><a href="{% url 'national-summary-pdf' survey_type_slug=survey_type.slug cycle_id=latest_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Summary</a></p>
             <p><a href="{% url 'national-poster-pdf' survey_type_slug=survey_type.slug cycle_id=latest_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Poster</a></p>
-
           </section>
 
           {% for province in province_count %}
-          <h3 id="{{ province.cycle_result_set__site__province__slug }}">{{ province.cycle_result_set__site__province__name }}
-          <small>
-          <a href="{% url 'province-summary-pdf' survey_type_slug=survey_type.slug province_slug=province.cycle_result_set__site__province__slug cycle_id=latest_cycle.id %}">Summary</a>
-           |
-           <a href="{% url 'province-poster-pdf' survey_type_slug=survey_type.slug province_slug=province.cycle_result_set__site__province__slug cycle_id=latest_cycle.id %}">Poster</a>
-          </small>
-          </h3>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th data-sort="string">Site</th>
-                <th data-sort="string">Number of participants</th>
-                <th data-sort="string">Summary</th>
-                <th data-sort="string">Poster</th>
-                <th data-sort="string">Handout</th>
-                <th data-sort="string">Comments</th>
-              </tr>
-            </thead>
-            {% for site in province.sites %}
-            <tr>
-              <td><a href="{% url 'site' site_slug=site.cycle_result_set__site__slug %}">{{ site.cycle_result_set__site__name }}</a></td>
-              <td><a href="{% url 'site-result' site_slug=site.cycle_result_set__site__slug result_id=site.cycle_result_set__id %}">{{ site.dcount }}</a></td>
-              <td><a href="{% url 'site-result-summary-pdf' site_slug=site.cycle_result_set__site__slug result_id=site.cycle_result_set__id %}">Summary</a></td>
-              <td><a href="{% url 'site-result-poster-pdf' site_slug=site.cycle_result_set__site__slug result_id=site.cycle_result_set__id %}">Poster</a></td>
-              <td><a href="{% url 'site-result-handout-pdf' site_slug=site.cycle_result_set__site__slug result_id=site.cycle_result_set__id %}">Handout</a></td>
-              <td><a href="{% url 'site-result-comments' site_slug=site.cycle_result_set__site__slug result_id=site.cycle_result_set__id %}">Comments</a></td>
-            </tr>
-            {% endfor %}
-          </table>
+            <h3 id="{{ province.cycle_result_set__site__province__slug }}">{{ province.cycle_result_set__site__province__name }}
+            <small>
+            <a href="{% url 'province-summary-pdf' survey_type_slug=survey_type.slug province_slug=province.cycle_result_set__site__province__slug cycle_id=latest_cycle.id %}">Summary</a>
+             |
+             <a href="{% url 'province-poster-pdf' survey_type_slug=survey_type.slug province_slug=province.cycle_result_set__site__province__slug cycle_id=latest_cycle.id %}">Poster</a>
+            </small>
+            </h3>
+
+            <div class="row">
+              {% for site in province.sites %}
+                <div class="col-xs-12">
+                  <h4>{{ site.cycle_result_set__site__name }} <small>{{ site.dcount }} participants</small></h4>
+                  <a href="{% url 'site' site_slug=site.cycle_result_set__site__slug %}"><i class="fa fa-map-marker" aria-hidden="true"></i> Site information</a>
+                  <a href="{% url 'site-result' site_slug=site.cycle_result_set__site__slug result_id=site.cycle_result_set__id %}"><i class="fa fa-bar-chart" aria-hidden="true"></i> Site results</a>
+                </div>
+              {% endfor %}
+            </div>
           {% endfor %}
-
-          <!-- sites -->
-
-
+            
         </div>
-        </div>
-
       </div>
     </div>
   </div>
+</div>
 
 {% endblock %}
