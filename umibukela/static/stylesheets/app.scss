@@ -893,6 +893,7 @@ blockquote cite{
   .location-item {
     background-color: #1a6378;
     background-image: url(../img/bg-texture.png);
+    padding-bottom: 10px;
     .cycle-callouts {
       margin-bottom: 10px;
     }
@@ -914,6 +915,12 @@ blockquote cite{
         font-size: 16px;
         color: #fff;
       }
+    }
+  }
+  .provinces {
+    .province-title {
+      background-color: #f1f1f1;
+      margin-top: -22px;
     }
   }
 
