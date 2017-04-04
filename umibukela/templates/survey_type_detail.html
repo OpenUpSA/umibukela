@@ -64,20 +64,27 @@
         <div class="col-md-12">
 
           <section class="location-item">
-            <h3 id="nat">National</h3>
 
             <!-- call outs -->
 
-            <h4 class="select-cycle">{{ latest_cycle.name }}: {{ latest_cycle.start_date }} - {{ latest_cycle.end_date }}</h4>
-            <hr/>
+            <div class="row">
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <h3 class="select-cycle">{{ latest_cycle.name }}</h3>
+                <h4>{{ latest_cycle.start_date }} - {{ latest_cycle.end_date }}</h4>
+              </div>
 
-            <div class="callouts">
-              <p>{{ latest_cycle_resultset.count }}</p>
-              <p>sites monitored</p>
-            </div>
-            <div class="callouts">
-              <p>{{ total_count.count }}</p>
-              <p>Participants</p>
+              <div class="col-md-3 col-sm-3 col-xs-6">
+                <div class="callouts">
+                  <h3 class="callouts-figure">{{ latest_cycle_resultset.count }}</h3>
+                  <p class="callouts-desc">sites monitored</p>
+                </div>
+              </div>
+              <div class="col-md-3 col-sm-3 col-xs-6">
+                <div class="callouts">
+                  <h3 class="callouts-figure">{{ total_count.count }}</h3>
+                  <p class="callouts-desc">Participants</p>
+                </div>
+              </div>
             </div>
 
             <!-- downloadable resources -->
