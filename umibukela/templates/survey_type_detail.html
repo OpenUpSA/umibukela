@@ -26,8 +26,6 @@
   <!-- /section-header -->
 
   <div class="sites-table page-section">
-    
-    <!--<div class="container">-->
 
       <div class="row">
         <div class="container">
@@ -45,7 +43,6 @@
             <div class="row"> <!-- start row -->
 
               <div class="col-md-6"> <!-- start col-md-6 -->
-                
                 <h3>Monitoring cycle</h3>
                 <div class="dropdown cycle-btn">
                   <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -74,11 +71,9 @@
 
 
             </div> <!-- end row -->
-
             </div> <!-- end monitoring period -->
 
           </div>
-
         </div>
       </div>
 
@@ -90,18 +85,18 @@
 
             <!-- call outs -->
               <div id="nat" class="row cycle-callouts">
-                <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="col-md-4 col-sm-4 col-xs-12">
                   <h3 class="select-cycle">{{ latest_cycle.name }}</h3>
                   <h4>{{ latest_cycle.start_date }} - {{ latest_cycle.end_date }}</h4>
                 </div>
 
-                <div class="col-md-3 col-sm-3 col-xs-6">
+                <div class="col-md-4 col-sm-4 col-xs-6">
                   <div class="callouts">
                     <h3 class="callouts-figure">{{ latest_cycle_resultset.count }}</h3>
-                    <p class="callouts-desc">sites monitored</p>
+                    <p class="callouts-desc">Sites Monitored</p>
                   </div>
                 </div>
-                <div class="col-md-3 col-sm-3 col-xs-6">
+                <div class="col-md-4 col-sm-4 col-xs-6">
                   <div class="callouts">
                     <h3 class="callouts-figure">{{ total_count.count }}</h3>
                     <p class="callouts-desc">Participants</p>
