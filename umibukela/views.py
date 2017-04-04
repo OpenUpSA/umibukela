@@ -440,6 +440,8 @@ def survey_types(request):
     return render(request, 'survey_types.html', {
         'active_tab': 'surveys',
         'survey_types': survey_types,
+        'username': settings.BLACKSASH_KOBO_USERNAME,
+        'password': settings.BLACKSASH_KOBO_PASSWORD,
     })
 
 def survey_type(request, survey_type_slug):
@@ -1010,9 +1012,3 @@ def create_materials_zip(request, cycle_id):
     Cycle.schedule_create_materials_zip(cycle_id, artifacts)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
-def kobo_credentials(request):
-    return render(request, 'admin/kobo_credentials.html', {
-        'username': settings.BLACKSASH_KOBO_USERNAME,
-        'password': settings.BLACKSASH_KOBO_PASSWORD,
-    })

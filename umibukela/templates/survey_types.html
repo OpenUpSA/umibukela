@@ -56,12 +56,16 @@
 <section class="resources">
   <div class="container">
     <h2>Resources</h2>
-    <p>Useful resources</p>
     <div class="row">
       <div class="col-md-6">
         <a href="{% static 'resources/ODK_collect_user_guide.pdf' %}" target="_blank">ODK collect user guide</a>
-        <p></p>
-
+        {% if user.is_superuser %}
+          <div>URL: <code>https://kc.kobotoolbox.org/blacksash</code></div>
+          <div>Username: <code>{{ username }}</code></div>
+          <div>Password: <code>{{ password }}</code></div>
+        {% else %}
+          <p>In order to see the ODK Collect login details, please <a href="/admin/login/?next=/survey-types#odk-collect">log in</a>.</p>
+        {% endif %}
       </div>
     </div>
   </div>
