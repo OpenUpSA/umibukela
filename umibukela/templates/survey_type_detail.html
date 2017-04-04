@@ -107,6 +107,7 @@
                   <h4>{{ site.cycle_result_set__site__name }} <small>{{ site.dcount }} participants</small></h4>
                   <a href="{% url 'site' site_slug=site.cycle_result_set__site__slug %}"><i class="fa fa-map-marker" aria-hidden="true"></i> Site information</a>
                   <a href="{% url 'site-result' site_slug=site.cycle_result_set__site__slug result_id=site.cycle_result_set__id %}"><i class="fa fa-bar-chart" aria-hidden="true"></i> Site results</a>
+                  <p><i class="fa fa-phone" aria-hidden="true"></i> {{ site.cycle_result_set__site__telephone }}</p>
                 </div>
               {% endfor %}
             </div>

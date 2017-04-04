@@ -477,6 +477,7 @@ def survey_type(request, survey_type_slug):
             'cycle_result_set__id',
             'cycle_result_set__site',
             'cycle_result_set__site__slug',
+            'cycle_result_set__site__telephone',
             'cycle_result_set__site__name').annotate(
             dcount=Count('cycle_result_set__site'))
         province['sites'] = site_count
@@ -530,6 +531,7 @@ def survey_type_cycle(request, survey_type_slug, cycle_id):
             ).values(
             'cycle_result_set__id',
             'cycle_result_set__site',
+            'cycle_result_set__site__telephone',
             'cycle_result_set__site__slug',
             'cycle_result_set__site__name').annotate(
             dcount=Count('cycle_result_set__site'))
