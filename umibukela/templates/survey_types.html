@@ -29,12 +29,9 @@
   
   <div class="container">
 
-    <div class="row">
+    <div class="row info">
       <div class="col-md-8">
-        <div class="info">
-            <h2>Survey types are these things.</h2>
-            <p>Aenean varius felis neque, quis tincidunt magna posuere quis. Nulla aliquam libero eu nunc egestas blandit. Sed dignissim porta tellus et placerat. Sed at feugiat metus.</p>
-        </div>
+        <p>The Black Sash and Community Partners have been promoting citizens’ monitoring for a number of years. We work with the Department of Planning, Monitoring and Evaluation (DPME) to learn and demonstrate how government can make citizen voices an integral part of the way public services are managed.</p>
       </div>
     </div>
 
@@ -45,6 +42,7 @@
               <div class="col-xs-6 col-md-3">
                 <div class="survey-name">     
                   <a href="{% url 'survey-type' survey_type_slug=type.slug %}">{{ type.name }}</a>
+                  <p>{{ type.short_description }}</p>
                 </div>
               </div>
               {% endfor %}
