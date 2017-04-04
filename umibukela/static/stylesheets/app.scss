@@ -891,15 +891,29 @@ blockquote cite{
   }
 
   .location-item {
+    background-color: #1a6378;
+    background-image: url(../img/bg-texture.png);
+    .cycle-callouts {
+      margin-bottom: 10px;
+    }
+    h3.select-cycle {
+      color: #fff;
+      font-size: 2.2em;
+      font-weight: 600;
+    }
+    h4 {
+      color: #fff;
+    }
     .callouts {
       .callouts-figure {
-        font-weight: bold;
+        color: #fff;
+        font-size: 2.2em;
+        font-weight: 600;
       }
       .callouts-desc {
         font-size: 16px;
-        font-weight: bold;
+        color: #fff;
       }
-
     }
   }
 
