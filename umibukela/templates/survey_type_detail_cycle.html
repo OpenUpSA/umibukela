@@ -103,8 +103,7 @@
             </div>
 
             <!-- downloadable resources -->
-            <p><a href="{% url 'national-summary-pdf' survey_type_slug=survey_type.slug cycle_id=this_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Summary</a></p>
-            <p><a href="{% url 'national-poster-pdf' survey_type_slug=survey_type.slug cycle_id=this_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Poster</a></p>
+            <p><a href="{% url 'national-summary-pdf' survey_type_slug=survey_type.slug cycle_id=this_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Summary</a> &nbsp;&nbsp;<a href="{% url 'national-poster-pdf' survey_type_slug=survey_type.slug cycle_id=this_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Poster</a></p>
           </div>
         </section>
 
