@@ -894,11 +894,10 @@ blockquote cite{
     .cycle-btn {
       margin-bottom: 15px;
       .btn, .btn-default {
-        box-shadow: none;
+        box-shadow: 0 4px 0 #d77809;
         background-color: #f6921d;
-        border-radius: 0px;
         color: #fff;
-        font-weight: normal;
+        font-weight: bold;
         text-transform: uppercase;
       }
     }
