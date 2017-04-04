@@ -1,10 +1,10 @@
 <div class="site-names">
   {% if site_names %}
   {% if site_names|length > 1 %}
-  The facilities presented here are
+  The {{ site_type }}s presented here are
   {{ site_names|slice:"-1"|join:", " }} and {{ site_names|last }}
   {% else %}
-  The facility represented here is {{ site_names|first }}
+  The {{ site_type }} presented here is {{ site_names|first }}
   {% endif %}
   {% endif %}
 </div>
