@@ -1,5 +1,5 @@
 from collections import Counter
-from datetime import datetime, timedelta
+from datetime import datetime
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import Http404
@@ -38,6 +38,7 @@ from .models import (
 IGNORE_TYPES = ['start', 'end', 'meta', 'today', 'username', 'phonenumber']
 TRIM_SITE_RE = r"SASSA Service Office: |SASSA Pay Point: "
 TRIM_TYPE_RE = r" - Citizen"
+
 
 def home(request):
     return render(request, 'index.html', {
@@ -893,3 +894,10 @@ def create_materials_zip(request, cycle_id):
             })
     Cycle.schedule_create_materials_zip(cycle_id, artifacts)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def kobo_credentials(request):
+    return render(request, 'admin/kobo_credentials.html', {
+        'username': settings.BLACKSASH_KOBO_USERNAME,
+        'password': settings.BLACKSASH_KOBO_PASSWORD,
+    })
