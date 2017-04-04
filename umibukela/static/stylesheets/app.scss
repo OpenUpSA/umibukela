@@ -889,6 +889,15 @@ blockquote cite{
   .survey-type-detail-desc {
     margin: 15px 0;
   }
+  .monitoring-period {
+    margin-bottom: 15px;
+    .cycle-btn {
+      margin-bottom: 15px;
+      .btn, .btn-default {
+        box-shadow: none;
+      }
+    }
+  }
 
   .location-item {
     background-color: #1a6378;

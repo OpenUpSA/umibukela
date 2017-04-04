@@ -21,7 +21,6 @@
   <div class="section-heading">
     <div class="container">
       <h1><i class="fa fa-file-text-o"></i> {{ survey_type.name }}</h1>
-      <p class="survey-type-detail-desc">{{ survey_type.full_description }}</p>
     </div>
   </div>
   <!-- /section-header -->
@@ -32,33 +31,51 @@
 
       <div class="row">
         <div class="container">
-
           <div class="col-md-12"> <!--begin location nav -->
+            
             <div class="monitoring-period">
-              <p>Monitoring period:</p>
 
-              <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                  {{ latest_cycle.name }}
-                  <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                  {% for cycle in cycles %}
-                  <li><a href="{% url 'survey-type-cycle' survey_type_slug=survey_type.slug cycle_id=cycle.cycle__id %}">{{ cycle.cycle__name }}</a></li>
-                  {% endfor %}
-                </ul>
+            <div class="row">
+              <div class="col-md-10 col-sm-10 col-xs-12">
+                <p class="survey-type-detail-desc">{{ survey_type.full_description }}</p>
               </div>
+            </div>
+
+
+            <div class="row"> <!-- start row -->
+
+              <div class="col-md-6"> <!-- start col-md-6 -->
+                
+                <div class="dropdown cycle-btn">
+                  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    {{ latest_cycle.name }}
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    {% for cycle in cycles %}
+                    <li><a href="{% url 'survey-type-cycle' survey_type_slug=survey_type.slug cycle_id=cycle.cycle__id %}">{{ cycle.cycle__name }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </div>
+
+                <div id="fixed-location-nav">
+                  <p>For national results: <a href="#nat">National</a>. Provinces we have monitored during this cycle are: {% for province in province_count %} <a href="#{{ province.cycle_result_set__site__province__slug }}">{{ province.cycle_result_set__site__province__name }}</a>, {% endfor %}</p>
+                </div>
+
+              </div> <!-- end col-md-6 -->
+
+              <div class="col-md-6">
+                <div class="monitor-resources">
+                  <h3>Monitor Resources</h3>
+
+                </div>
+              </div>
+
+
+            </div> <!-- end row -->
 
             </div> <!-- end monitoring period -->
 
-            <div id="fixed-location-nav">
-              <ul class="location-nav">
-                <li><a href="#nat">National</a></li>
-                {% for province in province_count %}
-                <li><a href="#{{ province.cycle_result_set__site__province__slug }}">{{ province.cycle_result_set__site__province__name }}</a></li>
-                {% endfor %}
-              </ul>
-            </div>
           </div>
 
         </div>
@@ -71,7 +88,7 @@
             <div class="container">
 
             <!-- call outs -->
-              <div class="row cycle-callouts">
+              <div id="nat" class="row cycle-callouts">
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <h3 class="select-cycle">{{ latest_cycle.name }}</h3>
                   <h4>{{ latest_cycle.start_date }} - {{ latest_cycle.end_date }}</h4>
