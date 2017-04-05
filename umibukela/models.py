@@ -67,7 +67,6 @@ class Province(models.Model):
     def __str__(self):
         return self.name
 
-
 class Funder(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
@@ -186,11 +185,18 @@ class CycleFrequency(models.Model):
         return self.name
 
 
+
+
 class Programme(models.Model):
     short_name = models.CharField(max_length=100, unique=True)
     long_name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
     frequency = models.ForeignKey(CycleFrequency, null=True, blank=True)
+
+    def cycles(self):
+        cycles = list(set(Cycle.objects.all()))
+        cycles.sort(key=lambda p: p.name)
+        return cycles
 
     def __str__(self):
         return self.long_name
@@ -283,7 +289,9 @@ class Cycle(models.Model):
 class SurveyType(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
-    description = models.TextField(help_text="This is a short line to indicate who is being surveyed to what degree, e.g. \"Light-touch survey completed by users of facility X\"")
+    short_description = models.TextField(help_text="This is a short line to indicate who is being surveyed to what degree, e.g. \"Light-touch survey completed by users of facility X\"")
+    full_description = models.TextField(help_text="This is a thorough description used to fully explain the purpose behind the surveys of this type.")
+    public = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('name',)
@@ -294,8 +302,8 @@ class SurveyType(models.Model):
 
 class Survey(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    cycle = models.ForeignKey(Cycle, null=True, related_name="cycle_result_sets")
-    type = models.ForeignKey(SurveyType, null=True)
+    cycle = models.ForeignKey(Cycle, related_name="cycle_result_sets")
+    type = models.ForeignKey(SurveyType)
     form = jsonfield.JSONField()
     map_to_form = jsonfield.JSONField(blank=True, null=True)
 

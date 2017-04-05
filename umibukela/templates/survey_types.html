@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block title %}Surveys{% endblock %}
+{% block page-content %}
+
+<!-- breadcrumbs -->
+<div class="container breadcrumb-container">
+  <ol class="breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li class="active">Surveys</li>
+  </ol>
+</div>
+<!-- /breadcrumbs -->
+
+<div class="section" id="survey-types">
+
+  <!-- section-header -->
+  <div class="section-heading">
+    <div class="container">
+      <h1><i class="fa fa-file-text-o"></i> Surveys</h1>
+    </div>
+  </div>
+  <!-- /section-header -->
+
+</div>
+
+<section class="survey-types ">
+  
+  <!-- begin container -->
+  <div class="container">
+
+  <div class="info">
+  <h2>Survey types are these things.</h2>
+    <p>Aenean varius felis neque, quis tincidunt magna posuere quis. Nulla aliquam libero eu nunc egestas blandit. Sed dignissim porta tellus et placerat. Sed at feugiat metus.</p>
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-6 col-xs-12">
+      <h3>Survey types</h3>
+        <div class="row">
+          {% for type in survey_types %}
+          <div class="survey-name col-md-6">        
+            <a href="{% url 'survey_type' survey_type_slug=type.slug %}">{{ type.name }}</a>
+          </div>
+          {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xs-12">
+      <h3>Monitor Resources</h3>
+      <ul class="survey-resources">
+        
+        <li class="resource-c1">
+          <i class="fa fa-book" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Monitoring Handbook <a href="#" target="_blank"> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a><br><span class="resource-context">Aliquam libero metus, feugiat non lorem ut, lobortis dignissim risus.</span>
+        </li>
+
+        <li class="resource-c2">
+          <i class="fa fa-print" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Paper-based RTP form <a href="#" target="_blank"> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a><br><span class="resource-context">Aliquam libero metus, feugiat non lorem ut, lobortis dignissim risus.</span>
+        </li>
+
+        <li class="resource-c3">
+          <i class="fa fa-list" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Link to form <a href="#" target="_blank"> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a><br><span class="resource-context">Aliquam libero metus, feugiat non lorem ut, lobortis dignissim risus.</span>
+        </li>
+
+      </ul>
+    </div>
+  
+  </div> <!-- end col-md-6 row -->
+  </div>
+</section>
+
+{% endblock %}

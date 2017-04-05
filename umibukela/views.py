@@ -2,6 +2,7 @@ from collections import Counter
 from datetime import datetime
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.db.models import Count
 from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -434,6 +435,118 @@ def partner(request, partner_slug):
         'partner': partner,
     })
 
+def survey_types(request):
+    survey_types = SurveyType.objects.filter(public=True).all()
+    return render(request, 'survey_types.html', {
+        'active_tab': 'surveys',
+        'survey_types': survey_types,
+    })
+
+def survey_type(request, survey_type_slug):
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    cycles = list(CycleResultSet.objects.values(
+        'cycle__name',
+        'cycle__id',
+        'cycle__start_date',
+        'cycle__end_date'
+    ).order_by('cycle_id').distinct('cycle').filter(survey_type__id=survey_type.id))
+    cycles = sorted(cycles, key=lambda x: x['cycle__start_date'])
+    latest_cycle = Cycle.objects.get(id=cycles[-1]['cycle__id'])
+    latest_cycle_resultset = CycleResultSet.objects.filter(
+        cycle__id=latest_cycle.id,
+        survey_type_id=survey_type.id).values(
+        'id',
+        'survey_type_id',
+        'partner_id',
+        'site_id',
+        )
+    total_count = Submission.objects.filter(
+        cycle_result_set__cycle__id=latest_cycle.id,
+        cycle_result_set__survey_type__id=survey_type.id).values(
+        'cycle_result_set__site__province__name')
+    province_count = list(Submission.objects.filter(
+        cycle_result_set__cycle__id=latest_cycle.id,
+        cycle_result_set__survey_type__id=survey_type.id).values(
+        'cycle_result_set__site__province__slug',
+        'cycle_result_set__site__province__id',
+        'cycle_result_set__site__province__name').annotate(
+        dcount=Count('cycle_result_set__site__province__name')))
+    for province in province_count:
+        site_count = Submission.objects.filter(
+            cycle_result_set__cycle__id=latest_cycle.id,
+            cycle_result_set__survey_type__id=survey_type.id,
+            cycle_result_set__site__province__id=province['cycle_result_set__site__province__id'],
+            ).values(
+            'cycle_result_set__id',
+            'cycle_result_set__site',
+            'cycle_result_set__site__slug',
+            'cycle_result_set__site__name').annotate(
+            dcount=Count('cycle_result_set__site'))
+        province['sites'] = site_count
+
+    return render(request, 'survey_type_detail.html', {
+        'active_tab': 'surveys',
+        'survey_type': survey_type,
+        'cycles': cycles,
+        'latest_cycle': latest_cycle,
+        'total_count': total_count,
+        'province_count': province_count,
+        'latest_cycle_resultset': latest_cycle_resultset,
+    })
+
+def survey_type_cycle(request, survey_type_slug, cycle_id):
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    this_cycle = get_object_or_404(Cycle, id=cycle_id)
+
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    cycles = list(CycleResultSet.objects.values(
+        'cycle__name',
+        'cycle__id',
+        'cycle__start_date',
+        'cycle__end_date'
+    ).order_by('cycle_id').distinct('cycle').filter(survey_type__id=survey_type.id))
+    cycles = sorted(cycles, key=lambda x: x['cycle__start_date'])
+    this_cycle_resultset = CycleResultSet.objects.filter(
+        cycle__id=this_cycle.id,
+        survey_type_id=survey_type.id).values(
+        'id',
+        'survey_type_id',
+        'partner_id',
+        'site_id',
+        )
+    total_count = Submission.objects.filter(
+        cycle_result_set__cycle__id=this_cycle.id,
+        cycle_result_set__survey_type__id=survey_type.id).values(
+        'cycle_result_set__site__province__name')
+    province_count = list(Submission.objects.filter(
+        cycle_result_set__cycle__id=this_cycle.id,
+        cycle_result_set__survey_type__id=survey_type.id).values(
+        'cycle_result_set__site__province__slug',
+        'cycle_result_set__site__province__id',
+        'cycle_result_set__site__province__name').annotate(
+        dcount=Count('cycle_result_set__site__province__name')))
+    for province in province_count:
+        site_count = Submission.objects.filter(
+            cycle_result_set__cycle__id=this_cycle.id,
+            cycle_result_set__survey_type__id=survey_type.id,
+            cycle_result_set__site__province__id=province['cycle_result_set__site__province__id'],
+            ).values(
+            'cycle_result_set__id',
+            'cycle_result_set__site',
+            'cycle_result_set__site__slug',
+            'cycle_result_set__site__name').annotate(
+            dcount=Count('cycle_result_set__site'))
+        province['sites'] = site_count
+
+    return render(request, 'survey_type_detail_cycle.html', {
+        'active_tab': 'surveys',
+        'survey_type': survey_type,
+        'cycles': cycles,
+        'this_cycle': this_cycle,
+        'total_count': total_count,
+        'province_count': province_count,
+        'this_cycle_resultset': this_cycle_resultset,
+    })
 
 def survey_from_kobo(request):
     if not is_kobo_authed(request):

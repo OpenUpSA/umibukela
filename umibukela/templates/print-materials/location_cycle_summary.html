@@ -31,7 +31,7 @@ var form = {{ form|jsonify }};
       <h2 class="survey">{{ survey_type.name }}</h2>
       <h3 class="location">{{ location_name }}</h3>
       <h3 class="date">{{ cycle.start_date|date:'F' }} / {{ cycle.end_date|date:'F' }} {{ cycle.end_date|date:'Y' }}</h3>
-      <h2 class="survey-type">{{ survey_type.description }}</h2>
+      <h2 class="survey-type">{{ survey_type.short_description }}</h2>
     </header>
 
     <div class="section sites">

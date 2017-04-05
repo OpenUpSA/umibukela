@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ cycle.name }}{% endblock %}
+
+{% block page-content %}
+
+<!-- breadcrumbs -->
+<div class="container breadcrumb-container">
+  <ol class="breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li><a href="{% url 'programmes' %}">Programmes</a></li>
+    <li class="active">Cycles</li>
+  </ol>
+</div>
+<!-- /breadcrumbs -->
+
+<div class="section" id="cycles">
+
+  <!-- section-header -->
+  <div class="section-heading">
+    <div class="container">
+      <h1><i class="fa fa-cogs"></i> {{ cycle.name }}</h1>
+    </div>
+  </div>
+  <!-- /section-header -->
+
+  <!-- programmes-table -->
+  <div class="sites-table page-section">
+    <div class="container">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th data-sort="string">Partner</th>
+            <th data-sort="string">Number of submissions</th>
+          </tr>
+        </thead>
+          {% for partner, count in partner_counts.iteritems %}
+          <tr>
+            <td>{{ partner.full_name }}</td>
+            <td>{{ count }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+    </div>
+  </div>
+  <!-- /programmes-table -->
+
+</div>
+
+{% endblock %}

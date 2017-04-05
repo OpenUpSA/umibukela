@@ -13,7 +13,7 @@ def print_stuff(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('umibukela', '0029_auto_20170226_0745'),
+        ('umibukela', '0030_pub_priv_survey_types'),
     ]
 
     operations = [
