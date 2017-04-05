@@ -435,12 +435,14 @@ def partner(request, partner_slug):
         'partner': partner,
     })
 
+
 def survey_types(request):
     survey_types = SurveyType.objects.filter(public=True).all()
     return render(request, 'survey_types.html', {
         'active_tab': 'surveys',
         'survey_types': survey_types,
     })
+
 
 def survey_type(request, survey_type_slug):
     survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
@@ -498,6 +500,7 @@ def survey_type(request, survey_type_slug):
         'latest_cycle_resultset': latest_cycle_resultset,
     })
 
+
 def survey_type_cycle(request, survey_type_slug, cycle_id):
     survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
     this_cycle = get_object_or_404(Cycle, id=cycle_id)
@@ -551,6 +554,7 @@ def survey_type_cycle(request, survey_type_slug, cycle_id):
         'province_count': province_count,
         'this_cycle_resultset': this_cycle_resultset,
     })
+
 
 def survey_from_kobo(request):
     if not is_kobo_authed(request):
@@ -795,8 +799,8 @@ def province_summary(request, province_slug, survey_type_slug, cycle_id):
 
     result_sets = CycleResultSet.objects.filter(
         site__province=province,
-        cycle=cycle,
-        survey_type=survey_type
+        survey__cycle=cycle,
+        survey__type=survey_type
     )
 
     form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
@@ -846,8 +850,8 @@ def national_summary(request, survey_type_slug, cycle_id):
     cycle = get_object_or_404(Cycle, id=cycle_id)
 
     result_sets = CycleResultSet.objects.filter(
-        cycle=cycle,
-        survey_type=survey_type
+        survey__cycle=cycle,
+        survey__type=survey_type
     )
 
     form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
@@ -897,8 +901,8 @@ def national_poster(request, survey_type_slug, cycle_id):
     cycle = get_object_or_404(Cycle, id=cycle_id)
 
     result_sets = CycleResultSet.objects.filter(
-        cycle=cycle,
-        survey_type=survey_type
+        survey__cycle=cycle,
+        survey__type=survey_type
     )
 
     form, gender_disagg, results, curr_totals = analysis.cross_site_summary(result_sets)
@@ -950,8 +954,8 @@ def province_poster(request, province_slug, survey_type_slug, cycle_id):
 
     result_sets = CycleResultSet.objects.filter(
         site__province=province,
-        cycle=cycle,
-        survey_type=survey_type
+        survey__cycle=cycle,
+        survey__type=survey_type
     )
 
     form, gender_disagg, results, curr_totals = analysis.cross_site_summary(result_sets)
