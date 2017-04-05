@@ -302,7 +302,7 @@ class SurveyType(models.Model):
 
 class Survey(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    cycle = models.ForeignKey(Cycle, related_name="cycle_result_sets")
+    cycle = models.ForeignKey(Cycle, related_name="surveys")
     type = models.ForeignKey(SurveyType)
     form = jsonfield.JSONField()
     map_to_form = jsonfield.JSONField(blank=True, null=True)
