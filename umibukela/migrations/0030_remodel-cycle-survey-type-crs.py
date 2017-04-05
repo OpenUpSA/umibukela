@@ -3,6 +3,12 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 
+from umibukela.models import Survey
+
+
+def print_stuff(apps, schema_editor):
+    print Survey.objects.filter(cycle=None).values("id")
+
 
 class Migration(migrations.Migration):
 
@@ -36,8 +42,9 @@ class Migration(migrations.Migration):
         # delete a couple of surveys that don't make sense to have in the platform anyway
         # because they didn't have results. This doesn't mean we can't have survyes without
         # results, it's just that this migration doesn't handle that and doesn't need to.
-        migrations.RunSQL("delete from umibukela_surveykoboproject where survey_id in (9, 25)"),
-        migrations.RunSQL("delete from umibukela_survey where id in (9, 25)"),
+        migrations.RunSQL("delete from umibukela_surveykoboproject where survey_id in (9, 25, 29)"),
+        migrations.RunSQL("delete from umibukela_survey where id in (9, 25, 29)"),
+        migrations.RunPython(print_stuff),
         migrations.AlterField(
             model_name='survey',
             name='cycle',

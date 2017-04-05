@@ -100,6 +100,21 @@ We currently only run `manage.py process_tasks` to execute background tasks as n
 dokku run umibukela python manage.py process_tasks
 ```
 
+Generating an entity relationship diagram
+-----------------------------------------
+
+Install GraphViz, then `pygraphviz` if you haven't already
+
+```
+pip install pygraphviz
+```
+
+Then use the `graph_models` manage command to generate a diagram
+
+```
+python manage.py graph_models umibukela -o umibukela.png
+```
+
 License
 -------
 
