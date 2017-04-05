@@ -444,44 +444,48 @@ def survey_types(request):
 
 def survey_type(request, survey_type_slug):
     survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
-    cycles = list(CycleResultSet.objects.values(
+    cycles = Survey.objects.values(
         'cycle__name',
         'cycle__id',
         'cycle__start_date',
         'cycle__end_date'
-    ).order_by('cycle_id').distinct('cycle').filter(survey_type__id=survey_type.id))
+    )
+    cycles = cycles.filter(type=survey_type)
+    cycles = cycles.order_by('cycle__id')
+    cycles = cycles.distinct('cycle__id')
+    cycles = list(cycles)
     cycles = sorted(cycles, key=lambda x: x['cycle__start_date'])
     latest_cycle = Cycle.objects.get(id=cycles[-1]['cycle__id'])
     latest_cycle_resultset = CycleResultSet.objects.filter(
-        cycle__id=latest_cycle.id,
-        survey_type_id=survey_type.id).values(
+        survey__cycle=latest_cycle,
+        survey__type=survey_type).values(
         'id',
-        'survey_type_id',
+        'survey__type__id',
         'partner_id',
         'site_id',
         )
     total_count = Submission.objects.filter(
-        cycle_result_set__cycle__id=latest_cycle.id,
-        cycle_result_set__survey_type__id=survey_type.id).values(
+        cycle_result_set__survey__cycle=latest_cycle,
+        cycle_result_set__survey__type=survey_type).values(
         'cycle_result_set__site__province__name')
     province_count = list(Submission.objects.filter(
-        cycle_result_set__cycle__id=latest_cycle.id,
-        cycle_result_set__survey_type__id=survey_type.id).values(
+        cycle_result_set__survey__cycle=latest_cycle,
+        cycle_result_set__survey__type=survey_type).values(
         'cycle_result_set__site__province__slug',
         'cycle_result_set__site__province__id',
         'cycle_result_set__site__province__name').annotate(
         dcount=Count('cycle_result_set__site__province__name')))
     for province in province_count:
         site_count = Submission.objects.filter(
-            cycle_result_set__cycle__id=latest_cycle.id,
-            cycle_result_set__survey_type__id=survey_type.id,
+            cycle_result_set__survey__cycle=latest_cycle,
+            cycle_result_set__survey__type=survey_type,
             cycle_result_set__site__province__id=province['cycle_result_set__site__province__id'],
-            ).values(
+        ).values(
             'cycle_result_set__id',
             'cycle_result_set__site',
             'cycle_result_set__site__slug',
-            'cycle_result_set__site__name').annotate(
-            dcount=Count('cycle_result_set__site'))
+            'cycle_result_set__site__name'
+        ).annotate(dcount=Count('cycle_result_set__site'))
         province['sites'] = site_count
 
     return render(request, 'survey_type_detail.html', {
