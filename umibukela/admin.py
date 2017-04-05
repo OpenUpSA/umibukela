@@ -37,6 +37,10 @@ class AdminSite(admin.AdminSite):
                 name='cycle-create-zip'
             ),
             url(
+                r'^umibukela/kobo_credentials$',
+                self.admin_view(views.kobo_credentials)
+            ),
+            url(
                 r'^umibukela/kobo_forms/(?P<kobo_form_id>\d+)/site/(?P<site_name>\w+)/preview$',
                 self.admin_view(views.kobo_form_site_preview)
             ),

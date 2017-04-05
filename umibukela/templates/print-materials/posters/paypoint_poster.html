@@ -79,27 +79,27 @@
     <div class="response text-center" data-key="performance_group/respect" data-type="2" data-width="170" data-legend="attitude" data-height="125"></div>
   </div>
 </div>
-<div class="row">
-  <div class="survey-item col-xs-3">
+<div class="row last">
+  <div class="survey-item col col-xs-3">
     {% with q14=questions_dict|get:'performance_group/assistance' %}
     <h4 class="question text-center">{{ q14.label }}</h4>
     {% endwith %}
     <div class="response text-center" data-key="performance_group/assistance" data-type="2" data-width="170" data-legend="attitude" data-height="125"></div>
   </div>
-  <div class="survey-item col-xs-3">
+  <div class="survey-item col col-xs-3">
     {% with q15=questions_dict|get:'yes_no_group/money_lenders' %}
     <h4 class="question text-center">{{ q15.label }}</h4>
     {% endwith %}
     <div class="response text-center" data-key="yes_no_group/money_lenders" data-type="2" data-width="170" data-legend="yes/no" data-height="125"></div>
   </div>
-  <div class="survey-item col-xs-3">
+  <div class="survey-item col col-xs-3">
     <h4 class="question text-center">{{ questions_dict.clinic_feedback.label }}</h4>
     <div class="response text-center" data-key="clinic_feedback" data-type="2" data-width="170" data-legend="attitude" data-height="125"></div>
   </div>
-  <div class="col-xs-3 summary">
+  <div class="col col-xs-3 summary {% if site_names %}spill{% endif %}">
     {% include 'print-materials/posters/_survey_totals.html' %}
-    <img class="code4sa-logo" alt="Code4SA" src="{% static 'img/logo-code4sa.png' %}" />
     {% include 'print-materials/posters/_site_list.html' %}
+    <img class="code4sa-logo" alt="Code4SA" src="{% static 'img/logo-code4sa.png' %}" />
   </div>
 </div>
 {% endblock %}

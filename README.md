@@ -71,7 +71,10 @@ heroku config:set DJANGO_DEBUG=false \
                   HEALTHE_KOBO_USERNAME=...\
                   HEALTHE_KOBO_PASSWORD=...\
                   KOBO_CLIENT_ID=...\
-                  KOBO_CLIENT_SECRET=...
+                  KOBO_CLIENT_SECRET=...\
+                  BLACKSASH_KOBO_USERNAME=... \
+                  BLACKSASH_KOBO_PASSWORD=...
+
 git push heroku master
 heroku run python manage.py migrate
 heroku run python manage.py createsuperuser
@@ -85,7 +88,7 @@ sudo chown -R ubuntu: /var/log/umibukela
 ```
 
 ```cron
-0 * * * * /usr/local/bin/dokku --rm  run umibukela python manage.py import_submissions  2>&1 >> /var/log/umibukela/import-submissions.log
+0 * * * * /usr/local/bin/dokku --rm  run umibukela newrelic-admin run-program python manage.py import_submissions  2>&1 >> /var/log/umibukela/import-submissions.log
 ```
 
 Background Tasks in production
