@@ -88,7 +88,7 @@ sudo chown -R ubuntu: /var/log/umibukela
 ```
 
 ```cron
-0 * * * * /usr/local/bin/dokku --rm  run umibukela python manage.py import_submissions  2>&1 >> /var/log/umibukela/import-submissions.log
+0 * * * * /usr/local/bin/dokku --rm  run umibukela newrelic-admin run-program python manage.py import_submissions  2>&1 >> /var/log/umibukela/import-submissions.log
 ```
 
 Background Tasks in production
