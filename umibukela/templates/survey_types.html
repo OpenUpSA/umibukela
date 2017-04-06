@@ -59,13 +59,7 @@
     <div class="row">
       <div class="col-md-6">
         <a id="odk-collect" href="{% static 'resources/ODK_collect_user_guide.pdf' %}" target="_blank">Guide for monitors in the field using ODK</a>
-        {% if user.is_superuser %}
-          <div>URL: <code>https://kc.kobotoolbox.org/blacksash</code></div>
-          <div>Username: <code>{{ username }}</code></div>
-          <div>Password: <code>{{ password }}</code></div>
-        {% else %}
-          <p>In order to see the ODK Collect login details, please <a href="/admin/login/?next=/survey-types#odk-collect">log in</a>.</p>
-        {% endif %}
+        {% include "odk_credentials.html" %}
       </div>
     </div>
   </div>

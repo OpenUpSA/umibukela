@@ -452,7 +452,7 @@ def survey_type(request, survey_type_slug):
         'cycle__name',
         'cycle__id',
         'cycle__start_date',
-        'cycle__end_date'
+        'cycle__end_date',
     )
     cycles = cycles.filter(type=survey_type)
     cycles = cycles.order_by('cycle__id')
@@ -513,7 +513,7 @@ def survey_type_cycle(request, survey_type_slug, cycle_id):
         'cycle__name',
         'cycle__id',
         'cycle__start_date',
-        'cycle__end_date'
+        'cycle__end_date',
     ).order_by('cycle_id').distinct('cycle').filter(survey_type__id=survey_type.id))
     cycles = sorted(cycles, key=lambda x: x['cycle__start_date'])
     this_cycle_resultset = CycleResultSet.objects.filter(

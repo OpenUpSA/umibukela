@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load staticfiles %}
 
 {% block title %}{{ survey_type.name }}{% endblock %}
 
@@ -26,52 +27,48 @@
   <!-- /section-header -->
 
   <div class="sites-table page-section">
+    <div class="container">
+          
+      <div class="monitoring-period">
 
-    <div class="row">
-      <div class="container">
-        <div class="col-md-12"> <!--begin location nav -->
+        <div class="row">
+          <div class="col-sm-10">
+            <p class="survey-type-detail-desc">{{ survey_type.full_description }}</p>
+          </div>
+        </div>
 
-          <div class="monitoring-period">
-            
-            <div class="row">
-              <div class="col-md-10 col-sm-10 col-xs-12">
-                <p class="survey-type-detail-desc">{{ survey_type.full_description }}</p>
-              </div>
+        <div class="row"> <!-- start row -->
+
+          <div class="col-md-6"> <!-- start col-md-6 -->
+            <h3>Monitoring cycle</h3>
+            <div class="dropdown cycle-btn">
+              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                {{ this_cycle.name }}
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                {% for cycle in cycles %}
+                <li><a href="{% url 'survey-type-cycle' survey_type_slug=survey_type.slug cycle_id=cycle.cycle__id %}">{{ cycle.cycle__name }} | {{ cycle.cycle__start_date }} - {{ cycle.cycle__end_date }}</a></li>
+                {% endfor %}
+              </ul>
             </div>
 
-            <div class="row"> <!-- start row -->
-              
-              <div class="col-md-6"> <!-- start col-md-6 -->
-                <h3>Monitoring cycle</h3>
-                  <div class="dropdown cycle-btn">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                      {{ this_cycle.name }}
-                      <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                      {% for cycle in cycles %}
-                      <li><a href="{% url 'survey-type-cycle' survey_type_slug=survey_type.slug cycle_id=cycle.cycle__id %}">{{ cycle.cycle__name }}</a></li>
-                      {% endfor %}
-                    </ul>
-                  </div>
+            <div id="fixed-location-nav">
+              <p>Provinces we have monitored during this cycle are: {% for province in province_count %} <a href="#{{ province.cycle_result_set__site__province__slug }}">{{ province.cycle_result_set__site__province__name }}</a>, {% endfor %} and the <a href="#nat">National</a> overview.</p>
+            </div>
 
-                <div id="fixed-location-nav">
-                  <p>Provinces we have monitored during this cycle are: {% for province in province_count %} <a href="#{{ province.cycle_result_set__site__province__slug }}">{{ province.cycle_result_set__site__province__name }}</a>, {% endfor %} and the <a href="#nat">National</a> overview.</p>
-                </div>
+          </div> <!-- end col-md-6 -->
 
-              </div><!-- end col-md-6 -->
+          <div class="col-md-6">
+            <div class="monitor-resources">
+              <h3>Monitor Resources</h3>
+              <a id="odk-collect" href="{% static 'resources/ODK_collect_user_guide.pdf' %}" target="_blank">Guide for monitors in the field using ODK</a>
+              {% include "odk_credentials.html" %}
+            </div>
+          </div>
+        </div> <!-- end row -->
+      </div> <!-- end monitoring period -->
 
-              <div class="col-md-6">
-                <div class="monitor-resources">
-                  <h3>Monitor Resources</h3>
-                </div>
-              </div>
-
-            </div> <!-- end row -->              
-          </div> <!-- end monitoring period -->
-
-        </div>
-      </div>
     </div>
 
     <div class="row">
@@ -89,21 +86,22 @@
 
               <div class="col-md-4 col-sm-4 col-xs-6">
                 <div class="callouts">
-                    <h3 class="callouts-figure">{{ this_cycle_resultset.count }}</h3>
-                    <p class="callouts-desc">Sites Monitored</p>
+                  <h3 class="callouts-figure">{{ this_cycle_resultset.count }}</h3>
+                  <p class="callouts-desc">Sites Monitored</p>
                 </div>
               </div>
-
               <div class="col-md-4 col-sm-4 col-xs-6">
                 <div class="callouts">
-                    <h3 class="callouts-figure">{{ total_count.count }}</h3>
-                    <p class="callouts-desc">Participants</p>
+                  <h3 class="callouts-figure">{{ total_count.count }}</h3>
+                  <p class="callouts-desc">Participants</p>
                 </div>
               </div>
             </div>
 
             <!-- downloadable resources -->
-            <p><a href="{% url 'national-summary-pdf' survey_type_slug=survey_type.slug cycle_id=this_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Summary</a> &nbsp;&nbsp;<a href="{% url 'national-poster-pdf' survey_type_slug=survey_type.slug cycle_id=this_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Poster</a></p>
+            <p><a href="{% url 'national-summary-pdf' survey_type_slug=survey_type.slug cycle_id=this_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Summary</a> &nbsp;&nbsp;
+            <a href="{% url 'national-poster-pdf' survey_type_slug=survey_type.slug cycle_id=this_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Poster</a></p>
+
           </div>
         </section>
 
@@ -114,9 +112,9 @@
             <div class="container">
               <h3 id="{{ province.cycle_result_set__site__province__slug }}">{{ province.cycle_result_set__site__province__name }}
                 <small>
-                <a href="{% url 'province-summary-pdf' survey_type_slug=survey_type.slug province_slug=province.cycle_result_set__site__province__slug cycle_id=this_cycle.id %}">Summary</a>
-                 |
-                 <a href="{% url 'province-poster-pdf' survey_type_slug=survey_type.slug province_slug=province.cycle_result_set__site__province__slug cycle_id=this_cycle.id %}">Poster</a>
+                  <a href="{% url 'province-summary-pdf' survey_type_slug=survey_type.slug province_slug=province.cycle_result_set__site__province__slug cycle_id=this_cycle.id %}">Summary</a>
+                   |
+                   <a href="{% url 'province-poster-pdf' survey_type_slug=survey_type.slug province_slug=province.cycle_result_set__site__province__slug cycle_id=this_cycle.id %}">Poster</a>
                 </small>
               </h3>
             </div>
@@ -127,23 +125,27 @@
             <div class="row">
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <h4>{{ site.cycle_result_set__site__name }} <small>{{ site.dcount }} participants</small></h4>
+                  <p><i class="fa fa-phone" aria-hidden="true"></i> {{ site.cycle_result_set__site__telephone }}</p>
                 </div>
-                <div class="col-md-3 col-sm-3 col-xs-6 survey-site-link">
-                  <a href="{% url 'site' site_slug=site.cycle_result_set__site__slug %}"><i class="fa fa-map-marker" aria-hidden="true"></i> Site information</a>
-                </div>
+
                 <div class="col-md-3 col-sm-3 col-xs-6 survey-site-link">
                   <a href="{% url 'site-result' site_slug=site.cycle_result_set__site__slug result_id=site.cycle_result_set__id %}"><i class="fa fa-bar-chart" aria-hidden="true"></i> Site results</a>
                 </div>
-              </div>
+
+                <div class="col-md-3 col-sm-3 col-xs-6 survey-site-link">
+                  <a href="{% url 'site' site_slug=site.cycle_result_set__site__slug %}"><i class="fa fa-map-marker" aria-hidden="true"></i> Site information</a>
+                </div>
             </div>
-              {% endfor %}
+          </div>
+          {% endfor %}
 
           {% endfor %}
-          </section>
-            
-        </div>
+        </section>
       </div>
+    </div>
+
   </div>
+
 </div>
 
 {% endblock %}

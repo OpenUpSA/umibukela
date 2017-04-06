@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load staticfiles %}
 
 {% block title %}{{ survey_type.name }}{% endblock %}
 
@@ -61,7 +62,8 @@
           <div class="col-md-6">
             <div class="monitor-resources">
               <h3>Monitor Resources</h3>
-
+              <a id="odk-collect" href="{% static 'resources/ODK_collect_user_guide.pdf' %}" target="_blank">Guide for monitors in the field using ODK</a>
+              {% include "odk_credentials.html" %}
             </div>
           </div>
         </div> <!-- end row -->
@@ -127,11 +129,11 @@
                 </div>
 
                 <div class="col-md-3 col-sm-3 col-xs-6 survey-site-link">
-                  <a href="{% url 'site' site_slug=site.cycle_result_set__site__slug %}"><i class="fa fa-map-marker" aria-hidden="true"></i> Site information</a>
-                </div>
-                
-                <div class="col-md-3 col-sm-3 col-xs-6 survey-site-link">
                   <a href="{% url 'site-result' site_slug=site.cycle_result_set__site__slug result_id=site.cycle_result_set__id %}"><i class="fa fa-bar-chart" aria-hidden="true"></i> Site results</a>
+                </div>
+
+                <div class="col-md-3 col-sm-3 col-xs-6 survey-site-link">
+                  <a href="{% url 'site' site_slug=site.cycle_result_set__site__slug %}"><i class="fa fa-map-marker" aria-hidden="true"></i> Site information</a>
                 </div>
             </div>
           </div>
