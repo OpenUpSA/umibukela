@@ -42,7 +42,8 @@ var questions = {{ results.questions_dict|jsonify }};
 
         <div class="col-sm-4">
           <h4>Community partner</h4>
-          <p><a href="{% url 'partner' partner_slug=result_set.partner.slug %}">{{ result_set.partner.short_name }}</a></p>
+          <div><a href="{% url 'partner' partner_slug=result_set.partner.slug %}">{{ result_set.partner.short_name }}</a></div>
+          <div><i class="fa fa-phone" aria-hidden="true"></i> <a href="tel:{{ result_set.partner.telephone }}">{{ result_set.partner.telephone }}</a></div>
         </div>
       </div>
     </div>

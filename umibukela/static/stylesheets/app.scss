@@ -855,6 +855,9 @@ blockquote cite{
   }
 }
 
+
+//== Survey Types
+
 .survey-types {
 
   h3 {
@@ -864,61 +867,99 @@ blockquote cite{
   .survey-name {
     background-color: #f2982f;
     border-left:7px solid #bd6d0f;
-    font-weight: 700;
+    font-weight: normal;
     padding: 20px 10px;
-    margin-bottom: 20px;
+    margin: 30px 0;
+    a, a:hover {
+      font-size: 14px;
+      text-transform: uppercase;
+    }
     a {
+        color: #fff;
+    }
+    a:hover {
+      color: #000;
+    }
+  }
+
+}
+
+#cycles {
+
+  .survey-type-detail-desc {
+    margin: 15px 0;
+  }
+  .monitoring-period {
+    margin-bottom: 15px;
+    .cycle-btn {
+      margin-bottom: 15px;
+      .btn, .btn-default {
+        box-shadow: 0 4px 0 #d77809;
+        background-color: #f6921d;
+        color: #fff;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+    }
+    #fixed-location-nav {
+      a {
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  .location-item {
+    background-color: #1a6378;
+    background-image: url(../img/bg-texture.png);
+    padding-bottom: 10px;
+    a {
+      text-transform: uppercase;
+    }
+    .cycle-callouts {
+      margin-bottom: 10px;
+    }
+    h3.select-cycle {
+      color: #fff;
+      font-size: 2.2em;
+      font-weight: 600;
+    }
+    h4 {
       color: #fff;
     }
-  }
-
-  .survey-resources {
-
-    margin: 20px 0px;
-    list-style-type: none;
-
-    .survey-resources a:hover {
-      color: #f7f7f7;
-    }
-    .resource-c1, .resource-c2, .resource-c3 {
-      list-style-type: none;
-      padding: 10px 10px;
-      margin-bottom: 20px;
-      color: #f7f7f7;
-      font-weight: 700;
-    }
-
-    .resource-c1 {
-      background-color: #669933;
-      border-left: 7px solid #457910;
-    }
-    .resource-c1 a {
-      color: #457910;
-    }
-    .resource-c2 {
-      background-color: #236477;
-      border-left: 7px solid #0c495a;
-    }
-    .resource-c2 a {
-      color: #0c495a;
-    }
-    .resource-c3 {
-      background-color: #bb0a0a;
-      border-left: 7px solid #a20505;
-    }
-    .resource-c3 a {
-      color: #a20505; 
-    }
-    .resource-context {
-      font-weight: 300;
+    .callouts {
+      text-align: center;
+      .callouts-figure {
+        color: #fff;
+        font-size: 2.2em;
+        font-weight: 600;
+      }
+      .callouts-desc {
+        font-size: 16px;
+        color: #fff;
+      }
     }
   }
-
+  .provinces {
+    .province-title {
+      background-color: #f1f1f1;
+      h3 { margin-bottom: 22px; }
+    }
+    .survey-site-link {
+      margin-top: 11px;
+      a {
+        text-transform: uppercase;
+        font-size: 14px;
+      }
+    }
+  }
 
 }
 
 
+
+
 //== Social Media
+
 a.social-media{
   display: inline-block;
   float: right;

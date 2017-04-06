@@ -441,6 +441,8 @@ def survey_types(request):
     return render(request, 'survey_types.html', {
         'active_tab': 'surveys',
         'survey_types': survey_types,
+        'username': settings.BLACKSASH_KOBO_USERNAME,
+        'password': settings.BLACKSASH_KOBO_PASSWORD,
     })
 
 
@@ -486,8 +488,9 @@ def survey_type(request, survey_type_slug):
             'cycle_result_set__id',
             'cycle_result_set__site',
             'cycle_result_set__site__slug',
-            'cycle_result_set__site__name'
-        ).annotate(dcount=Count('cycle_result_set__site'))
+            'cycle_result_set__site__telephone',
+            'cycle_result_set__site__name').annotate(
+            dcount=Count('cycle_result_set__site'))
         province['sites'] = site_count
 
     return render(request, 'survey_type_detail.html', {
@@ -540,6 +543,7 @@ def survey_type_cycle(request, survey_type_slug, cycle_id):
             ).values(
             'cycle_result_set__id',
             'cycle_result_set__site',
+            'cycle_result_set__site__telephone',
             'cycle_result_set__site__slug',
             'cycle_result_set__site__name').annotate(
             dcount=Count('cycle_result_set__site'))
@@ -1015,10 +1019,3 @@ def create_materials_zip(request, cycle_id):
             })
     Cycle.schedule_create_materials_zip(cycle_id, artifacts)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def kobo_credentials(request):
-    return render(request, 'admin/kobo_credentials.html', {
-        'username': settings.BLACKSASH_KOBO_USERNAME,
-        'password': settings.BLACKSASH_KOBO_PASSWORD,
-    })

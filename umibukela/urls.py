@@ -59,7 +59,7 @@ urlpatterns = patterns(
         name='survey-types'),
     url(r'^survey-types/(?P<survey_type_slug>[\w-]+)$',
         'umibukela.views.survey_type',
-        name='survey_type'),
+        name='survey-type'),
     url(r'^survey-types/(?P<survey_type_slug>[\w-]+)/(?P<cycle_id>[\w-]+)$',
         'umibukela.views.survey_type_cycle',
         name='survey-type-cycle'),

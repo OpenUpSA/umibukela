@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load staticfiles %}
 
 {% block title %}Surveys{% endblock %}
 {% block page-content %}
@@ -24,49 +25,49 @@
 
 </div>
 
-<section class="survey-types ">
+<section class="survey-types">
   
-  <!-- begin container -->
   <div class="container">
 
-  <div class="info">
-  <h2>Survey types are these things.</h2>
-    <p>Aenean varius felis neque, quis tincidunt magna posuere quis. Nulla aliquam libero eu nunc egestas blandit. Sed dignissim porta tellus et placerat. Sed at feugiat metus.</p>
-  </div>
+    <div class="row info">
+      <div class="col-md-8">
+        <p>The Black Sash and Community Partners have been promoting citizens’ monitoring for a number of years. We work with the Department of Planning, Monitoring and Evaluation (DPME) to learn and demonstrate how government can make citizen voices an integral part of the way public services are managed.</p>
+      </div>
+    </div>
 
-  <div class="row">
-
-    <div class="col-md-6 col-xs-12">
-      <h3>Survey types</h3>
-        <div class="row">
-          {% for type in survey_types %}
-          <div class="survey-name col-md-6">        
-            <a href="{% url 'survey_type' survey_type_slug=type.slug %}">{{ type.name }}</a>
+    <div class="row">
+      <div class="col-md-12">
+          <div class="row">
+              {% for type in survey_types %}
+              <div class="col-xs-6 col-md-3">
+                <div class="survey-name">     
+                  <a href="{% url 'survey-type' survey_type_slug=type.slug %}">{{ type.name }}</a>
+                  <p>{{ type.short_description }}</p>
+                </div>
+              </div>
+              {% endfor %}
           </div>
-          {% endfor %}
-        </div>
+      </div>
     </div>
 
-    <div class="col-md-6 col-xs-12">
-      <h3>Monitor Resources</h3>
-      <ul class="survey-resources">
-        
-        <li class="resource-c1">
-          <i class="fa fa-book" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Monitoring Handbook <a href="#" target="_blank"> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a><br><span class="resource-context">Aliquam libero metus, feugiat non lorem ut, lobortis dignissim risus.</span>
-        </li>
+  </div>
+</section>
 
-        <li class="resource-c2">
-          <i class="fa fa-print" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Paper-based RTP form <a href="#" target="_blank"> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a><br><span class="resource-context">Aliquam libero metus, feugiat non lorem ut, lobortis dignissim risus.</span>
-        </li>
-
-        <li class="resource-c3">
-          <i class="fa fa-list" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Link to form <a href="#" target="_blank"> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a><br><span class="resource-context">Aliquam libero metus, feugiat non lorem ut, lobortis dignissim risus.</span>
-        </li>
-
-      </ul>
+<section class="resources">
+  <div class="container">
+    <h2>Resources</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <a id="odk-collect" href="{% static 'resources/ODK_collect_user_guide.pdf' %}" target="_blank">Guide for monitors in the field using ODK</a>
+        {% if user.is_superuser %}
+          <div>URL: <code>https://kc.kobotoolbox.org/blacksash</code></div>
+          <div>Username: <code>{{ username }}</code></div>
+          <div>Password: <code>{{ password }}</code></div>
+        {% else %}
+          <p>In order to see the ODK Collect login details, please <a href="/admin/login/?next=/survey-types#odk-collect">log in</a>.</p>
+        {% endif %}
+      </div>
     </div>
-  
-  </div> <!-- end col-md-6 row -->
   </div>
 </section>
 
