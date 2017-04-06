@@ -16,7 +16,7 @@
 </div>
 <!-- /breadcrumbs -->
 
-<div class="section" id="cycles">
+<div class="section survey-type">
 
   <!-- section-header -->
   <div class="section-heading">
@@ -31,7 +31,7 @@
           
       <div class="monitoring-period">
 
-        <div class="row">
+        <div class="row description">
           <div class="col-sm-10">
             <p class="survey-type-detail-desc">{{ survey_type.full_description }}</p>
           </div>
@@ -62,7 +62,7 @@
           <div class="col-md-6">
             <div class="monitor-resources">
               <h3>Monitor Resources</h3>
-              <a id="odk-collect" href="{% static 'resources/ODK_collect_user_guide.pdf' %}" target="_blank">Guide for monitors in the field using ODK</a>
+              <a href="{% static 'resources/ODK_collect_user_guide.pdf' %}" target="_blank">Guide for monitors in the field using ODK</a>
               {% include "odk_credentials.html" %}
             </div>
           </div>

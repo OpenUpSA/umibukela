@@ -36,6 +36,7 @@ $brand-primary-dark: darken($brand-primary,10%);
 
 $brand-secondary: $green;
 
+$brand-secondary-extra-light: lighten($brand-secondary,50%);
 $brand-secondary-light: lighten($brand-secondary,10%);
 $brand-secondary-dark: darken($brand-secondary,10%);
 
@@ -132,6 +133,13 @@ $input-border-focus: transparent !default;
 //============================================================================================
 
 // CUSTOM CSS
+
+
+//== code
+code {
+  color: $brand-secondary !important;
+  background-color: $brand-secondary-extra-light !important;
+}
 
 //== mixins
 @mixin background-texture {
@@ -885,7 +893,11 @@ blockquote cite{
 
 }
 
-#cycles {
+.survey-type {
+
+  .description {
+    margin-top: 15px;
+  }
 
   .survey-type-detail-desc {
     margin: 15px 0;
@@ -956,7 +968,13 @@ blockquote cite{
 
 }
 
+//== ODK Credentials
 
+#odk-howto {
+  img {
+    width: 100%; 
+  }
+}
 
 
 //== Social Media

@@ -497,6 +497,8 @@ def survey_type(request, survey_type_slug):
         'total_count': total_count,
         'province_count': province_count,
         'latest_cycle_resultset': latest_cycle_resultset,
+        'username': settings.BLACKSASH_KOBO_USERNAME,
+        'password': settings.BLACKSASH_KOBO_PASSWORD,
     })
 
 
@@ -553,6 +555,8 @@ def survey_type_cycle(request, survey_type_slug, cycle_id):
         'total_count': total_count,
         'province_count': province_count,
         'this_cycle_resultset': this_cycle_resultset,
+        'username': settings.BLACKSASH_KOBO_USERNAME,
+        'password': settings.BLACKSASH_KOBO_PASSWORD,
     })
 
 
