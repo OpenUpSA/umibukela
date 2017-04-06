@@ -300,12 +300,30 @@ class SurveyType(models.Model):
         return self.name
 
 
+class KoboProject(models.Model):
+    # Kobo is deprecating projects so from this point on,
+    # when we refer to a kobo project (a form and its submissions),
+    # the formid field is the unique reference for the URLs
+    # https://kc.kobotoolbox.org/api/v1/forms/69399?format=json (project)
+    # https://kc.kobotoolbox.org/api/v1/forms/69399/form.json (the xform as json)
+    # https://kc.kobotoolbox.org/api/v1/data/69399?format=json (the submissions)
+    form_id = models.IntegerField(unique=True, null=False)
+    name = models.CharField(max_length=200)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return "%d: %s" % (self.form_id, self.name)
+
+
 class Survey(models.Model):
     name = models.CharField(max_length=200, unique=True)
-    cycle = models.ForeignKey(Cycle, related_name="surveys")
+    cycle = models.ForeignKey(Cycle)
     type = models.ForeignKey(SurveyType)
     form = jsonfield.JSONField()
     map_to_form = jsonfield.JSONField(blank=True, null=True)
+    kobo_project = models.ForeignKey(KoboProject, null=True)
 
     def __getattribute__(self, attrname):
         attr = super(Survey, self).__getattribute__(attrname)
@@ -330,7 +348,7 @@ class Survey(models.Model):
         kobo = Kobo.from_refresh_token(refresh_token.token)
         refresh_token.token = kobo.refresh_token
         refresh_token.save()
-        responses = kobo.get_responses(self.surveykoboproject.form_id)
+        responses = kobo.get_responses(self.koboproject.form_id)
         if self.form.get_by_path('facility'):
             facility_q_name = 'facility'
         elif self.form.get_by_path('site'):
@@ -348,23 +366,6 @@ class Survey(models.Model):
                 answers=response,
                 cycle_result_set=facility_crs[facility_name]
             )
-
-
-class SurveyKoboProject(models.Model):
-    survey = models.OneToOneField(Survey, on_delete=models.CASCADE, primary_key=True)
-    # Kobo is deprecating projects so from this point on,
-    # when we refer to a kobo project (a form and its submissions),
-    # the formid field is the unique reference for the URLs
-    # https://kc.kobotoolbox.org/api/v1/forms/69399?format=json (project)
-    # https://kc.kobotoolbox.org/api/v1/forms/69399/form.json (the xform as json)
-    # https://kc.kobotoolbox.org/api/v1/data/69399?format=json (the submissions)
-    form_id = models.IntegerField(unique=True, null=False)
-
-    class Meta:
-        ordering = ('survey__name',)
-
-    def __str__(self):
-        return "Kobo project %d: %s" % (self.form_id, self.survey)
 
 
 class UserKoboRefreshToken(models.Model):

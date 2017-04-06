@@ -31,7 +31,7 @@ from .models import (
     Site,
     Submission,
     Survey,
-    SurveyKoboProject,
+    KoboProject,
     SurveyType,
     UserKoboRefreshToken,
 )
@@ -571,7 +571,7 @@ def survey_from_kobo(request):
             form = r.json()
             survey = Survey(name=form['title'], form=r.text)
             survey.save()
-            survey_kobo_project = SurveyKoboProject(survey=survey, form_id=form_id)
+            survey_kobo_project = KoboProject(survey=survey, form_id=form_id)
             survey_kobo_project.save()
             return redirect('/admin/umibukela/survey/%d' % survey.id)
         else:
@@ -580,7 +580,7 @@ def survey_from_kobo(request):
             r.raise_for_status()
             available_surveys = []
             for survey in r.json():
-                if not SurveyKoboProject.objects.filter(form_id=survey['formid']).count():
+                if not KoboProject.objects.filter(form_id=survey['formid']).count():
                     available_surveys.append(survey)
             return render(request, 'survey_from_kobo.html', {
                 'forms': available_surveys,
@@ -595,7 +595,7 @@ def survey_kobo_submissions(request, survey_id):
             'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
         }
         survey = get_object_or_404(Survey, id=survey_id)
-        form_id = survey.surveykoboproject.form_id
+        form_id = survey.koboproject.form_id
         r = requests.get("https://kc.kobotoolbox.org/api/v1/data/%s" % form_id, headers=headers)
         r.raise_for_status()
         submissions = r.json()

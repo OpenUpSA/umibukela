@@ -11,6 +11,14 @@ Local Development
 3. Install dependencies: `pip install -r requirements.txt`
 4. Setup the database:
 
+As database superuser
+```
+postgres=#  create database umibukela with owner umibukela;
+postgres=# \c umibukela
+umibukela=# create extension postgis;
+```
+
+On the OS command line with the python environment activated:
 ```
 python manage.py migrate
 python manage.py createsuperuser
