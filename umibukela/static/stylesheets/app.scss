@@ -504,13 +504,36 @@ img.img-rounded-border {
   .explore-menu{
     background-color: $brand-secondary-light;
     @include background-texture;
-    a:first-child {
+    a {
       margin-right: 10px;
     }
   }
 
-  .signup-cta-lg {
+  .survey-section {
     background-color: $brand-secondary-light;
+    @include background-texture;
+    .survey-name {
+      background-color: $brand-primary;
+      border-bottom: 7px solid $brand-primary-dark;
+      border-radius: 6px;
+      font-weight: normal;
+      padding: 20px 10px;
+      margin: 30px 0;
+      a, a:hover {
+        font-size: 14px;
+        text-transform: uppercase;
+      }
+      a {
+          color: #fff;
+      }
+      a:hover {
+        color: #000;
+      }
+    }
+  }
+
+  .signup-cta-lg {
+    background-color: $brand-secondary-extra-light;
     @include background-texture;
   }
 }
@@ -873,31 +896,35 @@ blockquote cite{
     margin: 30px 0px;
   }
 
-  .survey-name {
-    background-color: #f2982f;
-    border-left:7px solid #bd6d0f;
-    font-weight: normal;
-    padding: 20px 10px;
-    margin: 30px 0;
-    a, a:hover {
-      font-size: 14px;
-      text-transform: uppercase;
+  .types {
+    margin-top: 30px;
+
+    .survey-name {
+      background-color: $brand-primary;
+      border-left:7px solid $brand-primary-dark;
+      font-weight: normal;
+      padding: 20px 10px;
+      margin: 30px 0;
+      a, a:hover {
+        font-size: 14px;
+        text-transform: uppercase;
+      }
+      a {
+          color: #fff;
+      }
+      a:hover {
+        color: #000;
+      }
     }
-    a {
-        color: #fff;
-    }
-    a:hover {
-      color: #000;
-    }
+  }
+
+  .resources {
+    margin-bottom: 30px;
   }
 
 }
 
 .survey-type {
-
-  .description {
-    margin-top: 15px;
-  }
 
   .survey-type-detail-desc {
     margin: 15px 0;
