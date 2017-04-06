@@ -67,7 +67,6 @@ class Province(models.Model):
     def __str__(self):
         return self.name
 
-
 class Funder(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
@@ -98,7 +97,7 @@ class Partner(models.Model):
 
     def completed_result_sets(self):
         result_sets = list(self.cycle_result_sets.filter(
-            cycle__end_date__lte=timezone.now(),
+            survey__cycle__end_date__lte=timezone.now(),
             published=True
         ).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
@@ -153,7 +152,7 @@ class Site(models.Model):
 
     def completed_result_sets(self):
         result_sets = list(self.cycle_result_sets.filter(
-            cycle__end_date__lte=timezone.now(),
+            survey__cycle__end_date__lte=timezone.now(),
             published=True
         ).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
@@ -186,11 +185,18 @@ class CycleFrequency(models.Model):
         return self.name
 
 
+
+
 class Programme(models.Model):
     short_name = models.CharField(max_length=100, unique=True)
     long_name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
     frequency = models.ForeignKey(CycleFrequency, null=True, blank=True)
+
+    def cycles(self):
+        cycles = list(set(Cycle.objects.all()))
+        cycles.sort(key=lambda p: p.name)
+        return cycles
 
     def __str__(self):
         return self.long_name
@@ -283,7 +289,9 @@ class Cycle(models.Model):
 class SurveyType(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
-    description = models.TextField(help_text="This is a short line to indicate who is being surveyed to what degree, e.g. \"Light-touch survey completed by users of facility X\"")
+    short_description = models.TextField(help_text="This is a short line to indicate who is being surveyed to what degree, e.g. \"Light-touch survey completed by users of facility X\"")
+    full_description = models.TextField(help_text="This is a thorough description used to fully explain the purpose behind the surveys of this type.")
+    public = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('name',)
@@ -294,6 +302,8 @@ class SurveyType(models.Model):
 
 class Survey(models.Model):
     name = models.CharField(max_length=200, unique=True)
+    cycle = models.ForeignKey(Cycle, related_name="surveys")
+    type = models.ForeignKey(SurveyType)
     form = jsonfield.JSONField()
     map_to_form = jsonfield.JSONField(blank=True, null=True)
 
@@ -313,7 +323,7 @@ class Survey(models.Model):
     @property
     def programme(self):
         # Assumes all cycle_result_sets of a Survey have the same Cycle
-        return self.cycle_result_sets.first().cycle.programme
+        return self.cycle_result_sets.first().survey.cycle.programme
 
     def import_submissions(self):
         refresh_token = self.programme.kobo_refresh_token
@@ -363,7 +373,7 @@ class ProgrammeKoboRefreshToken(models.Model):
 
 class CycleResultSet(models.Model):
     """
-    An entity representing the data collection cycle for a given site
+    An entity representing the data collection period for a given site
     and survey type, by the partner that collected the data for that site in
     the given cycle.
 
@@ -375,13 +385,11 @@ class CycleResultSet(models.Model):
     Cycle per site, the cycle start and end dates and name would be repeated
     for each site.
     """
-    cycle = models.ForeignKey(Cycle, related_name="cycle_result_sets")
     site = models.ForeignKey(Site, related_name='cycle_result_sets')
     site_option_name = models.TextField()
     partner = models.ForeignKey(Partner, related_name='cycle_result_sets')
     # This is meant to allow identifying comparable CycleResultSets
     # which don't necessarily have exactly the same survey
-    survey_type = models.ForeignKey(SurveyType, null=True, blank=True)
     survey = models.ForeignKey(Survey, null=True, blank=True, related_name="cycle_result_sets")
     monitors = models.ManyToManyField("Monitor", blank=True, help_text="Only monitors for the current partner are shown. If you update the Partner you'll have to save and edit this Cycle Result Set again to see the available monitors.")
     funder = models.ForeignKey(Funder, null=True, blank=True, on_delete=models.SET_NULL)
@@ -392,22 +400,22 @@ class CycleResultSet(models.Model):
     published = models.BooleanField(null=False, blank=False, help_text="Whether the results may be listed publicly with the assumption that it's somewhat validated", default=False)
 
     class Meta:
-        unique_together = ('cycle', 'site', 'survey_type')
+        unique_together = ('site', 'survey')
         ordering = ('site__name', 'partner__short_name')
 
     def __str__(self):
         return "%s <- %s (%s: %s)" % (
-            self.site.name, self.partner.short_name, self.survey_type, self.cycle
+            self.site.name, self.partner.short_name, self.survey.type, self.survey.cycle
         )
 
     def end_date_cmp(a, b):
-        return Cycle.end_date_cmp(a.cycle, b.cycle)
+        return Cycle.end_date_cmp(a.survey.cycle, b.survey.cycle)
 
     def get_previous(self):
         result_sets = list(CycleResultSet.objects.filter(
-            cycle__end_date__lte=self.cycle.start_date,
+            survey__cycle__end_date__lte=self.survey.cycle.start_date,
             site__exact=self.site,
-            survey_type=self.survey_type,
+            survey__type=self.survey.type,
             published=True
         ).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp)

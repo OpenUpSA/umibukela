@@ -53,6 +53,17 @@ urlpatterns = patterns(
         'umibukela.views.comments_pdf',
         name='site-result-comments-pdf'),
 
+    # survey types
+    url(r'^survey-types$',
+        'umibukela.views.survey_types',
+        name='survey-types'),
+    url(r'^survey-types/(?P<survey_type_slug>[\w-]+)$',
+        'umibukela.views.survey_type',
+        name='survey-type'),
+    url(r'^survey-types/(?P<survey_type_slug>[\w-]+)/(?P<cycle_id>[\w-]+)$',
+        'umibukela.views.survey_type_cycle',
+        name='survey-type-cycle'),
+
     url(r'^partners$',
         'umibukela.views.partners',
         name='partners'),

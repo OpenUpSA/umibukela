@@ -21,7 +21,7 @@
       <div class="funder-logo {{ result_set.funder.name|slugify }}"></div>
       <div class="black-sash-logo"></div>
       <h1 class="partner {% if result_set.partner.full_name|length > 50 %}long{% endif %}">{{ result_set.partner.full_name }}</h1>
-      <h3 class="date">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
+      <h3 class="date">{{ result_set.survey.cycle.start_date|date:'F' }} / {{ result_set.survey.cycle.end_date|date:'F' }} {{ result_set.survey.cycle.end_date|date:'Y' }}</h3>
       <h2 class="site {% if site|length > 40 %}long{% endif %}">{% if sector %}{{ sector }}: {% endif %}{{ site }}</h2>
     </header>
 

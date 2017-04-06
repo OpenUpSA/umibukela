@@ -8,7 +8,7 @@
 {% block js %}
 <script type="text/javascript">
   var questions = {{ questions_dict | jsonify }};
-  var cycleYears = [{{ result_set.get_previous.cycle.end_date|date:'Y' }}, {{ result_set.cycle.end_date|date:'Y' }}];
+  var cycleYears = [{{ result_set.get_previous.survey.cycle.end_date|date:'Y' }}, {{ result_set.survey.cycle.end_date|date:'Y' }}];
 </script>
 {% javascript "print-materials" %}
 {% endblock %}
@@ -76,7 +76,7 @@
       <header class="header" style="background-image: url({% static 'img/banner-large.png' %})">
         <h1 class="banner">Community Monitoring</h1>
         <h1 class="partner">{{ partner.full_name }}</h1>
-        <h3 class="date text-xs-right">{{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}</h3>
+        <h3 class="date text-xs-right">{{ result_set.survey.cycle.start_date|date:'F' }} / {{ result_set.survey.cycle.end_date|date:'F' }} {{ result_set.survey.cycle.end_date|date:'Y' }}</h3>
         <h3 class="site">{{ site }}</h3>
         <div class="funder-logo {{ result_set.funder.name|slugify }}"></div>
         <div class="black-sash-logo"></div>
@@ -99,7 +99,7 @@
               <p>Survey respondents were not identified, so they could express their opinions freely. The questionnaire was developed by the Black Sash with Community Partners based on its own work.
               {% if "SASSA" in result_set.survey.name %}It was shown to SASSA and DPME for comments and input.{% endif %}
               The surveys try to highlight the VOICES of poor people and in particular that of women and girls.</p>
-              <p>The survey was conducted in {{ result_set.cycle.start_date|date:'F' }} / {{ result_set.cycle.end_date|date:'F' }} {{ result_set.cycle.end_date|date:'Y' }}.</p>
+              <p>The survey was conducted in {{ result_set.survey.cycle.start_date|date:'F' }} / {{ result_set.survey.cycle.end_date|date:'F' }} {{ result_set.survey.cycle.end_date|date:'Y' }}.</p>
             </div>
           </div>
         </div>

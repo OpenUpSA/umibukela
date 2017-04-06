@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+
+{% block title %}Surveys{% endblock %}
+{% block page-content %}
+
+<!-- breadcrumbs -->
+<div class="container breadcrumb-container">
+  <ol class="breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li class="active">Surveys</li>
+  </ol>
+</div>
+<!-- /breadcrumbs -->
+
+<div class="section" id="survey-types">
+
+  <!-- section-header -->
+  <div class="section-heading">
+    <div class="container">
+      <h1><i class="fa fa-file-text-o"></i> Surveys</h1>
+    </div>
+  </div>
+  <!-- /section-header -->
+
+</div>
+
+<div class="survey-types">
+  <section class="types">
+    
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-8">
+          <p>The Black Sash and Community Partners have been promoting citizens’ monitoring for a number of years. We work with the Department of Planning, Monitoring and Evaluation (DPME) to learn and demonstrate how government can make citizen voices an integral part of the way public services are managed.</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                {% for type in survey_types %}
+                <div class="col-xs-6 col-md-3">
+                  <div class="survey-name">     
+                    <a href="{% url 'survey-type' survey_type_slug=type.slug %}">{{ type.name }}</a>
+                    <p>{{ type.short_description }}</p>
+                  </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="resources">
+    <div class="container">
+      <h2>Resources</h2>
+      <div class="row">
+        <div class="col-md-6">
+          <a id="odk-collect" href="{% static 'resources/ODK_collect_user_guide.pdf' %}" target="_blank">Guide for monitors in the field using ODK</a>
+          {% include "odk_credentials.html" %}
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+{% endblock %}

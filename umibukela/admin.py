@@ -37,10 +37,6 @@ class AdminSite(admin.AdminSite):
                 name='cycle-create-zip'
             ),
             url(
-                r'^umibukela/kobo_credentials$',
-                self.admin_view(views.kobo_credentials)
-            ),
-            url(
                 r'^umibukela/kobo_forms/(?P<kobo_form_id>\d+)/site/(?P<site_name>\w+)/preview$',
                 self.admin_view(views.kobo_form_site_preview)
             ),
@@ -99,8 +95,18 @@ class CycleResultSetAdmin(admin.ModelAdmin):
         CycleResultSetAttachmentInline,
     ]
     form = CycleResultSetForm
-    list_filter = ('cycle__programme', 'survey_type', 'site__province', 'funder', 'cycle')
-    list_display = ('id', 'survey', 'cycle', 'site', 'partner')
+    list_filter = (
+        'survey__cycle__programme',
+        'survey__type',
+        'site__province',
+        'funder',
+        'survey__cycle'
+    )
+
+    def cycle(instance):
+        return instance.survey.cycle
+
+    list_display = ('id', 'survey', cycle, 'site', 'partner')
 
 
 class CycleAdmin(admin.ModelAdmin):
@@ -108,8 +114,8 @@ class CycleAdmin(admin.ModelAdmin):
     def change_view(self, request, id, extra_context=None):
         extra_context = extra_context or {}
 
-        cycle_result_sets = CycleResultSet.objects.filter(cycle__id=id)\
-                                .order_by('site__province', 'partner', 'site', 'survey_type')
+        cycle_result_sets = CycleResultSet.objects.filter(survey__cycle__id=id)\
+                                .order_by('site__province', 'partner', 'site', 'survey__type')
         extra_context['cycle_result_sets'] = cycle_result_sets
         return super(CycleAdmin, self).change_view(request, id, extra_context=extra_context)
 

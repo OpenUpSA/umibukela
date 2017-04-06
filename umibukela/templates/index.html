@@ -24,12 +24,13 @@
     <div class="container">
       <a href="{% url 'sites' %}" class="btn btn-primary uppercase">Explore Sites</a>
       <a href="{% url 'partners' %}" class="btn btn-primary uppercase">Explore Community partners</a>
+      <a href="{% url 'survey-types' %}" class="btn btn-primary uppercase">Explore Surveys</a>
     </div>
   </section>
 
   <section class="section video-section text-center">
     <div class="container">
-      <div class="row">
+      <div class="row video">
         <div class="col-md-8 col-md-offset-2">
           <h2>Why Community-Based Monitoring is Important</h2>
 
@@ -38,6 +39,30 @@
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="section survey-section text-center">
+    <div class="container">
+      <h2>Our surveys</h2>
+      <div class="row info">
+        <div class="col-md-8 col-md-offset-2">
+          <p>The Black Sash and Community Partners have been promoting citizens’ monitoring for a number of years. We work with the Department of Planning, Monitoring and Evaluation (DPME) to learn and demonstrate how government can make citizen voices an integral part of the way public services are managed.</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                {% for type in survey_types %}
+                <div class="type col-xs-6 col-md-3">
+                  <a class="btn btn-primary uppercase" href="{% url 'survey-type' survey_type_slug=type.slug %}">{{ type.name }}</a>
+                  <div class="description">{{ type.short_description }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+      </div>    
     </div>
   </section>
 

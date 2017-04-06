@@ -67,9 +67,9 @@
       {% for rs in site.completed_result_sets %}
         <section class="row stat-row cycle">
           <div class="col-xs-12 col-sm-3 col-md-4 stat">
-            <h3>{{ rs.cycle.programme.long_name }}</h3>
+            <h3>{{ rs.survey.cycle.programme.long_name }}</h3>
             <div class="name">
-              <p>{{ rs.cycle.start_date|date:'j F Y' }} - {{ rs.cycle.end_date|date:'j F Y' }}</p>
+              <p>{{ rs.survey.cycle.start_date|date:'j F Y' }} - {{ rs.survey.cycle.end_date|date:'j F Y' }}</p>
               <a class="btn btn-primary" href="{% url 'site-result' site_slug=site.slug result_id=rs.id %}">View results</a>
             </div>
           </div>
@@ -99,15 +99,15 @@
         <div class="panel-body">
           {% if site.latest_complete_result %}
           <div class="programme">
-            <h3 class="programme-name">{{ site.latest_complete_result.cycle.programme.long_name }}</h3>
+            <h3 class="programme-name">{{ site.latest_complete_result.survey.cycle.programme.long_name }}</h3>
             <div class="programme-description">
-              {{ site.latest_complete_result.cycle.programme.description }}
+              {{ site.latest_complete_result.survey.cycle.programme.description }}
             </div>
-            <div class="programme-frequency"><strong>Frequency:</strong> {{ site.latest_complete_result.cycle.programme.frequency.name }}</div>
+            <div class="programme-frequency"><strong>Frequency:</strong> {{ site.latest_complete_result.survey.cycle.programme.frequency.name }}</div>
             <div class="programme-last-cycle"><strong>Latest cycle:</strong>
               <a href="{% url 'site-result' site_slug=site.slug result_id=site.latest_complete_result.id %}">
-                {{ site.latest_complete_result.cycle.start_date|date:'j F Y' }}
-                  - {{ site.latest_complete_result.cycle.end_date|date:'j F Y' }}
+                {{ site.latest_complete_result.survey.cycle.start_date|date:'j F Y' }}
+                  - {{ site.latest_complete_result.survey.cycle.end_date|date:'j F Y' }}
               </a>
               <a href="{% url 'site-result' site_slug=site.slug result_id=site.latest_complete_result.id %}" class="btn btn-primary btn-sm">View results</a></div>
           </div>

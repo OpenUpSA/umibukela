@@ -2,6 +2,7 @@ from collections import Counter
 from datetime import datetime
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.db.models import Count
 from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -41,10 +42,11 @@ TRIM_TYPE_RE = r" - Citizen"
 
 
 def home(request):
+    survey_types = SurveyType.objects.filter(public=True).all()
     return render(request, 'index.html', {
         'active_tab': 'home',
+        'survey_types': survey_types,
     })
-
 
 def about(request):
     return render(request, 'about.html', {
@@ -183,8 +185,8 @@ def summary(request, site_slug, result_id):
         'form': form,
         'text_questions': text_questions,
         'location_name': result_set.site.name,
-        'survey_type': result_set.survey_type,
-        'cycle': result_set.cycle,
+        'survey_type': result_set.survey.type,
+        'cycle': result_set.survey.cycle,
         'gender_disagg': gender_disagg,
         'result_set': result_set,
         'results': {
@@ -239,7 +241,7 @@ def poster(request, site_slug, result_id):
                 prev_df = pandas.DataFrame(prev_responses)
                 prev_results = analysis.count_options(prev_df, prev_form['children'])
                 prev_results = analysis.calc_q_percents(prev_results)
-                prev_date = prev_result_set.cycle.start_date
+                prev_date = prev_result_set.survey.cycle.start_date
             else:
                 prev_results = None
                 prev_date = None
@@ -248,13 +250,13 @@ def poster(request, site_slug, result_id):
             prev_date = None
         analysis.combine_curr_hist(site_results, prev_results)
 
-    return render(request, poster_template(result_set.survey_type), {
+    return render(request, poster_template(result_set.survey.type), {
         'DEBUG': settings.DEBUG,
         'form': form,
-        'layout_class': slugify(result_set.survey_type.name),
+        'layout_class': slugify(result_set.survey.type.name),
         'prev_date': prev_date,
-        'start_date': result_set.cycle.start_date,
-        'end_date': result_set.cycle.end_date,
+        'start_date': result_set.survey.cycle.start_date,
+        'end_date': result_set.survey.cycle.end_date,
         'questions_dict': site_results,
         'sector': result_set.site.sector.name,
         'location': result_set.site.name,
@@ -311,14 +313,14 @@ def handout(request, site_slug, result_id):
         'questions_dict': [],
         'partner': result_set.partner,
         'site': result_set.site.name,
-        'survey_type': result_set.survey_type.id,
+        'survey_type': result_set.survey.type.id,
         'prev_date': None,
         'totals': {'male': 0, 'female': 0, 'total': 0},
         'DEBUG': settings.DEBUG,
     }
 
     if prev_result_set:
-        context['prev_date'] = prev_result_set.cycle.start_date
+        context['prev_date'] = prev_result_set.survey.cycle.start_date
 
     if responses:
         df = pandas.DataFrame(responses)
@@ -389,8 +391,8 @@ def comments(request, site_slug, result_id):
         'form': form,
         'text_questions': text_questions,
         'location_name': result_set.site.name,
-        'survey_type': result_set.survey_type,
-        'cycle': result_set.cycle,
+        'survey_type': result_set.survey.type,
+        'cycle': result_set.survey.cycle,
         'gender_disagg': gender_disagg,
         'result_set': result_set,
         'results': {
@@ -432,6 +434,129 @@ def partner(request, partner_slug):
     return render(request, 'partner_detail.html', {
         'active_tab': 'partners',
         'partner': partner,
+    })
+
+
+def survey_types(request):
+    survey_types = SurveyType.objects.filter(public=True).all()
+    return render(request, 'survey_types.html', {
+        'active_tab': 'surveys',
+        'survey_types': survey_types,
+        'username': settings.BLACKSASH_KOBO_USERNAME,
+        'password': settings.BLACKSASH_KOBO_PASSWORD,
+    })
+
+def survey_type(request, survey_type_slug):
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    cycles = list(Survey.objects.values(
+        'cycle__name',
+        'cycle__id',
+        'cycle__start_date',
+        'cycle__end_date'
+    ).filter(type=survey_type).order_by('cycle__id').distinct('cycle'))
+    cycles = sorted(cycles, key=lambda x: x['cycle__start_date'])
+    latest_cycle = Cycle.objects.get(id=cycles[-1]['cycle__id'])
+    latest_cycle_resultset = CycleResultSet.objects.filter(
+        survey__cycle=latest_cycle,
+        survey__type=survey_type).values(
+        'id',
+        'survey__type__id',
+        'partner_id',
+        'site_id',
+        )
+    total_count = Submission.objects.filter(
+        cycle_result_set__survey__cycle=latest_cycle,
+        cycle_result_set__survey__type=survey_type).values(
+        'cycle_result_set__site__province__name')
+    province_count = list(Submission.objects.filter(
+        cycle_result_set__survey__cycle=latest_cycle,
+        cycle_result_set__survey__type=survey_type).values(
+        'cycle_result_set__site__province__slug',
+        'cycle_result_set__site__province__id',
+        'cycle_result_set__site__province__name').annotate(
+        dcount=Count('cycle_result_set__site__province__name')))
+    for province in province_count:
+        site_count = Submission.objects.filter(
+            cycle_result_set__survey__cycle=latest_cycle,
+            cycle_result_set__survey__type=survey_type,
+            cycle_result_set__site__province__id=province['cycle_result_set__site__province__id'],
+        ).values(
+            'cycle_result_set__id',
+            'cycle_result_set__site',
+            'cycle_result_set__site__slug',
+            'cycle_result_set__site__telephone',
+            'cycle_result_set__site__name').annotate(
+            dcount=Count('cycle_result_set__site'))
+        province['sites'] = site_count
+
+    return render(request, 'survey_type_detail.html', {
+        'active_tab': 'surveys',
+        'survey_type': survey_type,
+        'cycles': cycles,
+        'latest_cycle': latest_cycle,
+        'total_count': total_count,
+        'province_count': province_count,
+        'latest_cycle_resultset': latest_cycle_resultset,
+        'username': settings.BLACKSASH_KOBO_USERNAME,
+        'password': settings.BLACKSASH_KOBO_PASSWORD,
+    })
+
+
+def survey_type_cycle(request, survey_type_slug, cycle_id):
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    this_cycle = get_object_or_404(Cycle, id=cycle_id)
+
+    survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
+    cycles = list(Survey.objects.values(
+        'cycle__name',
+        'cycle__id',
+        'cycle__start_date',
+        'cycle__end_date'
+    ).order_by('cycle__id').distinct('cycle').filter(type=survey_type))
+    cycles = sorted(cycles, key=lambda x: x['cycle__start_date'])
+    this_cycle_resultset = CycleResultSet.objects.filter(
+        survey__cycle=this_cycle,
+        survey__type=survey_type).values(
+        'id',
+        'survey__type_id',
+        'partner_id',
+        'site_id',
+    )
+    total_count = Submission.objects.filter(
+        cycle_result_set__survey__cycle=this_cycle,
+        cycle_result_set__survey__type=survey_type).values(
+        'cycle_result_set__site__province__name')
+    province_count = list(Submission.objects.filter(
+        cycle_result_set__survey__cycle=this_cycle,
+        cycle_result_set__survey__type=survey_type).values(
+        'cycle_result_set__site__province__slug',
+        'cycle_result_set__site__province__id',
+        'cycle_result_set__site__province__name').annotate(
+        dcount=Count('cycle_result_set__site__province__name')))
+    for province in province_count:
+        site_count = Submission.objects.filter(
+            cycle_result_set__survey__cycle=this_cycle,
+            cycle_result_set__survey__type=survey_type,
+            cycle_result_set__site__province__id=province['cycle_result_set__site__province__id'],
+            ).values(
+            'cycle_result_set__id',
+            'cycle_result_set__site',
+            'cycle_result_set__site__telephone',
+            'cycle_result_set__site__slug',
+            'cycle_result_set__site__name').annotate(
+            dcount=Count('cycle_result_set__site'))
+        province['sites'] = site_count
+
+    return render(request, 'survey_type_detail_cycle.html', {
+        'active_tab': 'surveys',
+        'survey_type': survey_type,
+        'cycles': cycles,
+        'this_cycle': this_cycle,
+        'total_count': total_count,
+        'province_count': province_count,
+        'this_cycle_resultset': this_cycle_resultset,
+        'username': settings.BLACKSASH_KOBO_USERNAME,
+        'password': settings.BLACKSASH_KOBO_PASSWORD,
     })
 
 
@@ -678,8 +803,8 @@ def province_summary(request, province_slug, survey_type_slug, cycle_id):
 
     result_sets = CycleResultSet.objects.filter(
         site__province=province,
-        cycle=cycle,
-        survey_type=survey_type
+        survey__cycle=cycle,
+        survey__type=survey_type
     )
 
     form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
@@ -729,8 +854,8 @@ def national_summary(request, survey_type_slug, cycle_id):
     cycle = get_object_or_404(Cycle, id=cycle_id)
 
     result_sets = CycleResultSet.objects.filter(
-        cycle=cycle,
-        survey_type=survey_type
+        survey__cycle=cycle,
+        survey__type=survey_type
     )
 
     form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
@@ -780,8 +905,8 @@ def national_poster(request, survey_type_slug, cycle_id):
     cycle = get_object_or_404(Cycle, id=cycle_id)
 
     result_sets = CycleResultSet.objects.filter(
-        cycle=cycle,
-        survey_type=survey_type
+        survey__cycle=cycle,
+        survey__type=survey_type
     )
 
     form, gender_disagg, results, curr_totals = analysis.cross_site_summary(result_sets)
@@ -833,8 +958,8 @@ def province_poster(request, province_slug, survey_type_slug, cycle_id):
 
     result_sets = CycleResultSet.objects.filter(
         site__province=province,
-        cycle=cycle,
-        survey_type=survey_type
+        survey__cycle=cycle,
+        survey__type=survey_type
     )
 
     form, gender_disagg, results, curr_totals = analysis.cross_site_summary(result_sets)
@@ -863,14 +988,14 @@ def create_materials_zip(request, cycle_id):
     # request.build_absolute_uri here, since we can only pass
     # serialisable variables to background_tasks.create_zip.
     cycle = Cycle.objects.get(id=cycle_id)
-    for crs in cycle.cycle_result_sets.all():
+    for crs in CycleResultSet.objects.filter(survey__cycle=cycle):
         params = {'site_slug': crs.site.slug, 'result_id': crs.id}
         dir = os.path.join(
             crs.site.province.name.encode('ascii', 'ignore'),
             crs.partner.short_name.encode('ascii', 'ignore'),
             crs.site.name.encode('ascii', 'ignore'),
         )
-        if 'citizen' in crs.survey_type.name.lower():
+        if 'citizen' in crs.survey.type.name.lower():
             url = request.build_absolute_uri(reverse('site-result-poster-pdf', kwargs=params))
             artifacts.append({
                 'url': url,
@@ -894,10 +1019,3 @@ def create_materials_zip(request, cycle_id):
             })
     Cycle.schedule_create_materials_zip(cycle_id, artifacts)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def kobo_credentials(request):
-    return render(request, 'admin/kobo_credentials.html', {
-        'username': settings.BLACKSASH_KOBO_USERNAME,
-        'password': settings.BLACKSASH_KOBO_PASSWORD,
-    })
