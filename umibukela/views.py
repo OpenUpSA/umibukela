@@ -452,17 +452,8 @@ def survey_type(request, survey_type_slug):
         'cycle__name',
         'cycle__id',
         'cycle__start_date',
-<<<<<<< HEAD
-        'cycle__end_date',
-    )
-    cycles = cycles.filter(type=survey_type)
-    cycles = cycles.order_by('cycle__id')
-    cycles = cycles.distinct('cycle__id')
-    cycles = list(cycles)
-=======
         'cycle__end_date'
     ).filter(type=survey_type).order_by('cycle__id').distinct('cycle'))
->>>>>>> origin/remodel-cycle-survey-type
     cycles = sorted(cycles, key=lambda x: x['cycle__start_date'])
     latest_cycle = Cycle.objects.get(id=cycles[-1]['cycle__id'])
     latest_cycle_resultset = CycleResultSet.objects.filter(
