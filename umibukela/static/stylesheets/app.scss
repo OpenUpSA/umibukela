@@ -515,22 +515,10 @@ img.img-rounded-border {
   .survey-section {
     background-color: $brand-secondary-light;
     @include background-texture;
-    .survey-name {
-      background-color: $brand-primary;
-      border-bottom: 7px solid $brand-primary-dark;
-      border-radius: 6px;
-      font-weight: normal;
-      padding: 20px 10px;
-      margin: 30px 0;
-      a, a:hover {
-        font-size: 14px;
-        text-transform: uppercase;
-      }
-      a {
-          color: #fff;
-      }
-      a:hover {
-        color: #000;
+    .type {
+      margin-top: 10px;
+      .description {
+        margin-top: 10px;
       }
     }
   }
