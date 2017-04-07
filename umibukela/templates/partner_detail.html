@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% load static markup_tags %}
 
-{% block title %}{{ partner.short_name }}{% endblock %}
+{% block title %}{{ partner.full_name }}{% endblock %}
 {% block page-content %}
 
 <!-- breadcrumbs -->
@@ -10,12 +10,12 @@
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="{% url 'partners' %}">Community Partners</a></li>
-    <li class="active">{{ partner.short_name }}</li>
+    <li class="active">{{ partner.full_name }}</li>
   </ol>
 </div>
 <!-- /breadcrumbs -->
 
-<div class="section" id="partner-detail">
+<div itemscope itemtype="http://schema.org/Organization" class="section" id="partner-detail">
 
   <!-- section-header -->
   <div class="section-heading">
@@ -24,10 +24,7 @@
       <div class="row">
         <div class="col-md-5">
           <h3><i class="fa fa-group"></i> Community Partner</h3>
-          <h1>{{ partner.short_name }}</h1>
-          {% if partner.short_name != partner.full_name %}
-          <h2>{{ partner.full_name }}</h2>
-          {% endif %}
+          <h1 itemprop="legalName">{{ partner.full_name }}</h1>
 
           {% if partner.latest_complete_result %}
           <div class="btn-latest-results">
@@ -38,9 +35,9 @@
 
         <div class="col-md-3">
           <ul class="list-unstyled contact-details">
-            {% if partner.physical_address %}<li><i class="fa fa-fw fa-map-marker"></i>{{ partner.physical_address }}</li>{% endif %}
+            {% if partner.physical_address %}<li><i class="fa fa-fw fa-map-marker"></i><span itemprop="address" typeof="PostalAddress">{{ partner.physical_address }}</span></li>{% endif %}
             {% if partner.contact_person %}<li><i class="fa fa-fw fa-user"></i> <strong>Contact:</strong> {{ partner.contact_person }}</li>{% endif %}
-            {% if partner.telephone %}<li><i class="fa fa-fw fa-phone"></i> <a href="tel:{{ partner.telephone.split | join:"-" }}">{{ partner.telephone }}</a></li>{% endif %}
+            {% if partner.telephone %}<li><i class="fa fa-fw fa-phone"></i> <a href="tel:{{ partner.telephone.split | join:"-" }}"><span itemprop="telephone">{{ partner.telephone }}</span></a></li>{% endif %}
             {% if partner.email_address %}<li><i class="fa fa-fw fa-envelope"></i> <a href="mailto:{{ partner.email_address }}">{{ partner.email_address }}</a></li>{% endif %}
           </ul>
         </div>

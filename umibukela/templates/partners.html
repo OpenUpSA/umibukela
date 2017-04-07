@@ -37,7 +37,7 @@
         </thead>
 {% for partner in partners %}
         <tr>
-          <td><a href="{% url 'partner' partner.slug %}">{{ partner.short_name }}</a></td>
+          <td><a href="{% url 'partner' partner.slug %}">{{ partner.full_name }}</a></td>
           <td class="hidden-xs">
             {% if partner.latest_complete_result %}
             <a href="{% url 'site-result' site_slug=partner.latest_complete_result.site.slug result_id=partner.latest_complete_result.id %}">
