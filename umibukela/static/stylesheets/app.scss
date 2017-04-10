@@ -36,6 +36,7 @@ $brand-primary-dark: darken($brand-primary,10%);
 
 $brand-secondary: $green;
 
+$brand-secondary-extra-light: lighten($brand-secondary,50%);
 $brand-secondary-light: lighten($brand-secondary,10%);
 $brand-secondary-dark: darken($brand-secondary,10%);
 
@@ -53,16 +54,18 @@ $color-partners-light: lighten($color-partners, 20%);
 
 @import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,800);
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans');
 
 $font-family-sans-serif: "Open Sans", Helvetica, Arial, sans-serif !default;
 $font-family-sans-serif-2: "Montserrat", Helvetica, Arial, sans-serif !default;
-$font-family-base: $font-family-sans-serif !default;
+$font-family-sans-serif-3: "Noto Sans", Helvetica, Arial, sans-serif !default;
+$font-family-base: $font-family-sans-serif-3 !default;
 
-$font-size-base: 16px !default;
+$font-size-base: 14px !default;
 
 $text-color: $black !default;
 
-$headings-font-family: $font-family-sans-serif-2;
+$headings-font-family: $font-family-sans-serif;
 $headings-color: $black;
 
 //== Links
@@ -102,7 +105,7 @@ $breadcrumb-separator: "→" !default;
 
 //== Buttons
 
-$btn-font-weight: bold;
+$btn-font-weight: normal;
 
 $btn-primary-color: #fff !default;
 $btn-primary-bg: $brand-primary !default;
@@ -132,6 +135,13 @@ $input-border-focus: transparent !default;
 //============================================================================================
 
 // CUSTOM CSS
+
+
+//== code
+code {
+  color: $brand-secondary !important;
+  background-color: $brand-secondary-extra-light !important;
+}
 
 //== mixins
 @mixin background-texture {
@@ -164,9 +174,9 @@ $input-border-focus: transparent !default;
     padding: 1em 0em;
   }
 
-  font-family: $font-family-sans-serif-2;
+  font-family: $font-family-sans-serif;
   font-size: 32px;
-  font-weight: bold;
+  font-weight: normal;
   a {
     color: $black;
   }
@@ -214,9 +224,9 @@ h1,h2,h3,h4,h5,h6{ margin-top: 0; }
 
 .site-header .navbar{
   border: 0;
-  font-family: $font-family-sans-serif-2;
+  font-family: $font-family-sans-serif-3;
   font-size: 13px;
-  font-weight: bold;
+  font-weight: normal;
   line-height: 12px;
   -moz-box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
   -webkit-box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2);
@@ -302,7 +312,7 @@ img.img-rounded-border {
   background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
 
   .panel-heading{
-    font-family: $font-family-sans-serif-2;
+    font-family: $font-family-sans-serif-3;
     font-size: 1.2em;
   }
 
@@ -408,7 +418,7 @@ img.img-rounded-border {
       display: inline-block;
       background: $white;
       padding: 5px;
-      font-family: $font-family-sans-serif-2;
+      font-family: $font-family-sans-serif;
       font-size: 0.9em;
       font-weight: bold;
       text-transform: uppercase;
@@ -416,6 +426,7 @@ img.img-rounded-border {
       letter-spacing: 2px;
     }
     h4 {
+      font-family: $font-family-sans-serif;
       text-transform: uppercase;
       font-size: 0.9em;
       font-weight: bold;
@@ -480,6 +491,10 @@ img.img-rounded-border {
 
 #home{
 
+  .jumbotron {
+    margin-bottom: 0;
+  }
+
   .bg-image {
     background-image: url(/static/img/black-sash-protest2.jpg);
   }
@@ -491,18 +506,32 @@ img.img-rounded-border {
   .video-section {
     background-color: $brand-secondary-dark;
     @include background-texture;
+    .video {
+      margin-bottom: 30px;
+    }
   }
 
   .explore-menu{
     background-color: $brand-secondary-light;
     @include background-texture;
-    a:first-child {
+    a {
       margin-right: 10px;
     }
   }
 
-  .signup-cta-lg {
+  .survey-section {
     background-color: $brand-secondary-light;
+    @include background-texture;
+    .type {
+      margin-top: 10px;
+      .description {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .signup-cta-lg {
+    background-color: $brand-secondary-extra-light;
     @include background-texture;
   }
 }
@@ -528,6 +557,7 @@ img.img-rounded-border {
   }
 
   nav.steps-sidebar button {
+    text-transform: uppercase;
     margin-top: 30px;
   }
 
@@ -596,7 +626,7 @@ img.img-rounded-border {
 .steps-sidebar .nav>.active>a,
 .steps-sidebar .nav>.active:hover>a,
 .steps-sidebar .nav>.active:focus>a {
-  font-weight: 700;
+  font-weight: normal;
 }
 /* nested active links */
 .steps-sidebar .nav .nav>.active>a,
@@ -744,7 +774,7 @@ article.general {
 
 //== Buttons
 .btn, .btn-lg{
-  font-family: $font-family-sans-serif-2;
+  font-family: $font-family-sans-serif-3;
   letter-spacing: 1px;
   box-shadow: 0px 4px 0px;
   margin-bottom: 3px;
@@ -761,7 +791,7 @@ article.general {
   }
   &.btn-primary:active {
     background-color: $link-hover-color;
-    margin-top: 3px;
+    margin-top: 0;
     margin-bottom: 0;
     box-shadow: 0 1px 0 darken($link-hover-color,10%);
     outline: 0;
@@ -784,7 +814,7 @@ article.general {
 
 //== Forms
 input {
-  font-family: $font-family-sans-serif-2;
+  font-family: $font-family-sans-serif-3;
   font-weight: bold;
   &.form-control {
     padding: 7px 12px 8px;
@@ -832,7 +862,7 @@ blockquote {
   border: 0;
 }
 blockquote:before {
-  font-family: $font-family-sans-serif-2;
+  font-family: $font-family-sans-serif-3;
   display: block;
   position: absolute;
   left: 0;
@@ -865,27 +895,35 @@ blockquote cite{
     margin: 30px 0px;
   }
 
-  .survey-name {
-    background-color: #f2982f;
-    border-left:7px solid #bd6d0f;
-    font-weight: normal;
-    padding: 20px 10px;
-    margin: 30px 0;
-    a, a:hover {
-      font-size: 14px;
-      text-transform: uppercase;
+  .types {
+    margin-top: 30px;
+
+    .survey-name {
+      background-color: $brand-primary;
+      border-left:7px solid $brand-primary-dark;
+      font-weight: normal;
+      padding: 20px 10px;
+      margin: 30px 0;
+      a, a:hover {
+        font-size: 14px;
+        text-transform: uppercase;
+      }
+      a {
+          color: $white;
+      }
+      a:hover {
+        color: #000;
+      }
     }
-    a {
-        color: #fff;
-    }
-    a:hover {
-      color: #000;
-    }
+  }
+
+  .resources {
+    margin-bottom: 30px;
   }
 
 }
 
-#cycles {
+.survey-type {
 
   .survey-type-detail-desc {
     margin: 15px 0;
@@ -894,16 +932,10 @@ blockquote cite{
     margin-bottom: 15px;
     .cycle-btn {
       margin-bottom: 15px;
-      .btn, .btn-default {
-        box-shadow: 0 4px 0 #d77809;
-        background-color: #f6921d;
-        color: #fff;
-        font-weight: bold;
-        text-transform: uppercase;
-      }
-    }
-    #fixed-location-nav {
-      a {
+      .btn-default.dropdown-toggle {
+        box-shadow: 0 4px 0 $brand-primary-dark;
+        background-color: $brand-primary;
+        color: $white;
         text-transform: uppercase;
       }
     }
@@ -920,43 +952,56 @@ blockquote cite{
       margin-bottom: 10px;
     }
     h3.select-cycle {
-      color: #fff;
+      color: $white;
       font-size: 2.2em;
       font-weight: 600;
     }
     h4 {
-      color: #fff;
+      color: $white;
     }
     .callouts {
       text-align: center;
       .callouts-figure {
-        color: #fff;
+        color: $white;
         font-size: 2.2em;
         font-weight: 600;
       }
       .callouts-desc {
         font-size: 16px;
-        color: #fff;
+        color: $white;
       }
     }
   }
   .provinces {
     .province-title {
-      background-color: #f1f1f1;
+      background-color: $gray-lighter;
       h3 { margin-bottom: 22px; }
     }
     .survey-site-link {
       margin-top: 11px;
       a {
-        text-transform: uppercase;
         font-size: 14px;
       }
+    }
+  }
+  .site-row {
+    padding: 10px 0;
+    border-bottom: 1px solid $gray-lighter;
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 10px;
     }
   }
 
 }
 
+//== ODK Credentials
 
+#odk-howto {
+  img {
+    width: 100%; 
+  }
+}
 
 
 //== Social Media
@@ -1063,7 +1108,7 @@ footer.footer{
     color: $white;
     text-align: left;
     line-height: 1;
-    font-family: $font-family-sans-serif-2;
+    font-family: $font-family-sans-serif-3;
     padding: 5px;
     border-radius: 3px;
     h1, h2 { margin: 0; color: $white; }
@@ -1091,7 +1136,7 @@ footer.footer{
 
   .diagram-comment{
     color: $white;
-    font-family: $font-family-sans-serif-2;
+    font-family: $font-family-sans-serif-3;
     font-size: 11px;
     font-weight: bold;
     text-align: left;
@@ -1125,7 +1170,7 @@ footer.footer{
     color: $white;
     text-align: left;
     line-height: 1;
-    font-family: $font-family-sans-serif-2;
+    font-family: $font-family-sans-serif-3;
     padding: 5px;
     border-radius: 3px;
     h1, h2 { margin: 0; color: $white; }
@@ -1153,7 +1198,7 @@ footer.footer{
 
   .diagram-comment{
     color: $white;
-    font-family: $font-family-sans-serif-2;
+    font-family: $font-family-sans-serif-3;
     font-size: 11px;
     font-weight: bold;
     text-align: left;

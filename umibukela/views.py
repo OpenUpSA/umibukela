@@ -42,10 +42,11 @@ TRIM_TYPE_RE = r" - Citizen"
 
 
 def home(request):
+    survey_types = SurveyType.objects.filter(public=True).all()
     return render(request, 'index.html', {
         'active_tab': 'home',
+        'survey_types': survey_types,
     })
-
 
 def about(request):
     return render(request, 'about.html', {
@@ -445,7 +446,6 @@ def survey_types(request):
         'password': settings.BLACKSASH_KOBO_PASSWORD,
     })
 
-
 def survey_type(request, survey_type_slug):
     survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
     cycles = list(Survey.objects.values(
@@ -497,6 +497,8 @@ def survey_type(request, survey_type_slug):
         'total_count': total_count,
         'province_count': province_count,
         'latest_cycle_resultset': latest_cycle_resultset,
+        'username': settings.BLACKSASH_KOBO_USERNAME,
+        'password': settings.BLACKSASH_KOBO_PASSWORD,
     })
 
 
@@ -553,6 +555,8 @@ def survey_type_cycle(request, survey_type_slug, cycle_id):
         'total_count': total_count,
         'province_count': province_count,
         'this_cycle_resultset': this_cycle_resultset,
+        'username': settings.BLACKSASH_KOBO_USERNAME,
+        'password': settings.BLACKSASH_KOBO_PASSWORD,
     })
 
 
