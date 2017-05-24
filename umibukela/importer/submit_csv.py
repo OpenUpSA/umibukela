@@ -35,7 +35,6 @@ class Question(Element):
 class MultipleChoice(Question):
     def __init__(self, question, path, group_labels):
         super(MultipleChoice, self).__init__(question, path)
-        self.options = [Option(o, self.path) for o in question['children']]
         self.group_labels = group_labels
 
 
@@ -47,8 +46,8 @@ class SelectOne(MultipleChoice):
     pass
 
 
-class SelectAllThatApply(MultipleChoice):
-    pass
+# class SelectAllThatApply(MultipleChoice):
+#     pass
 
 
 def pathstr(path):
@@ -64,6 +63,8 @@ def traverse(element, state, handlers, path=None, group_labels=None):
     for child in element['children']:
         deeper_path = path + [child['name']]
         if child.get('type') == 'group':
+            if child.get('name') == 'meta':
+                continue
             deeper_group_labels = group_labels + [child.get('label', '')]
             traverse(child, state, handlers, deeper_path, deeper_group_labels)
         elif child.get('type') == 'select one':
@@ -107,16 +108,17 @@ def select_one(q, state):
     return deep_set(state, path, val)
 
 
-def select_all_that_apply(q, state):
-    selected = []
-    path = ['submission'] + q.path
-    for o in q.options:
-        val = deep_get(state, ['row', o.pathstr])
-        if val == 'n/a':
-            return deep_set(state, path, None)
-        elif val == 'True':
-            selected += [o.name]
-    return deep_set(state, path, selected)
+# TODO: Doesn't work with kobo - also rotting right about...now.
+# def select_all_that_apply(q, state):
+#     selected = []
+#     path = ['submission'] + q.path
+#     for o in q.options:
+#         val = deep_get(state, ['row', o.pathstr])
+#         if val == 'n/a':
+#             return deep_set(state, path, None)
+#         elif val == 'True':
+#             selected += [o.name]
+#     return deep_set(state, path, selected)
 
 
 def submit(form_path, submissions_path, form_id, username, password):
@@ -128,14 +130,14 @@ def submit(form_path, submissions_path, form_id, username, password):
 
     handlers = {
         SelectOne: select_one,
-        SelectAllThatApply: select_all_that_apply,
+        # SelectAllThatApply: select_all_that_apply,
     }
 
     headers = {
-        "Content-type": "application/json",
+        "Content-Type": "application/json",
         "Authorization": "Basic %s" % auth(username, password),
     }
-
+    print headers
     successful = 0
     already = 0
     failed = 0
@@ -152,7 +154,8 @@ def submit(form_path, submissions_path, form_id, username, password):
             'id': form_id,
         })
 
-        conn = httplib.HTTPSConnection("kc.kobotoolbox.org")
+        conn = httplib.HTTPSConnection("kf.kobotoolbox.org")
+        print body
         conn.request("POST", "/api/v1/submissions", body, headers)
         response = conn.getresponse()
         if response.status == 201:
@@ -163,7 +166,7 @@ def submit(form_path, submissions_path, form_id, username, password):
             sys.stdout.write('-')
         else:
             failed += 1
-            sys.stdout.write(response.status, response.reason)
+            sys.stdout.write("\n%s %s\n%s\n" % (response.status, response.reason, response.read()))
         sys.stdout.flush()
         conn.close()
 
@@ -177,3 +180,7 @@ def submit(form_path, submissions_path, form_id, username, password):
 
 def auth(u, p):
     return base64.b64encode("%s:%s" % (u, p))
+
+
+if __name__ == "__main__":
+    submit(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
