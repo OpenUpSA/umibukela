@@ -6,4 +6,4 @@ class RedirectsMiddleware(object):
     """
     def process_request(self, request):
         if request.get_host() == 'cbm.code4sa.org':
-            return HttpResponsePermanentRedirect("https://%s%s" % ('cbm.blacksash.org.za', request.get_full_path()))
+            return HttpResponsePermanentRedirect("https://cbm.blacksash.org.za%s" % request.get_full_path())
