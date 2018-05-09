@@ -13,6 +13,16 @@
       <td>{{ form.num_of_submissions }}</td>
       <td>
         <form action="/admin/umibukela/survey_from_kobo" method="post">
+          <select name="cycle">
+            {% for cycle in cycles %}
+            <option value="{{ cycle.id }}">{{ cycle.name }}</option>
+            {% endfor %}
+          </select>
+          <select name="survey_type">
+            {% for survey_type in survey_types %}
+            <option value="{{ survey_type.id }}">{{ survey_type.name }}</option>
+            {% endfor %}
+          </select>
           <input type="submit" value="Import">
           <input type="hidden" name="form_id" value="{{ form.formid }}">
           {% csrf_token %}

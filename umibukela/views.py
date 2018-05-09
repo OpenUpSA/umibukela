@@ -573,7 +573,12 @@ def survey_from_kobo(request):
                              headers=headers)
             r.raise_for_status()
             form = r.json()
-            survey = Survey(name=form['title'], form=r.text)
+            survey = Survey(
+                name=form['title'],
+                cycle=Cycle.objects.get(pk=request.POST['cycle']),
+                type=SurveyType.objects.get(pk=request.POST['survey_type']),
+                form=r.text
+            )
             survey.save()
             survey_kobo_project = SurveyKoboProject(survey=survey, form_id=form_id)
             survey_kobo_project.save()
@@ -588,6 +593,8 @@ def survey_from_kobo(request):
                     available_surveys.append(survey)
             return render(request, 'survey_from_kobo.html', {
                 'forms': available_surveys,
+                'cycles': Cycle.objects.all(),
+                'survey_types': SurveyType.objects.all(),
             })
 
 
