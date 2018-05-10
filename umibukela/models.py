@@ -158,6 +158,19 @@ class Site(models.Model):
         result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
         return result_sets
 
+    def programmes_latest_results(self):
+        """
+        Return a distinct list of programmes and the latest completed
+        result set for the programme at that site
+        """
+        programmes = {}
+        for result_set in self.completed_result_sets():
+            programme = result_set.survey.cycle.programme
+            # Relies on the latest completed result sets coming up first.
+            if programme.id not in programmes:
+                programmes[programme.id] = (programme, result_set)
+        return programmes.values()
+
     def result_sets(self):
         result_sets = list(CycleResultSet.objects.filter(site=self).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
