@@ -6,11 +6,15 @@
   <!-- skipping element.type={{ element.type }} or path={{ element.pathstr }} -->
 
   {#### GROUP ####}
-  {% elif element.type == 'group'  and results.questions_dict %}
+  {% elif element.type == 'group' and results.questions_dict %}
+  {% if element.pathstr == 'demographics_group' and element.children|length == 1 %}
+  {# skip demographics_group with one child, assuming it's gender #}
+  {% else %}
   <h3>{{ element.label }}</h3>
   {% for element in element.children %}
   {% include "print-materials/_question_summary_gendered.html" %}
   {% endfor %}
+  {% endif %} {# demographics_group with just one question (assuming gender) #}
 
   {#### GROUP HEADER ####}
   {% elif element.control.appearance == 'label' %}
@@ -39,7 +43,7 @@
   {% endif %}{# text_questions is defined #}
 
   {#### MULTIPLE CHOICE ####}
-  {% elif element.type in multiple_choice_types and results.questions_dict %}
+  {% elif element.type in multiple_choice_types and results.questions_dict and element.pathstr != 'demographics_group/gender' %}
   {% with question_key=element.pathstr %}
   {% with question=results.questions_dict|get:question_key %}
   {% with first_option=question.options|first %}
