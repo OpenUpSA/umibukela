@@ -4,6 +4,7 @@ from django.contrib.gis.db import models as gis_models
 from django.core.files import File
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models import Q
 from kobo import Kobo
 from django.utils import timezone
 from django.utils.text import slugify
@@ -430,7 +431,7 @@ class CycleResultSet(models.Model):
             site__exact=self.site,
             survey__type=self.survey.type,
             published=True
-        ).all())
+        ).filter(~Q(pk=self.pk)).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp)
         result_sets.reverse()
         if result_sets:
