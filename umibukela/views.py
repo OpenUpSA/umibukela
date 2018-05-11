@@ -250,7 +250,7 @@ def poster(request, site_slug, result_id):
             prev_date = None
         analysis.combine_curr_hist(site_results, prev_results)
 
-    return render(request, poster_template(result_set.survey.type), {
+    return render(request, result_set.survey.type.poster_template, {
         'DEBUG': settings.DEBUG,
         'form': form,
         'layout_class': slugify(result_set.survey.type.name),
@@ -906,7 +906,7 @@ def national_poster(request, survey_type_slug, cycle_id):
     form, gender_disagg, results, curr_totals = analysis.cross_site_summary(result_sets)
     totals = {'current': curr_totals}
 
-    return render(request, poster_template(survey_type), {
+    return render(request, survey_type.poster_template, {
         'DEBUG': settings.DEBUG,
         'form': form,
         'layout_class': slugify(survey_type.name),
@@ -958,7 +958,7 @@ def province_poster(request, province_slug, survey_type_slug, cycle_id):
 
     form, gender_disagg, results, curr_totals = analysis.cross_site_summary(result_sets)
     totals = {'current': curr_totals}
-    return render(request, poster_template(survey_type), {
+    return render(request, survey_type.poster_template, {
         'DEBUG': settings.DEBUG,
         'form': form,
         'layout_class': slugify(survey_type.name),
