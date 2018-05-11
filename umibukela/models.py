@@ -306,6 +306,8 @@ class SurveyType(models.Model):
     short_description = models.TextField(help_text="This is a short line to indicate who is being surveyed to what degree, e.g. \"Light-touch survey completed by users of facility X\"")
     full_description = models.TextField(help_text="This is a thorough description used to fully explain the purpose behind the surveys of this type.")
     public = models.BooleanField(default=False)
+    poster_template = models.CharField(max_length=1000, blank=True, null=True, help_text="Path of template from the application root. If it's blank, poster links won't be generated for this survey type.")
+    has_handout = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('name',)
@@ -473,6 +475,16 @@ class CycleResultSet(models.Model):
                 form = self.survey.map_to_form
             simplify_perf_group(form, responses)
         return form, responses
+
+    def has_monitoring_outputs(self):
+        return any([
+            self.has_poster_attachment(),
+            self.has_handout_attachment(),
+            self.action_items,
+            self.follow_up,
+            self.survey.type.poster_template,
+            self.survey.type.has_handout,
+        ])
 
 
 class AttachmentNature(models.Model):
