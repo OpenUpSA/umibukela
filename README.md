@@ -3,6 +3,16 @@ UmiBukela
 
 This is [Black Sash's](http://www.blacksash.org.za/) Community Based Monitoring (CBM) advocacy and reporting platform, built by Code for South Africa.
 
+Open Data Kit / Kobo Toolbox form compatibility
+-------------------------------
+
+For CBM to be able to automatically generate summaries of Kobo Toolbox/ODK forms, the following assumptions are made about the forms, which means forms must comply with these to be supported:
+
+- All multiple-choice questions must be _required_ - any optional questions resulting in blanks in responses will result in errors on the site.
+- There must be field named `gender` (lower caps) in a group named `demographics_group`. It's values are allowed to be `male` or `female`. The labels for these fields and values may be different.
+- There must be a field named `facility`. Each option in this field will be mapped to a Site in CBM.
+
+
 Local Development
 -----------------
 
