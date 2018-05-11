@@ -50,19 +50,20 @@ var questions = {{ results.questions_dict|jsonify }};
   </div>
   <!-- /section-header -->
 
+  {% if result_set.has_monitoring_outputs %}
   <div class="page-section cycle-outputs">
     <div class="container">
       <div class="row">
         <div class="col-sm-4">
           <h5>Monitoring Outputs</h5>
           <ul class="list-unstyled">
-            {% if not result_set.has_poster_attachment %}
+            {% if not result_set.has_poster_attachment and result_set.survey.type.poster_template %}
               <li>
                 <a href="{% url 'site-result-poster-pdf' site_slug=result_set.site.slug result_id=result_set.id %}" target="_blank"><i class="fa fa-download"></i> Poster</a>
               </li>
             {% endif %}
 
-            {% if not result_set.has_handout_attachment %}
+            {% if not result_set.has_handout_attachment and result_set.survey.type.has_handout %}
               <li>
                 <a href="{% url 'site-result-handout-pdf' site_slug=result_set.site.slug result_id=result_set.id %}" target="_blank"><i class="fa fa-download"></i> Handout</a>
               </li>
@@ -90,6 +91,7 @@ var questions = {{ results.questions_dict|jsonify }};
       </div>
     </div>
   </div>
+  {% endif %}
 
   {% include "site_results_charts.html" %}
 

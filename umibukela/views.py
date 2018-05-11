@@ -286,19 +286,6 @@ def poster_pdf(request, site_slug, result_id):
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
-def poster_template(survey_type):
-    template = 'print-materials/posters/'
-    if 'paypoint' in survey_type.name.lower():
-        template += 'paypoint_poster.html'
-    elif 'health' in survey_type.name.lower():
-        template += 'health_clinic_poster.html'
-    elif 'service office' in survey_type.name.lower():
-        template += 'service_office_poster.html'
-    else:
-        template += 'poster_layout.html'
-    return template
-
-
 def handout(request, site_slug, result_id):
     result_set = get_object_or_404(
         CycleResultSet,
