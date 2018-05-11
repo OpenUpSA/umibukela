@@ -72,7 +72,7 @@
         <section class="location-item">
           <div class="container">
 
-          <!-- call outs -->
+            <!-- call outs -->
             <div id="nat" class="row cycle-callouts">
               <div class="col-md-4 col-sm-4 col-xs-12">
                 <h3 class="select-cycle">{{ latest_cycle.name }}</h3>
@@ -95,8 +95,13 @@
 
             <!-- downloadable resources -->
             {% if "local-government" not in survey_type.slug %}
-            <p><a href="{% url 'national-summary-pdf' survey_type_slug=survey_type.slug cycle_id=latest_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Summary</a> &nbsp;&nbsp;
-            <a href="{% url 'national-poster-pdf' survey_type_slug=survey_type.slug cycle_id=latest_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Poster</a></p>
+            <p>
+              <a href="{% url 'national-summary-pdf' survey_type_slug=survey_type.slug cycle_id=latest_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Summary</a>
+              {% if survey_type.poster_template %}
+              &nbsp;&nbsp;
+              <a href="{% url 'national-poster-pdf' survey_type_slug=survey_type.slug cycle_id=latest_cycle.id %}"><i class="fa fa-download" aria-hidden="true"></i> Poster</a>
+              {% endif %}
+            </p>
             {% endif %}
           </div>
         </section>
@@ -110,8 +115,10 @@
                 {% if "local-government" not in survey_type.slug %}
                 <small>
                   <a href="{% url 'province-summary-pdf' survey_type_slug=survey_type.slug province_slug=province.cycle_result_set__site__province__slug cycle_id=latest_cycle.id %}">Summary</a>
-                   |
-                   <a href="{% url 'province-poster-pdf' survey_type_slug=survey_type.slug province_slug=province.cycle_result_set__site__province__slug cycle_id=latest_cycle.id %}">Poster</a>
+                  {% if survey_type.poster_template %}
+                  |
+                  <a href="{% url 'province-poster-pdf' survey_type_slug=survey_type.slug province_slug=province.cycle_result_set__site__province__slug cycle_id=latest_cycle.id %}">Poster</a>
+                  {% endif %}
                 </small>
                 {% endif %}
               </h3>
