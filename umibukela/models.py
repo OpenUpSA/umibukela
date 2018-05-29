@@ -338,8 +338,7 @@ class Survey(models.Model):
 
     @property
     def programme(self):
-        # Assumes all cycle_result_sets of a Survey have the same Cycle
-        return self.cycle_result_sets.first().survey.cycle.programme
+        return self.cycle.programme
 
     def import_submissions(self):
         refresh_token = self.programme.kobo_refresh_token
