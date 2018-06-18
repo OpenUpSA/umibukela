@@ -14,12 +14,17 @@ from xform import map_form, simplify_perf_group, XForm
 from zipfile import ZipFile
 import analysis
 import jsonfield
+import logging
 import pandas
 import re
 import requests
 import shutil
 import uuid
 from xform import field_per_SATA_option, skipped_as_na
+import pprint
+import json
+import copy
+logger = logging.getLogger(__name__)
 
 # ------------------------------------------------------------------------------
 # General utilities
@@ -358,11 +363,34 @@ class Survey(models.Model):
         responses = field_per_SATA_option(self.form, responses)
         responses = skipped_as_na(self.form, responses)
         for response in responses:
-            facility_name = response[facility_q_name]
-            Submission.objects.get_or_create(
-                answers=response,
-                cycle_result_set=facility_crs[facility_name]
-            )
+            try:
+                uuid = response['_uuid']
+                obj = Submission.objects.get(uuid=uuid)
+
+                remote_answers = copy.copy(response)
+                del remote_answers['_id']
+                del remote_answers['_submission_time']
+                remote_answers_json = json.dumps(remote_answers, sort_keys=True)
+
+                db_answers = copy.copy(obj.answers)
+                del db_answers['_id']
+                del db_answers['_submission_time']
+                db_answers_json = json.dumps(db_answers, sort_keys=True)
+
+                logger.info("Already have %s", uuid)
+                if db_answers_json != remote_answers_json:
+                    raise Exception("Same uuid but different values\n"
+                                    "Remote: %s\n\nDB: %s" % (
+                                        pprint.pformat(remote_answers),
+                                        pprint.pformat(db_answers)
+                                    ))
+            except Submission.DoesNotExist:
+                facility_name = response[facility_q_name]
+                obj = Submission(
+                    answers=response,
+                    cycle_result_set=facility_crs[facility_name]
+                )
+                obj.save()
 
 
 class SurveyKoboProject(models.Model):
