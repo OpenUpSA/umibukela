@@ -366,24 +366,7 @@ class Survey(models.Model):
             try:
                 uuid = response['_uuid']
                 obj = Submission.objects.get(uuid=uuid)
-
-                remote_answers = copy.copy(response)
-                del remote_answers['_id']
-                del remote_answers['_submission_time']
-                remote_answers_json = json.dumps(remote_answers, sort_keys=True)
-
-                db_answers = copy.copy(obj.answers)
-                del db_answers['_id']
-                del db_answers['_submission_time']
-                db_answers_json = json.dumps(db_answers, sort_keys=True)
-
-                logger.info("Already have %s", uuid)
-                if db_answers_json != remote_answers_json:
-                    raise Exception("Same uuid but different values\n"
-                                    "Remote: %s\n\nDB: %s" % (
-                                        pprint.pformat(remote_answers),
-                                        pprint.pformat(db_answers)
-                                    ))
+                Submission.assert_equal(response, obj.answers)
             except Submission.DoesNotExist:
                 facility_name = response[facility_q_name]
                 obj = Submission(
@@ -547,6 +530,28 @@ class Submission(models.Model):
     def save(self, *args, **kwargs):
         self.uuid = self.answers['_uuid']
         super(Submission, self).save(*args, **kwargs)
+
+    @staticmethod
+    def assert_equal(remote_answers, local_answers):
+        """
+        Raise an exception if any fields except _id and _submission_time differ
+        """
+        remote_copy = copy.copy(remote_answers)
+        del remote_copy['_id']
+        del remote_copy['_submission_time']
+        remote_copy_json = json.dumps(remote_copy, sort_keys=True)
+
+        local_copy = copy.copy(local_answers)
+        del local_copy['_id']
+        del local_copy['_submission_time']
+        local_copy_json = json.dumps(local_copy, sort_keys=True)
+
+        if local_copy_json != remote_copy_json:
+            raise Exception("Same uuid but different values\n"
+                            "Remote: %s\n\nDB: %s" % (
+                                pprint.pformat(remote_copy),
+                                pprint.pformat(local_copy)
+                            ))
 
     def __str__(self):
         return "uuid=%s" % self.uuid
