@@ -366,7 +366,7 @@ class Survey(models.Model):
             try:
                 uuid = response['_uuid']
                 obj = Submission.objects.get(uuid=uuid)
-                Submission.assert_equal(response, obj.answers)
+                obj.assert_answers_equal(response)
             except Submission.DoesNotExist:
                 facility_name = response[facility_q_name]
                 obj = Submission(
@@ -531,8 +531,7 @@ class Submission(models.Model):
         self.uuid = self.answers['_uuid']
         super(Submission, self).save(*args, **kwargs)
 
-    @staticmethod
-    def assert_equal(remote_answers, local_answers):
+    def assert_answers_equal(self, remote_answers):
         """
         Raise an exception if any fields except _id and _submission_time differ
         """
@@ -541,7 +540,7 @@ class Submission(models.Model):
         del remote_copy['_submission_time']
         remote_copy_json = json.dumps(remote_copy, sort_keys=True)
 
-        local_copy = copy.copy(local_answers)
+        local_copy = copy.copy(self.answers)
         del local_copy['_id']
         del local_copy['_submission_time']
         local_copy_json = json.dumps(local_copy, sort_keys=True)
