@@ -5,21 +5,25 @@ from django.core.files import File
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
-from kobo import Kobo
 from django.utils import timezone
 from django.utils.text import slugify
+from kobo import Kobo
 from os import makedirs, path
 from tempfile import mkdtemp, NamedTemporaryFile
+from xform import field_per_SATA_option, skipped_as_na
 from xform import map_form, simplify_perf_group, XForm
 from zipfile import ZipFile
 import analysis
+import copy
+import json
 import jsonfield
 import pandas
+import pprint
 import re
 import requests
 import shutil
 import uuid
-from xform import field_per_SATA_option, skipped_as_na
+
 
 # ------------------------------------------------------------------------------
 # General utilities
@@ -358,11 +362,16 @@ class Survey(models.Model):
         responses = field_per_SATA_option(self.form, responses)
         responses = skipped_as_na(self.form, responses)
         for response in responses:
-            facility_name = response[facility_q_name]
-            Submission.objects.get_or_create(
-                answers=response,
-                cycle_result_set=facility_crs[facility_name]
-            )
+            try:
+                obj = Submission.objects.get(uuid=response['_uuid'])
+                obj.assert_answers_equal(response)
+            except Submission.DoesNotExist:
+                facility_name = response[facility_q_name]
+                obj = Submission(
+                    answers=response,
+                    cycle_result_set=facility_crs[facility_name]
+                )
+                obj.save()
 
 
 class SurveyKoboProject(models.Model):
@@ -519,6 +528,27 @@ class Submission(models.Model):
     def save(self, *args, **kwargs):
         self.uuid = self.answers['_uuid']
         super(Submission, self).save(*args, **kwargs)
+
+    def assert_answers_equal(self, remote_answers):
+        """
+        Raise an exception if any fields except _id and _submission_time differ
+        """
+        remote_copy = copy.copy(remote_answers)
+        del remote_copy['_id']
+        del remote_copy['_submission_time']
+        remote_copy_json = json.dumps(remote_copy, sort_keys=True)
+
+        local_copy = copy.copy(self.answers)
+        del local_copy['_id']
+        del local_copy['_submission_time']
+        local_copy_json = json.dumps(local_copy, sort_keys=True)
+
+        if local_copy_json != remote_copy_json:
+            raise Exception("Same uuid but different values\n"
+                            "Remote: %s\n\nDB: %s" % (
+                                pprint.pformat(remote_copy),
+                                pprint.pformat(local_copy)
+                            ))
 
     def __str__(self):
         return "uuid=%s" % self.uuid

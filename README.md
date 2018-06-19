@@ -98,8 +98,10 @@ sudo chown -R ubuntu: /var/log/umibukela
 ```
 
 ```cron
-0 * * * * /usr/local/bin/dokku --rm  run umibukela newrelic-admin run-program python manage.py import_submissions  2>&1 >> /var/log/umibukela/import-submissions.log
+0 * * * * /usr/local/bin/dokku --rm  run umibukela newrelic-admin run-program python manage.py import_submissions  2>&1 | tee -a /var/log/umibukela/import-submissions.log | grep -i -B10 error
 ```
+
+If cron mail is set up on the server, it should email us errors.
 
 Background Tasks in production
 ------------------------------
