@@ -5,26 +5,25 @@ from django.core.files import File
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
-from kobo import Kobo
 from django.utils import timezone
 from django.utils.text import slugify
+from kobo import Kobo
 from os import makedirs, path
 from tempfile import mkdtemp, NamedTemporaryFile
+from xform import field_per_SATA_option, skipped_as_na
 from xform import map_form, simplify_perf_group, XForm
 from zipfile import ZipFile
 import analysis
+import copy
+import json
 import jsonfield
-import logging
 import pandas
+import pprint
 import re
 import requests
 import shutil
 import uuid
-from xform import field_per_SATA_option, skipped_as_na
-import pprint
-import json
-import copy
-logger = logging.getLogger(__name__)
+
 
 # ------------------------------------------------------------------------------
 # General utilities
