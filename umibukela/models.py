@@ -363,8 +363,7 @@ class Survey(models.Model):
         responses = skipped_as_na(self.form, responses)
         for response in responses:
             try:
-                uuid = response['_uuid']
-                obj = Submission.objects.get(uuid=uuid)
+                obj = Submission.objects.get(uuid=response['_uuid'])
                 obj.assert_answers_equal(response)
             except Submission.DoesNotExist:
                 facility_name = response[facility_q_name]
