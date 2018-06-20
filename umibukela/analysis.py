@@ -251,7 +251,10 @@ def set_response_counts(q, results, counts_table, gender_disagg):
     if gender_disagg:
         total = len(counts_table)
         for gender in ['male', 'female']:
-            val = int(counts_table.loc[gender])
+            if gender in counts_table.index:
+                val = int(counts_table.loc[gender])
+            else:
+                val = 0
             results = deep_set(results, [q.pathstr, 'response_count', gender], val)
     else:
         total = counts_table
