@@ -60,6 +60,8 @@ log = getLogger(__name__)
 
 
 def count_submissions(submissions, gender_disagg=True):
+    if not len(submissions):
+        return {'total': 0, 'male': 0, 'female': 0}
     results = {}
     results['total'] = int(submissions.loc[:, ['_uuid']].count())
     if gender_disagg:
