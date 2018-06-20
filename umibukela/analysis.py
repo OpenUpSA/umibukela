@@ -70,8 +70,11 @@ def count_submissions(submissions, gender_disagg=True):
         gender_counts = question_table.groupby(
             [GENDER_COLUMN]
         ).count()
-        results['female'] = int(gender_counts.loc['female'])
-        results['male'] = int(gender_counts.loc['male'])
+        for gender in ('female', 'male'):
+            if gender in gender_counts.index:
+                results[gender] = int(gender_counts.loc[gender])
+            else:
+                results[gender] = 0
     return results
 
 
