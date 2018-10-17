@@ -24,7 +24,6 @@ import requests
 import shutil
 import uuid
 
-
 # ------------------------------------------------------------------------------
 # General utilities
 # ------------------------------------------------------------------------------
@@ -47,6 +46,7 @@ def cycle_materials_filename(instance, filename):
     """
     return 'cycle_materials/%s' % path.basename(filename)
 
+
 # ------------------------------------------------------------------------------
 # Models
 # ------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ class Sector(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('name', )
 
     def __str__(self):
         return self.name
@@ -67,10 +67,11 @@ class Province(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('name', )
 
     def __str__(self):
         return self.name
+
 
 class Funder(models.Model):
     name = models.CharField(max_length=200, unique=True)
@@ -89,22 +90,24 @@ class Partner(models.Model):
     email_address = models.EmailField(max_length=200, null=True, blank=True)
     intro_title = models.CharField(max_length=200, null=True, blank=True)
     intro_statement = models.TextField(null=True, blank=True)
-    intro_image = models.ImageField(upload_to=image_filename, null=True, blank=True)
+    intro_image = models.ImageField(
+        upload_to=image_filename, null=True, blank=True)
     context_quote = models.CharField(max_length=200, null=True, blank=True)
     context_statement = models.TextField(null=True, blank=True)
-    context_image = models.ImageField(upload_to=image_filename, null=True, blank=True)
+    context_image = models.ImageField(
+        upload_to=image_filename, null=True, blank=True)
 
     class Meta:
-        ordering = ('short_name',)
+        ordering = ('short_name', )
 
     def __str__(self):
         return self.short_name
 
     def completed_result_sets(self):
-        result_sets = list(self.cycle_result_sets.filter(
-            survey__cycle__end_date__lte=timezone.now(),
-            published=True
-        ).all())
+        result_sets = list(
+            self.cycle_result_sets.filter(
+                survey__cycle__end_date__lte=timezone.now(),
+                published=True).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
         return result_sets
 
@@ -117,7 +120,8 @@ class Partner(models.Model):
         return reverse('partner', args=[self.slug])
 
     def sites(self):
-        sites = list(set(Site.objects.filter(cycle_result_sets__partner=self).all()))
+        sites = list(
+            set(Site.objects.filter(cycle_result_sets__partner=self).all()))
         sites.sort(key=lambda p: p.name)
         return sites
 
@@ -127,7 +131,7 @@ class Monitor(models.Model):
     partner = models.ForeignKey(Partner)
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('name', )
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.partner.short_name)
@@ -145,7 +149,7 @@ class Site(models.Model):
     coordinates = gis_models.PointField(null=True, blank=True)
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('name', )
 
     def __str__(self):
         return self.name
@@ -156,10 +160,10 @@ class Site(models.Model):
         return result_sets[0] if result_sets else None
 
     def completed_result_sets(self):
-        result_sets = list(self.cycle_result_sets.filter(
-            survey__cycle__end_date__lte=timezone.now(),
-            published=True
-        ).all())
+        result_sets = list(
+            self.cycle_result_sets.filter(
+                survey__cycle__end_date__lte=timezone.now(),
+                published=True).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp, reverse=True)
         return result_sets
 
@@ -188,7 +192,8 @@ class Site(models.Model):
         return ', '.join([p for p in parts if p])
 
     def partners(self):
-        partners = list(set(Partner.objects.filter(cycle_result_sets__site=self).all()))
+        partners = list(
+            set(Partner.objects.filter(cycle_result_sets__site=self).all()))
         partners.sort(key=lambda p: p.short_name)
         return partners
 
@@ -203,13 +208,12 @@ class CycleFrequency(models.Model):
         return self.name
 
 
-
-
 class Programme(models.Model):
     short_name = models.CharField(max_length=100, unique=True)
     long_name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
     frequency = models.ForeignKey(CycleFrequency, null=True, blank=True)
+    slug = models.SlugField(max_length=200, unique=True)
 
     def cycles(self):
         cycles = list(set(Cycle.objects.all()))
@@ -225,7 +229,8 @@ class Cycle(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     programme = models.ForeignKey(Programme)
-    materials = models.FileField(upload_to=cycle_materials_filename, blank=True, null=True)
+    materials = models.FileField(
+        upload_to=cycle_materials_filename, blank=True, null=True)
     auto_import = models.BooleanField()
 
     class Meta:
@@ -233,9 +238,8 @@ class Cycle(models.Model):
         ordering = ('name', )
 
     def __str__(self):
-        return "%s - %s [%s to %s]" % (
-            self.name, self.programme.short_name, self.start_date, self.end_date
-        )
+        return "%s - %s [%s to %s]" % (self.name, self.programme.short_name,
+                                       self.start_date, self.end_date)
 
     def end_date_cmp(a, b):
         if a.end_date > b.end_date:
@@ -246,10 +250,11 @@ class Cycle(models.Model):
             return -1
 
     def get_previous(self):
-        cycles = list(Cycle.objects.filter(
-            end_date__lte=self.start_date,
-            programme=self.programme,
-        ).all())
+        cycles = list(
+            Cycle.objects.filter(
+                end_date__lte=self.start_date,
+                programme=self.programme,
+            ).all())
         cycles.sort(cmp=Cycle.end_date_cmp)
         cycles.reverse()
         if cycles:
@@ -290,7 +295,8 @@ class Cycle(models.Model):
                 with NamedTemporaryFile(dir=ziptmpdir, delete=False) as zfh:
                     with ZipFile(zfh, 'w') as zf:
                         for file in to_archive:
-                            zf.write(file['local_filename'], file['archive_filename'])
+                            zf.write(file['local_filename'],
+                                     file['archive_filename'])
                     filename = "%s-%s-%s-to-%s.zip" % (
                         slugify(self.name),
                         slugify(self.programme.short_name),
@@ -307,14 +313,26 @@ class Cycle(models.Model):
 class SurveyType(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
-    short_description = models.TextField(help_text="This is a short line to indicate who is being surveyed to what degree, e.g. \"Light-touch survey completed by users of facility X\"")
-    full_description = models.TextField(help_text="This is a thorough description used to fully explain the purpose behind the surveys of this type.")
+    short_description = models.TextField(
+        help_text=
+        "This is a short line to indicate who is being surveyed to what degree, e.g. \"Light-touch survey completed by users of facility X\""
+    )
+    full_description = models.TextField(
+        help_text=
+        "This is a thorough description used to fully explain the purpose behind the surveys of this type."
+    )
     public = models.BooleanField(default=False)
-    poster_template = models.CharField(max_length=1000, blank=True, null=True, help_text="Path of template from the application root. If it's blank, poster links won't be generated for this survey type.")
+    poster_template = models.CharField(
+        max_length=1000,
+        blank=True,
+        null=True,
+        help_text=
+        "Path of template from the application root. If it's blank, poster links won't be generated for this survey type."
+    )
     has_handout = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('name', )
 
     def __str__(self):
         return self.name
@@ -369,13 +387,13 @@ class Survey(models.Model):
                 facility_name = response[facility_q_name]
                 obj = Submission(
                     answers=response,
-                    cycle_result_set=facility_crs[facility_name]
-                )
+                    cycle_result_set=facility_crs[facility_name])
                 obj.save()
 
 
 class SurveyKoboProject(models.Model):
-    survey = models.OneToOneField(Survey, on_delete=models.CASCADE, primary_key=True)
+    survey = models.OneToOneField(
+        Survey, on_delete=models.CASCADE, primary_key=True)
     # Kobo is deprecating projects so from this point on,
     # when we refer to a kobo project (a form and its submissions),
     # the formid field is the unique reference for the URLs
@@ -386,12 +404,17 @@ class SurveyKoboProject(models.Model):
 
 
 class UserKoboRefreshToken(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, primary_key=True)
     token = models.TextField(null=False, blank=False)
 
 
 class ProgrammeKoboRefreshToken(models.Model):
-    programme = models.OneToOneField(Programme, on_delete=models.CASCADE, primary_key=True, related_name="kobo_refresh_token")
+    programme = models.OneToOneField(
+        Programme,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name="kobo_refresh_token")
     token = models.TextField(null=False, blank=False)
 
 
@@ -414,34 +437,55 @@ class CycleResultSet(models.Model):
     partner = models.ForeignKey(Partner, related_name='cycle_result_sets')
     # This is meant to allow identifying comparable CycleResultSets
     # which don't necessarily have exactly the same survey
-    survey = models.ForeignKey(Survey, null=True, blank=True, related_name="cycle_result_sets")
-    monitors = models.ManyToManyField("Monitor", blank=True, help_text="Only monitors for the current partner are shown. If you update the Partner you'll have to save and edit this Cycle Result Set again to see the available monitors.")
-    funder = models.ForeignKey(Funder, null=True, blank=True, on_delete=models.SET_NULL)
+    survey = models.ForeignKey(
+        Survey, null=True, blank=True, related_name="cycle_result_sets")
+    monitors = models.ManyToManyField(
+        "Monitor",
+        blank=True,
+        help_text=
+        "Only monitors for the current partner are shown. If you update the Partner you'll have to save and edit this Cycle Result Set again to see the available monitors."
+    )
+    funder = models.ForeignKey(
+        Funder, null=True, blank=True, on_delete=models.SET_NULL)
 
-    action_items = models.TextField(null=True, blank=True, help_text="Key challenges identified for improvement. Markdown allowed.")
-    follow_up_date = models.DateField(null=True, blank=True, help_text="Date when follow up check was performed")
-    follow_up = models.TextField(null=True, blank=True, help_text="Follow ups to key challenges. Markdown allowed.")
-    published = models.BooleanField(null=False, blank=False, help_text="Whether the results may be listed publicly with the assumption that it's somewhat validated", default=False)
+    action_items = models.TextField(
+        null=True,
+        blank=True,
+        help_text="Key challenges identified for improvement. Markdown allowed."
+    )
+    follow_up_date = models.DateField(
+        null=True,
+        blank=True,
+        help_text="Date when follow up check was performed")
+    follow_up = models.TextField(
+        null=True,
+        blank=True,
+        help_text="Follow ups to key challenges. Markdown allowed.")
+    published = models.BooleanField(
+        null=False,
+        blank=False,
+        help_text=
+        "Whether the results may be listed publicly with the assumption that it's somewhat validated",
+        default=False)
 
     class Meta:
         unique_together = ('site', 'survey')
         ordering = ('site__name', 'partner__short_name')
 
     def __str__(self):
-        return "%s <- %s (%s: %s)" % (
-            self.site.name, self.partner.short_name, self.survey.type, self.survey.cycle
-        )
+        return "%s <- %s (%s: %s)" % (self.site.name, self.partner.short_name,
+                                      self.survey.type, self.survey.cycle)
 
     def end_date_cmp(a, b):
         return Cycle.end_date_cmp(a.survey.cycle, b.survey.cycle)
 
     def get_previous(self):
-        result_sets = list(CycleResultSet.objects.filter(
-            survey__cycle__end_date__lte=self.survey.cycle.start_date,
-            site__exact=self.site,
-            survey__type=self.survey.type,
-            published=True
-        ).filter(~Q(pk=self.pk)).all())
+        result_sets = list(
+            CycleResultSet.objects.filter(
+                survey__cycle__end_date__lte=self.survey.cycle.start_date,
+                site__exact=self.site,
+                survey__type=self.survey.type,
+                published=True).filter(~Q(pk=self.pk)).all())
         result_sets.sort(cmp=CycleResultSet.end_date_cmp)
         result_sets.reverse()
         if result_sets:
@@ -503,13 +547,16 @@ class AttachmentNature(models.Model):
 
 
 class CycleResultSetAttachment(models.Model):
-    cycle_result_set = models.ForeignKey(CycleResultSet, null=False, related_name='attachments')
+    cycle_result_set = models.ForeignKey(
+        CycleResultSet, null=False, related_name='attachments')
     nature = models.ForeignKey(AttachmentNature, null=False)
     file = models.FileField(upload_to=attachment_filename, null=False)
 
     def __str__(self):
         return "%s -> %s (%s)" % (
-            self.cycle_result_set, self.file.name, self.nature.name,
+            self.cycle_result_set,
+            self.file.name,
+            self.nature.name,
         )
 
 
@@ -517,11 +564,7 @@ class Submission(models.Model):
     answers = jsonfield.JSONField()
     uuid = models.TextField(unique=True)
     cycle_result_set = models.ForeignKey(
-        CycleResultSet,
-        null=True,
-        blank=True,
-        related_name="submissions"
-    )
+        CycleResultSet, null=True, blank=True, related_name="submissions")
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(auto_now=True, editable=False)
 
@@ -545,10 +588,9 @@ class Submission(models.Model):
 
         if local_copy_json != remote_copy_json:
             raise Exception("Same uuid but different values\n"
-                            "Remote: %s\n\nDB: %s" % (
-                                pprint.pformat(remote_copy),
-                                pprint.pformat(local_copy)
-                            ))
+                            "Remote: %s\n\nDB: %s" %
+                            (pprint.pformat(remote_copy),
+                             pprint.pformat(local_copy)))
 
     def __str__(self):
         return "uuid=%s" % self.uuid
