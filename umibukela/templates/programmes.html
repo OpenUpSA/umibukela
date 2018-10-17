@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+
+{% block title %}Programmes{% endblock %}
+{% block page-content %}
+
+<!-- breadcrumbs -->
+<div class="container breadcrumb-container">
+    <ol class="breadcrumb">
+	<li><a href="/">Home</a></li>
+	<li class="active">Programmes</li>
+    </ol>
+</div>
+<!-- /breadcrumbs -->
+
+<div class="section" id="programmes">
+
+    <!-- section-header -->
+    <div class="section-heading">
+	<div class="container">
+	    <h1><i class="fa fa-clipboard"></i> Programmes</h1>
+	</div>
+    </div>
+    <!-- /section-header -->
+
+</div>
+
+<div class="survey-types">
+    <section class="types">
+	<div class="container">
+	    <div class="row">
+		<div class="col-md-8">
+		    <p>A programme is a collection of surveys with specific research questions, administered by a collection of community partners and typically sharing common funding sources. It can have one or many cycles (frequency) and each cycle has a set of results for each survey instrument</p>
+		</div>
+	    </div>
+	    <div class="row">
+		<div class="col-md-12">
+		    <div class="row">
+			{% for programme in programmes %}
+			<div class="col-xs-6 col-md-3">
+			    <div class="survey-name">     
+				<a href="{% url 'programme_detail' programme.slug %}">{{ programme.long_name }}</a>
+				<p>{{ programme.description|truncatewords:35 }}</p>
+			    </div>
+			</div>
+			{% endfor %}
+		    </div>
+		</div>
+	    </div>
+
+	</div>
+    </section>
+</div>
+
+
+{% endblock %}
