@@ -3,28 +3,18 @@ from django.conf import settings
 from django.conf.urls.static import static
 from umibukela.admin import admin_site
 
-
 urlpatterns = patterns(
     '',
-    url(r'^$',
-      'umibukela.views.home',
-        name='home'),
-    url(r'^about$',
-      'umibukela.views.about',
-        name='about'),
-    url(r'^learn-about-cbm$',
-      'umibukela.views.learn',
-        name='learn'),
-    url(r'^resources$',
-      'umibukela.views.resources',
-        name='resources'),
-
-    url(r'^sites$',
-        'umibukela.views.sites',
-        name='sites'),
-    url(r'^sites/(?P<site_slug>[\w-]+)$',
-        'umibukela.views.site',
-        name='site'),
+    url(r'^$', 'umibukela.views.home', name='home'),
+    url(r'^about$', 'umibukela.views.about', name='about'),
+    url(r'^learn-about-cbm$', 'umibukela.views.learn', name='learn'),
+    url(r'^resources$', 'umibukela.views.resources', name='resources'),
+    url('^programmes$', 'umibukela.views.programmes', name='programmes'),
+    url('^programmes/(?P<programme_slug>[\w?-]+)$',
+        'umibukela.views.programme_detail',
+        name='programme_detail'),
+    url(r'^sites$', 'umibukela.views.sites', name='sites'),
+    url(r'^sites/(?P<site_slug>[\w-]+)$', 'umibukela.views.site', name='site'),
     url(r'^sites/(?P<site_slug>[\w-]+)/results/(?P<result_id>\d+)$',
         'umibukela.views.site_result',
         name='site-result'),
@@ -54,19 +44,15 @@ urlpatterns = patterns(
         name='site-result-comments-pdf'),
 
     # survey types
-    url(r'^survey-types$',
-        'umibukela.views.survey_types',
-        name='survey-types'),
+    url(r'^survey-types$', 'umibukela.views.survey_types', name='survey-types'
+        ),
     url(r'^survey-types/(?P<survey_type_slug>[\w-]+)$',
         'umibukela.views.survey_type',
         name='survey-type'),
     url(r'^survey-types/(?P<survey_type_slug>[\w-]+)/(?P<cycle_id>[\w-]+)$',
         'umibukela.views.survey_type_cycle',
         name='survey-type-cycle'),
-
-    url(r'^partners$',
-        'umibukela.views.partners',
-        name='partners'),
+    url(r'^partners$', 'umibukela.views.partners', name='partners'),
     url(r'^partners/(?P<partner_slug>[\w-]+)$',
         'umibukela.views.partner',
         name='partner'),
@@ -100,9 +86,7 @@ urlpatterns = patterns(
         name='national-poster-pdf'),
 
     # health-e
-    url(r'^stockouts/$',
-        'umibukela.healthe.views.home',
-        name='healthe-home'),
+    url(r'^stockouts/$', 'umibukela.healthe.views.home', name='healthe-home'),
     url(r'^stockouts/download/$',
         'umibukela.healthe.views.report_download',
         name='healthe-report-download'),
@@ -112,13 +96,14 @@ urlpatterns = patterns(
     url(r'^stockouts/year/report$',
         'umibukela.healthe.views.year_report',
         name='healthe-year-report'),
-
-    url(r'^login/$',
-        'django.contrib.auth.views.login', {'template_name': 'admin/login.html'}),
+    url(r'^login/$', 'django.contrib.auth.views.login', {
+        'template_name': 'admin/login.html'
+    }),
     url(r'^admin/kobo-oauth',
         'umibukela.views.kobo_oauth_return',
         name='kobo-oauth'),
     url(r'^admin/', include(admin_site.urls)),
 
     # For when images are hosted locally
-) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+) + static(
+    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

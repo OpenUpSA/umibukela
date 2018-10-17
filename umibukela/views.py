@@ -48,6 +48,7 @@ def home(request):
         'survey_types': survey_types,
     })
 
+
 def about(request):
     return render(request, 'about.html', {
         'active_tab': 'about',
@@ -64,6 +65,37 @@ def resources(request):
     return render(request, 'resources.html', {
         'active_tab': 'resources',
     })
+
+
+def programmes(request):
+    prog = Programme.objects.all().only('long_name', 'description')
+    return render(request, 'programmes.html', {'programmes': prog})
+
+
+def programme_detail(request, programme_slug):
+    programme = Programme.objects.get(slug=programme_slug)
+    surveys = Survey.objects.filter(cycle__programme__slug=programme_slug)
+    partners = CycleResultSet\
+               .objects\
+               .filter(survey__cycle__programme__slug=programme_slug)\
+               .order_by('partner__id')\
+               .distinct('partner')\
+               .select_related('partner')\
+               .only('partner')
+    donars = CycleResultSet\
+              .objects\
+              .filter(survey__cycle__programme__slug=programme_slug)\
+              .order_by('funder_id')\
+              .distinct('funder')\
+              .select_related('funder')\
+              .only('funder')
+    return render(
+        request, 'programme_detail.html', {
+            'programme': programme,
+            'surveys': surveys,
+            'partners': partners,
+            'donars': donars
+        })
 
 
 def sites(request):
@@ -85,10 +117,7 @@ def site(request, site_slug):
 
 def site_result(request, site_slug, result_id):
     result_set = get_object_or_404(
-        CycleResultSet,
-        id=result_id,
-        site__slug__exact=site_slug
-    )
+        CycleResultSet, id=result_id, site__slug__exact=site_slug)
     if not (result_set.published or request.user.is_superuser):
         raise Http404("No such CycleResultSet found")
     form, responses = result_set.get_survey()
@@ -104,7 +133,8 @@ def site_result(request, site_slug, result_id):
                 site_totals = analysis.count_submissions(
                     pandas.DataFrame(responses + prev_responses))
                 prev_df = pandas.DataFrame(prev_responses)
-                prev_results = analysis.count_options(prev_df, prev_form['children'])
+                prev_results = analysis.count_options(prev_df,
+                                                      prev_form['children'])
                 prev_results = analysis.calc_q_percents(prev_results)
             else:
                 prev_results = None
@@ -115,29 +145,29 @@ def site_result(request, site_slug, result_id):
         site_totals = {'male': 0, 'female': 0, 'total': 0}
         site_results = None
 
-    return render(request, 'site_result_detail.html', {
-        'active_tab': 'sites',
-        'result_set': result_set,
-        'results': {
-            'questions_dict': site_results,
-            'totals': site_totals,
-        }
-    })
+    return render(
+        request, 'site_result_detail.html', {
+            'active_tab': 'sites',
+            'result_set': result_set,
+            'results': {
+                'questions_dict': site_results,
+                'totals': site_totals,
+            }
+        })
 
 
 def summary(request, site_slug, result_id):
     result_set = get_object_or_404(
-        CycleResultSet,
-        id=result_id,
-        site__slug__exact=site_slug
-    )
+        CycleResultSet, id=result_id, site__slug__exact=site_slug)
     # Multiple choice question responses
     form, responses = result_set.get_survey()
     gender_disagg = not not form.get_by_path('demographics_group/gender')
     if responses:
         df = pandas.DataFrame(responses)
-        site_totals = analysis.count_submissions(df, gender_disagg=gender_disagg)
-        site_results = analysis.count_options(df, form['children'], gender_disagg=gender_disagg)
+        site_totals = analysis.count_submissions(
+            df, gender_disagg=gender_disagg)
+        site_results = analysis.count_options(
+            df, form['children'], gender_disagg=gender_disagg)
         site_results = analysis.calc_q_percents(site_results, gender_disagg)
         prev_result_set = result_set.get_previous()
         if prev_result_set:
@@ -145,13 +175,14 @@ def summary(request, site_slug, result_id):
             if prev_responses:
                 site_totals = analysis.count_submissions(
                     pandas.DataFrame(responses + prev_responses),
-                    gender_disagg=gender_disagg
-                )
+                    gender_disagg=gender_disagg)
                 prev_df = pandas.DataFrame(prev_responses)
                 prev_results = analysis.count_options(
                     prev_df,
-                    prev_form['children'], gender_disagg=gender_disagg)
-                prev_results = analysis.calc_q_percents(prev_results, gender_disagg)
+                    prev_form['children'],
+                    gender_disagg=gender_disagg)
+                prev_results = analysis.calc_q_percents(
+                    prev_results, gender_disagg)
             else:
                 prev_results = None
         else:
@@ -167,9 +198,13 @@ def summary(request, site_slug, result_id):
     ]
     text_questions = {}
     for child in result_set.survey.form.get('children'):
-        if child.get('type', None) == 'text' and child.get('name') not in skip_questions:
-            comments = Counter([s.answers.get(child['name'], None)
-                                for s in result_set.submissions.all()])
+        if child.get(
+                'type',
+                None) == 'text' and child.get('name') not in skip_questions:
+            comments = Counter([
+                s.answers.get(child['name'], None)
+                for s in result_set.submissions.all()
+            ])
             comments.pop(None, None)
             comments.pop('n/a', None)
 
@@ -178,22 +213,23 @@ def summary(request, site_slug, result_id):
                 'comments': comments,
                 'count': sum(comments.values()),
             }
-    return render(request, 'print-materials/site_cycle_summary.html', {
-        'ignore_paths': ['facility', 'demographics_group/gender'],
-        'ignore_types': IGNORE_TYPES,
-        'multiple_choice_types': ['select all that apply', 'select one'],
-        'form': form,
-        'text_questions': text_questions,
-        'location_name': result_set.site.name,
-        'survey_type': result_set.survey.type,
-        'cycle': result_set.survey.cycle,
-        'gender_disagg': gender_disagg,
-        'result_set': result_set,
-        'results': {
-            'questions_dict': site_results,
-            'totals': site_totals,
-        }
-    })
+    return render(
+        request, 'print-materials/site_cycle_summary.html', {
+            'ignore_paths': ['facility', 'demographics_group/gender'],
+            'ignore_types': IGNORE_TYPES,
+            'multiple_choice_types': ['select all that apply', 'select one'],
+            'form': form,
+            'text_questions': text_questions,
+            'location_name': result_set.site.name,
+            'survey_type': result_set.survey.type,
+            'cycle': result_set.survey.cycle,
+            'gender_disagg': gender_disagg,
+            'result_set': result_set,
+            'results': {
+                'questions_dict': site_results,
+                'totals': site_totals,
+            }
+        })
 
 
 def summary_pdf(request, site_slug, result_id):
@@ -202,28 +238,41 @@ def summary_pdf(request, site_slug, result_id):
         id=result_id,
     )
     # render poster as pdf
-    url = reverse('site-result-summary', kwargs={'site_slug': site_slug, 'result_id': result_id})
+    url = reverse(
+        'site-result-summary',
+        kwargs={
+            'site_slug': site_slug,
+            'result_id': result_id
+        })
     url = request.build_absolute_uri(url)
-    pdf = wkhtmltopdf(url, **{
-        'margin-top': '0.5cm',
-        'margin-right': '0.5cm',
-        'margin-bottom': '0.5cm',
-        'margin-left': '0.5cm',
-    })
-    filename = (u'Summary for %s - %s - %s.pdf' % (result_set.survey.name, result_set.partner.short_name, result_set.site.name)).encode('ascii', 'ignore')
+    pdf = wkhtmltopdf(
+        url, **{
+            'margin-top': '0.5cm',
+            'margin-right': '0.5cm',
+            'margin-bottom': '0.5cm',
+            'margin-left': '0.5cm',
+        })
+    filename = (u'Summary for %s - %s - %s.pdf' %
+                (result_set.survey.name, result_set.partner.short_name,
+                 result_set.site.name)).encode('ascii', 'ignore')
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
 def poster(request, site_slug, result_id):
     result_set = get_object_or_404(
-        CycleResultSet,
-        id=result_id,
-        site__slug__exact=site_slug
-    )
+        CycleResultSet, id=result_id, site__slug__exact=site_slug)
     form, responses = result_set.get_survey()
     totals = {
-        'current': {'male': 0, 'female': 0, 'total': 0},
-        'previous': {'male': 0, 'female': 0, 'total': 0},
+        'current': {
+            'male': 0,
+            'female': 0,
+            'total': 0
+        },
+        'previous': {
+            'male': 0,
+            'female': 0,
+            'total': 0
+        },
     }
     site_results = None
 
@@ -239,7 +288,8 @@ def poster(request, site_slug, result_id):
                 totals['previous'] = analysis.count_submissions(
                     pandas.DataFrame(prev_responses))
                 prev_df = pandas.DataFrame(prev_responses)
-                prev_results = analysis.count_options(prev_df, prev_form['children'])
+                prev_results = analysis.count_options(prev_df,
+                                                      prev_form['children'])
                 prev_results = analysis.calc_q_percents(prev_results)
                 prev_date = prev_result_set.survey.cycle.start_date
             else:
@@ -250,48 +300,51 @@ def poster(request, site_slug, result_id):
             prev_date = None
         analysis.combine_curr_hist(site_results, prev_results)
 
-    return render(request, result_set.survey.type.poster_template, {
-        'DEBUG': settings.DEBUG,
-        'form': form,
-        'layout_class': slugify(result_set.survey.type.name),
-        'prev_date': prev_date,
-        'start_date': result_set.survey.cycle.start_date,
-        'end_date': result_set.survey.cycle.end_date,
-        'questions_dict': site_results,
-        'sector': result_set.site.sector.name,
-        'location': result_set.site.name,
-        'totals': totals,
-        'funder_name': result_set.funder.name,
-        'partner_name': result_set.partner.full_name,
-    })
+    return render(
+        request, result_set.survey.type.poster_template, {
+            'DEBUG': settings.DEBUG,
+            'form': form,
+            'layout_class': slugify(result_set.survey.type.name),
+            'prev_date': prev_date,
+            'start_date': result_set.survey.cycle.start_date,
+            'end_date': result_set.survey.cycle.end_date,
+            'questions_dict': site_results,
+            'sector': result_set.site.sector.name,
+            'location': result_set.site.name,
+            'totals': totals,
+            'funder_name': result_set.funder.name,
+            'partner_name': result_set.partner.full_name,
+        })
 
 
 def poster_pdf(request, site_slug, result_id):
     result_set = get_object_or_404(
-        CycleResultSet,
-        id=result_id,
-        site__slug__exact=site_slug
-    )
+        CycleResultSet, id=result_id, site__slug__exact=site_slug)
     # render poster as pdf
-    url = reverse('site-result-poster', kwargs={'site_slug': site_slug, 'result_id': result_id})
+    url = reverse(
+        'site-result-poster',
+        kwargs={
+            'site_slug': site_slug,
+            'result_id': result_id
+        })
     url = request.build_absolute_uri(url)
-    pdf = wkhtmltopdf(url, **{
-        'margin-top': '0.5cm',
-        'margin-right': '0.5cm',
-        'margin-bottom': '0.5cm',
-        'margin-left': '0.5cm',
-        'page-size': 'A4',
-    })
-    filename = (u'Poster for %s - %s - %s.pdf' % (result_set.survey.name, result_set.partner.short_name, result_set.site.name)).encode('ascii', 'ignore')
+    pdf = wkhtmltopdf(
+        url, **{
+            'margin-top': '0.5cm',
+            'margin-right': '0.5cm',
+            'margin-bottom': '0.5cm',
+            'margin-left': '0.5cm',
+            'page-size': 'A4',
+        })
+    filename = (u'Poster for %s - %s - %s.pdf' %
+                (result_set.survey.name, result_set.partner.short_name,
+                 result_set.site.name)).encode('ascii', 'ignore')
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
 def handout(request, site_slug, result_id):
     result_set = get_object_or_404(
-        CycleResultSet,
-        id=result_id,
-        site__slug__exact=site_slug
-    )
+        CycleResultSet, id=result_id, site__slug__exact=site_slug)
     prev_result_set = result_set.get_previous()
     form, responses = result_set.get_survey()
 
@@ -302,7 +355,11 @@ def handout(request, site_slug, result_id):
         'site': result_set.site.name,
         'survey_type': result_set.survey.type.id,
         'prev_date': None,
-        'totals': {'male': 0, 'female': 0, 'total': 0},
+        'totals': {
+            'male': 0,
+            'female': 0,
+            'total': 0
+        },
         'DEBUG': settings.DEBUG,
     }
 
@@ -315,43 +372,48 @@ def handout(request, site_slug, result_id):
         analysis.combine_curr_hist(site_results, None)
 
         context['questions_dict'] = site_results
-        context['totals'] = analysis.count_submissions(pandas.DataFrame(responses))
+        context['totals'] = analysis.count_submissions(
+            pandas.DataFrame(responses))
 
-    return render(request, 'print-materials/handouts/handout_layout.html', context)
+    return render(request, 'print-materials/handouts/handout_layout.html',
+                  context)
 
 
 def handout_pdf(request, site_slug, result_id):
     result_set = get_object_or_404(
-        CycleResultSet,
-        id=result_id,
-        site__slug__exact=site_slug
-    )
+        CycleResultSet, id=result_id, site__slug__exact=site_slug)
     # render handout as pdf
-    url = reverse('site-result-handout', kwargs={'site_slug': site_slug, 'result_id': result_id})
+    url = reverse(
+        'site-result-handout',
+        kwargs={
+            'site_slug': site_slug,
+            'result_id': result_id
+        })
     url = request.build_absolute_uri(url)
-    pdf = wkhtmltopdf(url, **{
-        'margin-top': '0.5cm',
-        'margin-right': '0.5cm',
-        'margin-bottom': '0.5cm',
-        'margin-left': '0.5cm',
-        'page-size': 'A3',
-        'orientation': 'landscape',
-    })
-    filename = (u'Handout for %s - %s - %s.pdf' % (result_set.survey.name, result_set.partner.short_name, result_set.site.name)).encode('ascii', 'ignore')
+    pdf = wkhtmltopdf(
+        url, **{
+            'margin-top': '0.5cm',
+            'margin-right': '0.5cm',
+            'margin-bottom': '0.5cm',
+            'margin-left': '0.5cm',
+            'page-size': 'A3',
+            'orientation': 'landscape',
+        })
+    filename = (u'Handout for %s - %s - %s.pdf' %
+                (result_set.survey.name, result_set.partner.short_name,
+                 result_set.site.name)).encode('ascii', 'ignore')
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
 def comments(request, site_slug, result_id):
     result_set = get_object_or_404(
-        CycleResultSet,
-        id=result_id,
-        site__slug__exact=site_slug
-    )
+        CycleResultSet, id=result_id, site__slug__exact=site_slug)
     form, responses = result_set.get_survey()
     gender_disagg = not not form.get_by_path('demographics_group/gender')
     if responses:
         df = pandas.DataFrame(responses)
-        site_totals = analysis.count_submissions(df, gender_disagg=gender_disagg)
+        site_totals = analysis.count_submissions(
+            df, gender_disagg=gender_disagg)
     else:
         site_totals = {'male': 0, 'female': 0, 'total': 0}
     skip_questions = [
@@ -360,9 +422,13 @@ def comments(request, site_slug, result_id):
     ]
     text_questions = {}
     for child in result_set.survey.form.get('children'):
-        if child.get('type', None) == 'text' and child.get('name') not in skip_questions:
-            comments = Counter([s.answers.get(child['name'], None)
-                                for s in result_set.submissions.all()])
+        if child.get(
+                'type',
+                None) == 'text' and child.get('name') not in skip_questions:
+            comments = Counter([
+                s.answers.get(child['name'], None)
+                for s in result_set.submissions.all()
+            ])
             comments.pop(None, None)
             comments.pop('n/a', None)
 
@@ -371,40 +437,46 @@ def comments(request, site_slug, result_id):
                 'comments': comments,
                 'count': sum(comments.values()),
             }
-    return render(request, 'print-materials/site_cycle_summary.html', {
-        'ignore_paths': ['facility'],
-        'ignore_types': IGNORE_TYPES,
-        'multiple_choice_types': ['select all that apply', 'select one'],
-        'form': form,
-        'text_questions': text_questions,
-        'location_name': result_set.site.name,
-        'survey_type': result_set.survey.type,
-        'cycle': result_set.survey.cycle,
-        'gender_disagg': gender_disagg,
-        'result_set': result_set,
-        'results': {
-            'questions_dict': None,
-            'totals': site_totals,
-        }
-    })
+    return render(
+        request, 'print-materials/site_cycle_summary.html', {
+            'ignore_paths': ['facility'],
+            'ignore_types': IGNORE_TYPES,
+            'multiple_choice_types': ['select all that apply', 'select one'],
+            'form': form,
+            'text_questions': text_questions,
+            'location_name': result_set.site.name,
+            'survey_type': result_set.survey.type,
+            'cycle': result_set.survey.cycle,
+            'gender_disagg': gender_disagg,
+            'result_set': result_set,
+            'results': {
+                'questions_dict': None,
+                'totals': site_totals,
+            }
+        })
 
 
 def comments_pdf(request, site_slug, result_id):
     result_set = get_object_or_404(
-        CycleResultSet,
-        id=result_id,
-        site__slug__exact=site_slug
-    )
+        CycleResultSet, id=result_id, site__slug__exact=site_slug)
     # render poster as pdf
-    url = reverse('site-result-comments', kwargs={'site_slug': site_slug, 'result_id': result_id})
+    url = reverse(
+        'site-result-comments',
+        kwargs={
+            'site_slug': site_slug,
+            'result_id': result_id
+        })
     url = request.build_absolute_uri(url)
-    pdf = wkhtmltopdf(url, **{
-        'margin-top': '0.5cm',
-        'margin-right': '0.5cm',
-        'margin-bottom': '0.5cm',
-        'margin-left': '0.5cm',
-    })
-    filename = (u'Comments for %s - %s - %s.pdf' % (result_set.survey.name, result_set.partner.short_name, result_set.site.name)).encode('ascii', 'ignore')
+    pdf = wkhtmltopdf(
+        url, **{
+            'margin-top': '0.5cm',
+            'margin-right': '0.5cm',
+            'margin-bottom': '0.5cm',
+            'margin-left': '0.5cm',
+        })
+    filename = (u'Comments for %s - %s - %s.pdf' %
+                (result_set.survey.name, result_set.partner.short_name,
+                 result_set.site.name)).encode('ascii', 'ignore')
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
@@ -426,67 +498,68 @@ def partner(request, partner_slug):
 
 def survey_types(request):
     survey_types = SurveyType.objects.filter(public=True).all()
-    return render(request, 'survey_types.html', {
-        'active_tab': 'surveys',
-        'survey_types': survey_types,
-        'username': settings.BLACKSASH_KOBO_USERNAME,
-        'password': settings.BLACKSASH_KOBO_PASSWORD,
-    })
+    return render(
+        request, 'survey_types.html', {
+            'active_tab': 'surveys',
+            'survey_types': survey_types,
+            'username': settings.BLACKSASH_KOBO_USERNAME,
+            'password': settings.BLACKSASH_KOBO_PASSWORD,
+        })
+
 
 def survey_type(request, survey_type_slug):
     survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
-    cycles = list(Survey.objects.values(
-        'cycle__name',
-        'cycle__id',
-        'cycle__start_date',
-        'cycle__end_date'
-    ).filter(type=survey_type).order_by('cycle__id').distinct('cycle'))
+    cycles = list(
+        Survey.objects.values(
+            'cycle__name',
+            'cycle__id', 'cycle__start_date', 'cycle__end_date').filter(
+                type=survey_type).order_by('cycle__id').distinct('cycle'))
     cycles = sorted(cycles, key=lambda x: x['cycle__start_date'])
     latest_cycle = Cycle.objects.get(id=cycles[-1]['cycle__id'])
     latest_cycle_resultset = CycleResultSet.objects.filter(
-        survey__cycle=latest_cycle,
-        survey__type=survey_type).values(
-        'id',
-        'survey__type__id',
-        'partner_id',
-        'site_id',
+        survey__cycle=latest_cycle, survey__type=survey_type).values(
+            'id',
+            'survey__type__id',
+            'partner_id',
+            'site_id',
         )
     total_count = Submission.objects.filter(
         cycle_result_set__survey__cycle=latest_cycle,
         cycle_result_set__survey__type=survey_type).values(
-        'cycle_result_set__site__province__name')
-    province_count = list(Submission.objects.filter(
-        cycle_result_set__survey__cycle=latest_cycle,
-        cycle_result_set__survey__type=survey_type).values(
-        'cycle_result_set__site__province__slug',
-        'cycle_result_set__site__province__id',
-        'cycle_result_set__site__province__name').annotate(
-        dcount=Count('cycle_result_set__site__province__name')))
+            'cycle_result_set__site__province__name')
+    province_count = list(
+        Submission.objects.filter(
+            cycle_result_set__survey__cycle=latest_cycle,
+            cycle_result_set__survey__type=survey_type).values(
+                'cycle_result_set__site__province__slug',
+                'cycle_result_set__site__province__id',
+                'cycle_result_set__site__province__name').annotate(
+                    dcount=Count('cycle_result_set__site__province__name')))
     for province in province_count:
         site_count = Submission.objects.filter(
             cycle_result_set__survey__cycle=latest_cycle,
             cycle_result_set__survey__type=survey_type,
-            cycle_result_set__site__province__id=province['cycle_result_set__site__province__id'],
-        ).values(
-            'cycle_result_set__id',
-            'cycle_result_set__site',
-            'cycle_result_set__site__slug',
-            'cycle_result_set__site__telephone',
-            'cycle_result_set__site__name').annotate(
-            dcount=Count('cycle_result_set__site'))
+            cycle_result_set__site__province__id=province[
+                'cycle_result_set__site__province__id'],
+        ).values('cycle_result_set__id', 'cycle_result_set__site',
+                 'cycle_result_set__site__slug',
+                 'cycle_result_set__site__telephone',
+                 'cycle_result_set__site__name').annotate(
+                     dcount=Count('cycle_result_set__site'))
         province['sites'] = site_count
 
-    return render(request, 'survey_type_detail.html', {
-        'active_tab': 'surveys',
-        'survey_type': survey_type,
-        'cycles': cycles,
-        'latest_cycle': latest_cycle,
-        'total_count': total_count,
-        'province_count': province_count,
-        'latest_cycle_resultset': latest_cycle_resultset,
-        'username': settings.BLACKSASH_KOBO_USERNAME,
-        'password': settings.BLACKSASH_KOBO_PASSWORD,
-    })
+    return render(
+        request, 'survey_type_detail.html', {
+            'active_tab': 'surveys',
+            'survey_type': survey_type,
+            'cycles': cycles,
+            'latest_cycle': latest_cycle,
+            'total_count': total_count,
+            'province_count': province_count,
+            'latest_cycle_resultset': latest_cycle_resultset,
+            'username': settings.BLACKSASH_KOBO_USERNAME,
+            'password': settings.BLACKSASH_KOBO_PASSWORD,
+        })
 
 
 def survey_type_cycle(request, survey_type_slug, cycle_id):
@@ -494,57 +567,56 @@ def survey_type_cycle(request, survey_type_slug, cycle_id):
     this_cycle = get_object_or_404(Cycle, id=cycle_id)
 
     survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
-    cycles = list(Survey.objects.values(
-        'cycle__name',
-        'cycle__id',
-        'cycle__start_date',
-        'cycle__end_date'
-    ).order_by('cycle__id').distinct('cycle').filter(type=survey_type))
+    cycles = list(
+        Survey.objects.values(
+            'cycle__name', 'cycle__id', 'cycle__start_date',
+            'cycle__end_date').order_by('cycle__id').distinct('cycle').filter(
+                type=survey_type))
     cycles = sorted(cycles, key=lambda x: x['cycle__start_date'])
     this_cycle_resultset = CycleResultSet.objects.filter(
-        survey__cycle=this_cycle,
-        survey__type=survey_type).values(
-        'id',
-        'survey__type_id',
-        'partner_id',
-        'site_id',
-    )
+        survey__cycle=this_cycle, survey__type=survey_type).values(
+            'id',
+            'survey__type_id',
+            'partner_id',
+            'site_id',
+        )
     total_count = Submission.objects.filter(
         cycle_result_set__survey__cycle=this_cycle,
         cycle_result_set__survey__type=survey_type).values(
-        'cycle_result_set__site__province__name')
-    province_count = list(Submission.objects.filter(
-        cycle_result_set__survey__cycle=this_cycle,
-        cycle_result_set__survey__type=survey_type).values(
-        'cycle_result_set__site__province__slug',
-        'cycle_result_set__site__province__id',
-        'cycle_result_set__site__province__name').annotate(
-        dcount=Count('cycle_result_set__site__province__name')))
+            'cycle_result_set__site__province__name')
+    province_count = list(
+        Submission.objects.filter(
+            cycle_result_set__survey__cycle=this_cycle,
+            cycle_result_set__survey__type=survey_type).values(
+                'cycle_result_set__site__province__slug',
+                'cycle_result_set__site__province__id',
+                'cycle_result_set__site__province__name').annotate(
+                    dcount=Count('cycle_result_set__site__province__name')))
     for province in province_count:
         site_count = Submission.objects.filter(
             cycle_result_set__survey__cycle=this_cycle,
             cycle_result_set__survey__type=survey_type,
-            cycle_result_set__site__province__id=province['cycle_result_set__site__province__id'],
-            ).values(
-            'cycle_result_set__id',
-            'cycle_result_set__site',
-            'cycle_result_set__site__telephone',
-            'cycle_result_set__site__slug',
-            'cycle_result_set__site__name').annotate(
-            dcount=Count('cycle_result_set__site'))
+            cycle_result_set__site__province__id=province[
+                'cycle_result_set__site__province__id'],
+        ).values('cycle_result_set__id', 'cycle_result_set__site',
+                 'cycle_result_set__site__telephone',
+                 'cycle_result_set__site__slug',
+                 'cycle_result_set__site__name').annotate(
+                     dcount=Count('cycle_result_set__site'))
         province['sites'] = site_count
 
-    return render(request, 'survey_type_detail_cycle.html', {
-        'active_tab': 'surveys',
-        'survey_type': survey_type,
-        'cycles': cycles,
-        'this_cycle': this_cycle,
-        'total_count': total_count,
-        'province_count': province_count,
-        'this_cycle_resultset': this_cycle_resultset,
-        'username': settings.BLACKSASH_KOBO_USERNAME,
-        'password': settings.BLACKSASH_KOBO_PASSWORD,
-    })
+    return render(
+        request, 'survey_type_detail_cycle.html', {
+            'active_tab': 'surveys',
+            'survey_type': survey_type,
+            'cycles': cycles,
+            'this_cycle': this_cycle,
+            'total_count': total_count,
+            'province_count': province_count,
+            'this_cycle_resultset': this_cycle_resultset,
+            'username': settings.BLACKSASH_KOBO_USERNAME,
+            'password': settings.BLACKSASH_KOBO_PASSWORD,
+        })
 
 
 def survey_from_kobo(request):
@@ -552,37 +624,42 @@ def survey_from_kobo(request):
         return start_kobo_oauth(request)
     else:
         headers = {
-            'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
+            'Authorization':
+            "Bearer %s" % request.session.get('kobo_access_token'),
         }
         if request.method == 'POST':
             form_id = request.POST['form_id']
-            r = requests.get("https://kc.kobotoolbox.org/api/v1/forms/%s/form.json" % form_id,
-                             headers=headers)
+            r = requests.get(
+                "https://kc.kobotoolbox.org/api/v1/forms/%s/form.json" %
+                form_id,
+                headers=headers)
             r.raise_for_status()
             form = r.json()
             survey = Survey(
                 name=form['title'],
                 cycle=Cycle.objects.get(pk=request.POST['cycle']),
                 type=SurveyType.objects.get(pk=request.POST['survey_type']),
-                form=r.text
-            )
+                form=r.text)
             survey.save()
-            survey_kobo_project = SurveyKoboProject(survey=survey, form_id=form_id)
+            survey_kobo_project = SurveyKoboProject(
+                survey=survey, form_id=form_id)
             survey_kobo_project.save()
             return redirect('/admin/umibukela/survey/%d' % survey.id)
         else:
-            r = requests.get("https://kc.kobotoolbox.org/api/v1/forms",
-                             headers=headers)
+            r = requests.get(
+                "https://kc.kobotoolbox.org/api/v1/forms", headers=headers)
             r.raise_for_status()
             available_surveys = []
             for survey in r.json():
-                if not SurveyKoboProject.objects.filter(form_id=survey['formid']).count():
+                if not SurveyKoboProject.objects.filter(
+                        form_id=survey['formid']).count():
                     available_surveys.append(survey)
-            return render(request, 'survey_from_kobo.html', {
-                'forms': available_surveys,
-                'cycles': Cycle.objects.all(),
-                'survey_types': SurveyType.objects.all(),
-            })
+            return render(
+                request, 'survey_from_kobo.html', {
+                    'forms': available_surveys,
+                    'cycles': Cycle.objects.all(),
+                    'survey_types': SurveyType.objects.all(),
+                })
 
 
 def survey_kobo_submissions(request, survey_id):
@@ -590,11 +667,14 @@ def survey_kobo_submissions(request, survey_id):
         return start_kobo_oauth(request)
     else:
         headers = {
-            'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
+            'Authorization':
+            "Bearer %s" % request.session.get('kobo_access_token'),
         }
         survey = get_object_or_404(Survey, id=survey_id)
         form_id = survey.surveykoboproject.form_id
-        r = requests.get("https://kc.kobotoolbox.org/api/v1/data/%s" % form_id, headers=headers)
+        r = requests.get(
+            "https://kc.kobotoolbox.org/api/v1/data/%s" % form_id,
+            headers=headers)
         r.raise_for_status()
         submissions = r.json()
         facilities = []
@@ -613,7 +693,8 @@ def survey_kobo_submissions(request, survey_id):
         facility_key = lambda r: r[facility_q_name]
         facility_sorted = sorted(submissions, key=facility_key, reverse=True)
         facilities = []
-        for facility_name, facility_group in groupby(facility_sorted, facility_key):
+        for facility_name, facility_group in groupby(facility_sorted,
+                                                     facility_key):
             facilities.append({
                 'name': facility_name,
                 'label': facility_labels[facility_name],
@@ -626,23 +707,25 @@ def survey_kobo_submissions(request, survey_id):
             for i in xrange(int(num_facilities)):
                 facility_name = request.POST['facility_%d' % i]
                 crs_id = int(request.POST['crs_%d' % i])
-                facility_crs[facility_name] = CycleResultSet.objects.get(pk=crs_id)
+                facility_crs[facility_name] = CycleResultSet.objects.get(
+                    pk=crs_id)
             submissions = field_per_SATA_option(survey.form, submissions)
             submissions = skipped_as_na(survey.form, submissions)
             for answers in submissions:
                 facility_name = answers[facility_q_name]
                 submission = Submission(
                     answers=answers,
-                    cycle_result_set=facility_crs[facility_name]
-                )
+                    cycle_result_set=facility_crs[facility_name])
                 submission.save()
-            return HttpResponseRedirect('/admin/umibukela/cycleresultset', status=303)
-        return render(request, 'survey_kobo_submissions.html', {
-            'submissions': submissions,
-            'survey': survey,
-            'facilities': facilities,
-            'crs_form': crs_form,
-        })
+            return HttpResponseRedirect(
+                '/admin/umibukela/cycleresultset', status=303)
+        return render(
+            request, 'survey_kobo_submissions.html', {
+                'submissions': submissions,
+                'survey': survey,
+                'facilities': facilities,
+                'crs_form': crs_form,
+            })
 
 
 def kobo_forms(request):
@@ -650,10 +733,11 @@ def kobo_forms(request):
         return start_kobo_oauth(request)
     else:
         headers = {
-            'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
+            'Authorization':
+            "Bearer %s" % request.session.get('kobo_access_token'),
         }
-        r = requests.get("https://kc.kobotoolbox.org/api/v1/forms",
-                         headers=headers)
+        r = requests.get(
+            "https://kc.kobotoolbox.org/api/v1/forms", headers=headers)
         r.raise_for_status()
         available_surveys = r.json()
         surveys = []
@@ -664,12 +748,17 @@ def kobo_forms(request):
             }
             if 'formid' in survey_json:
                 survey['kobo_form_id'] = survey_json['formid']
-                r = requests.get("https://kc.kobotoolbox.org/api/v1/forms/%d/form.json" % survey_json['formid'],
-                                 headers=headers)
+                r = requests.get(
+                    "https://kc.kobotoolbox.org/api/v1/forms/%d/form.json" %
+                    survey_json['formid'],
+                    headers=headers)
                 r.raise_for_status()
                 form = r.json()
                 fields = form.get('children', [])
-                facility_fields = [c for c in fields if c.get('name', None) in ('facility', 'site')]
+                facility_fields = [
+                    c for c in fields
+                    if c.get('name', None) in ('facility', 'site')
+                ]
                 if facility_fields:
                     survey['facilities'] = facility_fields[0]['children']
             surveys.append(survey)
@@ -684,15 +773,24 @@ def kobo_form_site_preview(request, kobo_form_id, site_name):
         return start_kobo_oauth(request)
     else:
         headers = {
-            'Authorization': "Bearer %s" % request.session.get('kobo_access_token'),
+            'Authorization':
+            "Bearer %s" % request.session.get('kobo_access_token'),
         }
-        r = requests.get("https://kc.kobotoolbox.org/api/v1/forms/%s/form.json" % kobo_form_id, headers=headers)
+        r = requests.get(
+            "https://kc.kobotoolbox.org/api/v1/forms/%s/form.json" %
+            kobo_form_id,
+            headers=headers)
         r.raise_for_status()
         form = r.json()
-        r = requests.get("https://kc.kobotoolbox.org/api/v1/data/%s" % kobo_form_id, headers=headers)
+        r = requests.get(
+            "https://kc.kobotoolbox.org/api/v1/data/%s" % kobo_form_id,
+            headers=headers)
         r.raise_for_status()
         submissions = r.json()
-        responses = [s for s in submissions if s.get('facility', s.get('site', None)) == site_name]
+        responses = [
+            s for s in submissions
+            if s.get('facility', s.get('site', None)) == site_name
+        ]
         responses = field_per_SATA_option(form, responses)
         map_questions(form, responses)
 
@@ -711,14 +809,15 @@ def kobo_form_site_preview(request, kobo_form_id, site_name):
             for option in q.get('children', []):
                 if option['name'] == site_name:
                     site_label = option['label']
-        return render(request, 'survey_preview.html', {
-            'site_name': site_label,
-            'form_title': form['title'],
-            'results': {
-                'questions_dict': site_results,
-                'totals': site_totals,
-            }
-        })
+        return render(
+            request, 'survey_preview.html', {
+                'site_name': site_label,
+                'form_title': form['title'],
+                'results': {
+                    'questions_dict': site_results,
+                    'totals': site_totals,
+                }
+            })
 
 
 def is_kobo_authed(request):
@@ -732,7 +831,8 @@ def start_kobo_oauth(request):
         refresh_token = refresh_token_query.get()
         kobo = Kobo.from_refresh_token(refresh_token.token)
         request.session['kobo_access_token'] = kobo.access_token
-        request.session['kobo_access_token_expiry'] = kobo.expiry_datetime.isoformat()
+        request.session[
+            'kobo_access_token_expiry'] = kobo.expiry_datetime.isoformat()
         refresh_token.token = kobo.refresh_token
         refresh_token.save()
         return redirect(request.path)
@@ -741,16 +841,21 @@ def start_kobo_oauth(request):
             'path': request.path,
             'type': 'user',
         }
-        return redirect("https://kc.kobotoolbox.org/o/authorize?client_id=%s&response_type=code&scope=read&state=%s" % (settings.KOBO_CLIENT_ID, json.dumps(state)))
+        return redirect(
+            "https://kc.kobotoolbox.org/o/authorize?client_id=%s&response_type=code&scope=read&state=%s"
+            % (settings.KOBO_CLIENT_ID, json.dumps(state)))
 
 
 def programme_kobo_grant(request, programme_id):
     state = {
-        'path': reverse('admin:umibukela_programme_change', args=[programme_id]),
+        'path': reverse(
+            'admin:umibukela_programme_change', args=[programme_id]),
         'type': 'programme',
         'id': programme_id,
     }
-    return redirect("https://kc.kobotoolbox.org/o/authorize?client_id=%s&response_type=code&scope=read&state=%s" % (settings.KOBO_CLIENT_ID, json.dumps(state)))
+    return redirect(
+        "https://kc.kobotoolbox.org/o/authorize?client_id=%s&response_type=code&scope=read&state=%s"
+        % (settings.KOBO_CLIENT_ID, json.dumps(state)))
 
 
 def kobo_oauth_return(request):
@@ -758,12 +863,15 @@ def kobo_oauth_return(request):
     redirect_uri = request.build_absolute_uri('/admin/kobo-oauth')
     kobo = Kobo.from_auth_code(request.GET.get('code'), redirect_uri)
     request.session['kobo_access_token'] = kobo.access_token
-    request.session['kobo_access_token_expiry'] = kobo.expiry_datetime.isoformat()
+    request.session[
+        'kobo_access_token_expiry'] = kobo.expiry_datetime.isoformat()
     if state['type'] == 'user':
-        refresh_token, created = UserKoboRefreshToken.objects.get_or_create(user=request.user)
+        refresh_token, created = UserKoboRefreshToken.objects.get_or_create(
+            user=request.user)
     elif state['type'] == 'programme':
         programme = Programme.objects.get(id=state['id'])
-        refresh_token, created = ProgrammeKoboRefreshToken.objects.get_or_create(programme=programme)
+        refresh_token, created = ProgrammeKoboRefreshToken.objects.get_or_create(
+            programme=programme)
     refresh_token.token = kobo.refresh_token
     refresh_token.save()
     return redirect(state['path'])
@@ -774,19 +882,24 @@ def province_summary_pdf(request, province_slug, survey_type_slug, cycle_id):
     survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
     cycle = get_object_or_404(Cycle, id=cycle_id)
     # render poster as pdf
-    url = reverse('province-summary', kwargs={
-        'province_slug': province_slug,
-        'survey_type_slug': survey_type_slug,
-        'cycle_id': cycle_id,
-    })
+    url = reverse(
+        'province-summary',
+        kwargs={
+            'province_slug': province_slug,
+            'survey_type_slug': survey_type_slug,
+            'cycle_id': cycle_id,
+        })
     url = request.build_absolute_uri(url)
-    pdf = wkhtmltopdf(url, **{
-        'margin-top': '0.5cm',
-        'margin-right': '0.5cm',
-        'margin-bottom': '0.5cm',
-        'margin-left': '0.5cm',
-    })
-    filename = (u'Summary for %s - %s - %s.pdf' % (province.name, survey_type.name, cycle.name)).encode('ascii', 'ignore')
+    pdf = wkhtmltopdf(
+        url, **{
+            'margin-top': '0.5cm',
+            'margin-right': '0.5cm',
+            'margin-bottom': '0.5cm',
+            'margin-left': '0.5cm',
+        })
+    filename = (u'Summary for %s - %s - %s.pdf' %
+                (province.name, survey_type.name, cycle.name)).encode(
+                    'ascii', 'ignore')
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
@@ -796,50 +909,53 @@ def province_summary(request, province_slug, survey_type_slug, cycle_id):
     cycle = get_object_or_404(Cycle, id=cycle_id)
 
     result_sets = CycleResultSet.objects.filter(
-        site__province=province,
-        survey__cycle=cycle,
-        survey__type=survey_type
-    )
+        site__province=province, survey__cycle=cycle, survey__type=survey_type)
 
-    form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
+    form, gender_disagg, results, totals = analysis.cross_site_summary(
+        result_sets)
     site_totals = totals.pop('per_site')
     for result_set in result_sets:
         result_set.totals = site_totals[result_set.site.id]
 
-    return render(request, 'print-materials/location_cycle_summary.html', {
-        'survey_type': survey_type,
-        'ignore_paths': ['facility'],
-        'ignore_types': IGNORE_TYPES,
-        'multiple_choice_types': ['select all that apply', 'select one'],
-        'form': form,
-        'gender_disagg': gender_disagg,
-        'location_name': province.name,
-        'survey_type': survey_type,
-        'cycle': cycle,
-        'result_sets': result_sets,
-        'results': {
-            'questions_dict': results,
-            'totals': totals,
-        }
-    })
+    return render(
+        request, 'print-materials/location_cycle_summary.html', {
+            'survey_type': survey_type,
+            'ignore_paths': ['facility'],
+            'ignore_types': IGNORE_TYPES,
+            'multiple_choice_types': ['select all that apply', 'select one'],
+            'form': form,
+            'gender_disagg': gender_disagg,
+            'location_name': province.name,
+            'survey_type': survey_type,
+            'cycle': cycle,
+            'result_sets': result_sets,
+            'results': {
+                'questions_dict': results,
+                'totals': totals,
+            }
+        })
 
 
 def national_summary_pdf(request, survey_type_slug, cycle_id):
     survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
     cycle = get_object_or_404(Cycle, id=cycle_id)
     # render poster as pdf
-    url = reverse('national-summary', kwargs={
-        'survey_type_slug': survey_type_slug,
-        'cycle_id': cycle_id,
-    })
+    url = reverse(
+        'national-summary',
+        kwargs={
+            'survey_type_slug': survey_type_slug,
+            'cycle_id': cycle_id,
+        })
     url = request.build_absolute_uri(url)
-    pdf = wkhtmltopdf(url, **{
-        'margin-top': '0.5cm',
-        'margin-right': '0.5cm',
-        'margin-bottom': '0.5cm',
-        'margin-left': '0.5cm',
-    })
-    filename = (u'Summary for South Africa - %s - %s.pdf' % (survey_type.name, cycle.name)).encode('ascii', 'ignore')
+    pdf = wkhtmltopdf(
+        url, **{
+            'margin-top': '0.5cm',
+            'margin-right': '0.5cm',
+            'margin-bottom': '0.5cm',
+            'margin-left': '0.5cm',
+        })
+    filename = (u'Summary for South Africa - %s - %s.pdf' %
+                (survey_type.name, cycle.name)).encode('ascii', 'ignore')
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
@@ -848,49 +964,53 @@ def national_summary(request, survey_type_slug, cycle_id):
     cycle = get_object_or_404(Cycle, id=cycle_id)
 
     result_sets = CycleResultSet.objects.filter(
-        survey__cycle=cycle,
-        survey__type=survey_type
-    )
+        survey__cycle=cycle, survey__type=survey_type)
 
-    form, gender_disagg, results, totals = analysis.cross_site_summary(result_sets)
+    form, gender_disagg, results, totals = analysis.cross_site_summary(
+        result_sets)
     site_totals = totals.pop('per_site')
     for result_set in result_sets:
         result_set.totals = site_totals[result_set.site.id]
 
-    return render(request, 'print-materials/location_cycle_summary.html', {
-        'survey_type': survey_type,
-        'ignore_paths': ['facility'],
-        'ignore_types': IGNORE_TYPES,
-        'multiple_choice_types': ['select all that apply', 'select one'],
-        'form': form,
-        'gender_disagg': gender_disagg,
-        'location_name': 'South Africa',
-        'survey_type': survey_type,
-        'cycle': cycle,
-        'result_sets': result_sets,
-        'results': {
-            'questions_dict': results,
-            'totals': totals,
-        }
-    })
+    return render(
+        request, 'print-materials/location_cycle_summary.html', {
+            'survey_type': survey_type,
+            'ignore_paths': ['facility'],
+            'ignore_types': IGNORE_TYPES,
+            'multiple_choice_types': ['select all that apply', 'select one'],
+            'form': form,
+            'gender_disagg': gender_disagg,
+            'location_name': 'South Africa',
+            'survey_type': survey_type,
+            'cycle': cycle,
+            'result_sets': result_sets,
+            'results': {
+                'questions_dict': results,
+                'totals': totals,
+            }
+        })
 
 
 def national_poster_pdf(request, survey_type_slug, cycle_id):
     survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
     cycle = get_object_or_404(Cycle, id=cycle_id)
     # render poster as pdf
-    url = reverse('national-poster', kwargs={
-        'survey_type_slug': survey_type_slug,
-        'cycle_id': cycle_id,
-    })
+    url = reverse(
+        'national-poster',
+        kwargs={
+            'survey_type_slug': survey_type_slug,
+            'cycle_id': cycle_id,
+        })
     url = request.build_absolute_uri(url)
-    pdf = wkhtmltopdf(url, **{
-        'margin-top': '0.5cm',
-        'margin-right': '0.5cm',
-        'margin-bottom': '0.5cm',
-        'margin-left': '0.5cm',
-    })
-    filename = (u'Poster for South Africa - %s - %s.pdf' % (survey_type.name, cycle.name)).encode('ascii', 'ignore')
+    pdf = wkhtmltopdf(
+        url, **{
+            'margin-top': '0.5cm',
+            'margin-right': '0.5cm',
+            'margin-bottom': '0.5cm',
+            'margin-left': '0.5cm',
+        })
+    filename = (u'Poster for South Africa - %s - %s.pdf' %
+                (survey_type.name, cycle.name)).encode('ascii', 'ignore')
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
@@ -899,29 +1019,43 @@ def national_poster(request, survey_type_slug, cycle_id):
     cycle = get_object_or_404(Cycle, id=cycle_id)
 
     result_sets = CycleResultSet.objects.filter(
-        survey__cycle=cycle,
-        survey__type=survey_type
-    )
+        survey__cycle=cycle, survey__type=survey_type)
 
-    form, gender_disagg, results, curr_totals = analysis.cross_site_summary(result_sets)
+    form, gender_disagg, results, curr_totals = analysis.cross_site_summary(
+        result_sets)
     totals = {'current': curr_totals}
 
-    return render(request, survey_type.poster_template, {
-        'DEBUG': settings.DEBUG,
-        'form': form,
-        'layout_class': slugify(survey_type.name),
-        'prev_date': None,
-        'start_date': cycle.start_date,
-        'end_date': cycle.end_date,
-        'questions_dict': results,
-        'sector': result_sets[0].site.sector.name,
-        'location': 'South Africa',
-        'totals': totals,
-        'funder_name': 'MAVC',
-        'survey_type': survey_type,
-        'site_type': re.sub(TRIM_TYPE_RE, "", survey_type.name),
-        'site_names': [re.sub(TRIM_SITE_RE, "", crs.site.name) for crs in result_sets],
-    })
+    return render(
+        request, survey_type.poster_template, {
+            'DEBUG':
+            settings.DEBUG,
+            'form':
+            form,
+            'layout_class':
+            slugify(survey_type.name),
+            'prev_date':
+            None,
+            'start_date':
+            cycle.start_date,
+            'end_date':
+            cycle.end_date,
+            'questions_dict':
+            results,
+            'sector':
+            result_sets[0].site.sector.name,
+            'location':
+            'South Africa',
+            'totals':
+            totals,
+            'funder_name':
+            'MAVC',
+            'survey_type':
+            survey_type,
+            'site_type':
+            re.sub(TRIM_TYPE_RE, "", survey_type.name),
+            'site_names':
+            [re.sub(TRIM_SITE_RE, "", crs.site.name) for crs in result_sets],
+        })
 
 
 def province_poster_pdf(request, province_slug, survey_type_slug, cycle_id):
@@ -929,19 +1063,24 @@ def province_poster_pdf(request, province_slug, survey_type_slug, cycle_id):
     survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
     cycle = get_object_or_404(Cycle, id=cycle_id)
     # render poster as pdf
-    url = reverse('province-poster', kwargs={
-        'province_slug': province_slug,
-        'survey_type_slug': survey_type_slug,
-        'cycle_id': cycle_id,
-    })
+    url = reverse(
+        'province-poster',
+        kwargs={
+            'province_slug': province_slug,
+            'survey_type_slug': survey_type_slug,
+            'cycle_id': cycle_id,
+        })
     url = request.build_absolute_uri(url)
-    pdf = wkhtmltopdf(url, **{
-        'margin-top': '0.5cm',
-        'margin-right': '0.5cm',
-        'margin-bottom': '0.5cm',
-        'margin-left': '0.5cm',
-    })
-    filename = (u'Poster for %s - %s - %s.pdf' % (province.name, survey_type.name, cycle.name)).encode('ascii', 'ignore')
+    pdf = wkhtmltopdf(
+        url, **{
+            'margin-top': '0.5cm',
+            'margin-right': '0.5cm',
+            'margin-bottom': '0.5cm',
+            'margin-left': '0.5cm',
+        })
+    filename = (u'Poster for %s - %s - %s.pdf' %
+                (province.name, survey_type.name, cycle.name)).encode(
+                    'ascii', 'ignore')
     return PDFResponse(pdf, filename=filename, show_content_in_browser=True)
 
 
@@ -951,29 +1090,42 @@ def province_poster(request, province_slug, survey_type_slug, cycle_id):
     cycle = get_object_or_404(Cycle, id=cycle_id)
 
     result_sets = CycleResultSet.objects.filter(
-        site__province=province,
-        survey__cycle=cycle,
-        survey__type=survey_type
-    )
+        site__province=province, survey__cycle=cycle, survey__type=survey_type)
 
-    form, gender_disagg, results, curr_totals = analysis.cross_site_summary(result_sets)
+    form, gender_disagg, results, curr_totals = analysis.cross_site_summary(
+        result_sets)
     totals = {'current': curr_totals}
-    return render(request, survey_type.poster_template, {
-        'DEBUG': settings.DEBUG,
-        'form': form,
-        'layout_class': slugify(survey_type.name),
-        'prev_date': None,
-        'start_date': cycle.start_date,
-        'end_date': cycle.end_date,
-        'questions_dict': results,
-        'sector': result_sets[0].site.sector.name,
-        'location': province.name,
-        'totals': totals,
-        'funder_name': 'MAVC',
-        'survey_type': survey_type,
-        'site_type': re.sub(TRIM_TYPE_RE, "", survey_type.name),
-        'site_names': [re.sub(TRIM_SITE_RE, "", crs.site.name) for crs in result_sets],
-    })
+    return render(
+        request, survey_type.poster_template, {
+            'DEBUG':
+            settings.DEBUG,
+            'form':
+            form,
+            'layout_class':
+            slugify(survey_type.name),
+            'prev_date':
+            None,
+            'start_date':
+            cycle.start_date,
+            'end_date':
+            cycle.end_date,
+            'questions_dict':
+            results,
+            'sector':
+            result_sets[0].site.sector.name,
+            'location':
+            province.name,
+            'totals':
+            totals,
+            'funder_name':
+            'MAVC',
+            'survey_type':
+            survey_type,
+            'site_type':
+            re.sub(TRIM_TYPE_RE, "", survey_type.name),
+            'site_names':
+            [re.sub(TRIM_SITE_RE, "", crs.site.name) for crs in result_sets],
+        })
 
 
 def create_materials_zip(request, cycle_id):
@@ -990,23 +1142,27 @@ def create_materials_zip(request, cycle_id):
             crs.site.name.encode('ascii', 'ignore'),
         )
         if 'citizen' in crs.survey.type.name.lower():
-            url = request.build_absolute_uri(reverse('site-result-poster-pdf', kwargs=params))
+            url = request.build_absolute_uri(
+                reverse('site-result-poster-pdf', kwargs=params))
             artifacts.append({
                 'url': url,
                 'dir': dir,
             })
-            url = request.build_absolute_uri(reverse('site-result-handout-pdf', kwargs=params))
+            url = request.build_absolute_uri(
+                reverse('site-result-handout-pdf', kwargs=params))
             artifacts.append({
                 'url': url,
                 'dir': dir,
             })
-            url = request.build_absolute_uri(reverse('site-result-comments-pdf', kwargs=params))
+            url = request.build_absolute_uri(
+                reverse('site-result-comments-pdf', kwargs=params))
             artifacts.append({
                 'url': url,
                 'dir': dir,
             })
         else:
-            url = request.build_absolute_uri(reverse('site-result-summary-pdf', kwargs=params))
+            url = request.build_absolute_uri(
+                reverse('site-result-summary-pdf', kwargs=params))
             artifacts.append({
                 'url': url,
                 'dir': dir,
