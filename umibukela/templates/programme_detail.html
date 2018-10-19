@@ -44,14 +44,18 @@
 			<thead>
 			    <tr>
 				<th data-sort="string" class="sorttable_sorted">Survey Name</th>
+				<th data-sort="string" class="sorttable_sorted">Survey Cycle</th>
 				<th data-sort="string" class="hidden-xs hidden-sm">Survey Type</th>
+				<th data-sort="string" class="hidden-xs hidden-sm">Results</th>
 			    </tr>
 			</thead>
 			<tbody>
 			    {% for survey in surveys %}
 			    <tr>
-				<td><a href="">{{ survey.name }}</a></td>
+				<td class="hidden-xs hidden-sm">{{ survey.name }}</td>
+				<td class="hidden-xs hidden-sm">{{ survey.cycle }}</td>
 				<td class="hidden-xs hidden-sm">{{ survey.type }}</td>
+				<td><a href="{% url 'programme_survey' survey.name %}">View</a></td>
 			    </tr>
 			    {% endfor %}
 			</tbody>
