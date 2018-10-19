@@ -98,6 +98,19 @@ def programme_detail(request, programme_slug):
         })
 
 
+def progamme_survey(request, survey_name):
+    try:
+        survey = Survey.objects.get(name=survey_name)
+    except Survey.DoesNotExist:
+        raise Http404
+    else:
+        cycle_result_set = CycleResultSet.objects.filter(survey=survey)
+        return render(request, 'programme_survey.html', {
+            'cycle_result_set': cycle_result_set,
+            'survey': survey
+        })
+
+
 def sites(request):
     sites = Site.objects.all().prefetch_related('province', 'sector')
 
