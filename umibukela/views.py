@@ -3,7 +3,7 @@ from datetime import datetime
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db.models import Count
-from django.http import Http404
+from django.http import HttpResponse, Http404
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
@@ -19,6 +19,8 @@ import os
 import pandas
 import re
 import requests
+
+import csv_export
 
 from .forms import CRSFromKoboForm
 from .models import (
@@ -99,6 +101,9 @@ def programme_detail(request, programme_slug):
 
 
 def progamme_survey(request, survey_name):
+    """
+    Show all the sites that were in a survey
+    """
     try:
         survey = Survey.objects.get(name=survey_name)
     except Survey.DoesNotExist:
@@ -109,6 +114,38 @@ def progamme_survey(request, survey_name):
             'cycle_result_set': cycle_result_set,
             'survey': survey
         })
+
+
+def site_survey_download(request, cycle_result_id):
+    """
+    Download a survey from a site
+    """
+    submission = Submission.objects.filter(cycle_result_set=cycle_result_id)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachement;filename=export.csv'
+    frame = pandas.DataFrame()
+    for answer in submission:
+        row = csv_export.export_row(answer)
+        frame = frame.append(row, ignore_index=True)
+    frame.to_csv(response, index=False, encoding='utf-8')
+    return response
+
+
+def survey_download(requests, survey_name):
+    """
+    Download all the survey data from all the sites
+    """
+    submissions = Submission\
+                  .objects\
+                  .filter(cycle_result_set__survey__name=survey_name)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachement;filename=export.csv'
+    frame = pandas.DataFrame()
+    for answer in submissions:
+        row = csv_export.export_row(answer)
+        frame = frame.append(row, ignore_index=True)
+    frame.to_csv(response, index=False, encoding='utf-8')
+    return response
 
 
 def sites(request):
