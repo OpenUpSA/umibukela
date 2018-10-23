@@ -96,7 +96,7 @@ def programme_detail(request, programme_slug):
             'programme': programme,
             'surveys': surveys,
             'partners': partners,
-            'donars': donars
+            'donars': donars,
         })
 
 

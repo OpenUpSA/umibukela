@@ -390,6 +390,12 @@ class Survey(models.Model):
                     cycle_result_set=facility_crs[facility_name])
                 obj.save()
 
+    def get_submission_count(self):
+        return Submission\
+            .objects\
+            .filter(cycle_result_set__survey__name=self.name)\
+            .count()
+
 
 class SurveyKoboProject(models.Model):
     survey = models.OneToOneField(

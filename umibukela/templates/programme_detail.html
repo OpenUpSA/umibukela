@@ -45,6 +45,7 @@
 			    <tr>
 				<th data-sort="string" class="sorttable_sorted">Survey Name</th>
 				<th data-sort="string" class="hidden-xs hidden-sm">Survey Type</th>
+				<th data-sort="string" class="hidden-xs hidden-sm">Submissions</th>
 				<th data-sort="string" class="hidden-xs hidden-sm">Results</th>
 			    </tr>
 			</thead>
@@ -53,7 +54,10 @@
 			    <tr>
 				<td class="hidden-xs hidden-sm">{{ survey.name }}</td>
 				<td class="hidden-xs hidden-sm">{{ survey.type }}</td>
-				<td><a href="{% url 'programme_survey' survey.name %}">View</a></td>
+				<td class="hidden-xs hidden-sm">
+				    {{survey.get_submission_count}}
+				</td>
+				<td><a href="{% url 'survey_download' survey.name %}">Download</a></td>
 			    </tr>
 			    {% endfor %}
 			</tbody>
