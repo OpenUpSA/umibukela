@@ -1,4 +1,4 @@
-from collections import Counter, OrderedDict
+from collections import Counter
 from datetime import datetime
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -19,7 +19,7 @@ import os
 import pandas
 import re
 import requests
-
+import csv
 import csv_export
 
 from .forms import CRSFromKoboForm
@@ -146,10 +146,14 @@ def survey_download(requests, survey_name):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachement;filename=export.csv'
     frame = pandas.DataFrame()
+    fields = csv_export.form_questions(survey.form)
+    writer = csv.DictWriter(response, fieldnames=fields.keys())
+    writer.writeheader()
     for answer in submissions:
-        row = csv_export.export_row(answer, survey.form)
-        frame = frame.append(row, ignore_index=True)
-    frame.to_csv(response, index=False, encoding='utf-8')
+        row = csv_export.export_row(answer, fields)
+        writer.writerow(row)
+        #frame = frame.append(row, ignore_index=True)
+    #frame.to_csv(response, index=False, encoding='utf-8')
     return response
 
 

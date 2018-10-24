@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
 
-def export_row(answer, form):
+def form_questions(form):
     d = OrderedDict()
     children = form['children']
     for child in children:
@@ -12,12 +12,6 @@ def export_row(answer, form):
         else:
             d.update({child['pathstr']: ''})
 
-    obj = answer.answers
-    for k in d.keys():
-        try:
-            d[k] = obj[k]
-        except KeyError:
-            del d[k]
     if 'Contact_number' in d:
         del d['Contact_number']
     if 'Full_name' in d:
@@ -35,3 +29,13 @@ def export_row(answer, form):
     if 'phone_number' in d:
         del d['phone_number']
     return d
+
+
+def export_row(answer, fields):
+    obj = answer.answers
+    for k in fields.keys():
+        try:
+            fields[k] = obj[k]
+        except KeyError:
+            del fields[k]
+    return fields
