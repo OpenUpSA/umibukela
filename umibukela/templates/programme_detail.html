@@ -31,14 +31,6 @@
 		    </div>
 		</div>
 		<div class="row">
-		    <h3>Donors</h3>
-		    <ul class="list-unstyled">
-			{% for d in donars %}
-			<li>{{d.funder.name}}</li>
-			{% endfor %}
-		    </ul>
-		</div>
-		<div class="row">
 		    <h3>Surverys Conducted</h3>
 		    <table class="table table-striped">
 			<thead>
@@ -74,11 +66,19 @@
 			<tbody>
 			    {% for p in partners %}
 			    <tr>
-				<td><a href="{% url 'partner' p.partner.slug %}">{{ p.partner.full_name }}</a></td>
+						    <td><a href="{% url 'partner' p.partner.slug %}">{{ p.partner.full_name }}</a></td>
 			    </tr>
-			    {% endfor %}
+					    {% endfor %}
 			</tbody>
 		    </table>
+						</div>
+		<div class="row">
+		    <h3>Donors</h3>
+		    <ul class="list-unstyled">
+			{% for d in donars %}
+			<li>{{d.funder.name}}</li>
+			{% endfor %}
+		    </ul>
 		</div>
 	    </div>
 	</div>
