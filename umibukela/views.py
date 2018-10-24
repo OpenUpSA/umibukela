@@ -1,4 +1,4 @@
-from collections import Counter
+from collections import Counter, OrderedDict
 from datetime import datetime
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -120,12 +120,16 @@ def site_survey_download(request, cycle_result_id):
     """
     Download a survey from a site
     """
+    survey = CycleResultSet\
+             .objects\
+             .only('survey')\
+             .get(id=cycle_result_id)
     submission = Submission.objects.filter(cycle_result_set=cycle_result_id)
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachement;filename=export.csv'
     frame = pandas.DataFrame()
     for answer in submission:
-        row = csv_export.export_row(answer)
+        row = csv_export.export_row(answer, survey.form)
         frame = frame.append(row, ignore_index=True)
     frame.to_csv(response, index=False, encoding='utf-8')
     return response
@@ -135,6 +139,7 @@ def survey_download(requests, survey_name):
     """
     Download all the survey data from all the sites
     """
+    survey = Survey.objects.get(name=survey_name)
     submissions = Submission\
                   .objects\
                   .filter(cycle_result_set__survey__name=survey_name)
@@ -142,7 +147,7 @@ def survey_download(requests, survey_name):
     response['Content-Disposition'] = 'attachement;filename=export.csv'
     frame = pandas.DataFrame()
     for answer in submissions:
-        row = csv_export.export_row(answer)
+        row = csv_export.export_row(answer, survey.form)
         frame = frame.append(row, ignore_index=True)
     frame.to_csv(response, index=False, encoding='utf-8')
     return response

@@ -1,20 +1,37 @@
-def export_row(answer):
-    obj = answer.answers
-    if 'Contact_number' in obj:
-        del obj['Contact_number']
-    if 'Full_name' in obj:
-        del obj['Full_name']
-    if 'Monitor_name' in obj:
-        del obj['Monitor_name']
-    if 'phonenumber' in obj:
-        del obj['phonenumber']
-    if 'capturer' in obj:
-        del obj['capturer']
-    if 'surveyor' in obj:
-        del obj['surveyor']
-    if 'Monitor_Name' in obj:
-        del obj['Monitor_Name']
+from collections import OrderedDict
 
-    obj['created_at'] = answer.created_at
-    obj['updated_at'] = answer.updated_at
-    return obj
+
+def export_row(answer, form):
+    d = OrderedDict()
+    children = form['children']
+    for child in children:
+        if 'children' in child:
+            for minor in child['children']:
+                if 'pathstr' in minor:
+                    d.update({minor['pathstr']: ''})
+        else:
+            d.update({child['pathstr']: ''})
+
+    obj = answer.answers
+    for k in d.keys():
+        try:
+            d[k] = obj[k]
+        except KeyError:
+            del d[k]
+    if 'Contact_number' in d:
+        del d['Contact_number']
+    if 'Full_name' in d:
+        del d['Full_name']
+    if 'Monitor_name' in d:
+        del d['Monitor_name']
+    if 'phonenumber' in d:
+        del d['phonenumber']
+    if 'capturer' in d:
+        del d['capturer']
+    if 'surveyor' in d:
+        del d['surveyor']
+    if 'Monitor_Name' in d:
+        del d['Monitor_Name']
+    if 'phone_number' in d:
+        del d['phone_number']
+    return d
