@@ -5,7 +5,7 @@ def form_questions(form):
     d = OrderedDict()
     children = form['children']
     for child in children:
-        if 'pathstr' in child and 'control' not in child:
+        if 'pathstr' in child and 'control' not in child and child['type'] != 'group':
             d.update({child['pathstr']: ''})
         elif 'children' in child:
             for minor in child['children']:
@@ -28,7 +28,6 @@ def form_questions(form):
         del d['Monitor_Name']
     if 'phone_number' in d:
         del d['phone_number']
-
     return d
 
 
