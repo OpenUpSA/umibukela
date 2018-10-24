@@ -74,11 +74,15 @@
 						</div>
 		<div class="row">
 		    <h3>Donors</h3>
-		    <ul class="list-unstyled">
-			{% for d in donars %}
-			<li>{{d.funder.name}}</li>
-			{% endfor %}
-		    </ul>
+		    {% if programme.short_name == 'MAVC' %}
+		    <div class="col-sm-2 col-xs-6">
+			<a href="http://www.makingallvoicescount.org" target="_blank"><img src="{% static 'img/mavc-logo.svg' %}" alt="MAVC"></a>
+		    </div>
+
+		    <div class="col-sm-2 col-xs-6">
+			<a href="https://www.brot-fuer-die-welt.de/en/bread-for-the-world/" target="_blank"><img src="{% static 'img/brot-logo.svg' %}" alt="Brot für die Welt"></a>
+		    </div>
+		    {% endif %}
 		</div>
 	    </div>
 	</div>
