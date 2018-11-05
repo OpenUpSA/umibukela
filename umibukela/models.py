@@ -75,6 +75,8 @@ class Province(models.Model):
 
 class Funder(models.Model):
     name = models.CharField(max_length=200, unique=True)
+    website = models.URLField(null=True)
+    logo = models.FileField(null=True, upload_to='funder/logo/')
 
     def __str__(self):
         return self.name

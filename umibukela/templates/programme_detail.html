@@ -73,16 +73,12 @@
 		    </table>
 						</div>
 		<div class="row">
-		    <h3>Donors</h3>
-		    {% if programme.short_name == 'MAVC' %}
+		    <h3>Donars</h3>
+		    {% for donar in donars %}
 		    <div class="col-sm-2 col-xs-6">
-			<a href="http://www.makingallvoicescount.org" target="_blank"><img src="{% static 'img/mavc-logo.svg' %}" alt="MAVC"></a>
+			<a href="{{donar.funder.website}}" target="_blank"><img src="{{donar.funder.logo.url}}" alt="{{donar.funder.name}}"></a>
 		    </div>
-
-		    <div class="col-sm-2 col-xs-6">
-			<a href="https://www.brot-fuer-die-welt.de/en/bread-for-the-world/" target="_blank"><img src="{% static 'img/brot-logo.svg' %}" alt="Brot für die Welt"></a>
-		    </div>
-		    {% endif %}
+		    {% endfor %}
 		</div>
 	    </div>
 	</div>

@@ -87,8 +87,8 @@ def programme_detail(request, programme_slug):
     donars = CycleResultSet\
               .objects\
               .filter(survey__cycle__programme__slug=programme_slug)\
-              .order_by('funder_id')\
               .distinct('funder')\
+              .order_by('funder')\
               .select_related('funder')\
               .only('funder')
     return render(
