@@ -143,8 +143,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 if DEBUG:
     DEFAULT_FILE_STORAGE = 'umibukela.dev_storage.DevFileSystemStorage'
     FAKE_MISSING_FILE_SIZE = True
-    MEDIA_URL = "/images/"
-    MEDIA_ROOT = "/tmp/umibukela/images"
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
     DEFAULT_FILE_STORAGE = 'umibukela.botopatch.S3Storage'
     AWS_S3_FILE_OVERWRITE = False
