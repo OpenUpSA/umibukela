@@ -99,8 +99,10 @@
 		    </table>
 		</div>
 		<div class="row">
+		    {% if donars %}
 		    <h3>With support from</h3>
 		    {% for donar in donars %}
+		    {% if donar.funder %}
 		    <div class="col-md-4">
 			<div class="thumbnail">
 			    <a href="{{donar.funder.website}}">
@@ -111,7 +113,9 @@
 			    </a>
 			</div>
 		    </div>
+		    {% endif %}
 		    {% endfor %}
+		    {% endif %}
 		</div>
 	    </div>
 	</div>
