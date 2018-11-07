@@ -215,7 +215,7 @@ class Programme(models.Model):
     long_name = models.CharField(max_length=200, unique=True)
     description = models.TextField()
     frequency = models.ForeignKey(CycleFrequency, null=True, blank=True)
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, blank=True)
 
     def cycles(self):
         cycles = list(set(Cycle.objects.all()))
@@ -224,6 +224,10 @@ class Programme(models.Model):
 
     def __str__(self):
         return self.long_name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.short_name)
+        super(Programme, self).save(*args, **kwargs)
 
 
 class Cycle(models.Model):
@@ -602,3 +606,40 @@ class Submission(models.Model):
 
     def __str__(self):
         return "uuid=%s" % self.uuid
+
+
+class ProgrammeStory(models.Model):
+    programme = models.ForeignKey(
+        Programme, on_delete=models.CASCADE, related_name='programme')
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    slug = models.SlugField(max_length=200, null=True)
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(ProgrammeStory, self).save(*args, **kwargs)
+
+
+class ProgrammeStoryImage(models.Model):
+    story = models.ForeignKey(
+        ProgrammeStory, on_delete=models.CASCADE, related_name='story_image')
+    caption = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='story/images')
+    date = models.DateField(null=True)
+
+    def __str__(self):
+        return self.caption
+
+
+class ProgrammeImage(models.Model):
+    programme = models.ForeignKey(
+        Programme, on_delete=models.CASCADE, related_name='program_image')
+    caption = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='programme/images/')
+    date = models.DateField(null=True)
+
+    def __str__(self):
+        return self.caption
