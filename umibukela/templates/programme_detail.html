@@ -24,12 +24,38 @@
 
     <div class="sites-table page-section">
 	<div class="container">
-	    <div class="monitoring-period">
-		<div class="row description">
-		    <div class="col-sm-10">
-			<p class="survey-type-detail-desc">{{ programme.description }}</p>
+	    <div class="row">
+		<div class="col-sm-10">
+		    <p class="survey-type-detail-desc">{{ programme.description }}</p>
+		</div>
+	    </div>
+	    {% if stories %}
+	    <div class="row">
+		<div class="col-sm-4 col-md-offset-4">
+		    <h1>Stories from the field</h1>
+		</div>
+	    </div>
+	    <div class="row">
+		{% for story in stories %}
+		<div class="col-sm-5 col-xs-4">
+		    <div class="media">
+			<div class="media-left">
+			    <img src="{{story.story_image.first.image.url}}" class="media-object" style="width:150px">
+			</div>
+			<div class="media-body">
+			    <h4 class="media-heading">{{story.title}}</h4>
+			    <p>{{story.description|truncatewords:25}}</p>
+			    <a href="{% url 'story_detail' story.slug %}" style="float:right">Read More</a>
+			</div>
 		    </div>
 		</div>
+		{% endfor %}
+		<div class="col-sm-2">
+		    <a href="{% url 'programme_story' programme.slug %}" class="btn btn-primary" style="margin-top:50px">See all stories</a>
+		</div>
+	    </div>
+	    {% endif %}
+	    <div class="monitoring-period">
 		<div class="row">
 		    <h3>Surverys Conducted</h3>
 		    <table class="table table-striped">
@@ -66,13 +92,14 @@
 			<tbody>
 			    {% for p in partners %}
 			    <tr>
-						    <td><a href="{% url 'partner' p.partner.slug %}">{{ p.partner.full_name }}</a></td>
+				<td><a href="{% url 'partner' p.partner.slug %}">{{ p.partner.full_name }}</a></td>
 			    </tr>
-					    {% endfor %}
+			    {% endfor %}
 			</tbody>
 		    </table>
-						</div>
+		</div>
 		<div class="row">
+		    <h3>With support from</h3>
 		    {% for donar in donars %}
 		    <div class="col-sm-2 col-xs-6">
 			<div class="panel panel_default">
