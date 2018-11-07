@@ -23,20 +23,10 @@ import csv
 import csv_export
 
 from .forms import CRSFromKoboForm
-from .models import (
-    Cycle,
-    CycleResultSet,
-    Partner,
-    Programme,
-    ProgrammeKoboRefreshToken,
-    Province,
-    Site,
-    Submission,
-    Survey,
-    SurveyKoboProject,
-    SurveyType,
-    UserKoboRefreshToken,
-)
+from .models import (Cycle, CycleResultSet, Partner, Programme,
+                     ProgrammeKoboRefreshToken, Province, Site, Submission,
+                     Survey, SurveyKoboProject, SurveyType,
+                     UserKoboRefreshToken, ProgrammeStory, ProgrammeImage)
 
 IGNORE_TYPES = ['start', 'end', 'meta', 'today', 'username', 'phonenumber']
 TRIM_SITE_RE = r"SASSA Service Office: |SASSA Pay Point: "
@@ -77,6 +67,8 @@ def programmes(request):
 def programme_detail(request, programme_slug):
     programme = Programme.objects.get(slug=programme_slug)
     surveys = Survey.objects.filter(cycle__programme__slug=programme_slug)
+    stories = ProgrammeStory.objects.filter(programme__slug=programme_slug)[:2]
+    programme_images = ProgrammeImage.objects.all()
     partners = CycleResultSet\
                .objects\
                .filter(survey__cycle__programme__slug=programme_slug)\
@@ -97,6 +89,8 @@ def programme_detail(request, programme_slug):
             'surveys': surveys,
             'partners': partners,
             'donars': donars,
+            'stories': stories,
+            'programme_images': programme_images
         })
 
 
@@ -114,6 +108,36 @@ def progamme_survey(request, survey_name):
             'cycle_result_set': cycle_result_set,
             'survey': survey
         })
+
+
+def programme_story(request, programme_slug):
+    """
+    Show all the stories for a programme
+    """
+    programme = Programme.objects.get(slug=programme_slug)
+    stories = ProgrammeStory.objects.all()
+    return render(request, 'programme_stories.html', {
+        'stories': stories,
+        'programme': programme
+    })
+
+
+def story_detail(request, story_slug):
+    """
+    show all the detail and images for a story
+    """
+    story = ProgrammeStory\
+            .objects\
+            .select_related('programme')\
+            .get(slug=story_slug)
+    more_stories = ProgrammeStory\
+                   .objects\
+                   .filter(programme=story.programme)\
+                   .exclude(slug=story_slug)
+    return render(request, 'story_detail.html', {
+        'story': story,
+        'more_stories': more_stories
+    })
 
 
 def site_survey_download(request, cycle_result_id):
