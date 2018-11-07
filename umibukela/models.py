@@ -613,7 +613,7 @@ class ProgrammeStory(models.Model):
         Programme, on_delete=models.CASCADE, related_name='programme')
     title = models.CharField(max_length=100)
     description = models.TextField()
-    slug = models.SlugField(max_length=200, null=True)
+    slug = models.SlugField(max_length=200, blank=True)
 
     def __str__(self):
         return self.title
