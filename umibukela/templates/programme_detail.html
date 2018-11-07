@@ -101,14 +101,14 @@
 		<div class="row">
 		    <h3>With support from</h3>
 		    {% for donar in donars %}
-		    <div class="col-sm-2 col-xs-6">
-			<div class="panel panel_default">
-			    <div class="panel-body">
-				<a href="{{donar.funder.website}}" target="_blank"><img src="{{donar.funder.logo.url}}" alt="{{donar.funder.name}}" width="200px" height="200px">
+		    <div class="col-md-4">
+			<div class="thumbnail">
+			    <a href="{{donar.funder.website}}">
+				<img src="{{donar.funder.logo.url}}" alt="{{donar.funder.name}}" style="width:auto;height:250px">
+				<div class="caption">
 				    {{donar.funder.name}}
-				</a>
-				
-			    </div>
+				</div>
+			    </a>
 			</div>
 		    </div>
 		    {% endfor %}
