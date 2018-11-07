@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ programme.long_name }}{% endblock %}
+
+{% block page-content %}
+
+    <!-- breadcrumbs -->
+    <div class="container breadcrumb-container">
+	<ol class="breadcrumb">
+	    <li><a href="/">Home</a></li>
+	    <li><a href="{% url 'programmes' %}">Programmes</a></li>
+	    <li><a href="{% url 'programme_detail' programme.slug %}">{{ programme.short_name }}</a></li>
+	    <li><a href="{% url 'programme_story' programme.slug %}">story</a></li>
+	</ol>
+    </div>
+    <!-- /breadcrumbs -->
+
+    <div class="section survey-type">
+	<div class="section-heading">
+	    <div class="container">
+		<h1><i class="fa fa-clipboard"></i> {{programme.slug|upper }} Stories from the field</h1>
+	    </div>
+	</div>
+	<div class="container">
+	    <div class="row">
+		{% for story in stories %}
+		    <div class="col-sm-10 col-xs-10">
+			<div class="media">
+			    <div class="media-left">
+				<img src="{{story.story_image.first.image.url}}" class="media-object" style="width:150px">
+			    </div>
+			    <div class="media-body">
+				<h4 class="media-heading">{{story.title}}</h4>
+				<p>{{story.description|truncatewords:100}}</p>
+				<a href="{% url 'story_detail' story.slug %}" style="float:right">Read More</a>
+			    </div>
+			</div>
+			<hr>
+		    </div>
+		{% endfor %}
+	    </div>
+	</div>
+
+    </div>
+
+{% endblock %}

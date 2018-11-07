@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% load staticfiles %}
+
+{% block title %}{{ story.title }}{% endblock %}
+
+{% block page-content %}
+
+    <!-- breadcrumbs -->
+    <div class="container breadcrumb-container">
+	<ol class="breadcrumb">
+	    <li><a href="/">Home</a></li>
+	    <li><a href="{% url 'programmes' %}">Programmes</a></li>
+	    <li><a href="{% url 'programme_detail' story.programme.slug %}">{{ story.programme.short_name }}</a></li>
+	    <li><a href="">story</a></li>
+	    <li><a href="">{{story.slug}}</a></li>
+	</ol>
+    </div>
+    <!-- /breadcrumbs -->
+
+    <div class="section survey-type">
+	<div class="section-heading">
+	    <div class="container">
+		<h1><i class="fa fa-clipboard"></i> {{story.title }}</h1>
+	    </div>
+	</div>
+	<div class="container">
+	    {% if story.story_image %}
+		<div class="row">
+		    {% for image in story.story_image.all %}
+			<div class="col-md-4">
+			    <div class="thumbnail">
+				<img src="{{image.image.url}}" alt="Lights" style="width:100%">
+				<div class="caption">
+				    <p>{{image.date}}</p>
+				    <p>{{image.caption}}</p>
+				</div>
+			    </div>
+			</div>
+		    {% endfor %}
+		</div>
+	    {% endif %}
+	    <div class="row">
+	    </div>
+	    <div class="row">
+		<div class="col-sm-8">
+		    <p class="survey-type-detail-desc">{{ story.description|linebreaks }}</p>
+		</div>
+		<div class="col-sm-4">
+		    {% if more_stories %}
+			<div class="panel panel-default">
+			    <div class="panel-heading">
+				<h4>More Stories  from the field</h4>
+			    </div>
+			    <div class="panel-body">
+				<ul>
+				    {% for story in more_stories %}
+					<li>
+					    <a href="{% url 'story_detail' story.slug  %}">
+						{{story.title}}
+					    </a>
+					</li>
+				    {% endfor %}
+				</ul>
+			    </div>
+			</div>
+		    {% endif %}
+		</div>
+	    </div>
+	</div>
+    </div>
+
+{% endblock %}
