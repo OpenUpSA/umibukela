@@ -29,7 +29,7 @@
 		    {% for image in story.story_image.all %}
 			<div class="col-md-4">
 			    <div class="thumbnail">
-				<img src="{{image.image.url}}" alt="Lights" style="width:100%">
+				<img src="{{image.image.url}}" alt="{{image.caption}}" style="width:auto;height:250px">
 				<div class="caption">
 				    <p>{{image.date}}</p>
 				    <p>{{image.caption}}</p>
