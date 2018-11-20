@@ -112,49 +112,56 @@
 		</div>
 	    </div>
 	    {% endif %}
+	    {% if surveys %}
+		
+	    {% endif %}
 	    <div class="monitoring-period">
-		<div class="row">
-		    <h3>Surverys Conducted</h3>
-		    <table class="table table-striped">
-			<thead>
-			    <tr>
-				<th data-sort="string" class="sorttable_sorted">Survey Name</th>
-				<th data-sort="string" class="hidden-xs hidden-sm">Survey Type</th>
-				<th data-sort="string" class="hidden-xs hidden-sm">Submissions</th>
-				<th data-sort="string" class="hidden-xs hidden-sm">Results</th>
-			    </tr>
-			</thead>
-			<tbody>
-			    {% for survey in surveys %}
-			    <tr>
-				<td class="hidden-xs hidden-sm">{{ survey.name }}</td>
-				<td class="hidden-xs hidden-sm">{{ survey.type }}</td>
-				<td class="hidden-xs hidden-sm">
-				    {{survey.get_submission_count}}
-				</td>
-				<td><a href="{% url 'survey_download' survey.name %}">Download</a></td>
-			    </tr>
-			    {% endfor %}
-			</tbody>
-		    </table>
-		</div>
-		<div class="row">
-		    <h3>Community Partners</h3>
-		    <table class="table table-striped">
-			<thead lass="thead-light">
-			    <tr>
-				<th data-sort="string" class="sorttable_sorted">Name</th>
-			    </tr>
-			</thead>
-			<tbody>
-			    {% for p in partners %}
-			    <tr>
-				<td><a href="{% url 'partner' p.partner.slug %}">{{ p.partner.full_name }}</a></td>
-			    </tr>
-			    {% endfor %}
-			</tbody>
-		    </table>
-		</div>
+		{% if surveys %}
+		    <div class="row">
+			<h3>Surverys Conducted</h3>
+			<table class="table table-striped">
+			    <thead>
+				<tr>
+				    <th data-sort="string" class="sorttable_sorted">Survey Name</th>
+				    <th data-sort="string" class="hidden-xs hidden-sm">Survey Type</th>
+				    <th data-sort="string" class="hidden-xs hidden-sm">Submissions</th>
+				    <th data-sort="string" class="hidden-xs hidden-sm">Results</th>
+				</tr>
+			    </thead>
+			    <tbody>
+				{% for survey in surveys %}
+				    <tr>
+					<td class="hidden-xs hidden-sm">{{ survey.name }}</td>
+					<td class="hidden-xs hidden-sm">{{ survey.type }}</td>
+					<td class="hidden-xs hidden-sm">
+					    {{survey.get_submission_count}}
+					</td>
+					    <td><a href="{% url 'survey_download' survey.name %}">Download</a></td>
+				    </tr>
+				{% endfor %}
+			    </tbody>
+			</table>
+				    </div>
+		{% endif %}
+		{% if partners %}
+		    <div class="row">
+			<h3>Community Partners</h3>
+			<table class="table table-striped">
+			    <thead lass="thead-light">
+				<tr>
+				    <th data-sort="string" class="sorttable_sorted">Name</th>
+				</tr>
+			    </thead>
+			    <tbody>
+				{% for p in partners %}
+				    <tr>
+					<td><a href="{% url 'partner' p.partner.slug %}">{{ p.partner.full_name }}</a></td>
+				    </tr>
+				{% endfor %}
+			    </tbody>
+			</table>
+		    </div>
+		{% endif %}
 		<div class="row">
 		    {% if resources %}
 			<div class="panel panel-default">
