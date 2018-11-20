@@ -68,7 +68,19 @@ def programme_detail(request, programme_slug):
     programme = Programme.objects.get(slug=programme_slug)
     surveys = Survey.objects.filter(cycle__programme__slug=programme_slug)
     stories = ProgrammeStory.objects.filter(programme__slug=programme_slug)[:2]
-    programme_images = ProgrammeImage.objects.all()
+    programme_images = ProgrammeImage\
+                       .objects\
+                       .filter(programme__slug=programme_slug)\
+                       .exclude(featured=True)[:4]
+    try:
+        featured_image = ProgrammeImage\
+                         .objects\
+                         .only('image')\
+                         .get(programme__slug=programme_slug,
+                              featured=True)
+    except ProgrammeImage.DoesNotExist:
+        featured_image = False
+
     partners = CycleResultSet\
                .objects\
                .filter(survey__cycle__programme__slug=programme_slug)\
@@ -96,7 +108,8 @@ def programme_detail(request, programme_slug):
             'donars': donars,
             'stories': stories,
             'programme_images': programme_images,
-            'resources': resources
+            'resources': resources,
+            'featured_image': featured_image
         })
 
 

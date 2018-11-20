@@ -25,10 +25,43 @@
 
     <div class="sites-table page-section">
 	<div class="container">
-	    <div class="row">
-		<div class="col-sm-10">
-		    <p class="survey-type-detail-desc">{{ programme.description|apply_markup:"markdown" }}</p>
+	    <div class="hidden-md hidden-lg">
+		<div class="row">
+		    <div class="col-sm-10">
+			<p class="survey-type-detail-desc">{{ programme.description|apply_markup:"markdown" }}</p>
+		    </div>
 		</div>
+	    </div>
+	    <div class="hidden-sm hidden-xs">
+		{% if featured_image %}
+		    <div class="media">
+			<div class="media-left media-middle">
+			    <a href="{{featured_image.image.url}}" data-lightbox="{{featured_image.image.url}}" data-title="{{featured_image.caption}}">
+				<img src="{{featured_image.image.url}}" class="media-object" style="width:280px;height:auto">
+			    </a>
+			</div>
+			<div class="media-body">
+			    <p class="survey-type-detail-desc">{{ programme.description|apply_markup:"markdown" }}</p>
+			</div>
+		    </div>
+		{% else %}
+		    <div class="row">
+			<div class="col-sm-10">
+			    <p class="survey-type-detail-desc">{{ programme.description|apply_markup:"markdown" }}</p>
+			</div>
+		    </div>
+		{% endif %}
+	    </div>
+	    <br/>
+	    <div class="row">
+		{% for image in programme_images %}
+		    <div class="col-md-3 col-sm-2 offset-sm-4">
+			<a href="{{image.image.url}}" data-lightbox="{{image.image.url}}" data-title="{{image.caption}}">
+			    <img src="{{image.image.url}}" class="img-thumbnail img-responsive" alt="{{image.caption}}" width="200" height="150" />
+			</a>
+		    </div>
+		{% empty %}
+		{% endfor %}
 	    </div>
 	    {% if stories %}
 	    <div class="row">
@@ -38,7 +71,7 @@
 		<div class="col-sm-4 col-sm-offset-4 hidden-md hidden-lg">
 		    <h3>Stories from the field</h3>
 		</div>
-		
+		<br/>
 	    </div>
 	    <div class="row hidden-sm hidden-xs">
 		{% for story in stories %}
@@ -208,70 +241,79 @@
     </div>
 </div>
 
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-<script>
- $(document).ready(function(){
-     
-     
-     $('.ShowHideFullLinks').click (ShowHideFullLinks);
-     $('.ShowHideFullLinks').click (); //-- Init list displays.
-     $('.ShowHideFullDocuments').click (ShowHideFullDocuments);
-     $('.ShowHideFullDocuments').click (); //-- Init list displays.
+<style>
+ .modal { 
+     display: none; 
+ }
+</style>
+<!-- <link rel="stylesheet" href="{% static 'stylesheets/featherlight.min.css' %}"> -->
+<link rel="stylesheet" href="{% static 'stylesheets/lightbox.css' %}">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<!-- <script src="{% static 'javascript/featherlight.min.js' %}"></script> -->
+<script src="{% static 'javascript/lightbox.js' %}"></script>
+	     <script>
+	     $(document).ready(function(){
+	     
+	     
+	     $('.ShowHideFullLinks').click (ShowHideFullLinks);
+	     $('.ShowHideFullLinks').click (); //-- Init list displays.
+	     $('.ShowHideFullDocuments').click (ShowHideFullDocuments);
+	     $('.ShowHideFullDocuments').click (); //-- Init list displays.
 
-     
-     function ShowHideFullLinks () {
-	 var showHideBtn = $(this);
-	 var bShowEm = showHideBtn.data ('bShowEm') || false;
-	 
-	 // Find the list for this button. It is a previous sibling, in the HTML.
-	 var thisBtnsList = showHideBtn.prev ("ul.truncate-list-links");
-	 
-	 // Show either all or the # from the data-list-items attribute.
-	 ShowItems (thisBtnsList, bShowEm, thisBtnsList.data ('listItems') );
-	 
-	 // Update the show-all flag.
-	 bShowEm ^= true;
-	 showHideBtn.data ('bShowEm', bShowEm);
-	 
-	 // Update the button text.
-	 if (bShowEm)
-	     showHideBtn.text ('Show More');
-	 else
-	     showHideBtn.text ('Show Less');
-     }
-     
-     function ShowHideFullDocuments () {
-	 var showHideBtn = $(this);
-	 var bShowEm = showHideBtn.data ('bShowEm') || false;
-	 
-	 // Find the list for this button. It is a previous sibling, in the HTML.
-	 var thisBtnsList = showHideBtn.prev ("ul.truncate-list-documents");
-	 
-	 // Show either all or the # from the data-list-items attribute.
-	 ShowItems (thisBtnsList, bShowEm, thisBtnsList.data ('listItems') );
-	 
-	 // Update the show-all flag.
-	 bShowEm ^= true;
-	 showHideBtn.data ('bShowEm', bShowEm);
-	 
-	 // Update the button text.
-	 if (bShowEm)
-	     showHideBtn.text ('Show More');
-	 else
-	     showHideBtn.text ('Show Less');
-     }
-     
-     
-     function ShowItems (parentNode, bShowAll, numVisible) {
-	 
-	 if (bShowAll)
-	     parentNode.find ("> li").show ();
+	     
+	     function ShowHideFullLinks () {
+	     var showHideBtn = $(this);
+	     var bShowEm = showHideBtn.data ('bShowEm') || false;
+	     
+	     // Find the list for this button. It is a previous sibling, in the HTML.
+	     var thisBtnsList = showHideBtn.prev ("ul.truncate-list-links");
+	
+	// Show either all or the # from the data-list-items attribute.
+	ShowItems (thisBtnsList, bShowEm, thisBtnsList.data ('listItems') );
+	
+	// Update the show-all flag.
+	bShowEm ^= true;
+	showHideBtn.data ('bShowEm', bShowEm);
+	
+	// Update the button text.
+	if (bShowEm)
+	showHideBtn.text ('Show More');
+	else
+	showHideBtn.text ('Show Less');
+	}
+	
+	function ShowHideFullDocuments () {
+	var showHideBtn = $(this);
+	var bShowEm = showHideBtn.data ('bShowEm') || false;
+	
+	// Find the list for this button. It is a previous sibling, in the HTML.
+	var thisBtnsList = showHideBtn.prev ("ul.truncate-list-documents");
+	
+	// Show either all or the # from the data-list-items attribute.
+	ShowItems (thisBtnsList, bShowEm, thisBtnsList.data ('listItems') );
+	
+	// Update the show-all flag.
+	bShowEm ^= true;
+	showHideBtn.data ('bShowEm', bShowEm);
+	
+	// Update the button text.
+	if (bShowEm)
+	showHideBtn.text ('Show More');
+	else
+	showHideBtn.text ('Show Less');
+	}
+	
+	
+	function ShowItems (parentNode, bShowAll, numVisible) {
+	
+	if (bShowAll)
+	parentNode.find ("> li").show ();
 	 else {
 	     parentNode.find ("> li:lt(" + numVisible + ")").show ();
 	     parentNode.find ("> li:gt(" + (numVisible-1) + ")").hide ();
-	 }
-     }
-     
- });
+	      }
+	      }
+	      
+	      });
 </script>
 {% endblock %}
