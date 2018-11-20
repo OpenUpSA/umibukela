@@ -41,7 +41,7 @@
 			<div class="col-xs-6 col-md-3">
 			    <div class="survey-name">     
 				<a href="{% url 'programme_detail' programme.slug %}">{{ programme.long_name }}</a>
-				<p>{{ programme.summary|truncatewords:35}}</p>
+				<p>{{ programme.summary|default:""|truncatewords:35}}</p>
 			    </div>
 			</div>
 			{% endfor %}
