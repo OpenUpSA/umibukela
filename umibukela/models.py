@@ -642,6 +642,7 @@ class ProgrammeImage(models.Model):
     caption = models.CharField(max_length=255)
     image = models.ImageField(upload_to='programme/images/')
     date = models.DateField(null=True)
+    featured = models.BooleanField(default=False)
 
     def __str__(self):
         return self.caption
