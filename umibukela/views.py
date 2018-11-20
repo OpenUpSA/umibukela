@@ -23,10 +23,10 @@ import csv
 import csv_export
 
 from .forms import CRSFromKoboForm
-from .models import (Cycle, CycleResultSet, Partner, Programme,
-                     ProgrammeKoboRefreshToken, Province, Site, Submission,
-                     Survey, SurveyKoboProject, SurveyType,
-                     UserKoboRefreshToken, ProgrammeStory, ProgrammeImage)
+from .models import (
+    Cycle, CycleResultSet, Partner, Programme, ProgrammeKoboRefreshToken,
+    Province, Site, Submission, Survey, SurveyKoboProject, SurveyType,
+    UserKoboRefreshToken, ProgrammeStory, ProgrammeImage, ProgrammeResources)
 
 IGNORE_TYPES = ['start', 'end', 'meta', 'today', 'username', 'phonenumber']
 TRIM_SITE_RE = r"SASSA Service Office: |SASSA Pay Point: "
@@ -83,14 +83,20 @@ def programme_detail(request, programme_slug):
               .order_by('funder')\
               .select_related('funder')\
               .only('funder')
+    resources = ProgrammeResources\
+                .objects\
+                .filter(programme__slug=programme_slug)\
+                .select_related('resource')\
+                .order_by('order')
     return render(
-        request, 'programme_detail.html', {
+        request, 'programme_detail.djhtml', {
             'programme': programme,
             'surveys': surveys,
             'partners': partners,
             'donars': donars,
             'stories': stories,
-            'programme_images': programme_images
+            'programme_images': programme_images,
+            'resources': resources
         })
 
 
