@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
+{% load static markup_tags %}
 
 {% block title %}{{ story.title }}{% endblock %}
 
@@ -43,7 +44,7 @@
 	    </div>
 	    <div class="row">
 		<div class="col-sm-8">
-		    <p class="survey-type-detail-desc">{{ story.description|linebreaks }}</p>
+		    <p class="survey-type-detail-desc">{{ story.description|apply_markup:"markdown" }}</p>
 		</div>
 		<div class="col-sm-4">
 		    {% if more_stories %}
