@@ -214,7 +214,7 @@ class CycleFrequency(models.Model):
 class Programme(models.Model):
     short_name = models.CharField(max_length=100, unique=True)
     long_name = models.CharField(max_length=200, unique=True)
-    summary = models.CharField(max_length=255, null=True)
+    summary = models.TextField(null=True)
     description = models.TextField()
     frequency = models.ForeignKey(CycleFrequency, null=True, blank=True)
     slug = models.SlugField(max_length=200, unique=True, blank=True)
