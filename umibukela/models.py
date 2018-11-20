@@ -23,6 +23,7 @@ import re
 import requests
 import shutil
 import uuid
+import magic
 
 # ------------------------------------------------------------------------------
 # General utilities
@@ -643,3 +644,37 @@ class ProgrammeImage(models.Model):
 
     def __str__(self):
         return self.caption
+
+
+class ProgrammeResourceType(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+class ProgrammeResources(models.Model):
+    programme = models.ForeignKey(Programme, on_delete=models.CASCADE)
+    resource = models.ForeignKey(
+        ProgrammeResourceType, related_name='resource_type')
+    order = models.IntegerField(
+        help_text='The order in which the document or link should appear')
+    title = models.CharField(max_length=50)
+    link = models.URLField(
+        blank=True, null=True, help_text='An External http:// link')
+    document = models.FileField(
+        upload_to='programme/resources/', blank=True, null=True)
+    document_extension = models.CharField(
+        max_length=150, blank=True, null=True)
+
+    class Meta:
+        unique_together = ('resource', 'order')
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if self.document:
+            extension = magic.from_buffer(self.document.file.read(), mime=True)
+            self.document_extension = extension
+        return super(ProgrammeResources, self).save(*args, **kwargs)
