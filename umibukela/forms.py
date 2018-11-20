@@ -3,7 +3,8 @@ from django.contrib.gis.geos import Point
 from widgets import AddAnotherWidgetWrapper
 from django.core.exceptions import ValidationError
 
-from .models import (Site, CycleResultSet, Monitor, ProgrammeResources)
+from .models import (Site, CycleResultSet, Monitor, ProgrammeResources,
+                     ProgrammeImage)
 
 
 class SiteForm(forms.ModelForm):
@@ -95,4 +96,22 @@ class ProgrammeResourcesForm(forms.ModelForm):
                 order=order_no, resource=resource).exists():
             raise ValidationError('Resource exists at this order number')
 
+        return self.cleaned_data
+
+
+class ProgrammeImageForm(forms.ModelForm):
+    class Meta:
+        model = ProgrammeImage
+        fields = '__all__'
+
+    def clean(self):
+        featured = self.cleaned_data.get('featured')
+        programme = self.cleaned_data.get('programme')
+        if featured:
+            if ProgrammeImage\
+               .objects\
+               .filter(programme=programme, featured=True):
+                raise ValidationError(
+                    "An image in this programme is already marked as a featured image"
+                )
         return self.cleaned_data
