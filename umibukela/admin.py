@@ -23,7 +23,8 @@ from .models import (
     SurveyType,
 )
 
-from .forms import (CycleResultSetForm, SiteForm, ProgrammeResourcesForm)
+from .forms import (CycleResultSetForm, SiteForm, ProgrammeResourcesForm,
+                    ProgrammeImageForm)
 
 
 class AdminSite(admin.AdminSite):
@@ -106,7 +107,8 @@ class CycleAdmin(admin.ModelAdmin):
 
 
 class ProgrammImageAdmin(admin.ModelAdmin):
-    list_display = ('programme', 'caption', 'date')
+    form = ProgrammeImageForm
+    list_display = ('programme', 'caption', 'date', 'featured')
 
 
 class ProgrammeStoryImageAdmin(admin.ModelAdmin):
