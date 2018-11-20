@@ -14,6 +14,8 @@ from .models import (
     ProgrammeStory,
     ProgrammeImage,
     ProgrammeStoryImage,
+    ProgrammeResources,
+    ProgrammeResourceType,
     Province,
     Sector,
     Site,
@@ -21,10 +23,7 @@ from .models import (
     SurveyType,
 )
 
-from .forms import (
-    CycleResultSetForm,
-    SiteForm,
-)
+from .forms import (CycleResultSetForm, SiteForm, ProgrammeResourcesForm)
 
 
 class AdminSite(admin.AdminSite):
@@ -114,6 +113,10 @@ class ProgrammeStoryImageAdmin(admin.ModelAdmin):
     list_display = ('story', 'caption', 'date')
 
 
+class ProgrammeResourcesAdmin(admin.ModelAdmin):
+    form = ProgrammeResourcesForm
+
+
 admin_site = AdminSite()
 
 admin_site.site_header = 'Umibukela administration'
@@ -134,3 +137,5 @@ admin_site.register(SurveyType, SurveyTypeAdmin)
 admin_site.register(Funder)
 admin_site.register(ProgrammeStory)
 admin_site.register(ProgrammeStoryImage, ProgrammeStoryImageAdmin)
+admin_site.register(ProgrammeResources, ProgrammeResourcesAdmin)
+admin_site.register(ProgrammeResourceType)
