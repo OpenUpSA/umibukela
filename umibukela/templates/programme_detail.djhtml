@@ -32,11 +32,15 @@
 	    </div>
 	    {% if stories %}
 	    <div class="row">
-		<div class="col-sm-4 col-md-offset-4">
+		<div class="col-md-4 col-md-offset-4 hidden-sm hidden-xs">
 		    <h1>Stories from the field</h1>
 		</div>
+		<div class="col-sm-4 col-sm-offset-4 hidden-md hidden-lg">
+		    <h3>Stories from the field</h3>
+		</div>
+		
 	    </div>
-	    <div class="row">
+	    <div class="row hidden-sm hidden-xs">
 		{% for story in stories %}
 		<div class="col-sm-5 col-xs-4">
 		    <div class="media">
@@ -50,6 +54,25 @@
 			</div>
 		    </div>
 		</div>
+		{% endfor %}
+		<div class="col-sm-2">
+		    <a href="{% url 'programme_story' programme.slug %}" class="btn btn-primary" style="margin-top:50px">See all stories</a>
+		</div>
+	    </div>
+	    <div class="row hidden-md hidden-lg">
+		{% for story in stories %}
+		    <div class="col-sm-12">
+			<div class="media">
+			    <div class="media-left">
+				<img src="{{story.story_image.first.image.url}}" class="media-object img-responsive" style="width:48px">
+			    </div>
+			    <div class="media-body">
+				<h4 class="media-heading">{{story.title}}</h4>
+				<p>{{story.description|truncatewords:15}}</p>
+				<a href="{% url 'story_detail' story.slug %}" style="float:right">Read More</a>
+			    </div>
+			</div>
+		    </div>
 		{% endfor %}
 		<div class="col-sm-2">
 		    <a href="{% url 'programme_story' programme.slug %}" class="btn btn-primary" style="margin-top:50px">See all stories</a>
