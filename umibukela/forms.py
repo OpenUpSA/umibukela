@@ -1,12 +1,9 @@
 from django import forms
 from django.contrib.gis.geos import Point
 from widgets import AddAnotherWidgetWrapper
+from django.core.exceptions import ValidationError
 
-from .models import (
-    Site,
-    CycleResultSet,
-    Monitor,
-)
+from .models import (Site, CycleResultSet, Monitor, ProgrammeResources)
 
 
 class SiteForm(forms.ModelForm):
@@ -27,7 +24,7 @@ class SiteForm(forms.ModelForm):
         widgets = {'coordinates': forms.HiddenInput()}
 
     def __init__(self, *args, **kwargs):
-        if args:    # If args exist
+        if args:  # If args exist
             data = args[0]
             if data['latitude'] and data['longitude']:
                 latitude = float(data['latitude'])
@@ -57,12 +54,13 @@ class CycleResultSetForm(forms.ModelForm):
             partner = crs.partner
         else:
             partner = None
-        self.fields['monitors'].queryset = Monitor.objects.filter(partner=partner)
-        self.fields['site_option_name'].help_text = "This is the name of the option for this site in the form, e.g. for 'Folweni clinic' it's probably 'folweni' (without the single quotes). You can find the names of options in the relevant Survey admin page."
+        self.fields['monitors'].queryset = Monitor.objects.filter(
+            partner=partner)
+        self.fields[
+            'site_option_name'].help_text = "This is the name of the option for this site in the form, e.g. for 'Folweni clinic' it's probably 'folweni' (without the single quotes). You can find the names of options in the relevant Survey admin page."
 
 
 class CRSFromKoboForm(forms.Form):
-
     def __init__(self, *args, **kwargs):
         facilities = kwargs.pop('facilities')
         super(CRSFromKoboForm, self).__init__(*args, **kwargs)
@@ -70,15 +68,31 @@ class CRSFromKoboForm(forms.Form):
         for i, facility in enumerate(facilities):
             crs_field = forms.ModelChoiceField(
                 queryset=CycleResultSet.objects.order_by('site__name').all(),
-                label=facility['label']
-            )
-            crs_field.widget = AddAnotherWidgetWrapper(crs_field.widget, CycleResultSet)
+                label=facility['label'])
+            crs_field.widget = AddAnotherWidgetWrapper(crs_field.widget,
+                                                       CycleResultSet)
             self.fields['crs_%d' % i] = crs_field
             self.fields['facility_%d' % i] = forms.CharField(
-                widget=forms.HiddenInput(),
-                initial=facility['name']
-            )
+                widget=forms.HiddenInput(), initial=facility['name'])
         self.fields['num_facilities'] = forms.CharField(
-            widget=forms.HiddenInput(),
-            initial=len(facilities)
-        )
+            widget=forms.HiddenInput(), initial=len(facilities))
+
+
+class ProgrammeResourcesForm(forms.ModelForm):
+    class Meta:
+        model = ProgrammeResources
+        exclude = ('document_extension', )
+
+    def clean(self):
+        link = self.cleaned_data.get('link')
+        document = self.cleaned_data.get('document')
+        order_no = self.cleaned_data.get('order')
+        resource = self.cleaned_data.get('resource')
+        if link and document:
+            raise ValidationError(
+                "You cant have an External link and a Document")
+        if ProgrammeResources.objects.filter(
+                order=order_no, resource=resource).exists():
+            raise ValidationError('Resource exists at this order number')
+
+        return self.cleaned_data
