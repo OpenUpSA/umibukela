@@ -112,9 +112,30 @@
 		</div>
 	    </div>
 	    {% endif %}
-	    {% if surveys %}
-		
-	    {% endif %}
+	    <div class="datasets">
+		{% if datastudio %}
+		    <div class="panel panel-default">
+			<div class="panel-heading">Monitoring Results</div>
+			<div class="panel-body">
+			    {% for data in datastudio %}
+				<div class="row">
+				    <div class="col-md-12 col-sm-12">
+					<h3 class="text-center">{{data.survey}} Results Dashboard</h3>
+					<div class="embed-responsive embed-responsive-16by9">
+									    <iframe width="auto" height="450" src="{{data.datastudio}}" frameborder="0" style="border:0" allowfullscreen></iframe>
+					</div>
+				    </div>
+								</div>
+			    {% endfor %}
+			    {% if raw_data %}
+				<div class="row">
+				    <h3 class="text-center">Data Downloads</h3>
+				</div>
+			    {% endif %}
+			</div>
+		    </div>
+		{% endif %}
+	    </div>
 	    <div class="monitoring-period">
 		{% if surveys %}
 		    <div class="row">

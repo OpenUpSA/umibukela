@@ -23,10 +23,11 @@ import csv
 import csv_export
 
 from .forms import CRSFromKoboForm
-from .models import (
-    Cycle, CycleResultSet, Partner, Programme, ProgrammeKoboRefreshToken,
-    Province, Site, Submission, Survey, SurveyKoboProject, SurveyType,
-    UserKoboRefreshToken, ProgrammeStory, ProgrammeImage, ProgrammeResources)
+from .models import (Cycle, CycleResultSet, Partner, Programme,
+                     ProgrammeKoboRefreshToken, Province, Site, Submission,
+                     Survey, SurveyKoboProject, SurveyType,
+                     UserKoboRefreshToken, ProgrammeStory, ProgrammeImage,
+                     ProgrammeResources, SurveyTypeData)
 
 IGNORE_TYPES = ['start', 'end', 'meta', 'today', 'username', 'phonenumber']
 TRIM_SITE_RE = r"SASSA Service Office: |SASSA Pay Point: "
@@ -68,6 +69,16 @@ def programme_detail(request, programme_slug):
     programme = Programme.objects.get(slug=programme_slug)
     surveys = Survey.objects.filter(cycle__programme__slug=programme_slug)
     stories = ProgrammeStory.objects.filter(programme__slug=programme_slug)[:2]
+
+    type_surveys = Survey\
+                   .objects\
+                   .filter(cycle__programme__slug=programme_slug)\
+                   .distinct('type')\
+                   .order_by('type__id')\
+                   .only('type')\
+                   .values('type')
+    survey_ids = [t['type'] for t in type_surveys]
+    data_results = SurveyTypeData.objects.filter(survey__id__in=survey_ids)
     programme_images = ProgrammeImage\
                        .objects\
                        .filter(programme__slug=programme_slug)\
@@ -109,7 +120,8 @@ def programme_detail(request, programme_slug):
             'stories': stories,
             'programme_images': programme_images,
             'resources': resources,
-            'featured_image': featured_image
+            'featured_image': featured_image,
+            'datastudio': data_results
         })
 
 

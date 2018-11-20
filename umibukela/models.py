@@ -346,6 +346,15 @@ class SurveyType(models.Model):
         return self.name
 
 
+class SurveyTypeData(models.Model):
+    survey = models.ForeignKey(SurveyType)
+    cycle = models.ForeignKey(Cycle, null=True, blank=True)
+    datastudio = models.URLField(help_text='Embed Url to the datastudio chart')
+
+    def __str__(self):
+        return self.survey.name
+
+
 class Survey(models.Model):
     name = models.CharField(max_length=200, unique=True)
     cycle = models.ForeignKey(Cycle, related_name="surveys")

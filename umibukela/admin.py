@@ -1,27 +1,12 @@
 from django.contrib import admin
 from umibukela import views
 
-from .models import (
-    AttachmentNature,
-    Cycle,
-    CycleFrequency,
-    CycleResultSet,
-    CycleResultSetAttachment,
-    Funder,
-    Monitor,
-    Partner,
-    Programme,
-    ProgrammeStory,
-    ProgrammeImage,
-    ProgrammeStoryImage,
-    ProgrammeResources,
-    ProgrammeResourceType,
-    Province,
-    Sector,
-    Site,
-    Survey,
-    SurveyType,
-)
+from .models import (AttachmentNature, Cycle, CycleFrequency, CycleResultSet,
+                     CycleResultSetAttachment, Funder, Monitor, Partner,
+                     Programme, ProgrammeStory, ProgrammeImage,
+                     ProgrammeStoryImage, ProgrammeResources,
+                     ProgrammeResourceType, Province, Sector, Site, Survey,
+                     SurveyType, SurveyTypeData)
 
 from .forms import (CycleResultSetForm, SiteForm, ProgrammeResourcesForm,
                     ProgrammeImageForm)
@@ -119,6 +104,10 @@ class ProgrammeResourcesAdmin(admin.ModelAdmin):
     form = ProgrammeResourcesForm
 
 
+class SurveyTypeDataAdmin(admin.ModelAdmin):
+    list_display = ('survey', 'cycle')
+
+
 admin_site = AdminSite()
 
 admin_site.site_header = 'Umibukela administration'
@@ -136,6 +125,7 @@ admin_site.register(Sector)
 admin_site.register(Site, SiteAdmin)
 admin_site.register(Survey)
 admin_site.register(SurveyType, SurveyTypeAdmin)
+admin_site.register(SurveyTypeData, SurveyTypeDataAdmin)
 admin_site.register(Funder)
 admin_site.register(ProgrammeStory)
 admin_site.register(ProgrammeStoryImage, ProgrammeStoryImageAdmin)
