@@ -82,7 +82,7 @@
 			</div>
 			<div class="media-body">
 			    <h4 class="media-heading">{{story.title}}</h4>
-			    <p>{{story.description|truncatewords:25}}</p>
+			    <p>{{story.summary|truncatewords:25}}</p>
 			    <a href="{% url 'story_detail' story.slug %}" style="float:right">Read More</a>
 			</div>
 		    </div>
@@ -101,7 +101,7 @@
 			    </div>
 			    <div class="media-body">
 				<h4 class="media-heading">{{story.title}}</h4>
-				<p>{{story.description|truncatewords:15}}</p>
+				<p>{{story.summary|truncatewords:15}}</p>
 				<a href="{% url 'story_detail' story.slug %}" style="float:right">Read More</a>
 			    </div>
 			</div>
