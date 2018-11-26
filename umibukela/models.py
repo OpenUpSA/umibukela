@@ -214,8 +214,9 @@ class CycleFrequency(models.Model):
 class Programme(models.Model):
     short_name = models.CharField(max_length=100, unique=True)
     long_name = models.CharField(max_length=200, unique=True)
-    summary = models.TextField(null=True)
-    description = models.TextField()
+    summary = models.TextField(
+        null=True, help_text='Field is not supported by markdown')
+    description = models.TextField(help_text='Field is markdown supported')
     frequency = models.ForeignKey(CycleFrequency, null=True, blank=True)
     slug = models.SlugField(max_length=200, unique=True, blank=True)
 
@@ -623,7 +624,9 @@ class ProgrammeStory(models.Model):
     programme = models.ForeignKey(
         Programme, on_delete=models.CASCADE, related_name='programme')
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(help_text='Field is markdown supported')
+    summary = models.TextField(
+        help_text='Markdown is not supported', default='')
     slug = models.SlugField(max_length=200, blank=True)
 
     def __str__(self):
