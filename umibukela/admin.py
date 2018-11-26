@@ -102,6 +102,7 @@ class ProgrammeStoryImageAdmin(admin.ModelAdmin):
 
 class ProgrammeResourcesAdmin(admin.ModelAdmin):
     form = ProgrammeResourcesForm
+    list_display = ('order', 'resource', 'title', 'programme')
 
 
 class SurveyTypeDataAdmin(admin.ModelAdmin):
