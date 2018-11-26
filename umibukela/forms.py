@@ -91,6 +91,13 @@ class ProgrammeResourcesForm(forms.ModelForm):
         resource = self.cleaned_data.get('resource')
         programme = self.cleaned_data.get('programme')
 
+        if resource.name == 'Link' and link is None:
+            raise ValidationError('Enter a link')
+        if resource.name == 'Reports' and document is None:
+            raise ValidationError('Upload a document')
+        if resource.name == 'Survey Instrument' and document is None:
+            raise ValidationError('Upload a document')
+
         if link and document:
             raise ValidationError(
                 "You cant have an External link and a Document")
@@ -99,15 +106,15 @@ class ProgrammeResourcesForm(forms.ModelForm):
                 programme=programme).exists():
             raise ValidationError(
                 'A Resource already exists for this order number')
-        if resource.name == 'Links' and document is not None:
+        if resource.name == 'Links' and document:
             raise ValidationError(
                 'A resource of type Link cannot have a document, expecting a link'
             )
-        if resource.name == 'Reports' and link is not None:
+        if resource.name == 'Reports' and link:
             raise ValidationError(
                 'A resource of type Reports cannot have a link, expecting a document'
             )
-        if resource.name == 'Survey Instrument' and link is not None:
+        if resource.name == 'Survey Instrument' and link:
             raise ValidationError(
                 'A resource of type Survey Instrument cannot have a link, expecting a document'
             )
