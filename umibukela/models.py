@@ -682,7 +682,7 @@ class ProgrammeResources(models.Model):
         max_length=150, blank=True, null=True)
 
     class Meta:
-        unique_together = ('resource', 'order')
+        unique_together = ('resource', 'order', 'programme')
 
     def __str__(self):
         return self.title

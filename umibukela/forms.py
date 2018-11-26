@@ -89,12 +89,15 @@ class ProgrammeResourcesForm(forms.ModelForm):
         document = self.cleaned_data.get('document')
         order_no = self.cleaned_data.get('order')
         resource = self.cleaned_data.get('resource')
+        programme = self.cleaned_data.get('programme')
         if link and document:
             raise ValidationError(
                 "You cant have an External link and a Document")
         if ProgrammeResources.objects.filter(
-                order=order_no, resource=resource).exists():
-            raise ValidationError('Resource exists at this order number')
+                order=order_no, resource=resource,
+                programme=programme).exists():
+            raise ValidationError(
+                'A Resource already exists for this order number')
 
         return self.cleaned_data
 
