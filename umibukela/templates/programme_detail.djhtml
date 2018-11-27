@@ -16,12 +16,36 @@
 </div>
 <!-- /breadcrumbs -->
 
-<div class="section survey-type">
+
+<div class="section">
     <div class="section-heading">
 	<div class="container">
 	    <h1><i class="fa fa-clipboard"></i> {{programme.long_name }}</h1>
 	</div>
     </div>
+    <nav class="section-subnav" style="position:sticky;top:0;background-color:white;padding:20px;z-index:1">
+	<div class="container">
+	    <div id="subnav">
+		<a href="#overview" class="btn btn-primary btn-sm uppercase">Overview</a>
+		{% if stories %}
+		    <a href="#stories" class="btn btn-primary btn-sm uppercase">Stories</a>
+		{% endif %}
+
+		{% if datastudio %}
+		    <a href="#monitor-results" class="btn btn-primary btn-sm uppercase">Monitoring Results</a>
+		{% endif %}
+		{% if partners %}
+		    <a href="#community-partners" class="btn btn-primary btn-sm uppercase">Community Partners</a>
+		{% endif %}
+		{% if resources %}
+		    <a href="#resources" class="btn btn-primary btn-sm uppercase">Resources</a>
+		{% endif %}
+		{% if donars %}
+		    <a href="#donars" class="btn btn-primary btn-sm uppercase">Donars</a>
+		{% endif %}
+	    </div>
+	</div>
+    </nav>
 
     <div class="sites-table page-section">
 	<div class="container">
@@ -32,7 +56,7 @@
 		    </div>
 		</div>
 	    </div>
-	    <div class="hidden-sm hidden-xs">
+	    <div class="hidden-sm hidden-xs" id="overview">
 		{% if featured_image %}
 		    <div class="media">
 			<div class="media-left media-middle">
@@ -64,7 +88,7 @@
 		{% endfor %}
 	    </div>
 	    {% if stories %}
-	    <div class="row">
+	    <div class="row" id="stories">
 		<div class="col-md-4 col-md-offset-4 hidden-sm hidden-xs">
 		    <h1>Stories from the field</h1>
 		</div>
@@ -112,9 +136,9 @@
 		</div>
 	    </div>
 	    {% endif %}
-	    <div class="datasets">
+	    <div class="datasets" id="monitor-results">
 		{% if datastudio %}
-		    <div class="panel panel-default">
+		    <div class="panel panel-default" id="monitor-results">
 			<div class="panel-heading">Monitoring Results</div>
 			<div class="panel-body">
 			    {% for data in datastudio %}
@@ -136,8 +160,8 @@
 		    </div>
 		{% endif %}
 	    </div>
-	    <div class="monitoring-period">
-		{% if surveys %}
+	    {% if surveys %}
+		<div id="surveys">
 		    <div class="row">
 			<h3>Surverys Conducted</h3>
 			<table class="table table-striped">
@@ -162,109 +186,113 @@
 				{% endfor %}
 			    </tbody>
 			</table>
-				    </div>
-		{% endif %}
-		{% if partners %}
-		    <div class="row">
-			<h3>Community Partners</h3>
-			<table class="table table-striped">
-			    <thead lass="thead-light">
-				<tr>
-				    <th data-sort="string" class="sorttable_sorted">Name</th>
-				</tr>
-			    </thead>
-			    <tbody>
-				{% for p in partners %}
-				    <tr>
-					<td><a href="{% url 'partner' p.partner.slug %}">{{ p.partner.full_name }}</a></td>
-				    </tr>
-				{% endfor %}
-			    </tbody>
-			</table>
 		    </div>
-		{% endif %}
-		<div class="row">
-		    {% if resources %}
-			<div class="panel panel-default">
-			    <div class="panel-heading">Resources</div>
-			    <div class="panel-body">
-				<div class="row">
-				    <div class="col-md-6">
-					<h4>Links</h4>
-					<ul class="truncate-list-links fa-ul" style="margin-left:0;padding-left:0" data-list-items="3">
-					    {% for r in resources %}
-						{% if r.resource.name == 'Links' %}
-						    <li>
-							<a href="{{r.link}}" >{{r.title}}</a>
-						    </li>
+				</div>
+	    {% endif %}
+
+	    {% if partners %}
+		<div class="row" id="community-partners">
+		    <h3>Community Partners</h3>
+		    <table class="table table-striped">
+			<thead lass="thead-light">
+			    <tr>
+				<th data-sort="string" class="sorttable_sorted">Name</th>
+			    </tr>
+			</thead>
+			<tbody>
+			    {% for p in partners %}
+				<tr>
+				        <td><a href="{% url 'partner' p.partner.slug %}">{{ p.partner.full_name }}</a></td>
+				</tr>
+			    {% endfor %}
+			</tbody>
+		    </table>
+				</div>
+	    {% endif %}
+
+	    {% if resources %}
+		<div class="row" id="resources">
+		    <div class="panel panel-default">
+			<div class="panel-heading">Resources</div>
+			<div class="panel-body">
+			    <div class="row">
+				<div class="col-md-6">
+				    <h4>Links</h4>
+				    <ul class="truncate-list-links fa-ul" style="margin-left:0;padding-left:0" data-list-items="3">
+					{% for r in resources %}
+					    {% if r.resource.name == 'Links' %}
+						<li>
+						    <a href="{{r.link}}" >{{r.title}}</a>
+						</li>
+					    {% endif %}
+					{% endfor %}
+				    </ul>
+				    <button class="ShowHideFullLinks btn btn-primary" type="button">Show more links</button>
+				</div>
+				<div class="col-md-6">
+				    <h4>Documents</h4>
+				    <ul class="fa-ul truncate-list-documents" style="margin-left:0;padding-left:0" data-list-items="3">
+					{% for r in resources %}
+					    {% if r.resource.name == 'Reports' %}
+						<li>{% if r.document_extension == 'application/pdf' %}
+						    <i class="fa fa-file-pdf-o" style="font-size:24px"></i>
+						{% elif r.document_extension == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %}
+						    <i class="fa fa-file-excel-o" style="font-size:24px"></i>
+						{% else %}
+						    <i class="fa fa-file-o" style="font-size:24px"></i>
 						{% endif %}
-					    {% endfor %}
-					</ul>
-					<button class="ShowHideFullLinks btn btn-primary" type="button">Show more links</button>
-				    </div>
-				    <div class="col-md-6">
-					<h4>Documents</h4>
-					<ul class="fa-ul truncate-list-documents" style="margin-left:0;padding-left:0" data-list-items="3">
-					    {% for r in resources %}
-						{% if r.resource.name == 'Reports' %}
-						    <li>{% if r.document_extension == 'application/pdf' %}
-							<i class="fa fa-file-pdf-o" style="font-size:24px"></i>
-						    {% elif r.document_extension == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %}
-							<i class="fa fa-file-excel-o" style="font-size:24px"></i>
+						<a href="{{r.document.url}}" >{{r.title}}</a>
+						</li>
+					    {% endif %}
+					{% endfor %}
+				    </ul>
+				    <button class="ShowHideFullDocuments btn btn-primary" type="button">Show more documents</button>
+				</div>
+			    </div>
+			    <div class="row">
+				<div class="col-md-12">
+				    <h4>Survery Instruments</h4>
+				    <div class="row">
+					{% for r in resources %}
+					    {% if r.resource.name == 'Survey Instrument' %}
+						<div class="col-md-6">
+						    {% if r.document_extension == 'application/pdf' %}
+							<i class="fa fa-file-pdf-o" style="font-size:36px"></i>
 						    {% else %}
-							<i class="fa fa-file-o" style="font-size:24px"></i>
+							<i class="fa fa-file-excel-o" style="font-size:36px"></i>
 						    {% endif %}
 						    <a href="{{r.document.url}}" >{{r.title}}</a>
-						    </li>
-						{% endif %}
-					    {% endfor %}
-					</ul>
-					<button class="ShowHideFullDocuments btn btn-primary" type="button">Show more documents</button>
-								    </div>
-				</div>
-				<div class="row">
-				    <div class="col-md-12">
-					<h4>Survery Instruments</h4>
-					<div class="row">
-					    {% for r in resources %}
-						{% if r.resource.name == 'Survey Instrument' %}
-						    <div class="col-md-6">
-							{% if r.document_extension == 'application/pdf' %}
-							    <i class="fa fa-file-pdf-o" style="font-size:36px"></i>
-							{% else %}
-							    <i class="fa fa-file-excel-o" style="font-size:36px"></i>
-							{% endif %}
-							<a href="{{r.document.url}}" >{{r.title}}</a>
-						    </div>
-						{% endif %}
-					    {% endfor %}
-					</div>
+						</div>
+					    {% endif %}
+					{% endfor %}
 				    </div>
 				</div>
 			    </div>
 			</div>
-		    {% endif %}
-		</div>
-		<div class="row">
-		    {% if donars %}
+		    </div>
+				</div>
+	    {% endif %}
+
+	    {% if donars %}
+		{{donars}}
+		<div class="row" id="donars">
 		    <h3>With support from</h3>
 		    {% for donar in donars %}
-		    {% if donar.funder %}
-		    <div class="col-md-4">
-			<div class="thumbnail">
-			    <a href="{{donar.funder.website}}">
-				<img src="{{donar.funder.logo.url}}" alt="{{donar.funder.name}}" style="width:auto;height:250px">
-				<div class="caption">
-				    {{donar.funder.name}}
+			{% if donar.funder %}
+			    <div class="col-md-4">
+				<div class="thumbnail">
+				    <a href="{{donar.funder.website}}">
+					<img src="{{donar.funder.logo.url}}" alt="{{donar.funder.name}}" style="width:auto;height:250px">
+					<div class="caption">
+					    {{donar.funder.name}}
+					</div>
+				    </a>
 				</div>
-			    </a>
-			</div>
-		    </div>
-		    {% endif %}
+			    </div>
+			{% endif %}
 		    {% endfor %}
-		    {% endif %}
 		</div>
-	    </div>
+            {% endif %}
 	</div>
     </div>
 </div>
