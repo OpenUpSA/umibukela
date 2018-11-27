@@ -102,6 +102,7 @@ def programme_detail(request, programme_slug):
     donars = CycleResultSet\
               .objects\
               .filter(survey__cycle__programme__slug=programme_slug)\
+              .exclude(funder__isnull=True)\
               .distinct('funder')\
               .order_by('funder')\
               .select_related('funder')\
