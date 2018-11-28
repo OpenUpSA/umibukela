@@ -69,11 +69,21 @@ def programme_result_cycle(request, programme_slug, cycle_id):
     """
     Get the results for a particular cycle, if a result exists
     """
-    surveys = Survey.objects.filter(
-        cycle__programme__slug=programme_slug, cycle_id=cycle_id)
+    surveys = Survey\
+              .objects\
+              .filter(cycle__programme__slug=programme_slug, cycle_id=cycle_id)
     survey_submission_count = sum(
         survey.get_submission_count() for survey in surveys)
-    return JsonResponse({'submission_count': survey_submission_count})
+    data_results = SurveyTypeData\
+                   .objects\
+                   .filter(cycle_id=cycle_id)\
+                   .values('datastudio', 'survey__name')
+    return JsonResponse({
+        'submission_count': survey_submission_count,
+        'datastudio':
+        {key['survey__name']: key['datastudio']
+         for key in data_results}
+    })
 
 
 def programme_detail(request, programme_slug):
