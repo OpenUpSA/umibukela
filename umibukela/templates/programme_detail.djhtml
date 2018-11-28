@@ -158,8 +158,22 @@
 	    <div class="datasets" id="monitor-results">
 		{% if datastudio %}
 		    <div class="panel panel-default" id="monitor-results">
-			<div class="panel-heading">Monitoring Results</div>
-			<div class="panel-body">
+			<div class="panel-heading">
+			    <div class="row">
+				<div class="col-md-4">Monitoring Results</div>
+				<div class="col-md-4 col-md-offset-4">
+				    <div class="dropdown">
+					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="monitor-period-name">Monitoring Period</span> <span class="caret"></span></button>
+					<ul class="dropdown-menu" id="monitor-cycles">
+					    {% for cycle in programme_cycles %}
+						<li id="{{cycle.id}}"><a href='#'>{{cycle.start_date}} - {{cycle.end_date}}</a></li>
+					    {% endfor %}  
+					</ul>
+				    </div>
+				</div>
+			    </div>
+			</div>
+			<div class="panel-body" id="append-datastudio">
 			    {% for data in datastudio %}
 				<div class="row">
 				    <div class="col-md-12 col-sm-12">
@@ -168,7 +182,7 @@
 									    <iframe width="auto" height="450" src="{{data.datastudio}}" frameborder="0" style="border:0" allowfullscreen></iframe>
 					</div>
 				    </div>
-								</div>
+				</div>
 			    {% endfor %}
 			    {% if raw_data %}
 				<div class="row">
@@ -323,70 +337,70 @@
 <link rel="stylesheet" href="{% static 'stylesheets/lightbox.css' %}">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 <script src="{% static 'javascript/lightbox.js' %}"></script>
-<script>
-	     $(document).ready(function(){
-	     
-	     
-	     $('.ShowHideFullLinks').click (ShowHideFullLinks);
-	     $('.ShowHideFullLinks').click (); //-- Init list displays.
-	     $('.ShowHideFullDocuments').click (ShowHideFullDocuments);
-	     $('.ShowHideFullDocuments').click (); //-- Init list displays.
+<script src="{% static 'javascript/programme.js' %}">
+		     $(document).ready(function(){
+		     
+		     
+		     $('.ShowHideFullLinks').click (ShowHideFullLinks);
+		     $('.ShowHideFullLinks').click (); //-- Init list displays.
+		     $('.ShowHideFullDocuments').click (ShowHideFullDocuments);
+		     $('.ShowHideFullDocuments').click (); //-- Init list displays.
 
-	     
-	     function ShowHideFullLinks () {
-	     var showHideBtn = $(this);
-	     var bShowEm = showHideBtn.data ('bShowEm') || false;
-	     
-	     // Find the list for this button. It is a previous sibling, in the HTML.
-	     var thisBtnsList = showHideBtn.prev ("ul.truncate-list-links");
-	
-	// Show either all or the # from the data-list-items attribute.
-	ShowItems (thisBtnsList, bShowEm, thisBtnsList.data ('listItems') );
-	
-	// Update the show-all flag.
-	bShowEm ^= true;
-	showHideBtn.data ('bShowEm', bShowEm);
-	
-	// Update the button text.
-	if (bShowEm)
-	showHideBtn.text ('Show More');
-	else
-	showHideBtn.text ('Show Less');
-	}
-	
-	function ShowHideFullDocuments () {
-	var showHideBtn = $(this);
-	var bShowEm = showHideBtn.data ('bShowEm') || false;
-	
-	// Find the list for this button. It is a previous sibling, in the HTML.
-	var thisBtnsList = showHideBtn.prev ("ul.truncate-list-documents");
-	
-	// Show either all or the # from the data-list-items attribute.
-	ShowItems (thisBtnsList, bShowEm, thisBtnsList.data ('listItems') );
-	
-	// Update the show-all flag.
-	bShowEm ^= true;
-	showHideBtn.data ('bShowEm', bShowEm);
-	
-	// Update the button text.
-	if (bShowEm)
-	showHideBtn.text ('Show More');
-	else
-	showHideBtn.text ('Show Less');
-	}
-	
-	
-	function ShowItems (parentNode, bShowAll, numVisible) {
-	
-	if (bShowAll)
-	parentNode.find ("> li").show ();
+		     
+		     function ShowHideFullLinks () {
+		     var showHideBtn = $(this);
+		     var bShowEm = showHideBtn.data ('bShowEm') || false;
+		     
+		     // Find the list for this button. It is a previous sibling, in the HTML.
+		     var thisBtnsList = showHideBtn.prev ("ul.truncate-list-links");
+		
+		     // Show either all or the # from the data-list-items attribute.
+		     ShowItems (thisBtnsList, bShowEm, thisBtnsList.data ('listItems') );
+		
+		     // Update the show-all flag.
+		     bShowEm ^= true;
+		     showHideBtn.data ('bShowEm', bShowEm);
+		
+		     // Update the button text.
+		     if (bShowEm)
+		     showHideBtn.text ('Show More');
+		     else
+		     showHideBtn.text ('Show Less');
+		     }
+		
+		     function ShowHideFullDocuments () {
+		     var showHideBtn = $(this);
+		     var bShowEm = showHideBtn.data ('bShowEm') || false;
+		
+		     // Find the list for this button. It is a previous sibling, in the HTML.
+		     var thisBtnsList = showHideBtn.prev ("ul.truncate-list-documents");
+		
+		     // Show either all or the # from the data-list-items attribute.
+		     ShowItems (thisBtnsList, bShowEm, thisBtnsList.data ('listItems') );
+		
+		     // Update the show-all flag.
+		     bShowEm ^= true;
+		     showHideBtn.data ('bShowEm', bShowEm);
+		
+		     // Update the button text.
+		     if (bShowEm)
+		     showHideBtn.text ('Show More');
+		     else
+		     showHideBtn.text ('Show Less');
+		     }
+		
+		
+		     function ShowItems (parentNode, bShowAll, numVisible) {
+		
+		     if (bShowAll)
+		     parentNode.find ("> li").show ();
 	 else {
 	     parentNode.find ("> li:lt(" + numVisible + ")").show ();
 	     parentNode.find ("> li:gt(" + (numVisible-1) + ")").hide ();
-	      }
-	      }
-	      
-	      });
+	       }
+	       }
+	       
+	       });
 </script>
 <script>
  $(function(){
@@ -394,11 +408,6 @@
 	 console.log("this programme name is ");
 	 var name = $('#programme_short').text()
 	 date_string = $(this).children().contents().text();
-	 console.log(name);
-	 console.log('The cycle id is');
-	 console.log($(this).attr('id'));
-	 console.log("The date range");
-	 console.log($(this).children().contents().text());
 	 $.ajax({
 	     url: '/programme/results/'+name+'/'+$(this).attr('id'),
 	     type: 'GET',
@@ -406,8 +415,51 @@
 		 if (data){
 		     console.log("The count is here");
 		     console.log(data.submission_count);
+		     console.log(data.datastudio);
 		     $('#submission_count').html(data.submission_count + ' total citzens surveyed');
 		     $('#period-name').html(date_string);
+		     $('#monitor-period-name').html(date_string);
+		     var div_parent = document.createElement('div');
+		     div_parent.className = 'row';
+		     if (Object.keys(data.datastudio).length > 0){
+			 for (survey_type in data.datastudio){
+			     var div_child = document.createElement('div');
+			     div_child.className='col-md-12 col-sm-12';
+			     var survey_type_name = document.createTextNode(survey_type + 'Results Dashboard');
+			     var h3 = document.createElement('h3');
+			     h3.className='text-center';
+			     h3.appendChild(survey_type_name);
+			     var embed_div = document.createElement('div');
+			     embed_div.className='embed-responsive embed-responsive-16by9';
+			     var iframe = document.createElement('iframe');
+			     iframe.setAttribute('width','auto');
+			     iframe.setAttribute('height','450');
+			     iframe.setAttribute('src',data.datastudio[survey_type]);
+			     iframe.setAttribute('framework', '0');
+			     iframe.setAttribute('style','border:0');
+			     embed_div.appendChild(iframe);
+			     div_child.appendChild(h3);
+			     div_child.appendChild(embed_div);
+			     div_parent.appendChild(div_child);
+			     
+			 }
+			 $('#append-datastudio').empty();
+			 var append_studio = document.getElementById('append-datastudio');
+			 append_studio.appendChild(div_parent);
+		     }else {
+			 console.log("There is no survey results");
+			 var no_result_text = document.createTextNode("No Results for this monitoring period")
+			 var h3 = document.createElement('h3');
+			 h3.className='text-center';
+			 h3.appendChild(no_result_text);
+			 
+			 div_parent.appendChild(h3);
+			 $('#append-datastudio').empty();
+			 
+			 var append_studio = document.getElementById('append-datastudio');
+			 append_studio.appendChild(div_parent);
+		     }
+		     
 		 }else{
 		     console.log("No data here");
 		 }
@@ -416,6 +468,17 @@
 	     
 	 });
      });
- })
+ });
+
+ $(function(){
+     $('ul#monitor-cycles li').click(function(){
+	 console.log('Changeing the monitoring results page');
+	 var name = $('#programme_short').text();
+	 date_string = $(this).children().contents().text();
+	 console.log('THis is the date for the object' + date_string);
+	 cycle_id = $(this).attr('id');
+	 fetch_period_results(name, cycle_id,date_string);
+     });
+ });
 </script>
 {% endblock %}
