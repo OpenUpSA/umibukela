@@ -11,7 +11,7 @@
     <ol class="breadcrumb">
 	<li><a href="/">Home</a></li>
 	<li><a href="{% url 'programmes' %}">Programmes</a></li>
-	<li><a href="{% url 'programme_detail' programme.slug %}">{{ programme.short_name }}</a></li>
+	<li><a href="{% url 'programme_detail' programme.slug %}" id="programme_short">{{ programme.slug}}</a></li>
     </ol>
 </div>
 <!-- /breadcrumbs -->
@@ -20,7 +20,26 @@
 <div class="section">
     <div class="section-heading">
 	<div class="container">
-	    <h1><i class="fa fa-clipboard"></i> {{programme.long_name }}</h1>
+	    <div class="row">
+		<div class="col-md-5">
+		    <h1><i class="fa fa-clipboard"></i> {{programme.long_name }}</h1>
+		</div>
+		<div class="col-md-5">
+		    <h1>
+			<span id="submission_count">{{survey_submissions}} total citzens surveyed</span>
+		    </h1>
+		</div>
+		<div class="col-md-2">
+		    <div class="dropdown">
+			<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="period-name">Monitoring Period</span> <span class="caret"></span></button>
+			<ul class="dropdown-menu" id="cycles">
+			    {% for cycle in programme_cycles %}
+				<li id="{{cycle.id}}"><a href='#'>{{cycle.start_date}} - {{cycle.end_date}}</a></li>
+			    {% endfor %}  
+			</ul>
+		    </div>
+		</div>
+		</div>
 	</div>
     </div>
     <nav class="section-subnav" style="position:sticky;top:0;background-color:white;padding:20px;z-index:1">
@@ -274,7 +293,6 @@
 	    {% endif %}
 
 	    {% if donars %}
-		{{donars}}
 		<div class="row" id="donars">
 		    <h3>With support from</h3>
 		    {% for donar in donars %}
@@ -302,12 +320,10 @@
      display: none; 
  }
 </style>
-<!-- <link rel="stylesheet" href="{% static 'stylesheets/featherlight.min.css' %}"> -->
 <link rel="stylesheet" href="{% static 'stylesheets/lightbox.css' %}">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-<!-- <script src="{% static 'javascript/featherlight.min.js' %}"></script> -->
 <script src="{% static 'javascript/lightbox.js' %}"></script>
-	     <script>
+<script>
 	     $(document).ready(function(){
 	     
 	     
@@ -371,5 +387,35 @@
 	      }
 	      
 	      });
+</script>
+<script>
+ $(function(){
+     $('ul#cycles li').click(function(){
+	 console.log("this programme name is ");
+	 var name = $('#programme_short').text()
+	 date_string = $(this).children().contents().text();
+	 console.log(name);
+	 console.log('The cycle id is');
+	 console.log($(this).attr('id'));
+	 console.log("The date range");
+	 console.log($(this).children().contents().text());
+	 $.ajax({
+	     url: '/programme/results/'+name+'/'+$(this).attr('id'),
+	     type: 'GET',
+	     success: function(data){
+		 if (data){
+		     console.log("The count is here");
+		     console.log(data.submission_count);
+		     $('#submission_count').html(data.submission_count + ' total citzens surveyed');
+		     $('#period-name').html(date_string);
+		 }else{
+		     console.log("No data here");
+		 }
+	     },
+	     error: function(data){}
+	     
+	 });
+     });
+ })
 </script>
 {% endblock %}

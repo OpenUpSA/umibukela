@@ -3,7 +3,7 @@ from datetime import datetime
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db.models import Count
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
@@ -65,10 +65,28 @@ def programmes(request):
     return render(request, 'programmes.html', {'programmes': prog})
 
 
+def programme_result_cycle(request, programme_slug, cycle_id):
+    """
+    Get the results for a particular cycle, if a result exists
+    """
+    surveys = Survey.objects.filter(
+        cycle__programme__slug=programme_slug, cycle_id=cycle_id)
+    survey_submission_count = sum(
+        survey.get_submission_count() for survey in surveys)
+    return JsonResponse({'submission_count': survey_submission_count})
+
+
 def programme_detail(request, programme_slug):
     programme = Programme.objects.get(slug=programme_slug)
     surveys = Survey.objects.filter(cycle__programme__slug=programme_slug)
+    survey_submission_count = sum(
+        survey.get_submission_count() for survey in surveys)
     stories = ProgrammeStory.objects.filter(programme__slug=programme_slug)[:2]
+    programme_cycles = Cycle\
+                       .objects\
+                       .filter(programme__slug=programme_slug)\
+                       .only('start_date', 'end_date')\
+                       .order_by('start_date')
 
     type_surveys = Survey\
                    .objects\
@@ -115,7 +133,9 @@ def programme_detail(request, programme_slug):
     return render(
         request, 'programme_detail.djhtml', {
             'programme': programme,
+            'programme_cycles': programme_cycles,
             'surveys': surveys,
+            'survey_submissions': survey_submission_count,
             'partners': partners,
             'donars': donars,
             'stories': stories,
