@@ -62,7 +62,7 @@
   <!-- site-stats -->
   <div class="page-section site-cycles">
     <div class="container">
-      <h3>Monitoring cycles</h3>
+      <h3>Monitoring Periods</h3>
 
       {% for rs in site.completed_result_sets %}
         <section class="row stat-row cycle">
@@ -104,8 +104,7 @@
             <div class="programme-description">
               {{ programme.description }}
             </div>
-            <div class="programme-frequency"><strong>Frequency:</strong> {{ programme.frequency.name }}</div>
-            <div class="programme-last-cycle"><strong>Latest cycle:</strong>
+            <div class="programme-last-cycle"><strong>Latest monitoring period:</strong>
               <a href="{% url 'site-result' site_slug=site.slug result_id=latest_result.id %}">
                 {{ latest_result.survey.cycle.start_date|date:'j F Y' }}
                   - {{ latest_result.survey.cycle.end_date|date:'j F Y' }}
