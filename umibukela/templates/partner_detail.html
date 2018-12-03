@@ -106,7 +106,8 @@
         <div class="partner-cycle">
           <h3>
             {{ rs.survey.cycle.start_date|date:'j F Y' }} - {{ rs.survey.cycle.end_date|date:'j F Y' }}
-            <a href="{% url 'site-result' site_slug=rs.site.slug result_id=rs.id %}" class="btn btn-primary btn-sm">View results</a>
+              <a href="{% url 'site-result' site_slug=rs.site.slug result_id=rs.id %}" class="btn btn-primary btn-sm">View results</a>
+	      <h4>{{rs.survey.type.name}}</h4>
           </h3>
           <h4><i class="fa fa-map-marker"></i> <a href="{% url 'site' site_slug=rs.site.slug %}">{{ rs.site.name }}</a></h4>
 
