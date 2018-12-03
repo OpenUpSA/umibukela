@@ -330,7 +330,46 @@ def site(request, site_slug):
     return render(request, 'site_detail.html', {
         'active_tab': 'sites',
         'site': site,
+        'monitor_type': site.cycle_count()
     })
+
+
+def site_result_combined(request, site_slug):
+    """
+    For continous programme we need to combine all the results to the latest
+    """
+    all_cycle_results = []
+    frames = []
+    result_set_use = ''
+    result_sets = CycleResultSet.objects.filter(site__slug__exact=site_slug)
+    for result_set in result_sets:
+        result_set_use = result_set
+        form, responses = result_set.get_survey()
+        if responses:
+            df = pandas.DataFrame(responses)
+            frames.append(df)
+            site_results = analysis.count_options(df, form['children'])
+            site_results = analysis.calc_q_percents(site_results)
+            all_cycle_results.append(site_results)
+
+    df = pandas.concat(frames, ignore_index=True)
+    site_totals = analysis.count_submissions(df)
+    site_1 = all_cycle_results[0]
+    site_2 = all_cycle_results[1]
+    analysis.combine_curr_hist(site_1, site_2)
+
+    # analysis.combine_curr_hist(site_results, prev_results)
+    return render(
+        request, 'site_result_detail.html', {
+            'active_tab': 'sites',
+            'result_set': result_set_use,
+            'results': {
+                'questions_dict': site_1,
+                'totals': site_totals,
+            }
+        })
+
+    exit()
 
 
 def site_result(request, site_slug, result_id):
