@@ -65,9 +65,56 @@ def programmes(request):
     return render(request, 'programmes.html', {'programmes': prog})
 
 
+def get_submission_count(request, programme_slug, cycle_id):
+    surveys = Survey\
+              .objects\
+              .filter(cycle__programme__slug=programme_slug, cycle_id=cycle_id)
+    survey_submission_count = sum(
+        survey.get_submission_count() for survey in surveys)
+
+    return JsonResponse({'submission_count': survey_submission_count})
+
+
+def get_datastudio_cycle(request, programme_slug, cycle_id):
+    data_results = SurveyTypeData\
+                   .objects\
+                   .filter(cycle_id=cycle_id)\
+                   .values('datastudio', 'survey__name')
+    return JsonResponse({
+        'datastudio':
+        {key['survey__name']: key['datastudio']
+         for key in data_results}
+    })
+
+
+def get_community_cycle(request, programme_slug, cycle_id):
+    partners = CycleResultSet\
+               .objects\
+               .filter(survey__cycle__programme__slug=programme_slug,
+                       survey__cycle_id=cycle_id)\
+               .order_by('partner__id')\
+               .distinct('partner')\
+               .select_related('partner')\
+               .only('partner')
+    cycle_partners = [{
+        'name':
+        p.partner.full_name,
+        'site':
+        p.site.name,
+        'total':
+        p.summary()['total'],
+        'url':
+        '/sites/{}/results/{}'.format(
+            p.partner.latest_complete_result().site.slug,
+            p.partner.latest_complete_result().id)
+    } for p in partners]
+
+    return JsonResponse({'partners': cycle_partners})
+
+
 def programme_result_cycle(request, programme_slug, cycle_id):
     """
-    Get the results for a particular cycle, if a result exists
+    Get the results for a programme for a particular cycle
     """
     surveys = Survey\
               .objects\
@@ -78,11 +125,32 @@ def programme_result_cycle(request, programme_slug, cycle_id):
                    .objects\
                    .filter(cycle_id=cycle_id)\
                    .values('datastudio', 'survey__name')
+    partners = CycleResultSet\
+               .objects\
+               .filter(survey__cycle__programme__slug=programme_slug,
+                       survey__cycle_id=cycle_id)\
+               .order_by('partner__id')\
+               .distinct('partner')\
+               .select_related('partner')\
+               .only('partner')
+    cycle_partners = [{
+        'name':
+        p.partner.full_name,
+        'site':
+        p.site.name,
+        'total':
+        p.summary()['total'],
+        'url':
+        '/sites/{}/results/{}'.format(
+            p.partner.latest_complete_result().site.slug,
+            p.partner.latest_complete_result().id)
+    } for p in partners]
     return JsonResponse({
         'submission_count': survey_submission_count,
         'datastudio':
         {key['survey__name']: key['datastudio']
-         for key in data_results}
+         for key in data_results},
+        'partners': cycle_partners
     })
 
 
@@ -97,6 +165,7 @@ def programme_detail(request, programme_slug):
                        .filter(programme__slug=programme_slug)\
                        .only('start_date', 'end_date')\
                        .order_by('start_date')
+    latest_programme_cycle = programme_cycles.last()
 
     type_surveys = Survey\
                    .objects\
@@ -106,7 +175,10 @@ def programme_detail(request, programme_slug):
                    .only('type')\
                    .values('type')
     survey_ids = [t['type'] for t in type_surveys]
-    data_results = SurveyTypeData.objects.filter(survey__id__in=survey_ids)
+    data_results = SurveyTypeData\
+                   .objects\
+                   .filter(survey__id__in=survey_ids,
+                           cycle=latest_programme_cycle)
     programme_images = ProgrammeImage\
                        .objects\
                        .filter(programme__slug=programme_slug)\
@@ -122,7 +194,8 @@ def programme_detail(request, programme_slug):
 
     partners = CycleResultSet\
                .objects\
-               .filter(survey__cycle__programme__slug=programme_slug)\
+               .filter(survey__cycle__programme__slug=programme_slug,
+                       survey__cycle=latest_programme_cycle)\
                .order_by('partner__id')\
                .distinct('partner')\
                .select_related('partner')\
@@ -144,7 +217,7 @@ def programme_detail(request, programme_slug):
         request, 'programme_detail.djhtml', {
             'programme': programme,
             'programme_cycles': programme_cycles,
-            'surveys': surveys,
+            'latest_cycle': latest_programme_cycle,
             'survey_submissions': survey_submission_count,
             'partners': partners,
             'donars': donars,
