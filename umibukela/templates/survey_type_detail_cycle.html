@@ -38,24 +38,6 @@
         </div>
 
         <div class="row"> <!-- start row -->
-
-          <div class="col-md-6"> <!-- start col-md-6 -->
-            <h3>Monitoring Period</h3>
-            <div class="dropdown cycle-btn">
-              <button class="btn btn-default dropdown-toggle" type="button" id="switch-cycle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                {{ this_cycle.start_date }} - {{this_cycle.end_date}}
-                  <span class="caret"></span>
-              </button>
-	      {% if cycles|length > 1 %}
-	      <ul class="dropdown-menu" aria-labelledby="switch-cycle">
-                  {% for cycle in cycles reversed %}
-                  <li><a href="{% url 'survey-type-cycle' survey_type_slug=survey_type.slug cycle_id=cycle.cycle__id %}">{{ cycle.cycle__start_date }} - {{ cycle.cycle__end_date }}</a></li>
-                  {% endfor %}
-              </ul>
-	      {% endif %}
-            </div>
-          </div> <!-- end col-md-6 -->
-
           <div class="col-md-6">
             <div class="monitor-resources">
               <h3>Monitor Resources</h3>
@@ -75,9 +57,22 @@
           <div class="container">
 
           <!-- call outs -->
-            <div id="nat" class="row cycle-callouts">
-              <div class="col-md-4 col-sm-4 col-xs-12">
-                <h3 class="callout-figure" style="color:#fff">{{ this_cycle.start_date }} - {{ this_cycle.end_date }}</h4>
+              <div id="nat" class="row cycle-callouts">
+		  <div class="col-md-4 col-sm-4 col-xs-12">
+		      <h3 style="color:#fff">Monitoring Period</h3>
+		      <div class="dropdown cycle-btn">
+			  <button class="btn btn-default dropdown-toggle" type="button" id="switch-cycle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+			      {{ this_cycle.start_date }} - {{this_cycle.end_date}}
+			      <span class="caret"></span>
+			  </button>
+			  {% if cycles|length > 1 %}
+			  <ul class="dropdown-menu" aria-labelledby="switch-cycle">
+			      {% for cycle in cycles reversed %}
+			      <li><a href="{% url 'survey-type-cycle' survey_type_slug=survey_type.slug cycle_id=cycle.cycle__id %}">{{ cycle.cycle__start_date }} - {{ cycle.cycle__end_date }}</a></li>
+			      {% endfor %}
+			  </ul>
+			  {% endif %}
+		      </div>
               </div>
 
               <div class="col-md-4 col-sm-4 col-xs-6">
