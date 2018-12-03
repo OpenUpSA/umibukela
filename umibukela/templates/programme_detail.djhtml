@@ -31,14 +31,20 @@
 		    </h1>
 		</div>
 		<div class="col-md-2">
-		    <div class="dropdown">
-			<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="period-name">Monitoring Period</span> <span class="caret"></span></button>
+		    {% if programme_cycles|length > 1 %}
+			<div class="dropdown">
+			    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+				<span id="period-name">Monitoring Period</span> <span class="caret"></span>
+			    </button>
 			<ul class="dropdown-menu" id="cycles">
 			    {% for cycle in programme_cycles %}
 				<li id="{{cycle.id}}"><a href='#'>{{cycle.start_date}} - {{cycle.end_date}}</a></li>
 			    {% endfor %}  
 			</ul>
-		    </div>
+			</div>
+		    {% else %}
+                        <p>Continuous Monitoring</p>
+                    {% endif %}
 		</div>
 		</div>
 	</div>
@@ -166,14 +172,18 @@
 			    <div class="row">
 				<div class="col-md-4">Monitoring Results</div>
 				<div class="col-md-4 col-md-offset-4">
+				    {% if programme_cycles|length > 1 %}
 				    <div class="dropdown">
 					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="monitor-period-name">{{latest_cycle.start_date}} - {{latest_cycle.end_date}}</span> <span class="caret"></span></button>
 					<ul class="dropdown-menu" id="monitor-cycles">
 					    {% for cycle in programme_cycles %}
-						<li id="{{cycle.id}}"><a href='#'>{{cycle.start_date}} - {{cycle.end_date}}</a></li>
+						    <li id="{{cycle.id}}"><a href='#'>{{cycle.start_date}} - {{cycle.end_date}}</a></li>
 					    {% endfor %}  
 					</ul>
-				    </div>
+																    </div>
+				    {% else %}
+                                     <p>Continuous Monitoring</p>
+				    {% endif %}
 				</div>
 			    </div>
 			</div>
@@ -204,14 +214,18 @@
 			    <div class="row">
 				<div class="col-md-4">Community Partners</div>
 				<div class="col-md-4 col-md-offset-4">
+				    {% if programme_cycles|length > 1 %}
 				    <div class="dropdown">
 					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="community-period-name">{{latest_cycle.start_date}} - {{latest_cycle.end_date}}</span> <span class="caret"></span></button>
 					<ul class="dropdown-menu" id="community-cycles">
 					    {% for cycle in programme_cycles %}
-						    <li id="{{cycle.id}}"><a href='#'>{{cycle.start_date}} - {{cycle.end_date}}</a></li>
+						        <li id="{{cycle.id}}"><a href='#'>{{cycle.start_date}} - {{cycle.end_date}}</a></li>
 					    {% endfor %}  
 					</ul>
-				    </div>
+																    </div>
+				    {% else %}
+                                      <p>Continuous Monitoring</p>
+				    {% endif %}
 				</div>
 			    </div>
 									</div>
