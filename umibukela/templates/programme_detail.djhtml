@@ -43,7 +43,7 @@
 			</ul>
 			</div>
 		    {% else %}
-                        <p>Continuous Monitoring</p>
+			<button class="btn btn-primary">{{programme_cycles.0.start_date}} - {{programme_cycles.0.end_date}}</button>
                     {% endif %}
 		</div>
 		</div>
@@ -177,12 +177,12 @@
 					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="monitor-period-name">{{latest_cycle.start_date}} - {{latest_cycle.end_date}}</span> <span class="caret"></span></button>
 					<ul class="dropdown-menu" id="monitor-cycles">
 					    {% for cycle in programme_cycles %}
-						    <li id="{{cycle.id}}"><a href='#'>{{cycle.start_date}} - {{cycle.end_date}}</a></li>
+						<li id="{{cycle.id}}"><a href='#'>{{cycle.start_date}} - {{cycle.end_date}}</a></li>
 					    {% endfor %}  
 					</ul>
-																    </div>
+				    </div>
 				    {% else %}
-                                     <p>Continuous Monitoring</p>
+				    <button class="btn btn-primary">{{programme_cycles.0.start_date}} - {{programme_cycles.0.end_date}}</button>
 				    {% endif %}
 				</div>
 			    </div>
@@ -219,12 +219,12 @@
 					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="community-period-name">{{latest_cycle.start_date}} - {{latest_cycle.end_date}}</span> <span class="caret"></span></button>
 					<ul class="dropdown-menu" id="community-cycles">
 					    {% for cycle in programme_cycles %}
-						        <li id="{{cycle.id}}"><a href='#'>{{cycle.start_date}} - {{cycle.end_date}}</a></li>
+						<li id="{{cycle.id}}"><a href='#'>{{cycle.start_date}} - {{cycle.end_date}}</a></li>
 					    {% endfor %}  
 					</ul>
-																    </div>
+				    </div>
 				    {% else %}
-                                      <p>Continuous Monitoring</p>
+				    <button class="btn btn-primary">{{programme_cycles.0.start_date}} - {{programme_cycles.0.end_date}}</button>
 				    {% endif %}
 				</div>
 			    </div>
