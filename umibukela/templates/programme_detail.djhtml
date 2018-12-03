@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load staticfiles %}
 {% load static markup_tags %}
+{% load resources %}
 
 {% block title %}{{ programme.long_name }}{% endblock %}
 
@@ -155,7 +156,10 @@
 		</div>
 	    </div>
 	    {% endif %}
-	    <div class="datasets" id="monitor-results">
+	    <div class="row">
+		<br/>
+	    </div>
+	    <div class="row datasets" id="monitor-results">
 		{% if datastudio %}
 		    <div class="panel panel-default" id="monitor-results">
 			<div class="panel-heading">
@@ -163,7 +167,7 @@
 				<div class="col-md-4">Monitoring Results</div>
 				<div class="col-md-4 col-md-offset-4">
 				    <div class="dropdown">
-					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="monitor-period-name">Monitoring Period</span> <span class="caret"></span></button>
+					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="monitor-period-name">{{latest_cycle.start_date}} - {{latest_cycle.end_date}}</span> <span class="caret"></span></button>
 					<ul class="dropdown-menu" id="monitor-cycles">
 					    {% for cycle in programme_cycles %}
 						<li id="{{cycle.id}}"><a href='#'>{{cycle.start_date}} - {{cycle.end_date}}</a></li>
@@ -193,54 +197,48 @@
 		    </div>
 		{% endif %}
 	    </div>
-	    {% if surveys %}
-		<div id="surveys">
-		    <div class="row">
-			<h3>Surverys Conducted</h3>
-			<table class="table table-striped">
-			    <thead>
-				<tr>
-				    <th data-sort="string" class="sorttable_sorted">Survey Name</th>
-				    <th data-sort="string" class="hidden-xs hidden-sm">Survey Type</th>
-				    <th data-sort="string" class="hidden-xs hidden-sm">Submissions</th>
-				    <th data-sort="string" class="hidden-xs hidden-sm">Results</th>
-				</tr>
-			    </thead>
-			    <tbody>
-				{% for survey in surveys %}
-				    <tr>
-					<td class="hidden-xs hidden-sm">{{ survey.name }}</td>
-					<td class="hidden-xs hidden-sm">{{ survey.type }}</td>
-					<td class="hidden-xs hidden-sm">
-					    {{survey.get_submission_count}}
-					</td>
-					    <td><a href="{% url 'survey_download' survey.name %}">Download</a></td>
-				    </tr>
-				{% endfor %}
-			    </tbody>
-			</table>
-		    </div>
-				</div>
-	    {% endif %}
-
 	    {% if partners %}
 		<div class="row" id="community-partners">
-		    <h3>Community Partners</h3>
-		    <table class="table table-striped">
-			<thead lass="thead-light">
-			    <tr>
-				<th data-sort="string" class="sorttable_sorted">Name</th>
-			    </tr>
-			</thead>
-			<tbody>
-			    {% for p in partners %}
-				<tr>
-				        <td><a href="{% url 'partner' p.partner.slug %}">{{ p.partner.full_name }}</a></td>
-				</tr>
-			    {% endfor %}
-			</tbody>
-		    </table>
+		    <div class="panel panel-default" id="community-partners">
+			<div class="panel-heading">
+			    <div class="row">
+				<div class="col-md-4">Community Partners</div>
+				<div class="col-md-4 col-md-offset-4">
+				    <div class="dropdown">
+					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span id="community-period-name">{{latest_cycle.start_date}} - {{latest_cycle.end_date}}</span> <span class="caret"></span></button>
+					<ul class="dropdown-menu" id="community-cycles">
+					    {% for cycle in programme_cycles %}
+						    <li id="{{cycle.id}}"><a href='#'>{{cycle.start_date}} - {{cycle.end_date}}</a></li>
+					    {% endfor %}  
+					</ul>
+				    </div>
 				</div>
+			    </div>
+									</div>
+			<div class="panel-body" id="community-table">
+			    <table class="table table-striped">
+				<thead lass="thead-light">
+				    <tr>
+					<th data-sort="string" class="sorttable_sorted">Name</th>
+					<th>Latest Results</th>
+					<th>Monitoring Area</th>
+					<th>Total Submissions</th>
+				    </tr>
+				</thead>
+				<tbody id="community-body">
+				    {% for p in partners %}
+					<tr>
+				            <td>{{ p.partner.full_name }}</td>
+					    <td><a href="{% url 'site-result' site_slug=p.partner.latest_complete_result.site.slug result_id=p.partner.latest_complete_result.id %}">View</a></td>
+					    <td>{{p.site}}</td>
+					    <td>{{p.summary.total}}</td>
+					</tr>
+				    {% endfor %}
+				</tbody>
+			    </table>
+			</div>
+		    </div>
+		</div>
 	    {% endif %}
 
 	    {% if resources %}
@@ -260,7 +258,9 @@
 					    {% endif %}
 					{% endfor %}
 				    </ul>
-				    <button class="ShowHideFullLinks btn btn-primary" type="button">Show more links</button>
+				    {% if resources|type:'Links' > 3 %}
+					<a href="#" class="ShowHideFullLinks">Show more links</a>
+				    {% endif %}
 				</div>
 				<div class="col-md-6">
 				    <h4>Documents</h4>
@@ -279,7 +279,9 @@
 					    {% endif %}
 					{% endfor %}
 				    </ul>
-				    <button class="ShowHideFullDocuments btn btn-primary" type="button">Show more documents</button>
+				    {% if resources|type:"Reports" > 3 %}
+					<a href="#" class="ShowHideFullDocuments">Show more documents</a>
+				    {% endif %}
 				</div>
 			    </div>
 			    <div class="row">
@@ -337,148 +339,103 @@
 <link rel="stylesheet" href="{% static 'stylesheets/lightbox.css' %}">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 <script src="{% static 'javascript/lightbox.js' %}"></script>
-<script src="{% static 'javascript/programme.js' %}">
-		     $(document).ready(function(){
-		     
-		     
-		     $('.ShowHideFullLinks').click (ShowHideFullLinks);
-		     $('.ShowHideFullLinks').click (); //-- Init list displays.
-		     $('.ShowHideFullDocuments').click (ShowHideFullDocuments);
-		     $('.ShowHideFullDocuments').click (); //-- Init list displays.
-
-		     
-		     function ShowHideFullLinks () {
-		     var showHideBtn = $(this);
-		     var bShowEm = showHideBtn.data ('bShowEm') || false;
-		     
-		     // Find the list for this button. It is a previous sibling, in the HTML.
-		     var thisBtnsList = showHideBtn.prev ("ul.truncate-list-links");
-		
-		     // Show either all or the # from the data-list-items attribute.
-		     ShowItems (thisBtnsList, bShowEm, thisBtnsList.data ('listItems') );
-		
-		     // Update the show-all flag.
-		     bShowEm ^= true;
-		     showHideBtn.data ('bShowEm', bShowEm);
-		
-		     // Update the button text.
-		     if (bShowEm)
-		     showHideBtn.text ('Show More');
-		     else
-		     showHideBtn.text ('Show Less');
-		     }
-		
-		     function ShowHideFullDocuments () {
-		     var showHideBtn = $(this);
-		     var bShowEm = showHideBtn.data ('bShowEm') || false;
-		
-		     // Find the list for this button. It is a previous sibling, in the HTML.
-		     var thisBtnsList = showHideBtn.prev ("ul.truncate-list-documents");
-		
-		     // Show either all or the # from the data-list-items attribute.
-		     ShowItems (thisBtnsList, bShowEm, thisBtnsList.data ('listItems') );
-		
-		     // Update the show-all flag.
-		     bShowEm ^= true;
-		     showHideBtn.data ('bShowEm', bShowEm);
-		
-		     // Update the button text.
-		     if (bShowEm)
-		     showHideBtn.text ('Show More');
-		     else
-		     showHideBtn.text ('Show Less');
-		     }
-		
-		
-		     function ShowItems (parentNode, bShowAll, numVisible) {
-		
-		     if (bShowAll)
-		     parentNode.find ("> li").show ();
-	 else {
-	     parentNode.find ("> li:lt(" + numVisible + ")").show ();
-	     parentNode.find ("> li:gt(" + (numVisible-1) + ")").hide ();
-	       }
-	       }
-	       
-	       });
-</script>
+<script src="{% static 'javascript/programme.js' %}"></script>
 <script>
- $(function(){
-     $('ul#cycles li').click(function(){
-	 console.log("this programme name is ");
-	 var name = $('#programme_short').text()
-	 date_string = $(this).children().contents().text();
-	 $.ajax({
-	     url: '/programme/results/'+name+'/'+$(this).attr('id'),
-	     type: 'GET',
-	     success: function(data){
-		 if (data){
-		     console.log("The count is here");
-		     console.log(data.submission_count);
-		     console.log(data.datastudio);
-		     $('#submission_count').html(data.submission_count + ' total citzens surveyed');
-		     $('#period-name').html(date_string);
-		     $('#monitor-period-name').html(date_string);
-		     var div_parent = document.createElement('div');
-		     div_parent.className = 'row';
-		     if (Object.keys(data.datastudio).length > 0){
-			 for (survey_type in data.datastudio){
-			     var div_child = document.createElement('div');
-			     div_child.className='col-md-12 col-sm-12';
-			     var survey_type_name = document.createTextNode(survey_type + 'Results Dashboard');
-			     var h3 = document.createElement('h3');
-			     h3.className='text-center';
-			     h3.appendChild(survey_type_name);
-			     var embed_div = document.createElement('div');
-			     embed_div.className='embed-responsive embed-responsive-16by9';
-			     var iframe = document.createElement('iframe');
-			     iframe.setAttribute('width','auto');
-			     iframe.setAttribute('height','450');
-			     iframe.setAttribute('src',data.datastudio[survey_type]);
-			     iframe.setAttribute('framework', '0');
-			     iframe.setAttribute('style','border:0');
-			     embed_div.appendChild(iframe);
-			     div_child.appendChild(h3);
-			     div_child.appendChild(embed_div);
-			     div_parent.appendChild(div_child);
-			     
-			 }
-			 $('#append-datastudio').empty();
-			 var append_studio = document.getElementById('append-datastudio');
-			 append_studio.appendChild(div_parent);
-		     }else {
-			 console.log("There is no survey results");
-			 var no_result_text = document.createTextNode("No Results for this monitoring period")
-			 var h3 = document.createElement('h3');
-			 h3.className='text-center';
-			 h3.appendChild(no_result_text);
-			 
-			 div_parent.appendChild(h3);
-			 $('#append-datastudio').empty();
-			 
-			 var append_studio = document.getElementById('append-datastudio');
-			 append_studio.appendChild(div_parent);
-		     }
-		     
-		 }else{
-		     console.log("No data here");
-		 }
-	     },
-	     error: function(data){}
-	     
-	 });
-     });
- });
+ $(document).ready(function(){
 
- $(function(){
+     $('ul#community-cycles li').click(function(){
+	 console.log('Fetching Comunity Results');
+	 var name = $('#programme_short').text();
+	 date_string = $(this).children().contents().text();
+	 console.log('THis is the date for the object' + date_string);
+	 cycle_id = $(this).attr('id');
+	 fetch_community_results(name, cycle_id, date_string);
+     });
+     
+     $('ul#cycles li').click(function(){
+	 console.log('Changeing the monitoring results page');
+	 var name = $('#programme_short').text();
+	 date_string = $(this).children().contents().text();
+	 console.log('THis is the date for the object' + date_string);
+	 cycle_id = $(this).attr('id');
+	 fetch_period_results(name, cycle_id, date_string);
+     });
+     
      $('ul#monitor-cycles li').click(function(){
 	 console.log('Changeing the monitoring results page');
 	 var name = $('#programme_short').text();
 	 date_string = $(this).children().contents().text();
 	 console.log('THis is the date for the object' + date_string);
 	 cycle_id = $(this).attr('id');
-	 fetch_period_results(name, cycle_id,date_string);
+	 fetch_datastudio_results(name, cycle_id, date_string);
      });
+     
+ });
+
+</script>
+<script>
+ $(document).ready(function(){
+     
+     
+     $('.ShowHideFullLinks').click (ShowHideFullLinks);
+     $('.ShowHideFullLinks').click (); //-- Init list displays.
+     $('.ShowHideFullDocuments').click (ShowHideFullDocuments);
+     $('.ShowHideFullDocuments').click (); //-- Init list displays.
+
+     
+     function ShowHideFullLinks () {
+	 var showHideBtn = $(this);
+	 var bShowEm = showHideBtn.data ('bShowEm') || false;
+	 
+	 // Find the list for this button. It is a previous sibling, in the HTML.
+	 var thisBtnsList = showHideBtn.prev ("ul.truncate-list-links");
+	 
+	 // Show either all or the # from the data-list-items attribute.
+	 ShowItems (thisBtnsList, bShowEm, thisBtnsList.data ('listItems') );
+	 
+	 // Update the show-all flag.
+	 bShowEm ^= true;
+	 showHideBtn.data ('bShowEm', bShowEm);
+	 
+	 // Update the button text.
+	 if (bShowEm)
+	     showHideBtn.text ('Show More');
+	 else
+	     showHideBtn.text ('Show Less');
+     }
+     
+     function ShowHideFullDocuments () {
+	 var showHideBtn = $(this);
+	 var bShowEm = showHideBtn.data ('bShowEm') || false;
+	 
+	 // Find the list for this button. It is a previous sibling, in the HTML.
+	 var thisBtnsList = showHideBtn.prev ("ul.truncate-list-documents");
+	 
+	 // Show either all or the # from the data-list-items attribute.
+	 ShowItems (thisBtnsList, bShowEm, thisBtnsList.data ('listItems') );
+	 
+	 // Update the show-all flag.
+	 bShowEm ^= true;
+	 showHideBtn.data ('bShowEm', bShowEm);
+	 
+	 // Update the button text.
+	 if (bShowEm)
+	     showHideBtn.text ('Show More');
+	 else
+	     showHideBtn.text ('Show Less');
+     }
+     
+     
+     function ShowItems (parentNode, bShowAll, numVisible) {
+	 
+	 if (bShowAll)
+	     parentNode.find ("> li").show ();
+	 else {
+	     parentNode.find ("> li:lt(" + numVisible + ")").show ();
+	     parentNode.find ("> li:gt(" + (numVisible-1) + ")").hide ();
+	 }
+     }
+     
  });
 </script>
 {% endblock %}
