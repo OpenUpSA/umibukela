@@ -157,12 +157,45 @@ class Site(models.Model):
     def __str__(self):
         return self.name
 
+    def cycle_count(self):
+        """
+        Return the number of cycles
+        """
+        site_cycles = self.cycle_result_sets.all()
+        site_cycle_count = len({cycle.survey.cycle for cycle in site_cycles})
+        if site_cycle_count <= 1:
+            return 'continous'
+        else:
+            return 'cycles'
+
     def latest_complete_result(self):
         """Return the latest ended CycleResultSet, otherwise None"""
         result_sets = self.completed_result_sets()
-        return result_sets[0] if result_sets else None
+        return None
+        #return result_sets[0] if result_sets else None
+
+    def combined_completed_result_set(self):
+        result_sets = list(
+            self.cycle_result_sets.filter(
+                survey__cycle__end_date__lte=timezone.now(),
+                published=True).all())
+        summaries = {'participants': 0, 'male': 0, 'female': 0}
+        for rs in result_sets:
+            summaries['programme_name'] = rs\
+                                          .survey\
+                                          .cycle\
+                                          .programme\
+                                          .long_name
+            summaries['participants'] += rs.summary()['total']
+            summaries['male'] += rs.summary()['male']
+            summaries['female'] += rs.summary()['female']
+        return summaries
 
     def completed_result_sets(self):
+        """
+        We need to check if the programmes have multiple cycles
+        If there is only one cycle them we need to combine
+        """
         result_sets = list(
             self.cycle_result_sets.filter(
                 survey__cycle__end_date__lte=timezone.now(),
