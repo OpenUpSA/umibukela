@@ -26,9 +26,11 @@
 		    <h1><i class="fa fa-clipboard"></i> {{programme.long_name }}</h1>
 		</div>
 		<div class="col-md-5">
+		    {% if programme_cycles %}
 		    <h1>
 			<span id="submission_count">{{survey_submissions}} total citzens surveyed</span>
-		    </h1>
+				    </h1>
+		    {% endif %}
 		</div>
 		<div class="col-md-2">
 		    {% if programme_cycles|length > 1 %}
@@ -43,7 +45,9 @@
 			</ul>
 			</div>
 		    {% else %}
-			<button class="btn btn-primary">{{programme_cycles.0.start_date}} - {{programme_cycles.0.end_date}}</button>
+			{% if programme_cycles %}
+			    <button class="btn btn-primary">{{programme_cycles.0.start_date}} - {{programme_cycles.0.end_date}}</button>
+			{% endif %}
                     {% endif %}
 		</div>
 		</div>
