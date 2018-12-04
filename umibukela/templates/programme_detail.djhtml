@@ -304,7 +304,7 @@
 			    </div>
 			    <div class="row">
 				<div class="col-md-12">
-				    <h4>Survery Instruments</h4>
+				    <h4>Survey Instruments</h4>
 				    <div class="row">
 					{% for r in resources %}
 					    {% if r.resource.name == 'Survey Instrument' %}
