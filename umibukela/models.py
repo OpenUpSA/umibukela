@@ -157,39 +157,10 @@ class Site(models.Model):
     def __str__(self):
         return self.name
 
-    def cycle_count(self):
-        """
-        Return the number of cycles
-        """
-        site_cycles = self.cycle_result_sets.all()
-        site_cycle_count = len({cycle.survey.cycle for cycle in site_cycles})
-        if site_cycle_count <= 1:
-            return 'continous'
-        else:
-            return 'cycles'
-
     def latest_complete_result(self):
         """Return the latest ended CycleResultSet, otherwise None"""
         result_sets = self.completed_result_sets()
-        return None
-        #return result_sets[0] if result_sets else None
-
-    def combined_completed_result_set(self):
-        result_sets = list(
-            self.cycle_result_sets.filter(
-                survey__cycle__end_date__lte=timezone.now(),
-                published=True).all())
-        summaries = {'participants': 0, 'male': 0, 'female': 0}
-        for rs in result_sets:
-            summaries['programme_name'] = rs\
-                                          .survey\
-                                          .cycle\
-                                          .programme\
-                                          .long_name
-            summaries['participants'] += rs.summary()['total']
-            summaries['male'] += rs.summary()['male']
-            summaries['female'] += rs.summary()['female']
-        return summaries
+        return result_sets[0] if result_sets else None
 
     def completed_result_sets(self):
         """
@@ -232,6 +203,12 @@ class Site(models.Model):
             set(Partner.objects.filter(cycle_result_sets__site=self).all()))
         partners.sort(key=lambda p: p.short_name)
         return partners
+
+    def programmes(self):
+        programme_list = set()
+        cycle_set = CycleResultSet.objects.filter(site=self)
+        [programme_list.add(c.survey.cycle.programme) for c in cycle_set]
+        return programme_list
 
     def get_absolute_url(self):
         return reverse('site', args=[self.slug])

@@ -61,56 +61,37 @@
 
   <!-- site-stats -->
   <div class="page-section site-cycles">
-    <div class="container">
-	<h3>Monitoring Periods</h3>
-	
-	{% if monitor_type == 'continous' %}
-	<section class="row stat-row cycle">
-            <div class="col-xs-12 col-sm-3 col-md-4 stat">
-		<h3>{{ site.combined_completed_result_set.programme_name }}</h3>
-		<div class="name">
-		    <p>Continous monitoring</p>
-		    <a class="btn btn-primary" href="{% url 'site-result-combined' site_slug=site.slug %}">View results</a>
-		</div>
-            </div>
-            <div class="col-xs-4 col-sm-3 col-md-3 stat">
-		<div class="value">{{ site.combined_completed_result_set.participants }}</div>
-		<div class="name">Participants</div>
-            </div>
-            <div class="col-xs-4 col-sm-3 col-md-2 stat">
-		<div class="value">{{ site.combined_completed_result_set.female }}</div>
-		<div class="name">Female</div>
-            </div>
-            <div class="col-xs-4 col-sm-3 col-md-2 stat">
-		<div class="value">{{ site.combined_completed_result_set.male }}</div>
-		<div class="name">Male</div>
-            </div>
-        </section>
-	{% else %}
-	{% for rs in site.completed_result_sets %}
-	<section class="row stat-row cycle">
-            <div class="col-xs-12 col-sm-3 col-md-4 stat">
-		<h3>{{ rs.survey.cycle.programme.long_name }}</h3>
-		<div class="name">
-		    <p>{{ rs.survey.cycle.start_date|date:'j F Y' }} - {{ rs.survey.cycle.end_date|date:'j F Y' }}</p>
-		    <a class="btn btn-primary" href="{% url 'site-result' site_slug=site.slug result_id=rs.id %}">View results</a>
-		</div>
-            </div>
-            <div class="col-xs-4 col-sm-3 col-md-3 stat">
-		<div class="value">{{ rs.summary.total }}</div>
-		<div class="name">Participants</div>
-            </div>
-            <div class="col-xs-4 col-sm-3 col-md-2 stat">
-		<div class="value">{{ rs.summary.female }}</div>
-		<div class="name">Female</div>
-            </div>
-            <div class="col-xs-4 col-sm-3 col-md-2 stat">
-		<div class="value">{{ rs.summary.male }}</div>
-			    <div class="name">Male</div>
-            </div>
-		</section>
-	{% endfor %}
-	{% endif %}
+      <div class="container">
+	  {% for programme in programmes %}
+	  <h3><b>{{programme.long_name}}</b></h3>
+	  <h4>Monitoring Periods</h4>
+	  <br/>
+	  {% for rs in site.completed_result_sets %}
+	  {% if  rs.survey.cycle.programme.slug == programme.slug %}
+	  <section class="row stat-row cycle">
+              <div class="col-xs-12 col-sm-3 col-md-4 stat">
+		  <p class="name">{{rs.survey.type.name}}</p>
+		  <div class="name">
+		      <p>{{ rs.survey.cycle.start_date|date:'j F Y' }} - {{ rs.survey.cycle.end_date|date:'j F Y' }}</p>
+		      <a class="btn btn-primary" href="{% url 'site-result' site_slug=site.slug result_id=rs.id %}">View results</a>
+		  </div>
+              </div>
+              <div class="col-xs-4 col-sm-3 col-md-3 stat">
+		  <div class="value">{{ rs.summary.total }}</div>
+		  <div class="name">Participants</div>
+              </div>
+              <div class="col-xs-4 col-sm-3 col-md-2 stat">
+		  <div class="value">{{ rs.summary.female }}</div>
+		  <div class="name">Female</div>
+              </div>
+              <div class="col-xs-4 col-sm-3 col-md-2 stat">
+		  <div class="value">{{ rs.summary.male }}</div>
+		  <div class="name">Male</div>
+              </div>
+	  </section>
+	  {% endif %}
+	  {% endfor %}
+	  {% endfor %}
     </div>
   </div>
   <!-- /site-stats -->
