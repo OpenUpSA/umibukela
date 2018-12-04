@@ -61,7 +61,11 @@ def resources(request):
 
 
 def programmes(request):
-    prog = Programme.objects.all().only('long_name', 'description')
+    prog = Programme\
+           .objects\
+           .all()\
+           .only('long_name', 'description')\
+           .order_by('id')
     return render(request, 'programmes.html', {'programmes': prog})
 
 
