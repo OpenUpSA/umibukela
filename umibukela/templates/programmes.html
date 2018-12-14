@@ -5,25 +5,10 @@
 {% block title %}Programmes{% endblock %}
 {% block page-content %}
 
-<!-- breadcrumbs -->
-<div class="container breadcrumb-container">
-    <ol class="breadcrumb">
-	<li><a href="/">Home</a></li>
-	<li class="active">Programmes</li>
-    </ol>
-</div>
-<!-- /breadcrumbs -->
-
 <div class="section" id="programmes">
-
-    <!-- section-header -->
-    <div class="section-heading">
-	<div class="container">
-	    <h1><i class="fa fa-clipboard"></i> Programmes</h1>
-	</div>
+    <div class="container">
+	<h1><b>Programmes</b></h1>
     </div>
-    <!-- /section-header -->
-
 </div>
 
 <div class="survey-types">
@@ -34,12 +19,21 @@
 		    <p>A programme is a collection of surveys with specific research questions, administered by a collection of community partners and typically sharing common funding sources. It can have one or many cycles (frequency) and each cycle has a set of results for each survey instrument</p>
 		</div>
 	    </div>
+	    <br>
 	    <div class="row">
 		{% for programme in programmes %}
-		<div class="col-xs-12 col-md-3">
-		    <div class="survey-name">     
-			<a href="{% url 'programme_detail' programme.slug %}">{{ programme.long_name }}</a>
-			<p>{{ programme.summary|default:""|truncatewords:35}}</p>
+		<div class="col-xs-12 col-md-4">
+		    <div class="thumbnail" style="height:250px;border: 0 none;">
+			<a href="{% url 'programme_detail' programme.slug %}">
+			    {% if programme.program_image.first %}
+			    <img class="img-rounded" src="{{programme.program_image.first.image.url}}" style="width:100%;height:200px">
+			    {% else %}
+			    <img class="img-rounded" src="{% static 'img/default.jpg' %}" style="width:100%;height:200px">
+			    {% endif %}
+			    <div class="caption">
+				<h4><b>{{programme.long_name}}</b></h4>
+			    </div>
+			</a>
 		    </div>
 		</div>
 		{% endfor %}
