@@ -64,8 +64,8 @@ def programmes(request):
     prog = Programme\
            .objects\
            .all()\
-           .only('long_name', 'description')\
-           .order_by('id')
+           .order_by('id')\
+           .prefetch_related('program_image')
     return render(request, 'programmes.html', {'programmes': prog})
 
 
@@ -735,8 +735,8 @@ def survey_type(request, survey_type_slug):
     survey_type = get_object_or_404(SurveyType, slug=survey_type_slug)
     cycles = list(
         Survey.objects.values(
-            'cycle__name',
-            'cycle__id', 'cycle__start_date', 'cycle__end_date').filter(
+            'cycle__name', 'cycle__id', 'cycle__start_date',
+            'cycle__end_date').filter(
                 type=survey_type).order_by('cycle__id').distinct('cycle'))
     cycles = sorted(cycles, key=lambda x: x['cycle__start_date'])
     latest_cycle = Cycle.objects.get(id=cycles[-1]['cycle__id'])
