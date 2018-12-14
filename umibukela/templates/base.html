@@ -1,4 +1,5 @@
 {% load pipeline %}
+{% load static %}
 
 <!DOCTYPE html>
 <html>
@@ -28,9 +29,93 @@
     <![endif]-->
   </head>
   <body {% block body-attributes %}{% endblock %} class="{% block body-class %}{% endblock %}" id="top">
+      <header>
+	  <nav class="navbar navbar-default">
+	      <div class="container">
+		  <div class="navbar-header">
+		      <a class="navbar-brand">
+			  <img alt="Brand" src="{% static 'img/cbm-home.png' %}">
+		      </a>
+		  </div>
+		  <ul class="nav navbar-nav navbar-right text-black">
+		      <li class="{% if request.resolver_match.view_name == 'learn' %}active{% endif %}"><a href="{% url 'learn' %}">Learn about CBM</a></li>
+		      <li class="{% if request.resolver_match.view_name == 'programmes' %}active{% endif %}"><a href="{% url 'programmes' %}">Programmes</a></li>
+		      <li class="{% if request.resolver_match.view_name == 'sites' %}active{% endif %}"><a href="{% url 'sites' %}">Sites</a></li>
+		      <li class="{% if request.resolver_match.view_name == 'partners' %}active{% endif %}"><a href="{% url 'partners' %}">Community Partners</a></li>
+		      <li class="{% if request.resolver_match.view_name == 'surveys' %}active{% endif %}"><a href="{% url 'survey-types' %}">Surveys</a></li>
+		      <li class="{% if request.resolver_match.view_name == 'resources' %}active{% endif %}"><a href="{% url 'resources' %}">Resources</a></li>
+		      <li class="{% if request.resolver_match.view_name == 'about' %}active{% endif %}"><a href="{% url 'about' %}">About Us</a></li>
+		  </ul>
+	      </div>
+	  </nav>
+      </header>
+      {% block content %}
+      
+      {% endblock %}
+      <footer class="footer">
+	  <div class="container">
+	      <div class="row">
+		  <div class="col-md-3">
 
-    {% block content %}
-    {% endblock content %}
+		      <ul class="list-unstyled">
+			  <li><a href="{% url 'learn' %}"><strong>Learn about CBM</strong></a></li>
+			  <li><a href="{% url 'learn' %}">What is CBM?</a></li>
+			  <li><a href="{% url 'resources' %}">CBM Resources</a></li>
+			  <li><a href="{% url 'resources' %}">Norms & Standards</a></li>
+			  <li><a href="{% url 'resources' %}">Batho Pele Principles</a></li>
+		      </ul>
+
+		  </div>
+		  <div class="col-md-3">
+
+		      <ul class="list-unstyled">
+			  <li><a href="{% url 'sites' %}"><strong>Sites</strong></a></li>
+			  <li><a href="{% url 'partners' %}"><strong>Community Partners</strong></a></li>
+		      </ul>
+
+		  </div>
+		  <div class="col-md-2">
+
+		      <ul class="list-unstyled">
+			  <li><a href="{% url 'about' %}"><strong>Contact Us</strong></a></li>
+			  <li><a href="{% url 'about' %}"><strong>About Us</strong></a></li>
+		      </ul>
+
+		  </div>
+		  <div class="col-md-4">
+		      <h5>Sign up to our mailing list</h5>
+
+		      {% include '_mailing_list_form.html' %}
+		  </div>
+	      </div>
+
+	      <div class="row logos">
+		  <div class="col-sm-2 col-xs-6">
+		      <a href="http://www.blacksash.org.za" target="_blank"><img src="{% static 'img/black-sash-logo.png' %}" alt="Black Sash"></a>
+		  </div>
+
+		  <div class="col-sm-2 col-xs-6">
+		      <a href="https://www.hivos.org" target="_blank"><img src="{% static 'img/hivos-logo.png' %}" alt="Hivos"></a>
+		  </div>
+
+		  <div class="col-sm-2 col-xs-6">
+		      <a href="http://www.makingallvoicescount.org" target="_blank"><img src="{% static 'img/mavc-logo.svg' %}" alt="MAVC"></a>
+		  </div>
+
+		  <div class="col-sm-2 col-xs-6">
+		      <a href="https://www.brot-fuer-die-welt.de/en/bread-for-the-world/" target="_blank"><img src="{% static 'img/brot-logo.svg' %}" alt="Brot für die Welt"></a>
+		  </div>
+
+		  <div class="col-sm-2 col-xs-6">
+		      <a href="https://dgmt.co.za/" target="_blank"><img src="{% static 'img/dgmt.svg' %}" alt="DGMT"></a>
+		  </div>
+
+		  <div class="col-sm-2 col-xs-6">
+		      <a href="https://openup.org.za" target="_blank"><img src="{% static 'img/logo-openup.svg' %}" alt="OpenUp"></a>
+		  </div>
+	      </div>
+	  </div>
+      </footer>      
 
     {% block js %}
     {% javascript "js" %}

@@ -1,16 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-  {% include '_header.html' %}
-
-    <div class="page-content">
-      <div class="wrapper">
-        {% block page-content %}
-        {% endblock %}
-      </div>
-    </div>
-
-  {% include '_footer.html' %}
+<div class="page-content">
+    {% block page-content %}
+    {% endblock %}
+</div>
 
 {% endblock %}

@@ -76,13 +76,13 @@ $link-hover-decoration: none !default;
 
 //== Navbar
 
-$navbar-height: 20px !default;
+$navbar-height: 50px !default;
 
-$navbar-default-color: $white !default;
-$navbar-default-bg: transparent !default;
+$navbar-default-color: $black !default;
+$navbar-default-bg: $orange !default;
 
-$navbar-default-link-color: #fff !default;
-$navbar-default-link-hover-color: $brand-secondary !default;
+$navbar-default-link-color: $black !default;
+$navbar-default-link-hover-color: $white !default;
 
 $navbar-border-radius: 0 !default;
 $navbar-margin-bottom: 0;
