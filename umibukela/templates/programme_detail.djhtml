@@ -169,13 +169,45 @@
 	    <div class="row">
 		<br/>
 	    </div>
+	    <div class="row">
+		{% if surveys %}
+		    <div class="panel panel-default">
+			<div class="panel-heading">
+			    <div class="row">
+				<div class="col-md-4">
+				    <b>Survey Summaries</b>
+				</div>
+				
+			    </div>
+			</div>
+			<div class="panel-body">
+			    <table class="table table-striped">
+				<thead>
+				    <tr>
+					<th>Survey</th>
+					<th>View</th>
+				    </tr>
+				</thead>
+				<tbody>
+				    {% for s in surveys %}
+					<tr>
+					    <td>{{s.type__name}}</td>
+					    <td><a href="{% url 'survey-type' s.type__slug %}" target="_blank">Summary</a></td>
+					</tr>
+				    {% endfor %}
+				</tbody>
+			    </table>
+			</div>
+		    </div>
+		{% endif %}
+	    </div>
 	    <div class="row datasets" id="monitor-results">
 		{% if datastudio %}
 		    <div class="panel panel-default" id="monitor-results">
 			<div class="panel-heading">
 			    <div class="row">
 				<div class="col-md-4">
-				    <b>Monitoring Results</b>
+				    <b>Dasboard</b>
 				</div>
 				<div class="col-md-4 col-md-offset-4">
 				    {% if programme_cycles|length > 1 %}
@@ -197,11 +229,9 @@
 			    {% for data in datastudio %}
 				<div class="row">
 				    <div class="col-md-12 col-sm-12">
-					<h2 class="text-center">{{data.survey}}</h2><h5>
-					<h3 class="text-center">
-					    <a href="{% url 'survey-type' data.survey.slug %}" target="_blank">Summary </a>
-					</h3>
-					<h3 class="text-center">Dashboard View</h3>
+					<h2 class="text-center">
+					    {{data.survey}}
+					</h2>
 					<div class="embed-responsive embed-responsive-16by9">
 									    <iframe width="auto" height="450" src="{{data.datastudio}}" frameborder="0" style="border:0" allowfullscreen></iframe>
 					</div>
@@ -214,7 +244,7 @@
 				</div>
 			    {% endif %}
 			</div>
-		    </div>
+				    </div>
 		{% endif %}
 	    </div>
 	    {% if partners %}

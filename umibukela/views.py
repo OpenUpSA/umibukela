@@ -177,7 +177,7 @@ def programme_detail(request, programme_slug):
                    .distinct('type')\
                    .order_by('type__id')\
                    .only('type')\
-                   .values('type')
+                   .values('type', 'type__slug', 'type__name')
     survey_ids = [t['type'] for t in type_surveys]
     data_results = SurveyTypeData\
                    .objects\
@@ -229,7 +229,8 @@ def programme_detail(request, programme_slug):
             'programme_images': programme_images,
             'resources': resources,
             'featured_image': featured_image,
-            'datastudio': data_results
+            'datastudio': data_results,
+            'surveys': type_surveys
         })
 
 
