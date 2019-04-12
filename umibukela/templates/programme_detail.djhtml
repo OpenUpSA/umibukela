@@ -71,7 +71,7 @@
 		    <a href="#resources" class="btn btn-primary btn-sm uppercase">Resources</a>
 		{% endif %}
 		{% if donars %}
-		    <a href="#donars" class="btn btn-primary btn-sm uppercase">Donars</a>
+		    <a href="#donors" class="btn btn-primary btn-sm uppercase">Donors</a>
 		{% endif %}
 	    </div>
 	</div>
@@ -363,7 +363,7 @@
 	    {% endif %}
 
 	    {% if donars %}
-		<div class="row" id="donars">
+		<div class="row" id="donors">
 		    <h3>With support from</h3>
 		    {% for donar in donars %}
 			{% if donar.funder %}
