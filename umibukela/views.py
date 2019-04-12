@@ -64,7 +64,7 @@ def programmes(request):
     prog = Programme\
            .objects\
            .all()\
-           .order_by('id')\
+           .order_by('long_name')\
            .prefetch_related('program_image')
     return render(request, 'programmes.html', {'programmes': prog})
 
