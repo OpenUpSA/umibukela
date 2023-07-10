@@ -1,1 +1,1 @@
-web: newrelic-admin run-program gunicorn --worker-class gevent umibukela.wsgi:application --log-file -
+web: gunicorn umibukela.wsgi:application --preload --log-file -
